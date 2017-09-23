@@ -1,9 +1,7 @@
 # Data Mining 
 
 A.A. 2017/18
-
 University of Milano-Bicocca
-
 
 ### News
 
