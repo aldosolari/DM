@@ -1,7 +1,6 @@
 # Data Mining 
 
-A.A. 2017/18
-University of Milano-Bicocca
+University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 ### News
 
