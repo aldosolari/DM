@@ -1,7 +1,8 @@
 # Data Mining 
 
-A.A. 2017/18\
-University Milano-Bicocca\
+A.A. 2017/18
+
+University of Milano-Bicocca
 
 
 ### News
@@ -12,11 +13,11 @@ University Milano-Bicocca\
 
 *1st week*
 
-1. 25/9 12:30-15:30 Lab717 **Introduction**
+1. 25/9 12:30-15:30 Lab717 : **Introduction**
     + *Slides:* Introduction • The two cultures • Data science
     + *Dataset:* Yesterday
 
-2. 26/9 12:30-15:30 Lab907 **Prediction Error: the Bias-Variance Trade-Off**
+2. 26/9 12:30-15:30 Lab907 :  **Prediction Error: the Bias-Variance Trade-Off**
     + *Slides:* The bias-variance decomposition • How to avoid overfitting
     + *Labs:* Polynomials
 
