@@ -11,7 +11,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 *1st week*
 
 1. 25/9 12:30-15:30 Lab717 : **Introduction**
-    + *Slides:* Introduction • The two cultures • Data science
+    + *Slides:* [Introduction](https://github.com/aldosolari/DM/0_intro/0_intro.pdf) • The two cultures • Data science • Big data
     + *Dataset:* Yesterday
 
 2. 26/9 12:30-15:30 Lab907 :  **Prediction Error: the Bias-Variance Trade-Off**
