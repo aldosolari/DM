@@ -1,0 +1,70 @@
+## ----------------------------------------------------
+
+load("poly.Rdata")
+
+plot( y ~ x , train)
+
+fit <- lm( y ~ poly(x, degree=2), train)
+yhat <- predict(fit, newdata=test)
+lines( yhat ~ x, train)
+
+MSE.tr <- mean( (train$y - yhat)^2 )
+
+## ----------------------------------------------------
+
+n <- nrow(train)
+ds = 0:20
+
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d), train)
+fits <- sapply(ds, fun)
+
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+plot(ds, MSEs.tr, type="b")
+
+## ----------------------------------------------------
+
+yhats <- lapply(fits, predict)
+MSEs.te <- unlist( lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)) )
+
+plot(ds, MSEs.tr, type="b", col=4)
+lines(ds, MSEs.te, type="b", col=2)
+
+## ----------------------------------------------------
+
+plot(y~x, truef, type="l", col=3)
+points(y~x,train, col=4)
+points(y~x,test, col=2)
+
+## ----------------------------------------------------
+
+AICs <- unlist( lapply(fits, AIC) )
+BICs <- unlist( lapply(fits, BIC) )
+
+plot(ds, AICs, type="b", col=5)
+lines(ds, BICs, type="b", col=6)
+
+## ----------------------------------------------------
+
+library(boot)
+
+LOOCV = sapply(1:10, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), 
+     train, family = gaussian) )$delta[1] )
+
+GCV = MSEs.tr/(1-(ds+1)/n )^2
+
+plot(1:10, LOOCV, type="b", log="y", col=5)
+lines(ds, GCV, col=6)
+
+## ----------------------------------------------------
+
+library(boot)
+
+set.seed(123)
+KCV = sapply(1:10, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), 
+     train, family = gaussian), K=5 )$delta[1] )
+
+plot(1:10, KCV, type="b", log="y")
+
