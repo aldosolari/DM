@@ -17,7 +17,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 2. 26/9 12:30-15:30 Lab907 :  **Prediction Error: the Bias-Variance Trade-Off**
     + *Slides:* [The bias-variance decomposition](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
-    + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.html)
+    + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.Rmd)
     + *Reading:* ISL 2.1, 2.2.1, 2.2.2, 2.3, 5.1.1-5.1.4, 5.3.1-5.3.3; AS 2 3.1-3.5, 
 
 3. 29/9 14:30-16:30 Lab906
