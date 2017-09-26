@@ -4,7 +4,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 ### News
 
-* First lecture on Monday 25/9 at 13:00 in Lab717
+* 
 
 ### Lectures
 
@@ -13,16 +13,16 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 1. 25/9 12:30-15:30 Lab717 : **Introduction**
     + *Slides:* [Introduction](https://github.com/aldosolari/DM/blob/master/0_intro/0_intro.pdf) • [The two cultures](https://github.com/aldosolari/DM/blob/master/0_intro/0_twocult.pdf) • [Data science](https://github.com/aldosolari/DM/blob/master/0_intro/0_twocult.pdf) • [Big data](https://github.com/aldosolari/DM/blob/master/0_intro/0_twocult.pdf)
     + *Dataset:* [Yesterday](https://github.com/aldosolari/DM/blob/master/0_intro/0_yesterday.pdf)
-    + *Reading:* ISL 1; AS 1,
+    + *Reading:* ISL chapter 1; AS chapter 1
 
 2. 26/9 12:30-15:30 Lab907 :  **Prediction Error: the Bias-Variance Trade-Off**
-    + *Slides:* The bias-variance decomposition • How to avoid overfitting
-    + *Labs:* Polynomials
+    + *Slides:* [The bias-variance decomposition](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
+    + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.html)
     + *Reading:* ISL 2.1, 2.2.1, 2.2.2, 2.3, 5.1.1-5.1.4, 5.3.1-5.3.3; AS 2 3.1-3.5, 
 
 3. 29/9 14:30-16:30 Lab906
-    + *Slides:*  $K$-nearest neighbours regression • Local regression • Splines
-    + *Labs:* Cars
+    + *Slides:*  [How to avoid overfitting](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
+    + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.html)
     + *Reading:* ISL 3; AS 2, .. 
 
 
