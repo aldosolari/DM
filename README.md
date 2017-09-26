@@ -13,7 +13,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 1. 25/9 12:30-15:30 Lab717 : **Introduction**
     + *Slides:* [Introduction](https://github.com/aldosolari/DM/blob/master/0_intro/0_intro.pdf) • [The two cultures](https://github.com/aldosolari/DM/blob/master/0_intro/0_twocult.pdf) • [Data science](https://github.com/aldosolari/DM/blob/master/0_intro/0_twocult.pdf) • [Big data](https://github.com/aldosolari/DM/blob/master/0_intro/0_twocult.pdf)
     + *Dataset:* [Yesterday](https://github.com/aldosolari/DM/blob/master/0_intro/0_yesterday.pdf)
-    + *Reading:* ISL 1; AS 1
+    + *Reading:* ISL 1; AS 1,
 
 2. 26/9 12:30-15:30 Lab907 :  **Prediction Error: the Bias-Variance Trade-Off**
     + *Slides:* The bias-variance decomposition • How to avoid overfitting
