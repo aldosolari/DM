@@ -39,7 +39,6 @@ MSEs.tr <- unlist( lapply(fits, deviance) )/n
 plot(ds, MSEs.tr, type="b")
 ```
 
-
 ## Test MSE
 
 ```{r, message=FALSE, warning=FALSE}
@@ -49,6 +48,19 @@ MSEs.te <- unlist( lapply(yhats,
 
 plot(ds, MSEs.tr, type="b", col=4)
 lines(ds, MSEs.te, type="b", col=2)
+```
+
+## Overfitting
+
+```{r, message=FALSE, warning=FALSE}
+fit <- lm( y ~ poly(x, degree=14), train)
+yhat <- predict(fit, newdata=test)
+op <- par(mfrow = c(1, 2))
+plot( y ~ x , train, col=4)
+lines(yhat ~ x, train)
+plot( y ~ x , test, col=2)
+lines(yhat ~ x, test)
+par(op)
 ```
 
 ## True regression function

@@ -18,12 +18,12 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 2. 26/9 12:30-15:30 Lab907 :  **Prediction Error: the Bias-Variance Trade-Off**
     + *Slides:* [The bias-variance decomposition](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
     + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.Rmd)
-    + *Reading:* ISL 2.1, 2.2.1, 2.2.2, 2.3, 5.1.1-5.1.4, 5.3.1-5.3.3; AS 2 3.1-3.5, 
+    + *Reading:* ISL 2.1, 2.2.1, 2.2.2, 2.3; AS 3.1 - 3.4
 
 3. 29/9 14:30-16:30 Lab906
     + *Slides:*  [How to avoid overfitting](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
     + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.html)
-    + *Reading:* ISL 3; AS 2, .. 
+    + *Reading:* ISL 5.1.1 - 5.1.4, 5.3.1 - 5.3.3; AS 3.5.1 - 3.5.3
 
 
 *2nd week*
@@ -68,12 +68,13 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 * [AS] Azzalini, Scarpa (2012) Data analysis and data mining, an introduction. New York: Oxford University Press
 
-* [KJ] Kuhn, Johnson (2013) Applied Predictive Modelling. Springer
-
 * [WG] Wickham, Grolemund (2015) R for Data Science. O’Reilly Cookbooks
+
+* [KJ] Kuhn, Johnson (2013) Applied Predictive Modelling. Springer
 
 * [NL] Nolan and Lang (2015) Data Science in R: A Case Studies Approach to Computational Reasoning and Problem Solving. Chapman and Hall/CRC
 
 * [ESL] Hastie, Tibshirani, Friedman (2009) The Elements of Statistical Learning. Data Mining, Inference and Prediction. Springer
 
-* [EH] Efron, Hastie (2016) Computer-Age Statistical Inference: Algorithms, Evidence, and Data Science. Cambridge University Press
+* [ZM] Zumel, Mount (2014) Practical Data Science with R. Manning Publications
+
