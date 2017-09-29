@@ -81,7 +81,84 @@ plot(ds, AICs, type="b", col=5)
 lines(ds, BICs, type="b", col=6)
 ```
 
+
+
+## K-fold CV
+
+By hand
+
+```{r}
+d = 5
+
+# how many folds
+K<-5
+set.seed(123)
+# create folds
+folds <- sample( rep(1:K,length=n) )
+# initialize vector
+KfoldCV <- vector()
+
+for (k in 1:K){
+  fit <- lm(y~poly(x,degree=d), train, subset=which(folds!=k))
+  x.out <- train$x[which(folds==k)]
+  yhat <- predict(fit, newdata=list(x=x.out))
+  y.out <- train$y[which(folds==k)]
+  KfoldCV[k]<- mean( ( y.out - yhat )^2 )
+}
+
+# KfoldCV estimate of EMSE.te
+mean(KfoldCV)
+```
+
+By function
+
+```{r, message=FALSE, warning=FALSE}
+library(boot)
+
+set.seed(123)
+KCV = sapply(1:10, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), 
+     train, family = gaussian), K=5 )$delta[1] )
+
+plot(1:10, KCV, type="b", log="y")
+```
+
 ## LOOCV and GCV
+
+By hand
+
+```{r}
+d = 5
+# initialize vector
+oneout <- vector()
+
+for (i in 1:n){
+fit_i <- lm( y~poly(x,degree=d), data=train[-i,])
+yhat_i <- predict(fit_i, newdata=data.frame(x=train$x[i]) )
+oneout[i] <- ( train$y[i] -  yhat_i )^2
+}
+
+# LOOCV estimate of MSE.te
+mean(oneout)
+```
+
+By matrix
+
+```{r}
+d = 5
+fit <-  lm(y~poly(x,degree=d), train)
+
+X <- model.matrix(fit)
+H <- X %*% solve(t(X)%*% X) %*% t(X)
+
+LOOCV = mean(
+   ( (train$y - predict(fit)) / (1-diag(H))  )^2 
+) 
+LOOCV
+```
+
+
+By function
 
 ```{r, message=FALSE, warning=FALSE}
 library(boot)
@@ -94,17 +171,4 @@ GCV = MSEs.tr/(1-(ds+1)/n )^2
 
 plot(1:10, LOOCV, type="b", log="y", col=5)
 lines(ds, GCV, col=6)
-```
-
-## K-fold CV
-
-```{r, message=FALSE, warning=FALSE}
-library(boot)
-
-set.seed(123)
-KCV = sapply(1:10, function(d) 
-     cv.glm(train, glm(y~poly(x,degree=d), 
-     train, family = gaussian), K=5 )$delta[1] )
-
-plot(1:10, KCV, type="b", log="y")
 ```

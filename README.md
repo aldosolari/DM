@@ -19,6 +19,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Slides:* [The bias-variance decomposition](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
     + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.Rmd)
     + *Reading:* ISL 2.1, 2.2.1, 2.2.2, 2.3; AS 3.1 - 3.4
+    + *Homework:* Slide 12, 17
 
 3. 29/9 14:30-16:30 Lab906
     + *Slides:*  [How to avoid overfitting](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)

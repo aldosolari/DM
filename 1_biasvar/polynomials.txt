@@ -10,8 +10,17 @@ lines( yhat ~ x, train)
 
 MSE.tr <- mean( (train$y - yhat)^2 )
 
-## ----------------------------------------------------
+load("poly.Rdata")
 
+plot( y ~ x , train)
+
+fit <- lm( y ~ poly(x, degree=2), train)
+yhat <- predict(fit, newdata=test)
+lines( yhat ~ x, train)
+
+MSE.tr <- mean( (train$y - yhat)^2 )
+
+## -------------------------------------------
 n <- nrow(train)
 ds = 0:20
 
@@ -21,8 +30,7 @@ fits <- sapply(ds, fun)
 MSEs.tr <- unlist( lapply(fits, deviance) )/n
 plot(ds, MSEs.tr, type="b")
 
-## ----------------------------------------------------
-
+## -------------------------------------------
 yhats <- lapply(fits, predict)
 MSEs.te <- unlist( lapply(yhats, 
            function(yhat) mean((test$y - yhat)^2)) )
@@ -30,22 +38,84 @@ MSEs.te <- unlist( lapply(yhats,
 plot(ds, MSEs.tr, type="b", col=4)
 lines(ds, MSEs.te, type="b", col=2)
 
-## ----------------------------------------------------
+## -------------------------------------------
+fit <- lm( y ~ poly(x, degree=14), train)
+yhat <- predict(fit, newdata=test)
+op <- par(mfrow = c(1, 2))
+plot( y ~ x , train, col=4)
+lines(yhat ~ x, train)
+plot( y ~ x , test, col=2)
+lines(yhat ~ x, test)
+par(op)
 
+## -------------------------------------------
 plot(y~x, truef, type="l", col=3)
 points(y~x,train, col=4)
 points(y~x,test, col=2)
 
-## ----------------------------------------------------
-
+## -------------------------------------------
 AICs <- unlist( lapply(fits, AIC) )
 BICs <- unlist( lapply(fits, BIC) )
 
 plot(ds, AICs, type="b", col=5)
 lines(ds, BICs, type="b", col=6)
 
-## ----------------------------------------------------
+## ------------------------------------------------------------------------
+d = 5
 
+K<-5
+set.seed(123)
+folds <- sample( rep(1:K,length=n) )
+KfoldCV <- vector()
+
+for (k in 1:K){
+  fit <- lm(y~poly(x,degree=d), train, subset=which(folds!=k))
+  x.out <- train$x[which(folds==k)]
+  yhat <- predict(fit, newdata=list(x=x.out))
+  y.out <- train$y[which(folds==k)]
+  KfoldCV[k]<- mean( ( y.out - yhat )^2 )
+}
+
+
+mean(KfoldCV)
+
+## -------------------------------------------
+library(boot)
+
+set.seed(123)
+KCV = sapply(1:10, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), 
+     train, family = gaussian), K=5 )$delta[1] )
+
+plot(1:10, KCV, type="b", log="y")
+
+## ------------------------------------------------------------------------
+
+d = 5
+oneout <- vector()
+
+for (i in 1:n){
+fit_i <- lm( y~poly(x,degree=d), data=train[-i,])
+yhat_i <- predict(fit_i, newdata=data.frame(x=train$x[i]) )
+oneout[i] <- ( train$y[i] -  yhat_i )^2
+}
+
+mean(oneout)
+
+## ------------------------------------------------------------------------
+
+d = 5
+fit <-  lm(y~poly(x,degree=d), train)
+
+X <- model.matrix(fit)
+H <- X %*% solve(t(X)%*% X) %*% t(X)
+
+LOOCV = mean(
+   ( (train$y - predict(fit)) / (1-diag(H))  )^2 
+) 
+LOOCV
+
+## -------------------------------------------
 library(boot)
 
 LOOCV = sapply(1:10, function(d) 
@@ -56,15 +126,4 @@ GCV = MSEs.tr/(1-(ds+1)/n )^2
 
 plot(1:10, LOOCV, type="b", log="y", col=5)
 lines(ds, GCV, col=6)
-
-## ----------------------------------------------------
-
-library(boot)
-
-set.seed(123)
-KCV = sapply(1:10, function(d) 
-     cv.glm(train, glm(y~poly(x,degree=d), 
-     train, family = gaussian), K=5 )$delta[1] )
-
-plot(1:10, KCV, type="b", log="y")
 
