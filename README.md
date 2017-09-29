@@ -21,7 +21,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Reading:* ISL 2.1, 2.2.1, 2.2.2, 2.3; AS 3.1 - 3.4
     + *Homework:* Slide 12, 17
 
-3. 29/9 14:30-16:30 Lab906
+3. 29/9 14:30-16:30 Lab906 : **Expected Optimism and Cross-Validation**
     + *Slides:*  [How to avoid overfitting](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
     + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.html)
     + *Reading:* ISL 5.1.1 - 5.1.4, 5.3.1 - 5.3.3; AS 3.5.1 - 3.5.3
