@@ -29,7 +29,11 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 *2nd week*
 
-4. 2/10 12:30-15:30 Lab906
+4. 2/10 12:30-15:30 Lab906 : **Nonparametric Regression**
+    + *Slides:*  [k-nearest-neighbour](https://github.com/aldosolari/DM/blob/master/2_eda/2_npr.pdf) • [Local regression](https://github.com/aldosolari/DM/blob/master/2_eda/2_npr.pdf) • [Regression splines](https://github.com/aldosolari/DM/blob/master/2_eda/2_npr.pdf)
+    + *Labs:* [Auto](https://github.com/aldosolari/DM/blob/master/2_eda/auto.html)
+    + *Reading:* AS: 4.1 - 4.2.4, 4.4 - 4.4.2; GW 3.1 - 3.6; ISL 7.1-7.4, 7.6, 7.8.1, 7.8.2
+
 
 5. 3/10 12:30-15:30 Lab906
 

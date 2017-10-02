@@ -1,0 +1,117 @@
+---
+title: "Nonparametric regression"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/aldosolari/Desktop/DM_off/2_eda/code")
+```
+
+
+## Auto data
+
+* [AS] 4.1 - 4.2.4;  4.4 - 4.4.2
+
+```{r, message=FALSE, warning=FALSE}
+rm(list=ls())
+auto <- read.table("auto.dat", header=TRUE, quote="\"")
+plot(city.distance ~ engine.size, auto)
+```
+
+## $k$-Nearest-Neighbour regression
+
+```{r, message=FALSE, warning=FALSE}
+# install FNN package
+library(FNN)
+# number of neighbours
+k <- 10
+# fit kNN regression 
+x0 = seq(min(auto$engine.size),max(auto$engine.size), length.out = 200)
+fit.kNN <- knn.reg(train=auto$engine.size, y=auto$city.distance, test=data.frame(city.distance=x0),  k=k)
+# fitted values
+y0.kNN <- fit.kNN$pred
+
+# plot training set and fitted values
+plot(city.distance ~ engine.size, auto)
+lines(y0.kNN ~ x0, type="s", col=4)
+```
+
+## Local regression
+
+```{r, message=FALSE, warning=FALSE}
+# install sm package
+library(sm)
+# bandwidth
+h <- 0.5
+# fit local linear regression 
+fit.lr <- sm.regression(x=auto$engine.size, y=auto$city.distance, h=h, eval.points=x0, display="se" )
+```
+
+## Loess
+
+```{r, message=FALSE, warning=FALSE}
+s = 0.75
+fit.loess = loess(city.distance ~ engine.size, auto, degree=1, span=s)
+y0 = predict(fit.loess, newdata=data.frame(engine.size=x0), se=TRUE)
+
+plot(city.distance ~ engine.size, auto)
+lines(y0$fit ~ x0, col=4)
+lines(x0, y0$fit + 2*y0$se.fit , col=4, lty=3)
+lines(x0, y0$fit - 2*y0$se.fit , col=4, lty=3)
+```
+
+
+## Regression splines
+
+```{r}
+library(splines)
+# knots
+knots = c(1.5,2,2.5)
+# degree
+d = 1
+
+# fit regression splines
+fit.splines = lm(city.distance ~ bs(engine.size, knots=knots, degree=d), auto)
+
+y0 = predict(fit.splines, newdata=data.frame(engine.size=x0), se=TRUE)
+plot(city.distance~engine.size, auto)
+lines(x0, y0$fit, col=4)
+lines(x0, y0$fit +2* y0$se ,lty =2, col=4)
+lines(x0, y0$fit -2* y0$se ,lty =2, col=4)
+```
+
+## Natural cubic splines
+
+```{r}
+# fit natural cubic splines
+fit.ns = lm(city.distance ~ ns(engine.size, knots=knots), auto)
+
+y0 = predict(fit.ns, newdata=data.frame(engine.size=x0), se=T)
+plot(city.distance~engine.size, auto)
+lines(x0, y0$fit, col=4)
+lines(x0, y0$fit +2* y0$se ,lty =2, col=4)
+lines(x0, y0$fit -2* y0$se ,lty =2, col=4)
+```
+
+
+## Data visualization
+
+* [WG] 3.1 - 3.6
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+
+# scatterplot
+ggplot(data = auto) + geom_point(mapping = aes(x = engine.size, y = city.distance))
+
+# jittered scatterplot
+ggplot(data = auto) + geom_point(mapping = aes(x = engine.size, y = city.distance), position = "jitter")
+
+# colored scatterplot + loess
+ggplot(data = auto, mapping = aes(x = engine.size, y = city.distance, color = fuel)) +  geom_point()+ geom_smooth(method="loess", span = 0.75)
+
+# facets
+ggplot(data = auto) + geom_point(mapping = aes(x = engine.size, y = city.distance)) + facet_wrap(  ~ fuel)
+```

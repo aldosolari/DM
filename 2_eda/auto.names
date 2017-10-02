@@ -1,0 +1,30 @@
+# Data used in the book:
+#    "Data anlysis and data mining" by A.Azzalini and B.Scarpa,
+#    © Oxford University Press, 2012 (ISBN 978-0-19-976710-6).
+#
+# Data obtained by manipulation of the data available at
+# ftp://ftp.ics.uci.edu/pub/machine-learningdatabases/autos
+#------------------------------------------------------------------------
+
+
+Variable            Description 
+
+make                manufacturer (factor, 22 levels)    
+fuel type           type of engine fuel (factor, 2 levels: diesel, gasoline)   
+aspiration          type of engine aspiration (factor, 2 levels: standard, turbo)   
+body style          type of body style 
+                    (factor, 5 levels: hardtop, wagon, sedan, hatchback, convertible)  
+drive wheels        type of drive wheels (factor,  3 levels: 4wd, fwd, rwd)   
+engine location     location of engine (factor, 2 levels: front, rear)  
+wheel base          distance between axes (cm)   
+length              length (cm)    
+width               width (cm)  
+height              height (cm)   
+curb weight         weight (kg)   
+engine size         engine size (l)   
+compression rate    compression rate   
+hp                  horsepower   
+peak-rpm            number of peak revolutions per minute   
+city distance       city distance covered (km/l)   
+highway distance    highway distance (km/l)  
+n.cylinders         number of cylinders
