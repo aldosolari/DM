@@ -23,7 +23,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 3. 29/9 14:30-16:30 Lab906 : **Expected Optimism and Cross-Validation**
     + *Slides:*  [How to avoid overfitting](https://github.com/aldosolari/DM/blob/master/1_biasvar/1_biasvar.pdf)
-    + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.html)
+    + *Labs:* [Polynomials](https://github.com/aldosolari/DM/blob/master/1_biasvar/polynomials.Rmd)
     + *Reading:* ISL 5.1.1 - 5.1.4, 5.3.1 - 5.3.3; AS 3.5.1 - 3.5.3
 
 
@@ -31,11 +31,14 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 4. 2/10 12:30-15:30 Lab906 : **Moving beyond linearity**
     + *Slides:*  [k-nearest-neighbour](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Local regression](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Regression splines](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf)
-    + *Labs:* [Auto](https://github.com/aldosolari/DM/blob/master/2_eda/auto.html)
+    + *Labs:* [Auto](https://github.com/aldosolari/DM/blob/master/2_eda/auto.Rmd)
     + *Reading:* AS: 4.1 - 4.2.4, 4.4 - 4.4.2; GW 3.1 - 3.6; ISL 7.1-7.4, 7.6, 7.8.1, 7.8.2
 
 
-5. 3/10 12:30-15:30 Lab906
+5. 3/10 12:30-15:30 Lab906 : **Exploratory Data Analysis**
+ + *Slides:*  [Titanic competition: classification](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Exploratory data analysis: missing values and feature engineering](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) 
+    + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
++ *Reading:* tbd
 
 6. 6/10 14:30-16:30 Lab906
 
