@@ -1,5 +1,5 @@
 ---
-title: "The Bias-Variance Trade-Off"
+title: "The Bias-Variance Trade-Off: Yesterday-Tomorrow data"
 output: html_document
 ---
 
@@ -145,8 +145,8 @@ mean(oneout)
 By matrix
 
 ```{r}
-d = 5
-fit <-  lm(y~poly(x,degree=d), train)
+deg = 5
+fit <-  lm(y~poly(x,deg), train)
 
 X <- model.matrix(fit)
 H <- X %*% solve(t(X)%*% X) %*% t(X)
