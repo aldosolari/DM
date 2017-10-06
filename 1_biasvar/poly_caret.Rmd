@@ -1,0 +1,141 @@
+---
+title: "The caret Package: Yesterday-Tomorrow data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/aldosolari/Desktop/DM_off/1_biasvar/code")
+```
+
+## Generate data
+
+```{r, message=FALSE, warning=FALSE}
+rm(list=ls())
+
+load("poly250.Rdata")
+n = length(x)
+set.seed(123)
+sigma = 0.01
+y = f + rnorm(n, 0, sigma)
+train = data.frame(x=x,y=y)
+plot(y~x, train)
+lines(f ~ x, col=3)
+
+library(caret)
+```
+
+## Cross-validation settings
+
+```{r}
+cv <- trainControl(
+  method = "repeatedcv",
+  number = 5,
+  repeats = 2
+)
+```
+
+## Models
+
+```{r, message=FALSE, warning=FALSE}
+# k-nn
+fit.knn = train(
+  y~., train,
+  method = "knn",
+  tuneLength = 10,
+  verbose = FALSE,
+  trControl=cv)
+
+fit.knn
+plot(fit.knn)
+fit.knn$bestTune
+
+# loess
+loess_grid = expand.grid(
+  degree = c(0,1),
+  span = c(1,5,9,15,20,25,30,35,40,50,63,75,100,125)/250
+)
+fit.loess = train(
+  y~., train,
+  method = "gamLoess",
+  tuneGrid = loess_grid,
+  verbose = FALSE,
+  trControl=cv)
+
+fit.loess
+plot(fit.loess)
+fit.loess$bestTune
+```
+
+## Cross-validation RMSE
+
+```{r}
+models = list(
+    knn=fit.knn,
+    loess=fit.loess
+  )
+
+resamps = resamples(models)
+bwplot(resamps, metric = "RMSE")
+```
+
+## Test RMSE
+
+```{r}
+test = train[,-2, drop=FALSE]
+test.y = f + rnorm(n,0,sigma)
+  
+yhats = predict(models, newdata=test)
+plot(test.y ~ test$x)
+lines(f ~ test$x, col=3)
+lines(test$x, yhats$knn)
+
+plot(test.y~test$x, test)
+lines(f ~ test$x, col=3)
+lines(test$x, yhats$loess)
+
+lapply(yhats, function(yhat) sqrt( mean( (yhat - test.y)^2) ) )
+predVals <- extractPrediction(models, 
+                              testX = test, 
+                              testY = test.y)
+plotObsVsPred(predVals)
+```
+
+
+## Bias-Variance decomposition
+
+```{r, message=FALSE, warning=FALSE}
+dat = data.frame(f=f,x=x)
+
+library(kknn)
+ks = 1:40
+bias2.knn = sapply(ks, function(k) 
+  mean( (kknn(f ~ x, train=dat, test=dat, k = k)$fitted.values - f)^2 )
+  )
+var.knn = sigma^2/ks
+EMSE.knn = bias2.knn + var.knn + sigma^2
+( k.opt = which.min(EMSE.knn) )
+plot(ks, EMSE.knn, type="l", ylim=c(0,max(EMSE.knn)), col=2)
+points(k.opt, EMSE.knn[k.opt], col=2)
+lines(ks, bias2.knn, col=5)
+lines(ks, var.knn, col=6)
+legend("topright", c("E(MSE)", "bias2","var"), col=c(2,5,6), lty=c(1,1,1))
+
+
+library(gam)
+spans = seq(0.04,0.5,by = 0.01)
+bias2.loess = sapply(spans, function(s) 
+mean( (gam(f ~ lo(x, span=s, degree=1), family = gaussian, data=dat)$fitted.values - f)^2 )
+)
+var.loess = sapply(spans, function(s) 
+ (gam(f ~ lo(x, span=s, degree=1), family = gaussian, data=dat)$nl.df )*(sigma^2)/n
+)
+EMSE.loess = bias2.loess + var.loess + sigma^2
+( span.opt = spans[which.min(EMSE.loess)] )
+plot(spans, EMSE.loess, type="l", ylim=c(0,max(EMSE.loess)), col=2)
+points(span.opt, min(EMSE.loess), col=2)
+lines(spans, bias2.loess, col=5)
+lines(spans, var.loess, col=6)
+legend("topright", c("E(MSE)", "bias2","var"), col=c(2,5,6), lty=c(1,1,1))
+```
+
