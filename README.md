@@ -38,12 +38,12 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 5. 3/10 12:30-15:30 Lab906 : **Exploratory Data Analysis**
     + *Slides:*  [Titanic competition](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Classification setting](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Missing values](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) 
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
-    + *Reading:* tbd
+    + *Reading:* AS: 2
 
 6. 6/10 14:30-16:30 Lab906 : **Basic Modeling**
     + *Slides:*  [Feature engineering](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Classification trees](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
-    + *Reading:* tbd
+    + *Exercize* : [Yesterday250](https://github.com/aldosolari/DM/blob/master/1_biasvar/poly_caret.Rmd)
 
 *3rd week*
 
