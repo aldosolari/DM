@@ -1,0 +1,125 @@
+---
+title: "Bagging and Random Forests: spam data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/aldosolari/Desktop/DM_off/3_ensemble/code")
+```
+
+From ZM 9.1
+
+## Import data
+
+```{r}
+#Load the data and split into training and test sets.
+rm(list=ls())
+spam <- read.csv('SPAM.csv',header=T)
+train = spam[!spam$testid, -2]
+test = spam[spam$testid, -2]
+n = nrow(train)
+m = nrow(test)
+```
+
+## Model's formula
+
+```{r}
+# Use all the predictors 
+preds <- setdiff(colnames(train),list('spam'))
+fml <- as.formula(paste('spam==T',
+                  paste(preds,collapse=' + '),sep=' ~ '))
+fml
+```
+
+## Accuracy measures
+
+```{r}
+# A function to calculate and return various measures on the model: prediction accuracy, and f1, which is the product of precision and recall
+score <- function(pred, truth, name="model") {
+  ctable <- table(truth=truth,
+                  pred=(pred>0.5))
+  accuracy <- sum(diag(ctable))/sum(ctable)
+  precision <- ctable[2,2]/sum(ctable[,2])
+  recall <- ctable[2,2]/sum(ctable[2,])
+  f1 <- precision*recall
+  data.frame(model=name, accuracy=accuracy, f1=f1)
+}
+```
+
+## Fit a classification tree
+
+```{r}
+# Load the rpart library and fit a classification tree model
+library(rpart)
+fit.tree <- rpart(fml, train)
+plot(fit.tree)
+
+score(predict(fit.tree, newdata=train), train$spam==T, name="tree, training")
+score(predict(fit.tree, newdata=test), test$spam==T, name="tree, test")
+```
+
+## Bagging classification trees
+
+```{r}
+# Use B bootstrap samples of the training set
+set.seed(123)
+B <- 10
+
+samples <- sapply(1:B,
+                  FUN = function(iter)
+                  {sample(1:n, size=n, replace=T)})
+
+# Train the individual classification trees and return them in a list.
+# Note: this step can take a few minutes.
+treelist <-lapply(1:B,
+                  FUN=function(iter)
+                  {samp <- samples[,iter];
+                  rpart(fml, train[samp,])})
+
+# predict.bag assumes the underlying classifier returns decision probabilities, not decisions
+predict.bag <- function(treelist, newdata) {
+  preds <- sapply(1:length(treelist),
+                  FUN=function(iter) {
+                    predict(treelist[[iter]], newdata=newdata)})
+  predsums <- rowSums(preds)
+  predsums/length(treelist)
+}
+
+#Evaluate the bagged classification trees in the training and test sets
+score(predict.bag(treelist, newdata=train),
+                 train$spam==T,
+                 name="bagging, training")
+score(predict.bag(treelist, newdata=test),
+                 test$spam==T,
+                 name="bagging, test")
+
+```
+
+## Using random forests to further improve prediction
+
+```{r}
+library(randomForest)
+set.seed(123)
+
+# Specify that each node of a tree must have a minimum of 7 elements, to be compatible with the default minimum node size that rpart() uses on this training set
+fit.rf <- randomForest(x=train[,preds],
+y=as.factor(train$spam),
+ntree=B,
+# nodesize=7,
+importance=T)
+
+# out-of-bag estimate of error
+plot(fit.rf)
+# variable importance plot
+varImpPlot(fit.rf)
+
+score(predict(fit.rf,
+newdata=train[,preds],type='prob')[,'TRUE'],
+train$spam==T, name="random forest, train")
+
+score(predict(fit.rf,
+newdata=test[,preds],type='prob')[,'TRUE'],
+test$spam==T, name="random forest, test")
+```
+

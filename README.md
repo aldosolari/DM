@@ -47,7 +47,10 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 *3rd week*
 
-7. 9/10 12:30-15:30 Lab906
+7. 9/10 12:30-15:30 Lab906 : **Ensemble learning**
+    + *Slides:*  [Bagging](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [Random forests](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
+    + *Labs:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam.Rmd)
+
 
 8. 10/10 12:30-15:30 Lab906
 
