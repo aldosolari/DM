@@ -44,6 +44,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Slides:*  [Feature engineering](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Classification trees](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
     + *Exercize* : [Yesterday250](https://github.com/aldosolari/DM/blob/master/1_biasvar/poly_caret.Rmd)
+    + Reading: tbd
 
 *3rd week*
 
