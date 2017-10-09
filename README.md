@@ -74,7 +74,13 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 *6th week*
 
-16. 30/10 12:30-14:30 Lab906 or 8/11 tbd
+16. 8/11 tbd
+
+### Competitions
+
+  + [wine](https://github.com/aldosolari/DM/blob/master/Competitions/competitions.pdf)
+  + [ames](https://github.com/aldosolari/DM/blob/master/Competitions/competitions.pdf)
+  + [orange](https://github.com/aldosolari/DM/blob/master/Competitions/competitions.pdf)
 
 ### References
 
