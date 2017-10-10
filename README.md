@@ -43,23 +43,26 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 6. 6/10 14:30-16:30 Lab906 : **Basic Modeling**
     + *Slides:*  [Feature engineering](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Classification trees](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
-    + *Exercize* : [Yesterday250](https://github.com/aldosolari/DM/blob/master/1_biasvar/poly_caret.Rmd)
+    + *caret* : [Yesterday](https://github.com/aldosolari/DM/blob/master/1_biasvar/poly_caret.Rmd)
     + Reading: tbd
 
 *3rd week*
 
 7. 9/10 12:30-15:30 Lab906 : **Ensemble learning**
     + *Slides:*  [Bagging](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [Random forests](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
-    + *Labs:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam.Rmd) • [Spam with caret](https://github.com/aldosolari/DM/blob/master/3_ensemble/caret_spam.Rmd)
+    + *Labs:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam.Rmd) 
+    + *caret:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam_caret.Rmd)
     + Reading: tbd 
 
 
 8. 10/10 12:30-15:30 Lab906 : **Boosting algorithms**
   + *Slides:*  [L2-Boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [AdaBoost](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
-    + *Labs:* [Boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/boosting.Rmd) • [Boston with caret](https://github.com/aldosolari/DM/blob/master/3_ensemble/boston_caret.Rmd)
+    + *Labs:* [L2-boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/L2boost.Rmd)
+    + *caret:* [Boston](https://github.com/aldosolari/DM/blob/master/3_ensemble/boston_caret.Rmd)
     + Reading: tbd
 
-9. 13/10 14:30-16:30 Lab906
+9. 13/10 14:30-16:30 Lab906 : **Stacking**
+    + *Slides:* [Stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf)
 
 *4th week*
 
