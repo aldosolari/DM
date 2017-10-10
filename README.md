@@ -50,11 +50,14 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 7. 9/10 12:30-15:30 Lab906 : **Ensemble learning**
     + *Slides:*  [Bagging](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [Random forests](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
-    + *Labs:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam.Rmd)
+    + *Labs:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam.Rmd) • [Spam with caret](https://github.com/aldosolari/DM/blob/master/3_ensemble/caret_spam.Rmd)
+    + Reading: tbd 
+
+
+8. 10/10 12:30-15:30 Lab906 **Ensemble learning**
+  + *Slides:*  [L2-Boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [AdaBoost](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
+    + *Labs:* [Boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/boosting.Rmd) • [Booston with caret](https://github.com/aldosolari/DM/blob/master/3_ensemble/boston_caret.Rmd)
     + Reading: tbd
-
-
-8. 10/10 12:30-15:30 Lab906
 
 9. 13/10 14:30-16:30 Lab906
 

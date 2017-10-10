@@ -1,0 +1,89 @@
+---
+title: "Bagging and Random Forests: spam data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/aldosolari/Desktop/DM_off/3_ensemble/code")
+```
+
+
+## Import data
+
+```{r}
+#Load the data and split into training and test sets.
+rm(list=ls())
+spam <- read.csv("SPAM.csv",header=T)
+spam$spam = as.factor(ifelse(spam$spam==T,"spam","email"))
+train = spam[!spam$testid, -2]
+test.y = spam[spam$testid,1]
+test = spam[spam$testid, -c(1,2)]
+n = nrow(train)
+m = nrow(test)
+```
+
+
+
+## caret: cross-validation settings
+
+```{r, message=FALSE, warning=FALSE}
+library("caret")
+
+cv <- trainControl(
+  method = "cv",
+  number = 10,
+  allowParallel = TRUE
+)
+```
+
+## Models
+
+```{r, message=FALSE, warning=FALSE}
+tree <- train(
+  spam ~ ., train,
+  method = "rpart2",
+  tuneLength = 9,
+  trControl=cv)
+plot(tree)
+
+rf <- train(
+  spam~., train,
+  ntree = 50,
+  method = "rf",
+  trControl=cv)
+rf
+plot(rf)
+plot(varImp(rf))
+```
+
+## Cross-validation Accuracy
+
+```{r, message=FALSE, warning=FALSE}
+models = list(
+    tree=tree,
+    rf=rf
+  )
+
+resamps = resamples(models)
+bwplot(resamps, metric = "Accuracy")
+```
+
+## Test Accuracy
+
+```{r, message=FALSE, warning=FALSE}
+yhat.tree = predict(tree, newdata=test)
+confusionMatrix(yhat.tree, test.y)
+
+yhat.rf = predict(rf, newdata=test)
+confusionMatrix(yhat.rf, test.y)
+
+models = list(
+  tree = tree,
+  rf = rf)
+
+phats.all <- extractProb(models, testX = test, testY = test.y)
+phats <- subset(phats.all, dataType == "Test")
+
+plotClassProbs(phats)
+```

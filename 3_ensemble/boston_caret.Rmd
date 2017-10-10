@@ -1,0 +1,93 @@
+---
+title: "Boosting with caret: Boston dataset"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Load libraries**
+
+```{r, message=FALSE, warning=FALSE}
+rm(list=ls())
+library(MASS)
+library(caret)
+```
+
+**Create data partition**
+
+```{r, message=FALSE, warning=FALSE}
+set.seed(123)
+split <- createDataPartition(y=Boston$medv, p = 0.7, list=FALSE)
+
+train <- Boston[split,]
+nrow(train)
+
+test = Boston[-split,-14]
+test.y = Boston[-split,14]
+nrow(test)
+```
+
+**Cross-validation settings**
+
+```{r, message=FALSE, warning=FALSE}
+cv <- trainControl(
+  method = "repeatedcv",
+  number = 5,
+  repeats = 2,
+  verboseIter = FALSE,
+  allowParallel = TRUE
+)
+```
+
+**Models**
+
+```{r, message=FALSE, warning=FALSE}
+rf <- train(
+  medv~., train,
+  method = "rf",
+  trControl=cv)
+
+grid <- expand.grid(
+  n.trees = c(500, 1000, 1500),
+  shrinkage = c(0.01, 0.05),
+  interaction.depth = c(2,4,5,6), 
+  n.minobsinnode = c(5,10)
+)
+boost <- train(
+  medv~., train,
+  method = "gbm",
+  tuneGrid = grid,
+  verbose = FALSE,
+  trControl=cv)
+
+plot(boost)
+boost$bestTune
+```
+
+**Cross-validation RMSE**
+
+```{r, message=FALSE, warning=FALSE}
+models = list(
+    rf=rf,
+    boost=boost
+  )
+
+resamps = resamples(models)
+bwplot(resamps, metric = "RMSE")
+```
+
+**Test RMSE**
+
+```{r, message=FALSE, warning=FALSE}
+yhats = predict(models, newdata=test)
+lapply(yhats, function(yhat) sqrt( mean( (yhat - test.y)^2) ) )
+
+predVals <- extractPrediction(models, 
+                              testX = test, 
+                              testY = test.y)
+
+plotObsVsPred(predVals)
+```
+
