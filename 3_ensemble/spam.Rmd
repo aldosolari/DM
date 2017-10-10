@@ -8,14 +8,14 @@ knitr::opts_chunk$set(echo = TRUE)
 setwd("/Users/aldosolari/Desktop/DM_off/3_ensemble/code")
 ```
 
-From ZM 9.1
 
 ## Import data
 
 ```{r}
 #Load the data and split into training and test sets.
 rm(list=ls())
-spam <- read.csv('SPAM.csv',header=T)
+spam <- read.csv("SPAM.csv",header=T)
+spam$spam = as.factor(ifelse(spam$spam==T,"spam","email"))
 train = spam[!spam$testid, -2]
 test = spam[spam$testid, -2]
 n = nrow(train)
@@ -26,8 +26,8 @@ m = nrow(test)
 
 ```{r}
 # Use all the predictors 
-preds <- setdiff(colnames(train),list('spam'))
-fml <- as.formula(paste('spam==T',
+preds <- setdiff(colnames(train),"spam")
+fml <- as.formula(paste("spam",
                   paste(preds,collapse=' + '),sep=' ~ '))
 fml
 ```
@@ -35,15 +35,13 @@ fml
 ## Accuracy measures
 
 ```{r}
-# A function to calculate and return various measures on the model: prediction accuracy, and f1, which is the product of precision and recall
+# A function to calculate and return various measures on the model: prediction accuracy and Negative Predictive Value
 score <- function(pred, truth, name="model") {
   ctable <- table(truth=truth,
                   pred=(pred>0.5))
   accuracy <- sum(diag(ctable))/sum(ctable)
-  precision <- ctable[2,2]/sum(ctable[,2])
-  recall <- ctable[2,2]/sum(ctable[2,])
-  f1 <- precision*recall
-  data.frame(model=name, accuracy=accuracy, f1=f1)
+  npv <- ctable[2,1]/sum(ctable[1,])
+  data.frame(model=name, accuracy=accuracy, npv=npv)
 }
 ```
 
@@ -53,10 +51,12 @@ score <- function(pred, truth, name="model") {
 # Load the rpart library and fit a classification tree model
 library(rpart)
 fit.tree <- rpart(fml, train)
-plot(fit.tree)
+library(rpart.plot)
+rpart.plot(fit.tree)
 
-score(predict(fit.tree, newdata=train), train$spam==T, name="tree, training")
-score(predict(fit.tree, newdata=test), test$spam==T, name="tree, test")
+#Evaluate the bagged classification trees in the training and test sets
+score(predict(fit.tree, newdata=train)[,"spam"], train$spam, name="tree, training")
+score(predict(fit.tree, newdata=test)[,"spam"], test$spam, name="tree, test")
 ```
 
 ## Bagging classification trees
@@ -64,7 +64,7 @@ score(predict(fit.tree, newdata=test), test$spam==T, name="tree, test")
 ```{r}
 # Use B bootstrap samples of the training set
 set.seed(123)
-B <- 10
+B <- 50
 
 samples <- sapply(1:B,
                   FUN = function(iter)
@@ -81,45 +81,40 @@ treelist <-lapply(1:B,
 predict.bag <- function(treelist, newdata) {
   preds <- sapply(1:length(treelist),
                   FUN=function(iter) {
-                    predict(treelist[[iter]], newdata=newdata)})
+                  predict(treelist[[iter]], newdata=newdata)[,"spam"]})
   predsums <- rowSums(preds)
   predsums/length(treelist)
 }
 
-#Evaluate the bagged classification trees in the training and test sets
-score(predict.bag(treelist, newdata=train),
-                 train$spam==T,
-                 name="bagging, training")
+#Evaluate the bagged classification trees in the test set
 score(predict.bag(treelist, newdata=test),
-                 test$spam==T,
+                 test$spam,
                  name="bagging, test")
 
 ```
 
-## Using random forests to further improve prediction
+## Random forests
 
 ```{r}
 library(randomForest)
 set.seed(123)
 
-# Specify that each node of a tree must have a minimum of 7 elements, to be compatible with the default minimum node size that rpart() uses on this training set
-fit.rf <- randomForest(x=train[,preds],
-y=as.factor(train$spam),
-ntree=B,
-# nodesize=7,
-importance=T)
+p = ncol(test)
+fit.rf <- randomForest(fml,
+          data = train,
+          ntree=B,
+          mtry = sqrt(p),
+          importance=T)
 
 # out-of-bag estimate of error
 plot(fit.rf)
+# variable importance 
+importance(fit.rf)[1:5,]
 # variable importance plot
-varImpPlot(fit.rf)
+varImpPlot(fit.rf, type=1)
 
 score(predict(fit.rf,
-newdata=train[,preds],type='prob')[,'TRUE'],
-train$spam==T, name="random forest, train")
-
-score(predict(fit.rf,
-newdata=test[,preds],type='prob')[,'TRUE'],
-test$spam==T, name="random forest, test")
+newdata=test[,preds],type='prob')[,"spam"],
+test$spam, name="random forest, test")
 ```
 
