@@ -1,5 +1,5 @@
 ---
-title: "Bagging and Random Forests: spam data"
+title: "Random Forests with caret: spam data"
 output: html_document
 ---
 
@@ -32,8 +32,7 @@ library("caret")
 
 cv <- trainControl(
   method = "cv",
-  number = 10,
-  allowParallel = TRUE
+  number = 10
 )
 ```
 

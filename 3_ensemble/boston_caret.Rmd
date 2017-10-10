@@ -1,5 +1,5 @@
 ---
-title: "Boosting with caret: Boston dataset"
+title: "L2-boosting with caret: Boston dataset"
 output: html_document
 ---
 
@@ -35,9 +35,7 @@ nrow(test)
 cv <- trainControl(
   method = "repeatedcv",
   number = 5,
-  repeats = 2,
-  verboseIter = FALSE,
-  allowParallel = TRUE
+  repeats = 2
 )
 ```
 

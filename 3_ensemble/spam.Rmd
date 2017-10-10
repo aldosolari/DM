@@ -35,13 +35,13 @@ fml
 ## Accuracy measures
 
 ```{r}
-# A function to calculate and return various measures on the model: prediction accuracy and Negative Predictive Value
+# A function to calculate and return various measures on the model: prediction accuracy and specificity (the proportion of correctly predicted emails to all true emails)
 score <- function(pred, truth, name="model") {
   ctable <- table(truth=truth,
                   pred=(pred>0.5))
   accuracy <- sum(diag(ctable))/sum(ctable)
-  npv <- ctable[2,1]/sum(ctable[1,])
-  data.frame(model=name, accuracy=accuracy, npv=npv)
+  specificity <- ctable[1,1]/sum(ctable[1,])
+  data.frame(model=name, accuracy=accuracy, specificity=specificity)
 }
 ```
 
@@ -54,8 +54,12 @@ fit.tree <- rpart(fml, train)
 library(rpart.plot)
 rpart.plot(fit.tree)
 
-#Evaluate the bagged classification trees in the training and test sets
-score(predict(fit.tree, newdata=train)[,"spam"], train$spam, name="tree, training")
+#Confusion matrix
+phat = predict(fit.tree, newdata=test)[,"spam"]
+yhat = ifelse(phat>.5,"spam","email")
+table(pred=yhat, truth=test$spam)
+
+#Evaluate the bagged classification trees in test set
 score(predict(fit.tree, newdata=test)[,"spam"], test$spam, name="tree, test")
 ```
 
