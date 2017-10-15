@@ -29,7 +29,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 *2nd week*
 
-4. 2/10 12:30-15:30 Lab906 : **Moving beyond linearity**
+4. 2/10 12:30-15:30 Lab906 : **Moving Beyond Linearity**
     + *Slides:*  [k-nearest-neighbour](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Local regression](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Regression splines](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) 
     + *Labs:* [Auto](https://github.com/aldosolari/DM/blob/master/2_eda/auto.Rmd)
     + *Reading:* AS: 4.1 - 4.2.4, 4.4 - 4.4.2; GW 3.1 - 3.6; ISL 7.1-7.4, 7.6, 7.8.1, 7.8.2
@@ -38,31 +38,33 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 5. 3/10 12:30-15:30 Lab906 : **Exploratory Data Analysis**
     + *Slides:*  [Classification problems](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Missing values](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Data visualization](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
-    + *Reading:* AS: 2
+    + *Reading:* AS: 5.1, 5.2;  ISL: 2.2.3, 4
 
 6. 6/10 14:30-16:30 Lab906 : **Basic Modeling**
     + *Slides:*  [Feature engineering](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Classification trees](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
     + *caret* : [Yesterday](https://github.com/aldosolari/DM/blob/master/1_biasvar/poly_caret.Rmd)
-    + *Reading*: tbd
+    + *Reading*: AS: 5.7; ISL: 8.1
 
 *3rd week*
 
-7. 9/10 12:30-15:30 Lab906 : **Ensemble learning**
+7. 9/10 12:30-15:30 Lab906 : **Ensemble Learning**
     + *Slides:*  [Bagging](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [Random forests](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
     + *Labs:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam.Rmd) 
     + *caret:* [Spam](https://github.com/aldosolari/DM/blob/master/3_ensemble/spam_caret.Rmd)
-    + *Reading*: tbd 
+    + *Reading*: AS: 5.9.1, 5.9.3; ISL: 8.2.1, 8.2.2, 8.3.1, 8.3.2, 8.3.3
 
 
-8. 10/10 12:30-15:30 Lab906 : **Boosting algorithms**
+8. 10/10 12:30-15:30 Lab906 : **Boosting Algorithms**
   + *Slides:*  [L2-Boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [AdaBoost](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) 
     + *Labs:* [L2-boosting](https://github.com/aldosolari/DM/blob/master/3_ensemble/L2boost.Rmd)
     + *caret:* [Boston](https://github.com/aldosolari/DM/blob/master/3_ensemble/boston_caret.Rmd)
-    + *Reading*: tbd
+    + *Reading*: AS: 5.9.2; ISL: 8.2.3, 8.3.4
 
-9. 13/10 14:30-16:30 Lab906 : **Stacking**
-    + *Slides:* [Stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf)
+9. 13/10 14:30-16:30 Lab906 : **Model Stacking**
+    + *Slides:* [Stacked regression](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [Model stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf)
+    + *Labs*: [Stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/stacking.Rmd)
+    + *Reading*: ESL 8.8
 
 *4th week*
 
