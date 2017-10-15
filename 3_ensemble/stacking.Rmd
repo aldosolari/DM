@@ -60,7 +60,7 @@ $$\mathrm{MSE}^{\mathrm{stack}}_{\mathrm{Tr}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i
 $$\mathrm{MSE}^l_{\mathrm{Tr}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{l}(x^*_i) )^2, \quad l=1,\ldots,L.$$
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
 # 2.
 z1 = vector()
 z2 = z1
@@ -80,7 +80,7 @@ yhat1 = predict(fit1, newdata=test)
 yhat2 = predict(fit2, newdata=test)
 yhat = weights[1]*yhat1 + weights[2]*yhat2
 # 5.
-mean( (test.y - yhat)^2 )
-mean( (test.y - yhat1)^2 )
-mean( (test.y - yhat2)^2 )
+cat("MSE stack: ", mean( (test.y - yhat)^2) ) 
+cat("MSE lm: ", mean( (test.y - yhat1)^2) ) 
+cat("MSE rpart: ", mean( (test.y - yhat2)^2) ) 
 ```
