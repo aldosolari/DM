@@ -32,13 +32,13 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 4. 2/10 12:30-15:30 Lab906 : **Moving Beyond Linearity**
     + *Slides:*  [k-nearest-neighbour](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Local regression](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) • [Regression splines](https://github.com/aldosolari/DM/blob/master/2_eda/2_mbl.pdf) 
     + *Labs:* [Auto](https://github.com/aldosolari/DM/blob/master/2_eda/auto.Rmd)
-    + *Reading:* AS: 4.1 - 4.2.4, 4.4 - 4.4.2; GW 3.1 - 3.6; ISL 7.1-7.4, 7.6, 7.8.1, 7.8.2
+    + *Reading:* AS: 4.1 - 4.2.4, 4.4 - 4.4.2; ISL 7.1-7.4, 7.6, 7.8.1, 7.8.2; GW 3.1 - 3.6
 
 
 5. 3/10 12:30-15:30 Lab906 : **Exploratory Data Analysis**
     + *Slides:*  [Classification problems](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Missing values](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Data visualization](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
     + *Labs:* [Titanic](https://github.com/aldosolari/DM/blob/master/2_eda/titanic.Rmd)
-    + *Reading:* AS: 5.1, 5.2;  ISL: 2.2.3, 4
+    + *Reading:* AS: 5.1, 5.2;  ISL: 2.2.3, 4; GW 7
 
 6. 6/10 14:30-16:30 Lab906 : **Basic Modeling**
     + *Slides:*  [Feature engineering](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf) • [Classification trees](https://github.com/aldosolari/DM/blob/master/2_eda/2_eda.pdf)
@@ -68,9 +68,12 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 *4th week*
 
-10. 16/10 12:30-15:30 Lab906
+10. 16/10 12:30-15:30 Lab906 : **Ridge Regression**
+    + *Slides:* [Ridge regression](https://github.com/aldosolari/DM/blob/master/4_highdim/4_highdim.pdf) •
+      + *Labs*: 
+      + *Reading*: 
 
-11. 17/10 12:30-15:30 Lab906
+11. 17/10 12:30-15:30 Lab906 : **LASSO and Best Subsets**
 
 12. 20/10 14:30-16:30 Lab906
 
