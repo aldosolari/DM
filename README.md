@@ -63,7 +63,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 9. 13/10 14:30-16:30 Lab906 : **Model Stacking**
     + *Slides:* [Stacked regression](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf) • [Model stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/3_ensemble.pdf)
-    + *Labs*: [Stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/stacking.Rmd)
+    + *Exercize*: [Stacking](https://github.com/aldosolari/DM/blob/master/3_ensemble/stacking.pdf)
     + *Reading*: ESL 8.8
 
 *4th week*

@@ -1,0 +1,86 @@
+---
+title: 'Stacked Regression: Boston dataset'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data
+
+```{r, message=FALSE, warning=FALSE}
+rm(list=ls())
+library(MASS)
+
+set.seed(123)
+istrain = rbinom(n=nrow(Boston),size=1,prob=0.5)>0
+train <- Boston[istrain,]
+( n=nrow(train) )
+
+test = Boston[!istrain,-14]
+test.y = Boston[!istrain,14]
+( m=nrow(test) )
+```
+
+## Program the following algorithm:
+
+The training and test data are 
+$$(x_1,y_1),\ldots,(x_n,y_n),\quad (x^*_1,y^*_1),\ldots,(x^*_m,y^*_m)$$
+with $n=235$ and $m=271$ for the Boston data set. 
+
+The response variable is \texttt{medv}, and the
+predictor variables are \texttt{crim, zn, indus, chas, nox, rm, age, dis, rad, tax, ptratio, black, lstat}. 
+
+1. Fit a library of $L$ models $\hat{f}_1,\ldots,\hat{f}_L$ to the training set, with $L=2$ and $\hat{f}_1$ a linear model with all predictors
+```{r}
+fit1 = lm(medv ~ ., train)
+# to see the names of the predictors, 
+attr(summary(fit1)$term,"term.labels") 
+```
+and $\hat{f}_2$ a classification tree with all predictors and default settings
+```{r}
+library(rpart)
+fit2 = rpart(medv ~ ., train)
+```
+
+2. Let $\hat{f}^{-i}_l(x_i)$ be the prediction at $x_i$ using model $l$ fitted to the training data with the
+$i$th training observation $(x_i,y_i)$ removed
+
+3. Obtain the weights by least squares
+$$\hat{w}_1,\ldots,\hat{w}_L = \underset{w_1,\ldots,w_L}{\arg \min} \sum_{i=1}^{n} \left[ y_i - \sum_{l=1}^{L} w_l \hat{f}^{-i}_l(x_i) \right]^2$$
+
+4. Compute the predictions for the test set as
+$$\hat{f}_{\mathrm{stack}}(x^*_i) = \sum_{l=1}^{L} \hat{w}_l  \hat{f}_l(x^*_i), \quad i=1,\ldots,m$$
+5. Compute the mean squared error for the test set
+$$\mathrm{MSE}^{\mathrm{stack}}_{\mathrm{Tr}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{\mathrm{stack}}(x^*_i) )^2$$ and compare with
+$$\mathrm{MSE}^l_{\mathrm{Tr}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{l}(x^*_i) )^2, \quad l=1,\ldots,L.$$
+
+
+```{r, message=FALSE, warning=FALSE}
+# 2.
+z1 = vector()
+z2 = z1
+for (i in 1:n){
+z1[i] = predict( lm(medv ~ (.), train[-i, ]), 
+                 newdata = train[i,]
+                 )
+z2[i] = predict(rpart(medv ~ ., train[-i,]), 
+                newdata = train[i,]
+                ) 
+}
+# 3. 
+fit = lm(medv ~ 0 + z1 + z2, train)
+weights = coef(fit)
+# 4. 
+yhat1 = predict(fit1, newdata=test)
+yhat2 = predict(fit2, newdata=test)
+yhat = weights[1]*yhat1 + weights[2]*yhat2
+# 5.
+mean( (test.y - yhat)^2 )
+mean( (test.y - yhat1)^2 )
+mean( (test.y - yhat2)^2 )
+```
