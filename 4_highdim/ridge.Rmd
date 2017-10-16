@@ -1,0 +1,84 @@
+---
+title: "Ridge Regression: Prostate Cancer Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import data
+
+```{r}
+rm(list=ls())
+
+# load data and divide in train/test
+require(ElemStatLearn)
+train <- prostate[prostate$train,-10]
+test <- prostate[!prostate$train,-10]
+
+# design matrix (without the intercept)
+X<-as.matrix( train[,-which(names(train)=="lpsa")] )
+
+# response
+y = train$lpsa
+
+# n.ro observations
+n<-nrow(X)
+
+```
+
+## Ridge regression
+
+```{r}
+# Standardize the variables (ridge regression is not invariant to scaling)
+ys <- scale(y)
+Xs <- scale(X)
+
+# Ridge estimates for lambda = 10
+lambda <- 10
+( hatbeta.hand = solve(t(Xs)%*%Xs + lambda*diag(ncol(Xs)))%*%t(Xs)%*%ys )
+```
+
+## glmnet
+
+```{r}
+require(glmnet)
+
+# default settings
+fit = glmnet(X,y, alpha=0)
+
+plot(fit, xvar="lambda")
+
+```
+
+
+## Choosing $\lambda$ by cross-validation
+
+```{r}
+# grid of lambdas
+lambdas = exp(seq(-3,7,length=100))
+
+K = 10
+fit.cv <-cv.glmnet(X,y, alpha=0, nfolds = K)
+plot(fit.cv)
+
+
+# lambda selected by K-fold cross validation
+lambda.cv<-fit.cv$lambda.min
+
+# Estimates
+predict(fit ,s=lambda.cv, type ="coefficients")
+
+
+# design matrix of the test set 
+Xtest <- as.matrix( test[,-which(names(train)=="lpsa")] )
+
+# predicted values
+yhat = predict(fit, s=lambda.cv, newx=Xtest, exact=T)
+
+# MSE test
+mean( (yhat - test$lpsa)^2 )
+
+mean( (predict(lm(lpsa ~ ., train), newdata= test) -  test$lpsa)^2  )
+```
