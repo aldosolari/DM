@@ -56,8 +56,8 @@ $$\hat{w}_1,\ldots,\hat{w}_L = \underset{w_1,\ldots,w_L}{\arg \min} \sum_{i=1}^{
 4. Compute the predictions for the test set as
 $$\hat{f}_{\mathrm{stack}}(x^*_i) = \sum_{l=1}^{L} \hat{w}_l  \hat{f}_l(x^*_i), \quad i=1,\ldots,m$$
 5. Compute the mean squared error for the test set
-$$\mathrm{MSE}^{\mathrm{stack}}_{\mathrm{Tr}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{\mathrm{stack}}(x^*_i) )^2$$ and compare with
-$$\mathrm{MSE}^l_{\mathrm{Tr}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{l}(x^*_i) )^2, \quad l=1,\ldots,L.$$
+$$\mathrm{MSE}^{\mathrm{stack}}_{\mathrm{Te}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{\mathrm{stack}}(x^*_i) )^2$$ and compare with
+$$\mathrm{MSE}^l_{\mathrm{Te}} = \frac{1}{m}\sum_{i=1}^{m} (y^*_i - \hat{f}_{l}(x^*_i) )^2, \quad l=1,\ldots,L.$$
 
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
