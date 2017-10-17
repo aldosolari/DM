@@ -71,12 +71,12 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 10. 16/10 12:30-15:30 Lab906 : **Ridge Regression**
     + *Slides:* [High-dimensional data](https://github.com/aldosolari/DM/blob/master/4_highdim/4_highdim.pdf) • [Ridge regression](https://github.com/aldosolari/DM/blob/master/4_highdim/4_highdim.pdf)
     + *Exercize*: [Ridge](https://github.com/aldosolari/DM/blob/master/4_highdim/ridge.pdf) 
-      + *Reading*: [Lecture notes](https://arxiv.org/pdf/1509.09169.pdf); ISL 6.2.1, 6.4; 6.6.1
+    + *Reading*: [Lecture notes](https://arxiv.org/pdf/1509.09169.pdf); ISL 6.2.1, 6.4; 6.6.1
 
 11. 17/10 12:30-15:30 Lab906 : **Best Subsets Selection and LASSO**
     + *Slides:* [Best subsets selection](https://github.com/aldosolari/DM/blob/master/4_highdim/4_highdim.pdf) • [Lasso](https://github.com/aldosolari/DM/blob/master/4_highdim/4_highdim.pdf)
-      + *Labs*: [Prostate](https://github.com/aldosolari/DM/blob/master/4_highdim/prostate.Rmd)
-      + *Reading*: ISL 6.1, 6.2, 6.4, 6.5, 6.6.2; AS 3.6.3
+    + *Labs*: [Prostate](https://github.com/aldosolari/DM/blob/master/4_highdim/prostate.Rmd)
+    + *Reading*: ISL 6.1, 6.2, 6.4, 6.5, 6.6.2; AS 3.6.3
 
 12. 20/10 14:30-16:30 Lab906 : 
 
