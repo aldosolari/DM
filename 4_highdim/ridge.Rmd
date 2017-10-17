@@ -49,7 +49,7 @@ for $\lambda=10$.
 2. For $\lambda = 0, 1, 2,\ldots ,9,10$, plot the solution path of the estimated coeffients $\hat{\beta}_1(\lambda),\ldots,\hat{\beta}_p(\lambda)$ and the corresponding variances $\mathbb{V}\mathrm{ar}(\hat{\beta}_1(\lambda)), \ldots, \mathbb{V}\mathrm{ar}(\hat{\beta}_p(\lambda))$, which are the elements in the diagonal of the variance/covariance matrix
 $$\mathbb{V}\mathrm{ar}(\hat{\mathbf{\beta}}(\lambda) ) = \sigma^2 \mathbf{W}_\lambda (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}\mathbf{W}^\mathsf{T}_\lambda$$ where $\mathbf{W}_\lambda = [\mathbf{I}_{p\times p} + \lambda(\mathbf{Z}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$ and is set to $\sigma^2=1$.
 
-3. Compare the LOOCV estimate of error for the linear model and the ridge regression model with $\lambda=5$.  
+3. Compare the LOOCV estimate and the test MSE for the linear model and the ridge regression model with $\lambda=5$. 
 
 \newpage
  
@@ -81,8 +81,15 @@ for (i in 1:n){
   hatbeta_i = solve(t(X_i) %*% X_i + lambda*diag(p)) %*% t(X_i) %*% y[-i] 
   LOOCV[i] = ( X[i,] %*% hatbeta_i - y[i])^2
 }
+cat("LOOCV ridge: ", mean(LOOCV))
+hatbeta <- solve(t(X) %*% X + lambda*diag(p)) %*% t(X) %*% y
+yhat.ridge = X.star %*% hatbeta
+cat("MSE ridge: ", mean((yhat.ridge - y.star)^2))
+
 library(boot)
 train.std = data.frame(y,X)
-cat("LOOCV lm: ", cv.glm(train.std, glm(y ~ 0 + ., train.std, family = gaussian) )$delta[1])
-cat("LOOCV ridge with lambda=10: ", mean(LOOCV))
+fit.lm = glm(y ~ 0 + ., train.std, family = gaussian) 
+cat("LOOCV lm: ", cv.glm(train.std, fit.lm)$delta[1])
+yhat.lm = predict(fit.lm, newdata=data.frame(X.star))
+cat("MSE lm: ", mean((yhat.lm - y.star)^2))
 ```
