@@ -78,8 +78,11 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Labs*: [Prostate](https://github.com/aldosolari/DM/blob/master/4_highdim/prostate.Rmd)
     + *Reading*: ISL 6.1, 6.2, 6.4, 6.5, 6.6.2; AS 3.6.3
 
-12. 20/10 14:30-16:30 Lab906 : 
-
+12. 20/10 14:30-16:30 Lab906 : **Smoothing Splines and GAMs**
+    + *Slides:* [Smoothing splines](https://github.com/aldosolari/DM/blob/master/4_highdim/4_GAM.pdf) • [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/4_GAM.pdf)
+        + *Labs*: [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/gam.Rmd)
+    
+    
 *5th week*
 
 13. 23/10 12:30-15:30 Lab906

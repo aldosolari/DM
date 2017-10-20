@@ -1,0 +1,84 @@
+---
+title: "Smoothing Splines and GAM"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Generate data
+
+```{r, message=FALSE, warning=FALSE}
+rm(list=ls())
+
+load("/Users/aldosolari/Desktop/DM_off/1_biasvar/code/poly250.Rdata")
+n = length(x)
+set.seed(123)
+sigma = 0.01
+y = f + rnorm(n, 0, sigma)
+train = data.frame(x=x,y=y)
+plot(y~x, train)
+lines(f ~ x, col=3)
+```
+
+## Smoothing splines
+
+```{r, message=FALSE, warning=FALSE}
+require(splines)
+knots = unique(train$x)
+
+# overfitting (lambda = 0)
+fit.o = smooth.spline(train$x, train$y, lambda = 1e-20, all.knots=T)
+fit.o$lambda
+fit.o$df
+plot(y~x, train)
+lines(f ~ x, col=3)
+lines(train$x, predict(fit.o, x=train$x)$y, col=4)
+
+# underfitting (lambda = inf)
+fit.u = smooth.spline(train$x, train$y, lambda = 50, all.knots=T)
+fit.u$lambda
+fit.u$df
+plot(y~x, train)
+lines(f ~ x, col=3)
+lines(train$x, predict(fit.u, x=train$x)$y, col=4)
+
+# cross-validated lambda 
+fit = smooth.spline(train$x, train$y, cv=TRUE, all.knots=T)
+fit$lambda
+fit$df
+plot(y~x, train)
+lines(f ~ x, col=3)
+lines(train$x, predict(fit, x=train$x)$y, col=4)
+```
+
+## mgcv
+
+```{r, message=F, warning=F}
+library(mgcv)
+
+fit = gam(y ~ s(x), data=train)
+summary(fit)
+plot(fit, shade=TRUE)
+```
+
+
+## Wage data
+
+```{r, message=F, warning=F}
+library(ISLR)
+# ?Wage
+
+fit = gam(wage ~ s(year, k=4) + s(age) + education, data=Wage)
+summary(fit)
+
+par(mfrow =c(1,3))
+plot(fit, shade=TRUE, all.terms = TRUE)
+
+
+fit = gam(wage ~ s(year, age) + education, data=Wage)
+vis.gam(fit, view = c("year","age"),theta= -135)
+
+
+```
