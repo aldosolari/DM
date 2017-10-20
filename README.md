@@ -80,7 +80,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 12. 20/10 14:30-16:30 Lab906 : **Smoothing Splines and GAMs**
     + *Slides:* [Smoothing splines](https://github.com/aldosolari/DM/blob/master/4_highdim/4_GAM.pdf) • [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/4_GAM.pdf)
-        + *Labs*: [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/gam.Rmd)
+    + *Labs*: [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/gam.Rmd)
     
     
 *5th week*
