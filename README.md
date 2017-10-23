@@ -83,9 +83,10 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Labs*: [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/gam.Rmd)
     + *Reading*: ISL 7.5, 7.7, 7.8.2, 7.8.3; AS 4.4.3, 4.5   
     
-*5th week*
+*5th week* 
 
-13. 23/10 12:30-15:30 Lab906
+13. 23/10 12:30-15:30 Lab906 : **The Wrong and Right Way to Do Cross-validation**
+    + *Labs*: [ESL 7.10.2](https://github.com/aldosolari/DM/blob/master/5_otop/cvwrong.pdf) • [Orange benchmark](https://github.com/aldosolari/DM/blob/master/5_otop/orange_bm.pdf)
 
 14. 24/10 12:30-15:30 Lab906
 
