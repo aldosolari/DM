@@ -1,0 +1,91 @@
+---
+title: Exercize 10 Section 6.8 ISL
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We have seen that as the number of predictors used in a model increases, the training error will necessarily decrease, but the test error may not. We will now explore this in a simulated data set.
+
+
+(a) Generate a simulated data set as follows:
+
+```{r}
+set.seed(123)
+p = 20
+n = 1000
+X = matrix(rnorm(p*n), ncol=p)
+beta = c(rep(1,p/4),rep(0,3*p/4))
+y = X%*%beta + rnorm(n)
+```
+
+(b) Split your data set into a training set containing the first 100 observations and a test set containing the last 900 observations.
+
+```{r, echo=FALSE}
+combi = data.frame(y=y, X=X)
+train = combi[1:100,]
+test = combi[101:1000,]
+```
+
+(c) Perform best subset selection on the training set, and plot the training set MSE associated with the best model of each size.
+
+```{r, echo=FALSE}
+library(leaps)
+fit <- regsubsets(y ~ .,train, nvmax=p)
+plot(1:p, summary(fit)$rss/n, log="y")
+```
+
+
+(d) Plot the test set MSE associated with the best model of each size.
+
+```{r, echo=FALSE}
+predict.regsubsets =function(object ,newdata ,id ,...){
+form=as.formula(object$call[[2]])
+mat=model.matrix(form, newdata)
+coefi =coef(object, id=id)
+xvars =names(coefi)
+mat[,xvars]%*%coefi
+}
+
+MSE.te = vector()
+for (k in 1:p){
+yhat = predict.regsubsets(fit, newdata=test, id=k)
+MSE.te[k] = mean( (yhat - test$y)^2 )
+}
+plot(1:p,MSE.te, log="y")
+```
+
+(e) For which model size does the test set MSE take on its minimum value? Comment on your results.
+
+```{r, echo=FALSE}
+k = which.min(MSE.te)
+k
+```
+
+
+(f) Create a plot displaying
+$\sqrt{ \sum_{j=0}^{p} (\beta_j - \hat{\beta}_j^k)^2 }$ for a range of values
+of $k$ from 1 to 20, where $\hat{\beta}_j^k$
+is the $j$th coefficient estimate for the best model
+containing $k$ coefficients. Comment on what you observe. How
+does this compare to the test MSE plot from (d)?
+
+```{r, echo=FALSE}
+hatbetas = matrix(0,ncol=21,nrow=20)
+ where = summary(fit)$which
+ beta1 = c(0,beta)
+ diff = vector()
+ for (k in 1:20){
+ hatbetas[k,where[k,]] <- coef(fit,k)
+ diff[k] <- sqrt( sum( (hatbetas[k,] - beta1)^2 )  )
+ }
+plot(1:p,diff)
+```
+
+
+
+

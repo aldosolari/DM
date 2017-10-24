@@ -1,0 +1,59 @@
+---
+title: Exercize 8 Section 5.4 ISL
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We will now perform cross-validation on a simulated data set.
+
+(a) Generate a simulated data set as follows:
+  
+```{r}
+set.seed(1)
+y=rnorm(100)
+x=rnorm(100)
+y=x-2* x^2+ rnorm(100)
+```
+
+In this data set, what is $n$ and what is $p$? Write out the model
+used to generate the data in equation form.
+
+(b) Create a scatterplot of $X$ against $Y$. Comment on what you find.
+
+
+(c) Set a random seed, and then compute the LOOCV errors that
+result from fitting the following four models using least squares:
+
+i. $Y = \beta_0 + \beta_1 X + \epsilon$
+
+ii. $Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \epsilon$
+
+iii. $Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \epsilon$
+
+iv. $Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 + \beta_4 X^4 + \epsilon$
+
+Note you may find it helpful to use the \texttt{data.frame()} function
+to create a single data set containing both $X$ and $Y$.
+
+```{r, echo=FALSE, message=FALSE}
+train = data.frame(y,x)
+library(boot)
+LOOCV <- vector()
+for (d in 1:4){
+LOOCV[d] = cv.glm(train, glm(y ~ poly(x,d))  )$delta[1]
+}
+names(LOOCV) <- c("i","ii","iii","iv")
+LOOCV
+```
+
+(d) Repeat (c) using another random seed, and report your results.
+Are your results the same as what you got in (c)? Why?
+
+(e) Which of the models in (c) had the smallest LOOCV error? Is
+this what you expected? Explain your answer.
+

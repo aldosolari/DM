@@ -87,14 +87,16 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 13. 23/10 12:30-15:30 Lab906 : **The Wrong and Right Way to Do Cross-validation**
     + *Labs*: [ESL 7.10.2](https://github.com/aldosolari/DM/blob/master/5_otop/cvwrong.pdf) • [Orange benchmark](https://github.com/aldosolari/DM/blob/master/5_otop/orange_bm.pdf)
+    + *Reading* ESL 7.10.2
 
-14. 24/10 12:30-15:30 Lab906
+14. 24/10 12:30-15:30 Lab906 : **Exercizes**
+    + [ISL 5.8](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_5_8.pdf) • [ISL 6.10](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_6_10.pdf) • [ISL 7.11](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_7_11.pdf) • [LN 1.6](https://github.com/aldosolari/DM/blob/master/5_otop/LN_1_6.pdf)
 
 15. 27/10 14:30-16:30 Lab906
 
 *6th week*
 
-16. 8/11 tbd
+16. 8/11 8:30-10:30 Lab906 (to be confirmed)
 
 ### Competitions
 
