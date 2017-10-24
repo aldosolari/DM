@@ -90,7 +90,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Reading* ESL 7.10.2
 
 14. 24/10 12:30-15:30 Lab906 : **Exercizes**
-    + [ISL 5.8](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_5_8.pdf) • [ISL 6.10](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_6_10.pdf) • [ISL 7.11](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_7_11.pdf) • [LN 1.6](https://github.com/aldosolari/DM/blob/master/5_otop/LN_1_6.pdf)
+    + [ISL 5.8](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_5_8.pdf) • [ISL 6.10](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_6_10.pdf) • [ISL 7.11](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_7_11.pdf) • [ISL 8.7](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_8_7.pdf) • [LN 1.6](https://github.com/aldosolari/DM/blob/master/5_otop/LN_1_6.pdf)
 
 15. 27/10 14:30-16:30 Lab906
 
