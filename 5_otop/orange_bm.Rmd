@@ -7,14 +7,13 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-setwd("/Users/aldosolari/Desktop/DM_off/5_otop/code")
 ```
 
 ## Import data
 
 ```{r}
-train <- read.csv("train.csv")
-test <- read.csv("test.csv")
+train <- read.csv("/Users/aldosolari/Desktop/DM_off/5_otop/code/train.csv")
+test <- read.csv("/Users/aldosolari/Desktop/DM_off/5_otop/code/test.csv")
 n = nrow(train)
 m = nrow(test)
 test$churn=NA
