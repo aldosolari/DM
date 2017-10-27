@@ -78,10 +78,10 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Labs*: [Prostate](https://github.com/aldosolari/DM/blob/master/4_highdim/prostate.Rmd)
     + *Reading*: ISL 6.1, 6.2, 6.4, 6.5, 6.6.2; AS 3.6.3
 
-12. 20/10 14:30-16:30 Lab906 : **Smoothing Splines and GAMs**
+12. 20/10 14:30-16:30 Lab906 : **Smoothing Splines and Generalized Additive Models**
     + *Slides:* [Smoothing splines](https://github.com/aldosolari/DM/blob/master/4_highdim/4_GAM.pdf) • [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/4_GAM.pdf)
     + *Labs*: [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/gam.Rmd)
-    + *Reading*: ISL 7.5, 7.7, 7.8.2, 7.8.3; AS 4.4.3, 4.5   
+    + *Reading*: ISL 7.5, 7.7, 7.8.2, 7.8.3; AS 4.4.3, 4.5; [GAMs](https://github.com/aldosolari/DM/blob/master/4_highdim/GAMS.pdf)
     
 *5th week* 
 
@@ -89,20 +89,36 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
     + *Labs*: [ESL 7.10.2](https://github.com/aldosolari/DM/blob/master/5_otop/cvwrong.pdf) • [Orange benchmark](https://github.com/aldosolari/DM/blob/master/5_otop/orange_bm.pdf)
     + *Reading* ESL 7.10.2
 
-14. 24/10 12:30-15:30 Lab906 : **Exercizes**
+14. 24/10 12:30-15:30 Lab906 : **Exercizes: practical**
     + [ISL 5.8](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_5_8.pdf) • [ISL 6.10](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_6_10.pdf) • [ISL 7.11](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_7_11.pdf) • [ISL 8.7](https://github.com/aldosolari/DM/blob/master/5_otop/ISL_8_7.pdf) • [LN 1.6](https://github.com/aldosolari/DM/blob/master/5_otop/LN_1_6.pdf)
 
-15. 27/10 14:30-16:30 Lab906
+15. 27/10 14:30-16:30 Lab906 : **Exercizes: conceptual**
+
+    + *Reading* : [An introduction to machine learning](https://github.com/aldosolari/DM/blob/master/5_otop/ML_inR.pdf)
+    + [Quiz](https://docs.google.com/forms/d/e/1FAIpQLSdt3lUtz7RF1Yf1z-wxsqOA-9j1LvTJ4lz7mTF4iDwT4omGHw/viewform?usp=sf_link)
+
 
 *6th week*
 
-16. 8/11 8:30-10:30 Lab906 (to be confirmed)
+16. 8/11 8:30-10:30 Lab906
 
 ### Competitions
 
   + [wine](https://github.com/aldosolari/DM/blob/master/Competitions/competitions.pdf)
   + [ames](https://github.com/aldosolari/DM/blob/master/Competitions/competitions.pdf)
   + [orange](https://github.com/aldosolari/DM/blob/master/Competitions/competitions.pdf)
+
+### Videos and slides from ISL
+
+  + [video and slides]( https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/)
+
+
+### Exam
+
+  + Rules
+  + Code
+  + [ISL code](https://github.com/aldosolari/DM/blob/master/Exam/ISLcode.txt)
+
 
 ### References
 
