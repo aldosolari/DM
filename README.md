@@ -116,8 +116,9 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 ### Exam
 
   + Rules
-  + Code
+  + [Code](https://github.com/aldosolari/DM/blob/master/Exam/code.pdf)
   + [ISL code](https://github.com/aldosolari/DM/blob/master/Exam/ISLcode.txt)
+  + [13/11/17](https://github.com/aldosolari/DM/blob/master/Exam/sol_DM131117)
 
 
 ### References
