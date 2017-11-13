@@ -100,7 +100,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
 
 *6th week*
 
-16. 8/11 8:30-10:30 Lab906
+16. 8/11 8:30-10:30 Lab906 : **Wrap-up**
 
 ### Competitions
 
@@ -118,7 +118,7 @@ University of Milano-Bicocca, CLAMSES, A.A. 2017/18
   + Rules
   + [Code](https://github.com/aldosolari/DM/blob/master/Exam/code.pdf)
   + [ISL code](https://github.com/aldosolari/DM/blob/master/Exam/ISLcode.txt)
-  + [13/11/17](https://github.com/aldosolari/DM/blob/master/Exam/sol_DM131117)
+  + [Appello 13/11/17](https://github.com/aldosolari/DM/blob/master/Exam/sol_DM131117.pdf)
 
 
 ### References
