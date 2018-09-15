@@ -83,7 +83,8 @@ Readings should be complete by the following class. There are three primary refe
 
 # **Competitions**
 
-The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off)
+The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off).
+
 If you click on a specific Competition in the listing, you will go to the Competition's homepage. The following information is provided in the tabs:
 
 1. *Description* gives a description of the problem
@@ -95,15 +96,10 @@ If you click on a specific Competition in the listing, you will go to the Compet
 
 | Competition | Problem | Entry | Submission | 
 |---|---|----|----|
-| TBD | TBD | TBD | TBD  |
+| Houses prices | Regression | October 8 | TBD  |
 | TBD | TBD | TBD | TBD  |
 | TBD | TBD | TBD | TBD  |
 
-Houses sales
-OkCupid
-Human activity recognition
-Bikeshare
-Movies
 
 This page was last updated on `r Sys.time()` Eastern Time.
 

@@ -9,8 +9,8 @@ output:
 
 | Insegnamento | Modulo | CFU | ID |
 |----|--------|--------|--------------|
-| DATA SCIENCE M | DATA MINING | 6 | 1819-2-F8204B018-F8204B034M |
-| DATA MINING M  | | 6 |1819-2-F8204B014 |
+| DATA SCIENCE M | [DATA MINING](https://aldosolari.github.io/DM/) | 6 | 1819-2-F8204B018-F8204B034M |
+| [DATA MINING M](https://aldosolari.github.io/DM/)  | | 6 |1819-2-F8204B014 |
 
 # **Obiettivi formativi**
 
@@ -71,6 +71,6 @@ La parte 2. si può svolgere da casa o dall'Università in una finestra temporal
 
 Primo semestre, primo ciclo.
 
-# **Teaching language**
+# **Lingua di insegnamento**
 
 Le lezioni si svolgono in italiano, tuttavia la maggior parte dei libri di testo e il materiale didattico è in lingua inglese.
