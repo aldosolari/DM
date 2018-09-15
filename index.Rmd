@@ -29,7 +29,7 @@ Most of the course material can be found in the notes linked to below. The notes
 
 | N | Date |  Lecture    | Notes | Slides|
 |--|--|--------------|--------|-------|
-| 1 | October 1 | Introduction |  | [Slides](slides/1_intro/1_intro.html) |
+| 1 | October 1 | Introduction |  | [Slides](slides/Intro/Intro.html) |
 | 2 | October 4 | The Bias-Variance Decomposition | Polynomials | Slides |
 | 3 | October 5  | Avoiding Overfitting: IC and CV | Polynomials | Slides |
 |  |  |  |  | | |
