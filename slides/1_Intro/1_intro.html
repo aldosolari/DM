@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to the course</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Aldo Solari" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Introduction to the course
+### Aldo Solari
+
+---
+
+
+
+
+# Outline
+
+* Course overview
+* The two cultures
+* Data Science
+* Your turn
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Course overview
+
+---
+
+# Teacher
+
+Aldo Solari
+
+**E-mail** aldo.solari@unimib.it
+
+**Web page** https://aldosolari.github.io/
+
+**Office hours** Wednesday, 17:00-18:00, room 2030, building U7, II floor
+
+**Course page** https://aldosolari.github.io/DM/
+
+
+| When | Where | Hours |
+|---|---|----|
+| Monday | Lab713 | 12:30-15:30 |
+| Thursday | Lab713 | 13:30-15:30|
+| Friday | Lab713 | 12:30-15:30|
+
+.center[**Time table**]
+
+---
+
+# The course
+
+
+* This course aims to provide statistical and computational tools for __data mining__ and __supervised learning__ by using the R software environment for statistical computing
+
+* In particular, you will learn how to build __predictive/machine learning models__ that generate accurate predictions for future, yet-to-be-seen data
+
+* This framework includes 
+    - data visualization
+    - exploratory data analysis
+    - feature engineering
+    - splitting the data into training and testing sets
+    - building models
+    - selecting an approach for identifying optimal tuning parameters
+    - estimating predictive performance
+
+---
+
+# Competitions
+
+* Participating in predictive modelling __competitions__ can help you gain practical experience and improve your data modelling skills in various domains such as credit, insurance, marketing, sales' forecasting etc. 
+
+* At the same time you get to do it in a competitive context against dozens of participants where each one tries to build the most predictive algorithm
+
+* Inspired by [kaggle](https://www.kaggle.com/), the world's largest community of data scientists and machine learners
+
+* Since 2015, this course utilises [BeeViva](http://www.bee-viva.com/competitions), an Italian public data platform for hosting competitions
+
+* Beeviva is also used for the event [Stats Under the Stars](http://sus.stat.unipd.it/)
+
+---
+
+# Stats Under the Stars 
+
+.pull-left[
+
+![](images/SUS.JPG)
+.center[Caffè Pedrocchi, Padua]
+
+]
+
+.pull-left[
+* [SUS](http://sus.stat.unipd.it/) Padua (8/9/15)
+* [SUS^2](http://www.labeconomia.unisa.it/sus2/) Salerno (7/6/16)
+* [SUS^3](http://local.disia.unifi.it/sus3/) Florence (27/6/17)
+* [SUS^4](https://www.unipa.it/dipartimenti/seas/sus4/) Palermo (19/6/18)
+* SUS^5 Milan ! 
+]
+
+
+---
+
+# Exam
+
+The exams consists of two parts:
+
+* Test (in lab)
+    - Multiple-choice and open questions about theory 
+    - Programming exercises (selected R scripts available)
+
+* Competitions (homework)
+    - Attending students can form a team (max. 3 persons)
+
+* The final grade is a weighted average of test (2/3) and competitions (1/3)
+
+* See the [course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html) for more information
+
+---
+
+# This year competitions
+
+1. **House prices** (40%)
+
+2. **OkCupid** (30%)
+
+3. **TBD** (30%)
+
+| Competition | Problem |  Entry | Submission | 
+|---|---|----|----|
+| House prices | Regression | October 8 | November 16  |
+| OkCupid | Classification | October 15 | November 16  |
+| TBD | TBD | October 15 | November 16  |
+
+.center[Competitions timeline]
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# The two cultures
+
+---
+
+# The two cultures
+
+Breiman (2001) distinguished between
+
+**Statistical modeling**
+* emphasis on probability models
+* the goal is explanation (by assessing the uncertainty of the
+estimates)
+
+**Machine learning**
+* emphasis on algorithms
+* the goal is prediction accuracy
+
+What is the difference today?
+
+---
+
+# Rock-Paper-Scissor algorithm
+
+![](images/rps.jpg)
+
+.center[http://www.nytimes.com/interactive/science/rock-paper-scissors.html]
+
+---
+
+# What the computer is thinking
+
+* Four last throws
+
+    - **PAPER, SCISSORS, SCISSORS, ROCK** &lt;- HUMAN 
+
+    - **SCISSORS, PAPER, PAPER, SCISSORS** &lt;- COMPUTER
+
+* COMPUTER is going to search over 200,000 rounds of Rock-Paper-Scissors data and find
+all the times that HUMAN played **P, S, S, R**  when COMPUTER played **S, P, P, S**
+
+* Of all the times HUMANS played **P, S, S, R**  when COMPUTER played **S, P, P, S**, HUMANS played **PAPER** at their next throw the most. 
+
+* COMPUTER thinks that you will do the same this time
+
+---
+
+# Is this machine learning or statistics?
+
+* **Theorem** 
+A truly random game would result in a tie
+
+* **Hypothesis** 
+A human is not truly random
+
+* **Algorithm** 
+Learn humans non-random patterns from the data
+
+* **Counter-attack?** 
+
+---
+
+# Same thing, different name?
+
+| Machine Learning       |             | Statistics | 
+|------------------------|--------------------|-------------|
+| target variable | `\(Y\)` | response variable |
+| attribute, feature | `\(X\)` | predictor, explanatory variable |
+| supervised learning | model `\(Y\)` as a function of `\(X\)` | regression |
+| hypothesis | `\(Y= f(X) + \varepsilon\)` | model, regression function |
+| instances, examples | `\((Y_1,X_1),\ldots,(Y_n,X_n)\)` | samples, observations |
+| learning | `\(\displaystyle \hat{f} = \underset{f\in \mathcal{F}}{\arg\min} \sum_{i=1}^{n} \mathrm{loss}(Y_i,f(X_i))\)` | estimation, fitting |
+| classification | `\(\hat{Y} = \hat{f}(X)\)` | prediction |
+| generalization error | `\(\mathbb{E} [\, \mathrm{loss}(Y,\hat{f}(X))\,]\)` | risk |
+
+
+
+---
+
+# So, what's the difference? 
+
+
+| Machine Learning       |             | Statistics | 
+|------------------------|--------------------|-------------|
+| | FOCUS | |
+|prediction |  |significance |
+| | CULTURE | |
+|algorithmic/optimization |  | modeling |
+| | METHODS |  |
+|decision trees |  | linear/logistic regression |
+|k-nearest-neighbors | | discriminant analysis |
+|neural networks | | mixed models |
+|support vector machines || ridge/lasso regression |
+|adaboost | | GAM |
+|random forests | | random forests |
+
+---
+
+# Working together
+
+* Leo Breiman's fundamental contributions:
+    - Bagging
+    - Random Forests
+    - Boosting
+
+* Breiman's work helped to bridge the gap between statistical
+modeling and machine learning
+
+* __Statistical Learning__ = __Statistical__ Modeling + Machine __Learning__
+
+---
+
+# Statistical Learning
+
+* __Unsupervised learning__
+    - the data consists of `\(p\)` variables `\(X_1, \ldots, X_p\)`; no variable has a special status
+    - the goal is clustering, dimensionality reduction, etc.
+
+* __Supervised learning__
+    - the data consists of both response `\(Y\)` and predictors `\(X_1, \ldots, X_p\)`
+    - the problem is called supervised learning since the response
+`supervises' the learning process
+    - the goal is (usually) prediction of the response
+    - `\(Y\)` continuous : __regression__ problem 
+    - `\(Y\)` binary/multi-class : __classification__ problem 
+
+---
+
+# Convergence
+
+__Machine learning__ constructs algorithms that can learn from data
+
+__Statistical learning__ is a brach of Statistics that was born in response to Machine
+learning, emphasizing statistical models and assessment of
+uncertainty
+
+__Data mining__ finding patterns in data
+
+__. . .__
+
+all converge into __Data Science__
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
