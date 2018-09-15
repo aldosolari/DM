@@ -15,7 +15,7 @@ The goal of *predictive modeling* is to construct models that generate accurate 
 
 Participating in predictive modelling *competitions* can help you gain practical experience and  improve your data modelling skills in various domains such as credit, insurance, marketing, sales' forecasting etc.  At the same time you get to do it in a competitive context against dozens of participants where each one tries to build the most predictive algorithm. Since 2015, this course utilises [BeeViva](http://www.bee-viva.com/competitions), one of the first Italian public data platforms for hosting [#Competitions](#competitions). 
 
-See the **[course syllabus](https://idc9.github.io/DM/syllabus/syllabus.html)** for more information. 
+See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html)** for more information. 
 
 | When | Where | Hours |
 |---|---|----|
