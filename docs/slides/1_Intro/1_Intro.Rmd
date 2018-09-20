@@ -31,7 +31,7 @@ theme_set(thm)
 
 * Course overview
 * The two cultures
-* Data Science
+* Data science
 * Your turn
 
 
@@ -120,16 +120,16 @@ Aldo Solari
 
 # Exam
 
-The exams consists of two parts:
+* The exams consists of two parts:
 
-* Test (in lab)
-    - Multiple-choice and open questions about theory 
-    - Programming exercises (selected R scripts available)
+    - Test (in lab)
+        - Programming exercises (selected R scripts available)
+        - "Few" multiple-choice/open questions about theory 
 
-* Competitions (homework)
-    - Attending students can form a team (max. 3 persons)
+    - Competitions (homework)
+        - Attending students can form a team (max. 3 persons)
 
-* The final grade is a weighted average of test (2/3) and competitions (1/3)
+* The final grade is a weighted average of test (1/2) and competitions (1/2)
 
 * See the [course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html) for more information
 
@@ -137,11 +137,11 @@ The exams consists of two parts:
 
 # This year competitions
 
-1. **House prices** (40%)
+* **House prices** (40%) Individual competition
 
-2. **OkCupid** (30%)
+* **OkCupid** (30%) Individual/Team
 
-3. **TBD** (30%)
+* **TBD** (30%) Individual/Team
 
 | Competition | Problem |  Entry | Submission | 
 |---|---|----|----|
@@ -162,7 +162,9 @@ class: inverse, middle, center
 
 # The two cultures
 
-Breiman (2001) distinguished between
+Reading: [Breiman (2001) Statistical modelling: the two cultures](http://www2.math.uu.se/~thulin/mm/breiman.pdf) 
+
+Breiman distinguished between
 
 **Statistical modeling**
 * emphasis on probability models
@@ -173,7 +175,10 @@ estimates)
 * emphasis on algorithms
 * the goal is prediction accuracy
 
-What is the difference today?
+What is the difference today? 
+
+Reading: [Carmichael and Marron (2018) 
+Data Science vs. Statistics: Two Cultures?](https://arxiv.org/pdf/1801.00371.pdf)
 
 ---
 
@@ -267,16 +272,15 @@ modeling and machine learning
 
 ---
 
-# Statistical Learning
+# Statistical learning
 
-* __Unsupervised learning__
-    - the data consists of $p$ variables $X_1, \ldots, X_p$; no variable has a special status
+* **Unsupervised learning**
+    - the data consists of $p$ variables $X_1,\ldots,X_p$; no variable has a special status
     - the goal is clustering, dimensionality reduction, etc.
 
-* __Supervised learning__
-    - the data consists of both response $Y$ and predictors $X_1, \ldots, X_p$
-    - the problem is called supervised learning since the response
-`supervises' the learning process
+* **Supervised learning**
+    - the data consists of both response $Y$ and predictors $X_1,\ldots,X_p$
+    - the problem is called supervised learning since the response supervises the learning process
     - the goal is (usually) prediction of the response
     - $Y$ continuous : __regression__ problem 
     - $Y$ binary/multi-class : __classification__ problem 
@@ -295,7 +299,184 @@ __Data mining__ finding patterns in data
 
 __. . .__
 
-all converge into __Data Science__
+all converge into __data science__
+
+---
+layout: false
+class: inverse, middle, center
+
+# Data science
+
+---
+
+# What is data science?
+
+![](images/datascience.png)
+
+---
+
+# Data science
+
+> is an interdisciplinary field [...]
+
+> to extract knowledge or insights from data [...]
+
+> Wikipedia
+
+---
+
+# Interdisciplinary field
+
+![](images/venn.png)
+
+---
+
+# Data science = applied statistics?
+
+.pull-left[
+
+![](images/tukey.jpg)
+
+.center[John Tukey (1915-2000)]
+]
+
+.pull-right[
+
+Reading:
+
+* Tukey (1962) [The future of data analysis](https://projecteuclid.org/download/pdf_1/euclid.aoms/1177704711)
+* Donoho (2015) [50 years of Data Science](https://courses.csail.mit.edu/18.337/2015/docs/50YearsDataScience.pdf)
+
+]
+
+---
+
+# Statistics ⊂ Data science
+
+> While statistics - as the science of learning from data -
+is necessary for turning data into knowledge and action,
+it's not the only critical component within data science
+
+> When statistics, database management, and
+distributed/parallel computing combine, we will see
+growth in cross-trained experts who are better equipped
+to solve complex challenges in today's massive data
+revolution
+
+> Jessica Utts, ASA president
+
+---
+
+# Key word
+
+Most people hyping Data Science have focused on the first word:
+Data
+
+> The key word in "Data Science" is not Data, it is Science
+
+> Jeff Leek 
+
+Data Science is only useful when the data are used to answer a
+scientific question
+
+---
+
+# Is Gauss a data scientist?
+
+.pull-left[
+
+![](images/gauss.jpg)
+
+]
+
+.pull-left[
+Carl Friedrich Gauss (1777 - 1855) 
+]
+
+---
+
+# Gauss' problems
+
+__Astronomy problem__ 
+
+Predict the position of the asteroid Ceres at 31 December 1801 on the basis of data provided by the italian astronomer Giuseppe Piazzi
+
+__Statistical problem__
+
+Find $\boldsymbol{\beta}$ such that minimizes $(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\mathsf{T}(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})$
+
+Gauss solution: least squares $\hat{\boldsymbol{\beta}}=(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$
 
 
+__Computational problem__
+
+Solve (by hand!) the system of equations $\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T} \mathbf{y}$
+
+Gauss solution: fast optimization algorithm (Gaussian elimination)
+
+---
+layout: false
+class: inverse, middle, center
+
+# Big Data
+
+---
+
+# Big data revolution
+
+![](images/magazines.jpg)
+
+---
+
+# Big data
+
+> is a term for data sets that are so large or complex that traditional data processing application software is inadequate to deal with them
+
+
+> Wikipedia
+
+* If you have several gigabytes of data or several million
+observations, standard relational databases become unwieldy;
+databases to manage data of this size are generically known
+as NoSQL databases
+
+* Tools for manipulating big data are given in the next table (but won't be covered in this course)
+
+---
+
+.pull-left[
+
+![](images/tools.png)
+
+]
+
+.pull-right[
+Reading: [Varian (2013) Big Data: New Tricks for Econometrics](http://people.ischool.berkeley.edu/~hal/Papers/2013/ml.pdf)
+]
+
+
+---
+
+# Data: tall and fat
+
+The outcome of the big-data processing:
+
+data set = $n \times p$ matrix
+
+BIG $n$ = TALL = computational problem
+
+BIG $p$ = FAT = curse of dimensionality
+
+---
+
+# The end of theory?
+
+Petabytes allow us to say: correlation is enough
+
+
+![](images/end.jpg)
+
+
+Anderson (2008) The End of Theory: The Data Deluge Makes
+the Scientific Method Obsolete, Wired Magazine 16.07
 

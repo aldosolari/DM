@@ -29,7 +29,7 @@ Most of the course material can be found in the notes linked to below. The notes
 
 | N | Date |  Lecture    | Notes | Slides|
 |--|--|--------------|--------|-------|
-| 1 | October 1 | Introduction |  | [Slides](docs/slides/Intro/Intro.html) |
+| 1 | October 1 | Introduction |  | [Slides](docs/slides/1_Intro/1_Intro.html) |
 | 2 | October 4 | The Bias-Variance Decomposition | Polynomials | Slides |
 | 3 | October 5  | Avoiding Overfitting: IC and CV | Polynomials | Slides |
 |  |  |  |  | | |
@@ -45,9 +45,9 @@ Most of the course material can be found in the notes linked to below. The notes
 | 11 | October 25 | Wrong CV | |
 | 12 | October 26 | Class imbalance | |
 |  |  |  |  | | |
-| 13 | October 29 | Rolling forecast | |
+| 13 | October 29 | | |
 |  |  |  |  | | |
-| 14 | November 8 | Feature hashing |
+| 14 | November 8 | |
 | 15 | November 9 | | |
 |  |  |  |  | | |
 | 16 | November 12 | | |
