@@ -73,7 +73,6 @@ Readings should be complete by the following class. There are three primary refe
 **October 4**
 
 - tbd 
-- tbd
 
 
 **October 5**
