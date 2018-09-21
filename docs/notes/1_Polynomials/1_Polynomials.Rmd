@@ -98,7 +98,7 @@ Let's try a 3rd degree polynomial model ($d=3$)
 
 ```{r}
 # create test set
-test = data.frame(x=train$x)
+test = data.frame(x=train$x, y=df$y.tomorrow)
 
 # 3rd degree polynomial regression fit
 fit <- lm( y ~ poly(x, degree=3), train)
@@ -109,11 +109,65 @@ plot( y ~ x , train)
 lines( yhat ~ x, train)
 ```
 
-Is it a good fit? We can compute the mean squared error for the training data
-
+Is this a good fit? We can compute $\mathrm{MSE}_{\mathrm{Tr}}$ for the 3rd degree polynomial model. 
 
 ```{r}
-# compute mean squared error for the training data
+# compute MSE.tr for the 3rd degree polynomial fit
 MSE.tr <- mean( (train$y - yhat)^2 )
+MSE.tr
 ```
 
+Now we compute $\mathrm{MSE}_{\mathrm{Tr}}$ for all possible degrees from 0 to $n-1$. 
+
+```{r}
+n <- nrow(train)
+ds = 0:(n-1)
+ps = ds + 1
+# function to fit polynomial model of degree d
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+fits <- sapply(ds, fun)
+
+# compute MSE.tr for all degrees
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
+```
+
+The figure shows that the polynomial fit measured by $\mathrm{MSE}_{\mathrm{Tr}}$ seems to improve as $p$ increases.
+A special case exists when $p = n$, corresponding to a polynomial that exactly interpolates the observed data, with $\mathrm{MSE}_{\mathrm{Tr}}=0$. 
+
+# Overfitting
+
+As already mentioned, we need to use an estimate of $f(x)$ to predict values of $y$ for new data $y^*_i,i=1,\ldots,n$ produced by the same generating mechanism, but these will become available tomorrow. 
+
+We now evaluate the quality of the prediction using yesterday's fit of the polynomials for the new $y^*_i$, as if we could obtain tomorrow's data today. Let's try with the 20th degree polynomial:
+
+```{r, message=FALSE, warning=FALSE}
+# 20th degree polynomial fit
+fit <- lm( y ~ poly(x, degree=20), train)
+yhat <- predict(fit, newdata=test)
+# plots
+op <- par(mfrow = c(1, 2))
+plot( y ~ x , train)
+lines(yhat ~ x, train)
+plot( y ~ x , test, col=4)
+lines(yhat ~ x, train)
+par(op)
+```
+
+The figure shows yesterday and tomorrow's data with the predictions from the 20th degree polynomial. It is noteworthy that this high-degree polynomial fits very well the old points but fluctuate and no longer fit the new points. Here the model __overfits__ the training data.
+
+Now we compute $\mathrm{MSE}_{\mathrm{Te}}$ for all possible degrees from 0 to $n-1$.
+
+```{r, message=FALSE, warning=FALSE}
+# compute predictions for all degrees
+yhats <- lapply(fits, predict)
+# compute MSE.te for all degrees
+MSEs.te <- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+# plot
+plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
+```
+
+Here the $\mathrm{MSE}_{\mathrm{Te}}$ decreases to a certain point and
+then increases.
