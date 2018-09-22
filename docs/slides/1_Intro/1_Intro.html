@@ -337,8 +337,8 @@ class: inverse, middle, center
 
 Reading:
 
-* Tukey (1962) [The future of data analysis](https://projecteuclid.org/download/pdf_1/euclid.aoms/1177704711)
-* Donoho (2015) [50 years of Data Science](https://courses.csail.mit.edu/18.337/2015/docs/50YearsDataScience.pdf)
+* [Tukey (1962) The future of data analysis](https://projecteuclid.org/download/pdf_1/euclid.aoms/1177704711)
+* [Donoho (2015) 50 years of Data Science](https://courses.csail.mit.edu/18.337/2015/docs/50YearsDataScience.pdf)
 
 ]
 
@@ -488,21 +488,18 @@ class: inverse, middle, center
 
 # Training set and Test set
 
-* Suppose that yesterday we observed `\(n = 30\)` pairs of data, the __training set__
+* Suppose that yesterday we observed `\(n\)` pairs of data, the __training set__
 `$$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)$$` 
-
 
 * The data were generated artificially by 
 `$$y = f(x)+ \varepsilon$$`
 
 * We wish to obtain an estimate of `\(f(x)\)` that allows us to predict future `\(y\)` as new observations of `\(x\)` become available
 
-
 * Tomorrow data, or the __test set__, will be like
 `$$(x^*_1,y^*_1), (x^*_2,y^*_2), \ldots, (x^*_m,y^*_m)$$`
 
-* To simplify, suppose that
-these new `\(y^*_i\)` are associated with the same `\(x_i\)` used for yesterday's data
+* To simplify, consider the __fixed-X setting__: `\(x_1,\ldots,x_n\)` are fixed (i.e. non-random) and the new `\(y^*_i\)` are associated with the same `\(x_i\)` used for yesterday's data 
 
 `$$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$`
 ---
@@ -538,17 +535,23 @@ plot( y ~ x , train)
 
 .pull-left[
 * Consider polynomial regression of degree `\(d\)`
-
 `$$f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 + \ldots + \beta_d x^{d}$$`
-* Find the degree `\(d\)` that minimizes `\(\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})\)`
+
+* Use the training set to get the estimate 
+`$$\hat{f}(x)=\hat{\beta}_0 + \hat{\beta}_1 x + \hat{\beta}_2 x^2 + \ldots + \hat{\beta}_d x^{d}$$` and predict tomorrow `\(y_i^*\)` by using
+`$$\hat{y}_i^*=\hat{f}(x_i)$$`
+
+* Find the degree `\(d\)` that minimizes the expected value of  `\(\mathrm{MSE}_{\mathrm{Te}}=\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\)`
 
 ]
 .pull-right[
 
 ```r
 test = data.frame(x=train$x, y=df$y.tomorrow)
+# 3rd degree polynomial regression fit
 fit &lt;- lm( y ~ poly(x, degree=3), train)
 yhat &lt;- predict(fit, newdata=test)
+# plot
 plot( y ~ x , train)
 lines( yhat ~ x, train)
 ```

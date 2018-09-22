@@ -1,5 +1,5 @@
 ---
-title: '**Data Mining**'
+title: '**Polynomials**'
 output:
   html_document:
     theme: cosmo
@@ -167,6 +167,7 @@ MSEs.te <- unlist(lapply(yhats,
            ))
 # plot
 plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
+which.min(MSEs.te)
 ```
 
 Here the $\mathrm{MSE}_{\mathrm{Te}}$ decreases to a certain point and

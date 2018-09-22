@@ -1,0 +1,172 @@
+---
+title: '**Bias-variance decomposition**'
+output:
+  html_document:
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw() + 
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA), 
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.position = "top",
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.key = element_rect(fill = "transparent", colour = NA)
+  )
+theme_set(thm)
+
+knitr::opts_chunk$set(echo = T, message=F, warning=F, error=F, 
+                      comment=NA, cache=T)
+```
+
+# Fixed-X setting
+
+A statistical regression model seeks to describe the relationship between a response $y \in \mathbb{R}$ and a
+covariate vector $x\in \mathbb{R}^p$, based on training data comprised of paired observations $(x_1,y_1),\ldots,(x_n,y_n)$.
+Many modern regression models are ultimately aimed at prediction: given a new covariate value $x^*$, we apply the model to predict the corresponding response value $y^*$.
+
+A common assumption that is used in the estimation of prediction error is what we call a fixed-X assumption, where the training covariates values $x_1,\ldots,x_n$ are treated as fixed (i.e. non-random), as are the covariate values at which predictions are to be made, $x^*_1,\ldots,x^*_n$,
+which are also assumed to equal the training values.
+This setting combines the following two assumptions about the problem:
+
+1. The covariate values $x_1,\ldots,x_n$ used in training are not random (e.g., designed), and the only
+randomness in training is due to the responses $y_1,\ldots,y_n$.
+
+2. The covariates $x^*_1,\ldots,x^*_n$ used for prediction exactly match $x_1,\ldots,x_n$, respectively, and the
+corresponding responses $y^*_1,\ldots,y^*_n$ are independent copies of $y_1,\ldots,y_n$, respectively.
+
+Assume that for the training set
+$$y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$
+and for the test set
+$$y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n$$
+where $f(x)$ is the unknown regression function, 
+the covariates $x_1,\ldots,x_n$ are fixed and the errors 
+$\varepsilon_1,\ldots,\varepsilon_n$ and $\varepsilon^*_1,\ldots,\varepsilon^*_n$ are i.i.d. $N(0,\sigma^2)$. 
+
+
+In the fixed-X setting, __prediction error__ $\mathrm{ErrF}$ is defined by
+$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\right]$$
+ 
+ 
+# Bias-variance decomposition 
+
+We start by considering a specific value $x_i$ for $x$. 
+Suppose we want to predict $y^*_i$ by $\hat{y}_i^* = \hat{f}(x_i)$ where $\hat{f}$ is an estimate of $f$ based on the training data.
+The accuracy of $\hat{y}^*_i$ as a prediction for $y^*_i$ depends on two quantities, which we call the __reducible error__ and the __irreducible error__. 
+We have 
+$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$
+
+where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$. 
+Note that, even if it were possible to form a perfect estimate for
+$f$, so that our estimated response took the form $\hat{y}^*_i = f(x_i)$, our prediction would still have some error in it. This is because $y_i^* = f(x_i) + \varepsilon_i^*$. 
+
+The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator $\hat{f}$, respectively:
+$$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
+\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{\mathrm{Bias}^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}}$$
+
+
+Now the decomposition of fixed-X prediction error is simply
+
+$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}(\hat{f}(x_i) - f(x_i)) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}}$$
+
+Bias and variance are conflicting entities, and we cannot
+minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
+
+# Simulation
+
+For the yesterday-tomorrow data, the true $f(x)$ is
+
+```{r}
+# true regression function 
+ftrue <- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
+x = seq(.5,3,length=30)
+plot(x,ftrue, type="l", col=4)
+```
+
+Consider the polynomial regression of degree $d$.
+We will perform a simulation to compute squared bias $[\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2$ and variance $\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]$. 
+ 
+
+```{r}
+# setting
+sigmatrue=0.01
+n = length(x)
+d = 3
+p = d+1
+B = 100
+# simulation function
+sim = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d, raw=T))
+yhat = fitted(fit)
+}
+# results
+set.seed(123)
+yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1)
+lines(x,ftrue, col=4)
+# expected value
+Ave = apply(yhats,1,mean)
+lines(x,Ave)
+# squared bias
+Bias2 = (ftrue - Ave)^2
+# variance
+Var = apply(yhats,1,var)
+```
+
+The bias-variance decomposition gives
+
+```{r}
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+Note that the expected value $\mathbb{E}\hat{f}(x_i)$ can be obtained by fitting the polynomial model using $y_i = f(x_i)$:
+
+```{r}
+# expected value 
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d, raw=T)))
+plot(x,ftrue, type="l", col=4)
+lines(x,Ehatf)
+```
+
+
+Theoretical results show that for the linear model $$\frac{1}{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$
+Importantly, in the linear model the variance is unaffected by the form of $f(x)$. 
+
+```{r}
+# empirical variance
+mean(Var)
+# true variance
+(sigmatrue^2)*p/n
+```
+
+
+Now we easily compute the decomposition of $\mathrm{ErrF}$ into squared bias and variance of the polynomial regression for all possible degrees from 0 to $n-1$ without using simulations. 
+
+```{r}
+ds = 1:10
+ps = ds+1
+
+Bias2s = sapply(ps, function(p) 
+  mean( ( ftrue - fitted(lm(ftrue ~ poly(x,degree=(p-1)))) )^2 )
+  )
+Vars = ps*(sigmatrue^2)/n
+ErrFs = Bias2s+Vars
+barplot(ErrFs, ylab="ErrF", names.arg=ps)
+barplot(Vars,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+# best model size
+ps[which.min(ErrFs)]
+```
+
+
