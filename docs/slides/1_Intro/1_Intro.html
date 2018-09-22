@@ -499,7 +499,7 @@ class: inverse, middle, center
 * Tomorrow data, or the __test set__, will be like
 `$$(x^*_1,y^*_1), (x^*_2,y^*_2), \ldots, (x^*_m,y^*_m)$$`
 
-* To simplify, consider the __fixed-X setting__: `\(x_1,\ldots,x_n\)` are fixed (i.e. non-random) and the new `\(y^*_i\)` are associated with the same `\(x_i\)` used for yesterday's data 
+* To simplify, consider a __fixed-X setting__: `\(x_1,\ldots,x_n\)` are fixed (i.e. non-random) and the new `\(y^*_i\)` are associated with the same `\(x_i\)` used for yesterday's data 
 
 `$$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$`
 ---
@@ -557,6 +557,92 @@ lines( yhat ~ x, train)
 ```
 
 &lt;img src="1_Intro_files/figure-html/unnamed-chunk-2-1.png" width="672" /&gt;
+]
+
+---
+
+# Training MSE 
+
+.pull-left[
+
+```r
+MSE.tr &lt;- mean( (train$y - yhat)^2 )
+n &lt;- nrow(train)
+ds = 0:(n-1)
+ps = ds + 1
+
+# function to fit polynomial model of degree d
+fun &lt;- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+fits &lt;- sapply(ds, fun)
+
+# compute MSE.tr for all degrees
+MSEs.tr &lt;- unlist( lapply(fits, deviance) )/n
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
+```
+]
+
+.pull-right[
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-4-1.png" width="672" /&gt;
+]
+
+---
+
+# Overfitting
+
+
+```r
+# 20th degree polynomial fit
+fit &lt;- lm( y ~ poly(x, degree=20), train)
+yhat &lt;- predict(fit, newdata=test)
+```
+
+.pull-left[
+
+```r
+plot( y ~ x , train)
+lines(yhat ~ x, train)
+```
+
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-6-1.png" width="672" /&gt;
+]
+
+.pull-right[
+
+```r
+plot( y ~ x , test, col=4)
+lines(yhat ~ x, test)
+```
+
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-7-1.png" width="672" /&gt;
+]
+
+---
+
+# Test MSE 
+
+.pull-left[
+
+```r
+# compute predictions for all degrees
+yhats &lt;- lapply(fits, predict)
+
+# compute MSE.te for all degrees
+MSEs.te &lt;- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+
+# plot
+plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
+which.min(MSEs.te)
+```
+]
+
+.pull-right[
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-9-1.png" width="672" /&gt;
+
+```
+## [1] 5
+```
 ]
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

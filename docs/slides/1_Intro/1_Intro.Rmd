@@ -560,3 +560,102 @@ plot( y ~ x , train)
 lines( yhat ~ x, train)
 ```
 ]
+
+---
+
+# Training MSE 
+
+.pull-left[
+```{r, eval=F}
+MSE.tr <- mean( (train$y - yhat)^2 )
+n <- nrow(train)
+ds = 0:(n-1)
+ps = ds + 1
+
+# function to fit polynomial model of degree d
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+fits <- sapply(ds, fun)
+
+# compute MSE.tr for all degrees
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
+```
+]
+
+.pull-right[
+```{r, echo=F}
+# MSE.tr
+MSE.tr <- mean( (train$y - yhat)^2 )
+
+n <- nrow(train)
+ds = 0:(n-1)
+ps = ds + 1
+
+# function to fit polynomial model of degree d
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+fits <- sapply(ds, fun)
+
+# compute MSE.tr for all degrees
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
+```
+]
+
+---
+
+# Overfitting
+
+```{r, message=FALSE, warning=FALSE}
+# 20th degree polynomial fit
+fit <- lm( y ~ poly(x, degree=20), train)
+yhat <- predict(fit, newdata=test)
+```
+
+.pull-left[
+```{r}
+plot( y ~ x , train)
+lines(yhat ~ x, train)
+```
+]
+
+.pull-right[
+```{r}
+plot( y ~ x , test, col=4)
+lines(yhat ~ x, test)
+```
+]
+
+---
+
+# Test MSE 
+
+.pull-left[
+```{r, eval=F}
+# compute predictions for all degrees
+yhats <- lapply(fits, predict)
+
+# compute MSE.te for all degrees
+MSEs.te <- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+
+# plot
+plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
+which.min(MSEs.te)
+```
+]
+
+.pull-right[
+```{r, echo=F}
+# compute predictions for all degrees
+yhats <- lapply(fits, predict)
+# compute MSE.te for all degrees
+MSEs.te <- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+# plot
+plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
+which.min(MSEs.te)
+```
+]
+
