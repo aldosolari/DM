@@ -1,0 +1,380 @@
+---
+title: '**Modeling process: Expanded Car MPG Data**'
+output:
+  html_document:
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw() + 
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA), 
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.position = "top",
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.key = element_rect(fill = "transparent", colour = NA)
+  )
+theme_set(thm)
+
+knitr::opts_chunk$set(echo = T, message=F, warning=F, error=F, 
+                      comment=NA, cache=T)
+```
+
+Let’s load a dataset to use below for examples:
+
+```{r}
+rm(list=ls())
+PATH <- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
+load(paste(PATH,"car_data_splits.RData", sep=""))
+```
+
+The data that are used here are an extended version of the ubiquitous `mtcars` data set that contains information on the design and performance characteristics of older model cars (1973-74). [fueleconomy.gov](fueleconomy.gov) was used to obtain fuel efficiency data on cars from 2015-2019.
+
+Over this time range, duplicate ratings were eliminated; these occur when the same car is sold for several years in a row. As a result, there are 4422 cars that are listed in the data. The predictors include the automaker and addition information about the cars (e.g. cylinders, etc).
+
+In our analysis, the data from 2015-2108 are used for training to see if we can predict the 435 cars that were new in 2019. We will restrict ourselves to cars that use some type of gas.
+
+Non-combustion engines have their MPG estimated even though there are no real gallons. Let's get rid of these for simplicity.
+
+```{r}
+removals <- c("CNG", "Electricity")
+car_train <- 
+  car_train %>% 
+  filter(!(fuel_type %in% removals)) %>%
+  mutate(fuel_type = relevel(fuel_type, "Gasoline_or_natural_gas"))
+car_test <-
+  car_test %>% 
+  filter(!(fuel_type %in% removals)) %>%
+  mutate(fuel_type = relevel(fuel_type, "Gasoline_or_natural_gas"))
+```
+
+Let's see the training and test set by year:
+
+```{r}
+car_train %>% pull(year) %>% table()
+car_test %>% dim()
+```
+
+Two packages developed by Hadley Wickham greatly simplify the task of exploring and graphing data: `dplyr` for exploring and `ggplot2` for graphing. Additionally, the piping syntax offered in the `magrittr` package (included with `dplyr`) enables us not only to write more understandable `dplyr` code but also to use the two packages together. Documentation and examples for both packages are widely available on the web.
+
+# Data visualisation: ggplot2
+
+> The simple graph has brought more information to the data analyst's mind than any other device. — John Tukey
+
+`ggplot2` can help you to visualise your data using `ggplot2`. R has several systems for making graphs, but `ggplot2` is one of the most elegant and most versatile. `ggplot2` implements the grammar of graphics, a coherent system for describing and building graphs. 
+
+Among the variables in the Expanded Car MPG Data are:
+
+* `eng_displ`, a car's engine size
+
+* `mpg`, a car’s fuel efficiency on the highway, in miles per gallon 
+
+A car with a low fuel efficiency consumes more fuel than a car with a high fuel efficiency when they travel the same distance.
+
+To plot these two variable, run this code to put `eng_displ` on the x-axis and `mpg` on the y-axis:
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg)) 
+```
+
+
+The plot shows a negative relationship between engine size (`eng_displ`) and fuel efficiency (`mpg`). In other words, cars with big engines use more fuel. 
+
+With `ggplot2`, you begin a plot with the function `ggplot()`. The first argument of `ggplot()` is the dataset to use in the graph. You complete your graph by adding one or more layers to `ggplot()`.  The function `geom_point() adds a layer of points to your plot, which creates a scatterplot.
+
+The values of `eng_displ` and `mpg` are rounded so the points appear on a grid and many points overlap each other. This problem is known as __overplotting__. This arrangement makes it hard to see where the mass of the data is. 
+
+You can avoid this gridding by setting the position adjustment to “jitter”. `position = "jitter" adds a small amount of random noise to each point.
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg), position = "jitter") 
+```
+
+Or you can use the alpha aesthetic, which controls the transparency of the points:
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg), alpha = I(1/10)) 
+```
+
+
+You can convey information about your data by mapping the aesthetics in your plot to the variables in your dataset. For example, you can map the colors of your points to the `fuel_type` variable to reveal the fuel of each car.
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg, color=fuel_type))
+```
+
+We can map `cylinders` to the size aesthetic:
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg, size=cylinders))
+```
+
+You can use different geoms to plot the same data, e.g. `geom_smooth`, a smooth line fitted to the data.
+
+```{r}
+ggplot(data = car_train, mapping = aes(x = eng_displ, y = mpg)) +
+         geom_point() + 
+         geom_smooth()
+```
+
+What about 1/mpg?
+
+```{r}
+ggplot(data = car_train, mapping = aes(x = eng_displ, y = 1/mpg)) +
+         geom_point() + 
+         geom_smooth()
+```
+
+
+One way to add categorical variables, is to split your plot into __facets__, subplots that each display one subset of the data.
+
+To facet your plot by a single variable, use `facet_wrap()`. The first argument of `facet_wrap()` should be `~` followed by a variable name:
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg)) + 
+  facet_wrap(~ drive)
+```
+
+
+To facet your plot on the combination of two variables, add `facet_grid()` to your plot call. This time the formula should contain two variable names separated by a `~`:
+
+```{r}
+ggplot(data = car_train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg)) + 
+  facet_grid(  plug_in_hybrid ~ drive )
+```
+
+# Data transformation: dplyr
+
+`dplyr` implements the split-apply-combine strategy for data analysis. The strategy, package author Hadley Wickham explains, is to 
+
+> break up a big problem into manageable pieces, operate on each piece independently and then put all the pieces back together.
+
+`dplyr` contains 5 core functions, or verbs, for implementing the strategy:
+
+* `select()`
+* `filter()`
+* `arrange()`
+* `mutate()`
+* `summarize()`
+
+These functions become more powerful in combination with the `group_by()` function. 
+Those who are familiar with SQL will find these functions intuitive. Essentially, `dplyr` allows us to perform SQL-like operations on a dataframe stored in R memory.
+
+
+
+
+__Piping syntax__
+
+The piping syntax from the magrittr package makes code easier to conceptualize and read. The traditional syntax for R functions operates according to a nesting logic: if we want the structure of `car_train` we would type, `str(car_train)`, where the data object is nested within the function. Pipes, coded as `%>%`, instead work on a sequential logic: the equivalent of `str(car_train)` using pipes would be `car_train %>% str()`. Rather than a function operating on a dataset we have datasets on which functions operate. Particularly as nesting gets involved, pipes are much easier to read and understand. For example, rather than `head(subset(car_train, cylinders == 6))` we would write the following in `dplyr`:
+
+```{r}
+library(dplyr)
+car_train %>%
+  filter(cylinders == 6) %>%
+  head
+```
+
+This code we can read as a sequential operation rather than a nested one: using mtcars, filter for `cylinders = 6`, then return the first 6 rows. Each line in this little program defines an action to be taken on the dataset inherited from the previous line.
+
+__ Tibbles__
+
+`dplyr` automatically converts a dataframe to a tibble. A tibble is simply a dataframe with certain convenient features, including (among others):
+
+* Tibbles never print more than 10 rows to the console, or a viewable number of columns.
+
+* Strings are not automatically coerced to factors.
+
+We can always turn a tibble back into an R dataframe with the `data.frame()` command. For the most part, tibbles function exactly as we expect dataframes to function, so you can safely ignore the difference while enjoying the benefits.
+
+__select()__
+
+`select()` subsets a dataset by columns. We simply list the columns we want to select. While doing so we can also rename columns. The order the columns are listed within `select()` defines the order in the new dataframe. Sometimes functions in multiple packages have the same name. We can eliminate the confusion by specifying the package and function, for example, `dplyr::select()`.
+
+```{r}
+car_train %>%
+  dplyr::select(eng_displ, mpg, cyl = cylinders) %>%
+  head
+```
+
+We can also define a dataframe by deselecting columns using the minus sign.
+
+
+__filter()__
+
+`filter()` subsets a dataframe by rows. It has the same subsetting functionality as base R’s `subset()` function or the double bracket notation. To use it we specify the logical condition for including rows using logical operators:
+
+* “==” (equal)
+* “!=” (not equal)
+* “<” (less than)
+* “<=” (less than or equal to)
+* “>” (greater than)
+* “>=” (greater than or equal to)
+* is.na()
+* !is.na()
+* “|” (pipe operator, or)
+* “&” (and)
+* isTRUE()
+* !isTRUE()
+
+```{r}
+car_train %>%
+  dplyr::select(cylinders, mpg) %>%
+  filter(cylinders == 6 & mpg > 20) %>%
+  head
+```
+
+We could have written the same filter statement using a comma rather than an ampersand (“&”). `filter() treats a comma as equivalent to “&.”
+
+__arrange()__
+
+`arrange()` sorts the rows in a dataframe according the the values in the specified column(s).
+
+```{r}
+car_train %>%
+  dplyr::select(mpg, cylinders) %>%
+  arrange(desc(cylinders), mpg) %>%
+  head
+```
+
+`arrange()` by default sorts rows in ascending order based on column items. The `desc()` function within `arrange()` reverses this default ordering. Additionally, the order of the variables listed within `arrange()` determines the sort sequence. Above we first sort rows by `cylinders` (in descending, from large to small) and then by `mpg` (in ascending order, from least to most).
+
+__mutate()__
+
+`mutate()` creates a new variable, leaving the number and order of rows unaffected. For example, if we wanted to create a binary mpg variable we could use `ifelse()` within `mutate()`:
+
+```{r}
+car_train %>%
+  mutate(mpg_bin = ifelse(mpg > mean(mpg), 1, 0)) %>%
+  dplyr::select(mpg, mpg_bin) %>%
+  head
+```
+
+__summarize()__
+
+`summarize()` aggregates rows to produce summary statistics in a new dataframe. It does not preserve columns or rows from the original dataframe, returning values only for the summary variables defined within `summarize()`:
+
+```{r}
+car_train %>%
+  summarize(mean_mpg = mean(mpg),
+            median_mpg = median(mpg),
+            min_mpg = min(mpg),
+            max_mpg = max(mpg))
+```
+
+__ group_by()__
+
+The above functions, particularly `mutate()` and `summarize()`, become more powerful in combination with `group_by()`. For example, using `group_by()` we can easily compute conditional summary statistics produced by `summarize()`. In this case, let’s say that we want mean, median, min and max mpg for each number of cylinders. We could accomplish this by adapting the above code with `group_by()`:
+
+```{r}
+car_train %>%
+  group_by(cylinders) %>%
+  dplyr::summarize(mean_mpg = mean(mpg),
+            median_mpg = median(mpg),
+            min_mpg = min(mpg),
+            max_mpg = max(mpg))
+```
+
+`group_by()` essentially says: compute the following statistics for each group. Note that you will usually want the group_by variable to be a factor or a character variable.
+
+We can also use `group_by()` with `mutate()` to create new variables that are conditional on groups:
+
+```{r}
+car_train %>%
+  group_by(cylinders) %>%
+  mutate(mpg_bin = ifelse(mpg > mean(mpg), 1, 0), mean_mpg = round(mean(mpg), 2)) %>%
+  dplyr::select(mpg, mpg_bin, mean_mpg) %>%
+  head
+```
+
+In the first example above we defined mpg_bin to be 1 if mpg was greater than its mean (that is, greater than mean mpg in the entire dataset) and 0 otherwise. Here the `group_by()` statement entails that mpg_bin is 1 if mpg is greater than mean mpg in that cyl group and 0 otherwise. `group_by()` makes the calculation group-relative.
+
+
+
+# Predictive modeling: caret
+
+Common steps during model building are:
+
+* estimating model parameters (i.e. training models)
+
+* determining the values of tuning parameters that cannot be directly calculated from the data
+
+* model selection (within a model type) and model comparison (between types)
+
+* calculating the performance of the final model that will generalize to new data
+
+The `caret` package (short for _C_lassification _A_nd _RE_gression _T_raining) is a set of functions that attempt to streamline the process for creating predictive models. 
+`caret` was developed to:
+
+* create a unified interface for modeling and prediction to 238 models
+* streamline model tuning using resampling
+* provide a variety of "helper" functions and classes for day-to-day model building tasks
+* increase computational efficiency using parallel processing
+enable several feature selection frameworks
+
+It was originally developed in 2005 and is still very active.
+There is an extensive [page](http://topepo.github.io/caret/index.html) and an [article in JSS](https://www.jstatsoft.org/article/view/v028i05).
+
+We'll look at the car data and examine a few different models. 
+
+How much (and how) should we resample these data to create the model?
+Previously, cross-validation was discussed. If 10-fold CV was used, the assessment set would consist of about 268 cars (on average).
+That seems like an acceptable amount of data to determine the RMSE for each submodel.
+A control function that can be used to define parameters related to the numerical aspects of the search:
+
+
+```{r}
+library(caret)
+ctrl <- trainControl(
+  method = "cv",
+  number = 10,
+  # Save the assessment predictions from the best model
+  savePredictions = "final"
+  )
+```
+
+`train` can take a formula method, a `recipe` object, or a non-formula approach (x/y) to specify the model. We will need to use method = "lm" for linear models. 
+
+
+```{r}
+fit1 = train( mpg ~ eng_displ + cylinders + plug_in_hybrid,
+  data = car_train,
+  method = "lm", 
+  trControl = ctrl
+)
+
+fit2 = train( mpg ~ poly(eng_displ,4) + poly(cylinders,4) + plug_in_hybrid,
+  data = car_train,
+  method = "lm", 
+  trControl = ctrl
+)
+```
+
+
+
+
+
+```{r}
+ggplot(fit1$pred, aes(x = obs, y = pred)) +
+  geom_abline(col = "green", alpha = .5) + 
+  geom_point(alpha = .3) + 
+  geom_smooth(se = FALSE, col = "red", 
+              lty = 2, lwd = 1, alpha = .5)
+```
+
+
+
+

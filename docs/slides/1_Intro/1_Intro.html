@@ -4,8 +4,7 @@
     <title>Introduction to the course</title>
     <meta charset="utf-8">
     <meta name="author" content="Aldo Solari" />
-    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
-    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -15,8 +14,6 @@ class: center, middle, inverse, title-slide
 ### Aldo Solari
 
 ---
-
-
 
 
 # Outline
@@ -177,7 +174,7 @@ Data Science vs. Statistics: Two Cultures?](https://arxiv.org/pdf/1801.00371.pdf
 
 # Rock-Paper-Scissor algorithm
 
-![](images/rps.jpg)
+&lt;img src="images/rps.jpg" width="80%" height="80%" style="display: block; margin: auto;" /&gt;
 
 .center[http://www.nytimes.com/interactive/science/rock-paper-scissors.html]
 
@@ -224,7 +221,7 @@ Learn humans non-random patterns from the data
 | supervised learning | model `\(Y\)` as a function of `\(X\)` | regression |
 | hypothesis | `\(Y= f(X) + \varepsilon\)` | model, regression function |
 | instances, examples | `\((Y_1,X_1),\ldots,(Y_n,X_n)\)` | samples, observations |
-| learning | `\(\displaystyle \hat{f} = \underset{f\in \mathcal{F}}{\arg\min} \sum_{i=1}^{n} \mathrm{loss}(Y_i,f(X_i))\)` | estimation, fitting |
+| learning | `\(\displaystyle \hat{f} = \underset{f}{\arg\min} \sum_{i=1}^{n} \mathrm{loss}(Y_i,f(X_i))\)` | estimation, fitting |
 | classification | `\(\hat{Y} = \hat{f}(X)\)` | prediction |
 | generalization error | `\(\mathbb{E} [\, \mathrm{loss}(Y,\hat{f}(X))\,]\)` | risk |
 
@@ -304,7 +301,8 @@ class: inverse, middle, center
 
 # What is data science?
 
-![](images/datascience.png)
+&lt;img src="images/datascience.png" width="60%" height="60%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
@@ -376,15 +374,10 @@ scientific question
 
 # Is Gauss a data scientist?
 
-.pull-left[
 
-![](images/gauss.jpg)
+&lt;img src="images/gauss.jpg" width="30%" height="30%" style="display: block; margin: auto;" /&gt;
+.center[Carl Friedrich Gauss (1777 - 1855)]
 
-]
-
-.pull-left[
-Carl Friedrich Gauss (1777 - 1855) 
-]
 
 ---
 
@@ -417,7 +410,8 @@ class: inverse, middle, center
 
 # Big data revolution
 
-![](images/magazines.jpg)
+&lt;img src="images/magazines.jpg" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
@@ -504,17 +498,18 @@ class: inverse, middle, center
 `$$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$`
 ---
 
-# Yesterday data
 
 
 ```r
+# import data
 library(readr)
-df &lt;- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+*df &lt;- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
 train &lt;- data.frame(x=df$x, y=df$y.yesterday)
+test &lt;- data.frame(x=df$x, y=df$y.tomorrow)
+
+# scatterplot
 plot( y ~ x , train)
 ```
-
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-1-1.png" width="672" /&gt;
 
 ---
 
@@ -533,7 +528,7 @@ plot( y ~ x , train)
 
 # Polynomials
 
-.pull-left[
+
 * Consider polynomial regression of degree `\(d\)`
 `$$f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 + \ldots + \beta_d x^{d}$$`
 
@@ -543,47 +538,42 @@ plot( y ~ x , train)
 
 * Find the degree `\(d\)` that minimizes the expected value of  `\(\mathrm{MSE}_{\mathrm{Te}}=\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\)`
 
-]
-.pull-right[
-
-```r
-test = data.frame(x=train$x, y=df$y.tomorrow)
-# 3rd degree polynomial regression fit
-fit &lt;- lm( y ~ poly(x, degree=3), train)
-yhat &lt;- predict(fit, newdata=test)
-# plot
-plot( y ~ x , train)
-lines( yhat ~ x, train)
-```
-
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-2-1.png" width="672" /&gt;
-]
 
 ---
 
-# Training MSE 
-
-.pull-left[
 
 ```r
+# 3rd degree polynomial regression fit
+*fit &lt;- lm( y ~ poly(x, degree=3), train)
+*yhat &lt;- predict(fit, newdata=test)
+
+# plot
+plot( y ~ x , train)
+lines( yhat ~ x, train)
+
+# MSE.tr
 MSE.tr &lt;- mean( (train$y - yhat)^2 )
+```
+
+
+---
+
+
+
+```r
 n &lt;- nrow(train)
 ds = 0:(n-1)
 ps = ds + 1
 
 # function to fit polynomial model of degree d
-fun &lt;- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
-fits &lt;- sapply(ds, fun)
+*fun &lt;- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+*fits &lt;- sapply(ds, fun)
 
 # compute MSE.tr for all degrees
 MSEs.tr &lt;- unlist( lapply(fits, deviance) )/n
 plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
 ```
-]
 
-.pull-right[
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-4-1.png" width="672" /&gt;
-]
 
 ---
 
@@ -602,8 +592,6 @@ yhat &lt;- predict(fit, newdata=test)
 plot( y ~ x , train)
 lines(yhat ~ x, train)
 ```
-
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-6-1.png" width="672" /&gt;
 ]
 
 .pull-right[
@@ -612,15 +600,11 @@ lines(yhat ~ x, train)
 plot( y ~ x , test, col=4)
 lines(yhat ~ x, test)
 ```
-
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-7-1.png" width="672" /&gt;
 ]
 
 ---
 
-# Test MSE 
 
-.pull-left[
 
 ```r
 # compute predictions for all degrees
@@ -635,21 +619,13 @@ MSEs.te &lt;- unlist(lapply(yhats,
 plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
 which.min(MSEs.te)
 ```
-]
-
-.pull-right[
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-9-1.png" width="672" /&gt;
-
-```
-## [1] 5
-```
-]
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "ratio": "16:9",
 "highlightLanguage": "R",
-"countIncrementalSlides": false
+"countIncrementalSlides": false,
+"highlightLines": true
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

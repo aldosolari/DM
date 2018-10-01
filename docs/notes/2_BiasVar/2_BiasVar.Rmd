@@ -161,12 +161,22 @@ Bias2s = sapply(ps, function(p)
   mean( ( ftrue - fitted(lm(ftrue ~ poly(x,degree=(p-1)))) )^2 )
   )
 Vars = ps*(sigmatrue^2)/n
-ErrFs = Bias2s+Vars
-barplot(ErrFs, ylab="ErrF", names.arg=ps)
-barplot(Vars,add=T, col=1, names.arg=" ")
+Reds = Bias2s+Vars 
+barplot(Reds, ylab="Prediction error", names.arg=ps)
+barplot(Vars, add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 # best model size
-ps[which.min(ErrFs)]
+ps[which.min(Reds)]
+```
+
+The decomposition of the prediction error into irredubile and reducible error:
+```{r}
+# prediction error
+Irr = rep(sigmatrue^2,length(ps))
+ErrFs = Reds + Irr
+barplot(ErrFs, ylab="Reducible error", names.arg=ps)
+barplot(Irr, add=T, col=1, names.arg=" ")
+legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 ```
 
 

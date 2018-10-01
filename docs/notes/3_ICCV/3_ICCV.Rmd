@@ -1,0 +1,118 @@
+---
+title: '**Information criteria and cross-validation**'
+output:
+  html_document:
+    theme: cosmo
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw() + 
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA), 
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.position = "top",
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.key = element_rect(fill = "transparent", colour = NA)
+  )
+theme_set(thm)
+
+knitr::opts_chunk$set(echo = T, message=F, warning=F, error=F, 
+                      comment=NA, cache=T)
+```
+
+# Optimism
+
+The definition of __Optimism__ is the expected difference of the test error and training error
+\begin{aligned}
+\mathrm{Opt} &= \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) - \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}})
+\end{aligned}
+For the fixed-X setting, we have
+$$\mathrm{OptF} = \mathbb{E}\left[ \frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2 - \frac{1}{n}\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2 \right]$$
+Optimism can be also expressed as 
+$$\mathrm{OptF} =  \frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(y_i,\hat{f}(x_i))$$
+
+Optimism is an interesting and important concept because an estimate of $\widehat{\mathrm{OptF}}$ of $\mathrm{OptF}$ leads to an estimate of prediction error $\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) + \mathrm{OptF}$:
+\begin{aligned}
+\widehat{\mathrm{ErrF}} &= \mathrm{MSE}_{\mathrm{Tr}} + \widehat{\mathrm{OptF}}\\
+\end{aligned}
+
+For the linear model, it can be shown that
+$$\mathrm{OptF} =  \frac{2\sigma^2 p}{n}$$
+Because we don't know $\sigma^2$, we can plug-in its estimate $$\hat{\sigma}^2= \frac{\mathrm{RSS}}{n-p}= \frac{\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2}{n-p}$$ where $\mathrm{RSS} = n \mathrm{MSE}_{\mathrm{Tr}}$ is the __residual sum of squares__. This gives
+\begin{aligned}
+\widehat{\mathrm{ErrF}} &= \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}\\
+\end{aligned}
+
+This estimator is also known as __Mallows' Cp__
+\begin{aligned}
+\mathrm{Cp} &= \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}\\
+\end{aligned}
+
+We illustrate the optimism with the yesterday-tomorrow data: 
+
+```{r, echo=F}
+# import data
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+# compute MSE.tr
+n <- nrow(train)
+ds = 1:15
+ps = ds + 1
+x = seq(.5,3,length=30)
+MSEs.tr = sapply(ps, function(p) 
+  mean( ( residuals( lm(train$y ~ poly(x,degree=(p-1)))) )^2 )
+  )
+# compute ErrF
+sigmatrue = 0.01
+ftrue <- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
+x = seq(.5,3,length=30)
+Bias2s = sapply(ps, function(p) 
+  mean( ( ftrue - fitted(lm(ftrue ~ poly(x,degree=(p-1)))) )^2 )
+  )
+Vars = ps*(sigmatrue^2)/n
+ErrFs = Bias2s + Vars + sigmatrue^2
+```
+
+In the last lecture we have computed $\mathrm{MSE}_{\mathrm{Tr}}$ and $\mathrm{ErrF}$. Now we compare these values to $\widehat{\mathrm{ErrF}} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2\sigma^2 p}{n}$ knowing that the true $\sigma=0.01:
+
+```{r}
+ds = 1:15
+ps = ds+1
+sigmatrue = 0.01
+hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n 
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
+lines(ps, hatErrFs, type="b", col=2)
+lines(ps, ErrFs, type="b", col=4)
+legend("topright",c("ErrF","MSE.tr","MSE.tr + Opt"), col=c(4,1,2), pch=19)
+ps[which.min(hatErrFs)]
+```
+
+
+Now we compute $\widehat{\mathrm{ErrF}} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2\hat{\sigma}^2 p}{n}$
+
+```{r}
+hatsigma2 = (n*MSEs.tr)/(n-ps)
+hatErrFs2 = MSEs.tr + (2*hatsigma2*ps)/n 
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
+lines(ps, hatErrFs2, type="b", col=2)
+lines(ps, ErrFs, type="b", col=4)
+legend("topright",c("ErrF","MSE.tr","MSE.tr + hatOpt"), col=c(4,1,2), pch=19)
+ps[which.min(hatErrFs2)]
+```
+
+This is because of the different estimates $\hat{\sigma}^2$ for $\sigma^2$:
+
+```{r}
+plot(ps, hatsigma2, type="b", xlab="p", ylab="Sigma2")
+abline(h=sigma^2, col=4)
+```
+
+# Information criteria

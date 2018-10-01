@@ -33,17 +33,17 @@ Most of the course material can be found in the notes linked to below. The notes
 | 2 | October 4 | Bias-Variance Decomposition | [BiasVar](docs/notes/2_BiasVar/2_BiasVar.html) | Slides |
 | 3 | October 5  | Avoiding Overfitting: IC and CV | | Slides |
 |  |  |  |  | | |
-| 4 | October 8 | Data Visualization | | |
-| 5 | October 11| Exploratory Data Analysis |  |
-| 6 | October 12 | Feature Engineering | |
+| 4 | October 8 | | | |
+| 5 | October 11|  |  |
+| 6 | October 12 |  | |
 |  |  |  |  | | |
-| 7 | October 15 | Bagging and Random Forests | | |
-| 8 | October 18 | the caret R package| |
-| 9 | October 19 | Ridge regression | | |
+| 7 | October 15 |  | | |
+| 8 | October 18 | | |
+| 9 | October 19 |  | | |
 |  |  |  |  | | |
-| 10 | October 22 | Lasso | | |
-| 11 | October 25 | Wrong CV | |
-| 12 | October 26 | Class imbalance | |
+| 10 | October 22 | | | |
+| 11 | October 25 |  | |
+| 12 | October 26 |  | |
 |  |  |  |  | | |
 | 13 | October 29 | | |
 |  |  |  |  | | |
@@ -110,9 +110,9 @@ If you click on a specific Competition in the listing, you will go to the Compet
 
 | Competition | Problem | Entry | Submission | 
 |---|---|----|----|
-| Houses prices | Regression | October 8 | TBD  |
-| TBD | TBD | TBD | TBD  |
-| TBD | TBD | TBD | TBD  |
+| Houses prices | Regression | October 8 | November 16  |
+| OkCupid | Classification | October 15 | November 16 |
+| TBD | TBD | October 15 | November 16  |
 
 
 This page was last updated on `r Sys.time()` Eastern Time.
