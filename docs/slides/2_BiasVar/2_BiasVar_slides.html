@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bias-variance decomposition</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bias-variance decomposition
+### Aldo Solari
+
+---
+
+
+
+
+# Outline
+
+* Fixed-X setting
+* Bias-variance decomposition 
+* Simulation
+* Bias-variance trade-off
+
+
+---
+
+# Fixed-X setting
+
+This setting combines the following two assumptions about the problem:
+
+1. The covariate values `\(x_1,\ldots,x_n\)` used in training are not random (e.g., designed), and the only randomness in training is due to the responses `\(y_1,\ldots,y_n\)`.
+
+2. The covariates `\(x^*_1,\ldots,x^*_n\)` used for prediction exactly match `\(x_1,\ldots,x_n\)`, respectively
+
+We assume that for the training set
+`$$y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$`
+and for the test set
+`$$y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n$$`
+where `\(f(x)\)` is the unknown __regression function__, 
+the covariates `\(x_1,\ldots,x_n\)` are fixed and the errors 
+`\(\varepsilon_1,\ldots,\varepsilon_n\)` and `\(\varepsilon^*_1,\ldots,\varepsilon^*_n\)` are i.i.d. `\(N(0,\sigma^2)\)`. 
+
+---
+
+# Prediction error
+
+In the fixed-X setting, __prediction error__ `\(\mathrm{ErrF}\)` is defined by
+`$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\right]$$`
+
+This is the error that we want to minimize.
+
+---
+layout: false
+class: inverse, middle, center
+
+# Bias-Variance Decomposition 
+
+---
+
+# Bias-variance decomposition 
+
+* Suppose we want to predict `\(y^*_i\)` by `\(\hat{y}_i^* = \hat{f}(x_i)\)` where `\(\hat{f}\)` is an estimate of `\(f\)` based on the training data.
+
+* The accuracy of `\(\hat{y}^*_i\)` as a prediction for `\(y^*_i\)` depends on two quantities, which we call the __reducible error__ and the __irreducible error__. 
+
+* We have 
+`$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$`
+where `\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)`. 
+
+
+
+---
+
+# Reducible error
+
+
+* The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator `\(\hat{f}\)`, respectively:
+`$$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
+\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{\mathrm{Bias}^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}}$$`
+
+* Now the decomposition of fixed-X prediction error is simply
+`$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}(\hat{f}(x_i) - f(x_i)) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}}$$`
+
+* Bias and variance are conflicting entities, and we cannot
+minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
+
+---
+
+# Sources of error
+
+* __Irreducible error__ &lt;br&gt;
+Can we ever predict `\(Y\)` from `\(X\)` with zero error? No. Even the true
+regression function `\(f\)` cannot do this. Note that, even if it were possible to form a perfect estimate for `\(f\)`, so that our estimated response took the form `\(\hat{y}^*_i = f(x_i)\)`, our prediction would still have some error in it. This is because `\(y_i^* = f(x_i) + \varepsilon_i^*\)`
+
+* __Estimation bias__ &lt;br&gt;
+What happens if our fitted function `\(\hat{f}\)` belongs to a model class that is far from the true `\(f\)`? E.g. we choose to fit a linear model in a setting where the true relationship is far from linear?
+
+
+* __Estimation variance__ &lt;br&gt;
+What happens if our fitted (random) function `\(\hat{f}\)` is itself quite variable? In other words, 
+over different copies of the training data, we end up constructing substantially different functions `\(\hat{f}?\)`
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Simulation 
+
+---
+
+# True regression function
+
+
+```r
+ftrue &lt;- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
+x = seq(.5,3,length=30)
+plot(x,ftrue, type="l", col=4)
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-1-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Simulation
+
+* Consider the polynomial regression of degree `\(d\)`.
+We will perform a simulation to compute squared bias `\([\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2\)` and variance `\(\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]\)`
+
+
+
+```r
+# setting
+sigmatrue=0.01
+n = length(x)
+B = 100
+# simulation function
+*sim = function(d){
+*y = ftrue + rnorm(n,0,sigmatrue)
+*fit = lm(y ~ poly(x,degree=d, raw=T))
+*yhat = fitted(fit)
+*} 
+```
+
+---
+
+# Results (d=3)
+
+.pull-left[
+
+
+```r
+d = 3
+# results
+set.seed(123)
+*yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1)
+lines(x,ftrue, col=4)
+# expected value
+Ehatf = apply(yhats,1,mean)
+lines(x,Ehatf)
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-3-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+
+```r
+# squared bias
+Bias2 = (ftrue - Ehatf)^2
+# variance
+Var = apply(yhats,1,var)
+# plot
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-4-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Results (d=20)
+
+.pull-left[
+
+
+```r
+d = 20
+# results
+set.seed(123)
+yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1)
+lines(x,ftrue, col=4)
+# expected value
+Ehatf = apply(yhats,1,mean)
+lines(x,Ehatf)
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-5-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+
+```r
+# squared bias
+Bias2 = (ftrue - Ehatf)^2
+# variance
+Var = apply(yhats,1,var)
+# plot
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-6-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+# Linear model
+
+* Note that the expected value `\(\mathbb{E}\hat{f}(x_i)\)` can be obtained by fitting the polynomial model using `\(y_i = f(x_i)\)`:
+
+
+```r
+d = 3
+# expected value 
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d, raw=T)))
+Bias2 = (ftrue - Ehatf)^2
+```
+
+* Theoretical results show that for the linear model `$$\frac{1}{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$`
+Importantly, in the linear model the variance is unaffected by the form of `\(f(x)\)`. 
+
+
+```r
+# true variance
+p = d+1
+Var = (sigmatrue^2)*p/n
+```
+
+* Now we easily compute the decomposition of `\(\mathrm{ErrF}\)` into squared bias and variance of the polynomial regression for all possible degrees from 0 to `\(n-1\)` without using simulations
+
+---
+
+
+```r
+ds = 1:20
+ps = ds+1
+Bias2s = sapply(ps, function(p) 
+  mean( ( ftrue - fitted(lm(ftrue ~ poly(x,degree=(p-1)))) )^2 )
+  )
+Vars = ps*(sigmatrue^2)/n
+Reds = Bias2s+Vars 
+barplot(Reds, ylab="Prediction error", names.arg=ps)
+barplot(Vars, add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+# best model size
+ps[which.min(Reds)]
+```
+
+---
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-10-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+Irr = rep(sigmatrue^2,length(ps))
+ErrFs = Reds + Irr
+barplot(ErrFs, ylab="Reducible error", names.arg=ps)
+barplot(Irr, add=T, col=1, names.arg=" ")
+legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-11-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+layout: false
+class: inverse, middle, center
+
+# Bias-variance trade-off
+
+---
+
+# Bias-variance trade-off
+
+* Reducible Error = Bias `\(^2\)` + Variance
+
+* Models `\(\hat{f}\)` with low bias tend to have high variance
+
+* Models `\(\hat{f}\)` with low variance tend to have high bias
+
+* We can see that even if our prediction is unbiased, i.e.
+`\(\mathbb{E}\hat{f}(x_i)= f(x_i)\)`, we can still incur a large error if it is highly
+variable 
+
+* On the other hand, `\(\hat{f}(x_i)=0\)` has 0 variance but will be
+terribly biased
+
+* To predict well, we need to balance the bias and the variance
+
+---
+
+![](images/tiroasegno.png)
+
+---
+
+# Fig. 2.9 ISLR 
+
+![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf)
+
+---
+
+# Fig. 2.10 ISLR 
+
+![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf)
+
+---
+
+# Fig. 2.11 ISLR 
+
+![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf)
+
+---
+
+# Fig. 2.12 ISLR 
+
+![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -10,21 +10,8 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-# This is good for getting the ggplot background consistent with
-# the html background color
-library(ggplot2)
-thm <- theme_bw() + 
-  theme(
-    panel.background = element_rect(fill = "transparent", colour = NA), 
-    plot.background = element_rect(fill = "transparent", colour = NA),
-    legend.position = "top",
-    legend.background = element_rect(fill = "transparent", colour = NA),
-    legend.key = element_rect(fill = "transparent", colour = NA)
-  )
-theme_set(thm)
-
-knitr::opts_chunk$set(echo = T, message=F, warning=F, error=F, 
-                      comment=NA, cache=T)
+knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, 
+                      comment=NA, cache=T, R.options=list(width=220))
 ```
 
 # Fixed-X setting
@@ -162,7 +149,7 @@ Bias2s = sapply(ps, function(p)
   )
 Vars = ps*(sigmatrue^2)/n
 Reds = Bias2s+Vars 
-barplot(Reds, ylab="Prediction error", names.arg=ps)
+barplot(Reds, ylab="Reducible error", names.arg=ps)
 barplot(Vars, add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 # best model size
@@ -174,7 +161,7 @@ The decomposition of the prediction error into irredubile and reducible error:
 # prediction error
 Irr = rep(sigmatrue^2,length(ps))
 ErrFs = Reds + Irr
-barplot(ErrFs, ylab="Reducible error", names.arg=ps)
+barplot(ErrFs, ylab="Prediction error", names.arg=ps)
 barplot(Irr, add=T, col=1, names.arg=" ")
 legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 ```

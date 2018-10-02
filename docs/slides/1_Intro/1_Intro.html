@@ -16,6 +16,9 @@ class: center, middle, inverse, title-slide
 ---
 
 
+
+
+
 # Outline
 
 * Course overview
@@ -281,7 +284,7 @@ modeling and machine learning
 
 __Machine learning__ constructs algorithms that can learn from data
 
-__Statistical learning__ is a brach of Statistics that was born in response to Machine
+__Statistical learning__ is a branch of Statistics that was born in response to Machine
 learning, emphasizing statistical models and assessment of
 uncertainty
 
@@ -480,7 +483,7 @@ class: inverse, middle, center
 
 ---
 
-# Training set and Test set
+# Training set and test set
 
 * Suppose that yesterday we observed `\(n\)` pairs of data, the __training set__
 `$$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)$$` 
@@ -510,6 +513,8 @@ test &lt;- data.frame(x=df$x, y=df$y.tomorrow)
 # scatterplot
 plot( y ~ x , train)
 ```
+
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-5-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -550,9 +555,17 @@ plot( y ~ x , train)
 # plot
 plot( y ~ x , train)
 lines( yhat ~ x, train)
+```
 
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-6-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+```r
 # MSE.tr
-MSE.tr &lt;- mean( (train$y - yhat)^2 )
+( MSE.tr &lt;- mean( (train$y - yhat)^2 ) )
+```
+
+```
+[1] 0.0002085353
 ```
 
 
@@ -574,33 +587,8 @@ MSEs.tr &lt;- unlist( lapply(fits, deviance) )/n
 plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
 ```
 
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-7-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
----
-
-# Overfitting
-
-
-```r
-# 20th degree polynomial fit
-fit &lt;- lm( y ~ poly(x, degree=20), train)
-yhat &lt;- predict(fit, newdata=test)
-```
-
-.pull-left[
-
-```r
-plot( y ~ x , train)
-lines(yhat ~ x, train)
-```
-]
-
-.pull-right[
-
-```r
-plot( y ~ x , test, col=4)
-lines(yhat ~ x, test)
-```
-]
 
 ---
 
@@ -617,7 +605,16 @@ MSEs.te &lt;- unlist(lapply(yhats,
 
 # plot
 plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
+```
+
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-8-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+```r
 which.min(MSEs.te)
+```
+
+```
+[1] 5
 ```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

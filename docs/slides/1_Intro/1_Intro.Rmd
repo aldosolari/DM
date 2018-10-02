@@ -13,6 +13,13 @@ output:
       highlightLines: true   
 ---
 
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, 
+                      comment=NA, cache=T, R.options=list(width=220),
+                      fig.align='center', out.width='50%', fig.asp=.5)
+```
+
+
 # Outline
 
 * Course overview
@@ -280,7 +287,7 @@ modeling and machine learning
 
 __Machine learning__ constructs algorithms that can learn from data
 
-__Statistical learning__ is a brach of Statistics that was born in response to Machine
+__Statistical learning__ is a branch of Statistics that was born in response to Machine
 learning, emphasizing statistical models and assessment of
 uncertainty
 
@@ -485,7 +492,7 @@ class: inverse, middle, center
 
 ---
 
-# Training set and Test set
+# Training set and test set
 
 * Suppose that yesterday we observed $n$ pairs of data, the __training set__
 $$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)$$ 
@@ -504,7 +511,7 @@ $$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$
 ---
 
 
-```{r, eval = F, message=F, warning=F, error=F, comment=NA}
+```{r}
 # import data
 library(readr)
 {{df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]}}
@@ -545,7 +552,7 @@ $$\hat{y}_i^*=\hat{f}(x_i)$$
 
 ---
 
-```{r, eval=FALSE}
+```{r}
 # 3rd degree polynomial regression fit
 {{fit <- lm( y ~ poly(x, degree=3), train)}}
 {{yhat <- predict(fit, newdata=test)}}
@@ -555,14 +562,14 @@ plot( y ~ x , train)
 lines( yhat ~ x, train)
 
 # MSE.tr
-MSE.tr <- mean( (train$y - yhat)^2 )
+( MSE.tr <- mean( (train$y - yhat)^2 ) )
 ```
 
 
 ---
 
 
-```{r, eval=FALSE}
+```{r}
 n <- nrow(train)
 ds = 0:(n-1)
 ps = ds + 1
@@ -579,32 +586,8 @@ plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
 
 ---
 
-# Overfitting
 
-```{r, eval=FALSE, message=FALSE, warning=FALSE}
-# 20th degree polynomial fit
-fit <- lm( y ~ poly(x, degree=20), train)
-yhat <- predict(fit, newdata=test)
-```
-
-.pull-left[
-```{r, eval=FALSE}
-plot( y ~ x , train)
-lines(yhat ~ x, train)
-```
-]
-
-.pull-right[
-```{r, eval=FALSE}
-plot( y ~ x , test, col=4)
-lines(yhat ~ x, test)
-```
-]
-
----
-
-
-```{r, eval=F}
+```{r}
 # compute predictions for all degrees
 yhats <- lapply(fits, predict)
 
