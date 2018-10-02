@@ -307,33 +307,15 @@ terribly biased
 
 ---
 
-# Fig. 2.9 ISLR 
+# ISLR figures 2.9-2.12 
 
-```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
-knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf")
-```
+* [Fig. 2.9](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf)
 
----
+* [Fig. 2.10](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf)
 
-# Fig. 2.10 ISLR 
+* [Fig. 2.11](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf)
 
-```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
-knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf")
-```
+* [Fig. 2.12](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf)
 
----
 
-# Fig. 2.11 ISLR 
-
-```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
-knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf")
-```
-
----
-
-# Fig. 2.12 ISLR 
-
-```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
-knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf")
-```
 
