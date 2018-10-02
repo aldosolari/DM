@@ -69,7 +69,7 @@ class: inverse, middle, center
 * The accuracy of $\hat{y}^*_i$ as a prediction for $y^*_i$ depends on two quantities, which we call the __reducible error__ and the __irreducible error__. 
 
 * We have 
-$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$
+$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] + \mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \mathrm{Reducible+Irreducible}$$
 where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$. 
 
 
@@ -81,10 +81,10 @@ where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$.
 
 * The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator $\hat{f}$, respectively:
 $$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
-\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{\mathrm{Bias}^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}}$$
+[\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2 + \mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \mathrm{Bias2+Variance}$$
 
 * Now the decomposition of fixed-X prediction error is simply
-$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}(\hat{f}(x_i) - f(x_i)) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}}$$
+$$\mathrm{ErrF} =  \sigma^2 + \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}(\hat{f}(x_i) - f(x_i)) )^2 + \frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))$$
 
 * Bias and variance are conflicting entities, and we cannot
 minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
@@ -309,23 +309,31 @@ terribly biased
 
 # Fig. 2.9 ISLR 
 
-![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf)
+```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
+knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf")
+```
 
 ---
 
 # Fig. 2.10 ISLR 
 
-![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf)
+```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
+knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf")
+```
 
 ---
 
 # Fig. 2.11 ISLR 
 
-![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf)
+```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
+knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf")
+```
 
 ---
 
 # Fig. 2.12 ISLR 
 
-![](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf)
+```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
+knitr::include_graphics("http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf")
+```
 
