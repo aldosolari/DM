@@ -23,6 +23,10 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 | Thursday | Lab713 | 13:30-15:30|
 | Friday | Lab713 | 12:30-15:30|
 
+# **Latest announcements**
+
+* 3/10/18: The lecture of October 4 will start at 13:45 Lab713 instead of 14:00
+
 # **Course Material**
 
 Most of the course material can be found in the notes linked to below. The notes are supplemented by readings which are listed in the [#Reading](#reading) section.
