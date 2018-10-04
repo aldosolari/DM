@@ -91,7 +91,7 @@ B = 100
 # simulation function
 sim = function(d){
 y = ftrue + rnorm(n,0,sigmatrue)
-fit = lm(y ~ poly(x,degree=d, raw=T))
+fit = lm(y ~ poly(x,degree=d))
 yhat = fitted(fit)
 }
 # results
@@ -120,7 +120,7 @@ Note that the expected value $\mathbb{E}\hat{f}(x_i)$ can be obtained by fitting
 
 ```{r}
 # expected value 
-Ehatf = fitted(lm(ftrue ~ poly(x,degree=d, raw=T)))
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
 plot(x,ftrue, type="l", col=4)
 lines(x,Ehatf)
 ```

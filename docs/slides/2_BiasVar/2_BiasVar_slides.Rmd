@@ -114,7 +114,6 @@ class: inverse, middle, center
 
 ---
 
-# True regression function
 
 ```{r}
 ftrue <- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
@@ -138,7 +137,7 @@ B = 100
 # simulation function
 {{sim = function(d){
 y = ftrue + rnorm(n,0,sigmatrue)
-fit = lm(y ~ poly(x,degree=d, raw=T))
+fit = lm(y ~ poly(x,degree=d))
 yhat = fitted(fit)
 } }}
 ```
@@ -219,7 +218,7 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```{r}
 d = 3
 # expected value 
-Ehatf = fitted(lm(ftrue ~ poly(x,degree=d, raw=T)))
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
 Bias2 = (ftrue - Ehatf)^2
 ```
 
