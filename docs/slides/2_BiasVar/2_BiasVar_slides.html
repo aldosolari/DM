@@ -62,7 +62,7 @@ class: inverse, middle, center
 
 ---
 
-# Bias-variance decomposition 
+# Irreducible and reducible error 
 
 * Suppose we want to predict `\(y^*_i\)` by `\(\hat{y}_i^* = \hat{f}(x_i)\)` where `\(\hat{f}\)` is an estimate of `\(f\)` based on the training data.
 
@@ -239,7 +239,7 @@ Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
 Bias2 = (ftrue - Ehatf)^2
 ```
 
-* Theoretical results show that for the linear model `$$\frac{1}{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$`
+* Theoretical results show that for the linear model `$$\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$`
 Importantly, in the linear model the variance is unaffected by the form of `\(f(x)\)`. 
 
 
@@ -285,6 +285,48 @@ legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 ```
 
 &lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-11-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Best model (d=5)
+
+.pull-left[
+
+
+```r
+d = 5
+# results
+set.seed(123)
+yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1)
+lines(x,ftrue, col=4)
+# expected value
+Ehatf = apply(yhats,1,mean)
+lines(x,Ehatf)
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-12-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+
+```r
+# squared bias
+Bias2 = (ftrue - Ehatf)^2
+# variance
+Var = apply(yhats,1,var)
+# plot
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-13-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+
 
 ---
 layout: false
