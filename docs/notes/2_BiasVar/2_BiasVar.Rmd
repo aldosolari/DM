@@ -61,7 +61,7 @@ $$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat
 
 Now the decomposition of fixed-X prediction error is simply
 
-$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}(\hat{f}(x_i) - f(x_i)) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}}$$
+$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}} = [\mathrm{Bias}(\hat{f})]^2+\mathrm{Variance}(\hat{f})$$
 
 Bias and variance are conflicting entities, and we cannot
 minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
@@ -116,17 +116,18 @@ barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```
 
-Note that the expected value $\mathbb{E}\hat{f}(x_i)$ can be obtained by fitting the polynomial model using $y_i = f(x_i)$:
+Note that the expected value $\mathbb{E}\hat{f}(x_i)$ can be obtained by fitting the polynomial model using $y_i = f(x_i)$. This allows to compute the squared bias $[\mathrm{Bias}(\hat{f})]^2= \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2$.
 
 ```{r}
 # expected value 
 Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
 plot(x,ftrue, type="l", col=4)
 lines(x,Ehatf)
+Bias2 = mean( (ftrue - Ehatf)^2 )
 ```
 
 
-Theoretical results show that for the linear model $$\frac{1}{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$
+Theoretical results show that for the linear model $$\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$
 Importantly, in the linear model the variance is unaffected by the form of $f(x)$. 
 
 ```{r}
