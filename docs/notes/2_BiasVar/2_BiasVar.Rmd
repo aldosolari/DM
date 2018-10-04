@@ -27,8 +27,7 @@ This setting combines the following two assumptions about the problem:
 1. The covariate values $x_1,\ldots,x_n$ used in training are not random (e.g., designed), and the only
 randomness in training is due to the responses $y_1,\ldots,y_n$.
 
-2. The covariates $x^*_1,\ldots,x^*_n$ used for prediction exactly match $x_1,\ldots,x_n$, respectively, and the
-corresponding responses $y^*_1,\ldots,y^*_n$ are independent copies of $y_1,\ldots,y_n$, respectively.
+2. The covariates $x^*_1,\ldots,x^*_n$ used for prediction exactly match $x_1,\ldots,x_n$
 
 Assume that for the training set
 $$y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$
@@ -136,7 +135,6 @@ mean(Var)
 # true variance
 (sigmatrue^2)*p/n
 ```
-
 
 Now we easily compute the decomposition of $\mathrm{ErrF}$ into squared bias and variance of the polynomial regression for all possible degrees from 0 to $n-1$ without using simulations. 
 

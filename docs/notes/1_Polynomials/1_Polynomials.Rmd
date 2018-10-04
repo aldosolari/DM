@@ -10,21 +10,8 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-# This is good for getting the ggplot background consistent with
-# the html background color
-library(ggplot2)
-thm <- theme_bw() + 
-  theme(
-    panel.background = element_rect(fill = "transparent", colour = NA), 
-    plot.background = element_rect(fill = "transparent", colour = NA),
-    legend.position = "top",
-    legend.background = element_rect(fill = "transparent", colour = NA),
-    legend.key = element_rect(fill = "transparent", colour = NA)
-  )
-theme_set(thm)
-
-knitr::opts_chunk$set(echo = T, message=F, warning=F, error=F, 
-                      comment=NA, cache=T)
+knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, 
+                      comment=NA, cache=T, R.options=list(width=220))
 ```
 
 From Azzalini and Scarpa, Chapter 3
@@ -52,14 +39,10 @@ The data were generated artificially by an equation such as
 
 $$y = f(x)+ \varepsilon$$
 
-where $\varepsilon$ is an error component with distribution $N(0,\sigma^2)$ and $\sigma=10^{-2}$; $f(x)$ is
-a function which we leave unspecified - the only requirement is that this function should follow an essentially regular trend.
+where $\varepsilon$ is an error component with distribution $N(0,\sigma^2)$ and $\sigma=10^{-2}$; $f(x)$ is a function which we leave unspecified, the only requirement is that this function should follow an essentially regular trend.
+Clearly, to generate the data, we had to choose a specific function (not a polynomial), but we do not disclose our choice.
 
-Clearly, to generate the data, we had to
-choose a specific function (not a polynomial), but we do not disclose our choice.
-
-Say we wish to obtain an estimate of $f(x)$ today that allows us to predict $y$ as new observations of $x$ become available, i.e. 
-we need to fit a predictive model
+Say we wish to obtain an estimate $\hat{f}$ of $f$ today that allows us to predict $y$ as new observations of $x$ become available, i.e.
 $$\hat{y} = \hat{f}(x)$$
 
 
@@ -70,8 +53,9 @@ Here the new observations
 
 * are $n$ as in the training set
 * have new $y$ but old (train) $x$
+* $x_1,\ldots,x_n$ are are treated as fixed, i.e. not random
 
-This is a particular case which we will call __fixed-x setting__ .
+This is a particular case which we will call __fixed-X setting__ .
 
 In general the test set is of size $m$ and have both new $x$ and new $y$
 

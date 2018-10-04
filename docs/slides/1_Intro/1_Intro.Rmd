@@ -3,7 +3,7 @@ title: "Introduction to the course"
 author: Aldo Solari
 output:
   xaringan::moon_reader:
-    css: ["default"]  
+    css: ["default", "fira-code.css"]  
     self_contained: false
     lib_dir: libs
     nature:
@@ -500,7 +500,7 @@ $$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)$$
 * The data were generated artificially by 
 $$y = f(x)+ \varepsilon$$
 
-* We wish to obtain an estimate of $f(x)$ that allows us to predict future $y$ as new observations of $x$ become available
+* We wish to obtain an estimate $\hat{f}$ of $f$ that allows us to predict future $y$ as new observations of $x$ become available
 
 * Tomorrow data, or the __test set__, will be like
 $$(x^*_1,y^*_1), (x^*_2,y^*_2), \ldots, (x^*_m,y^*_m)$$
@@ -526,7 +526,7 @@ plot( y ~ x , train)
 
 # Mean squared error
 
-* Suppose we have estimated $f(x)$ by $\hat{f}(x)$
+* Suppose we have estimated $f$ by $\hat{f}$
 
 * For yesterday data (training set), we can compute the __mean squared error__ 
 $$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$ 

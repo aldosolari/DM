@@ -3,7 +3,7 @@ title: "Bias-variance decomposition"
 author: Aldo Solari
 output:
   xaringan::moon_reader:
-    css: ["default"]  
+    css: ["default", "fira-code.css"]  
     self_contained: false
     lib_dir: libs
     nature:
