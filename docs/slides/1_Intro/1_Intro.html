@@ -611,7 +611,8 @@ plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
 &lt;img src="1_Intro_files/figure-html/unnamed-chunk-8-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ```r
-which.min(MSEs.te)
+# best?
+ps[which.min(MSEs.te)]
 ```
 
 ```

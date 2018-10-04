@@ -598,7 +598,8 @@ MSEs.te <- unlist(lapply(yhats,
 
 # plot
 plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
-which.min(MSEs.te)
+# best?
+ps[which.min(MSEs.te)]
 ```
 
 
