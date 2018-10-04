@@ -81,10 +81,10 @@ where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$.
 
 * The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator $\hat{f}$, respectively:
 $$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
-[\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2 + \mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \mathrm{Bias2+Variance}$$
+[\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2 + \mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = [\mathrm{Bias}(\hat{f}(x_i))]^2+\mathrm{Variance}(\hat{f}(x_i))$$
 
 * Now the decomposition of fixed-X prediction error is simply
-$$\mathrm{ErrF} =  \sigma^2 + \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}(\hat{f}(x_i) - f(x_i)) )^2 + \frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))$$
+$$\mathrm{ErrF} =  \sigma^2 + \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2 + \frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i)) = [\mathrm{Bias}(\hat{f})]^2+\mathrm{Variance}(\hat{f})$$
 
 * Bias and variance are conflicting entities, and we cannot
 minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
@@ -126,7 +126,7 @@ plot(x,ftrue, type="l", col=4)
 # Simulation
 
 * Consider the polynomial regression of degree $d$.
-We will perform a simulation to compute squared bias $[\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2$ and variance $\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]$
+We will perform a simulation to compute squared bias $[\mathrm{Bias}(\hat{f})]^2$ and variance $\mathrm{Variance}(\hat{f})$
 
 
 ```{r}
@@ -213,16 +213,16 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 
 # Linear model
 
-* Note that the expected value $\mathbb{E}\hat{f}(x_i)$ can be obtained by fitting the polynomial model using $y_i = f(x_i)$:
+* Note that the expected value $\mathbb{E}\hat{f}(x_i)$ can be obtained by fitting the polynomial model using $y_i = f(x_i)$. This allows to compute the squared bias $[\mathrm{Bias}(\hat{f})]^2= \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2$
 
 ```{r}
 d = 3
 # expected value 
 Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
-Bias2 = (ftrue - Ehatf)^2
+Bias2 = mean( (ftrue - Ehatf)^2 )
 ```
 
-* Theoretical results show that for the linear model $$\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$
+* Theoretical results show that for the linear model $$\mathrm{Variance}(\hat{f})=\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$
 Importantly, in the linear model the variance is unaffected by the form of $f(x)$. 
 
 ```{r}
@@ -309,6 +309,32 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```
 ]
 
+
+---
+
+```{r}
+# setting
+sigmatrue=0.01
+n = length(x)
+B = 1000
+# simulation function
+sim2 = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+ystar = ftrue + rnorm(n,0,sigmatrue)
+MSE.te = mean((ystar - yhat)^2)
+} 
+# MSE.te empirical
+d = 5
+mean(replicate(B,sim2(d)))
+# MSE.te theoretical
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
+Bias2 = mean( (ftrue - Ehatf)^2 )
+p = d+1
+Var = (sigmatrue^2)*p/n
+Bias2 + Var + sigmatrue^2
+```
 
 
 ---
