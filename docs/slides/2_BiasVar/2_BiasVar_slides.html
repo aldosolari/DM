@@ -75,9 +75,9 @@ x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{
 
 This setting combines the following two assumptions about the problem:
 
-1. The covariate values `\(x_1,\ldots,x_n\)` used in training are not random (e.g., designed), and the only randomness in training is due to the responses `\(y_1,\ldots,y_n\)`.
+1. The predictor values `\(x_1,\ldots,x_n\)` used in training are not random (e.g., designed), and the only randomness in training is due to the responses `\(y_1,\ldots,y_n\)`.
 
-2. The covariates `\(x^*_1,\ldots,x^*_n\)` used for prediction exactly match `\(x_1,\ldots,x_n\)`, respectively
+2. The predictors `\(x^*_1,\ldots,x^*_n\)` exactly match `\(x_1,\ldots,x_n\)`
 
 We assume that for the training set
 `$$Y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$`
@@ -92,7 +92,7 @@ the predictors `\(x_1,\ldots,x_n\)` are fixed and the errors
 # Prediction error
 
 In the fixed-X setting, __prediction error__ `\(\mathrm{ErrF}\)` is defined by
-`$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right]$$`
+`$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right] = \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$`
 
 This is the error that we want to minimize.
 

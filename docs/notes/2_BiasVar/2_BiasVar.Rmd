@@ -54,30 +54,30 @@ x_{n1}   & x_{n2} & \cdots   & x_{nj}    &  \cdots   &   x_{np}\\
 
 # Fixed-X setting
 
-A statistical regression model seeks to describe the relationship between a response $Y \in \mathbb{R}$ and a
-predictor vector $X\in \mathbb{R}^p$, based on training data comprised of paired observations $(x_1,y_1),\ldots,(x_n,y_n)$ i.i.d. from $(X,Y)$.
+A statistical regression model seeks to describe the relationship between a response $Y$ and a
+predictor vector $X=(X_1,\ldots,X_p)^\mathsf{T}$, based on training data comprised of paired observations $(x_1,y_1),\ldots,(x_n,y_n)$ i.i.d. from $(X,Y)$.
 Many modern regression models are ultimately aimed at prediction: given a new predictor value $x^*$, we apply the model to predict the corresponding response value $y^*$.
 
-A common assumption that is used in the estimation of prediction error is what we call a fixed-X assumption, where the training covariates values $x_1,\ldots,x_n$ are treated as fixed (i.e. non-random), as are the covariate values at which predictions are to be made, $x^*_1,\ldots,x^*_n$,
-which are also assumed to equal the training values.
+A common assumption that is used in the estimation of prediction error is what we call a fixed-X assumption, where the training predictor values $x_1,\ldots,x_n$ are treated as fixed (i.e. non-random), as are the test predictor values $x^*_1,\ldots,x^*_n$,
+which are also assumed to equal the training values, i.e. $x_i=x^*_i$.
 This setting combines the following two assumptions about the problem:
 
-1. The covariate values $x_1,\ldots,x_n$ used in training are not random (e.g., designed), and the only
+1. The predictor values $x_1,\ldots,x_n$ used in training are not random (e.g., designed), and the only
 randomness in training is due to the responses $y_1,\ldots,y_n$.
 
-2. The covariates $x^*_1,\ldots,x^*_n$ used for prediction exactly match $x_1,\ldots,x_n$
+2. $x^*_1,\ldots,x^*_n$ exactly match $x_1,\ldots,x_n$
 
-Assume that for the training set
+We assume that for the training data
 $$Y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$
-and for the test set
+and for the test data
 $$Y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n$$
-where $f(x)=\mathbb{E}(Y|x)$ is the unknown regression function, 
-the covariates $x_1,\ldots,x_n$ are fixed and the errors 
+where $f(x)=\mathbb{E}(Y|x)$ is some unknown regression function, 
+the predictors $x_1,\ldots,x_n$ are fixed and the errors 
 $\varepsilon_1,\ldots,\varepsilon_n$ and $\varepsilon^*_1,\ldots,\varepsilon^*_n$ are i.i.d. $N(0,\sigma^2)$. 
 
 
 In the fixed-X setting, __prediction error__ $\mathrm{ErrF}$ is defined by
-$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\right]$$
+$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\right]= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$
  
  
 # Bias-variance decomposition 
@@ -94,7 +94,7 @@ $f$, so that our estimated response took the form $\hat{y}^*_i = f(x_i)$, our pr
 
 The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator $\hat{f}$, respectively:
 $$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
-\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{\mathrm{Bias}^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}}$$
+\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{[\mathrm{Bias}(\hat{f}(x_i))]^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}(\hat{f}(x_i))}$$
 
 
 Now the decomposition of fixed-X prediction error is simply
@@ -203,4 +203,28 @@ barplot(Irr, add=T, col=1, names.arg=" ")
 legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 ```
 
+Now we chack the correctness of our results by comparing the empirical prediction error (calculated by simulation) and the theoretical prediction error (calculated by formulas).
+
+```{r}
+sigmatrue=0.01
+n = length(x)
+B = 1000
+# simulation function
+sim2 = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+ystar = ftrue + rnorm(n,0,sigmatrue)
+MSE.te = mean((ystar - yhat)^2)
+} 
+# MSE.te empirical
+d = 5
+mean(replicate(B,sim2(d)))
+# MSE.te theoretical
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
+Bias2 = mean( (ftrue - Ehatf)^2 )
+p = d+1
+Var = (sigmatrue^2)*p/n
+Bias2 + Var + sigmatrue^2
+```
 
