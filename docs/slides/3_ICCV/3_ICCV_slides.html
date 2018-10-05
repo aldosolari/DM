@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -52,8 +53,7 @@ So the higher the correlation between `\(y_i\)` and its fitted value `\(\hat{f}(
 
 # Optimism in the linear model
 
-* Prediction error is given by
-`$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) + \mathrm{OptF}$$`
+* Prediction error is given by `\(\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) + \mathrm{OptF}\)`
 
 * Optimism is important  because an 
 estimate of `\(\widehat{\mathrm{OptF}}\)` of `\(\mathrm{OptF}\)` leads to an estimate of `\(\mathrm{ErrF}\)`:
@@ -64,12 +64,10 @@ estimate of `\(\widehat{\mathrm{OptF}}\)` of `\(\mathrm{OptF}\)` leads to an est
 * For the linear model, it can be shown that
 `$$\mathrm{OptF} =  \frac{2\sigma^2 p}{n}$$`
 
-* The above formula assumes that `\(\sigma^2\)` is known, which is not realistic. In practice, we can plug-in its estimate `$$\hat{\sigma}^2= \frac{\mathrm{RSS}}{n-p}= \frac{\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2}{n-p}$$` where `\(\mathrm{RSS} = n \mathrm{MSE}_{\mathrm{Tr}}\)` is the __residual sum of squares__.
+* The above formula assumes that `\(\sigma^2\)` is known, which is not realistic. We can plug-in its estimate `$$\hat{\sigma}^2= \frac{\mathrm{RSS}}{n-p}= \frac{\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2}{n-p}$$` where `\(\mathrm{RSS} = n \mathrm{MSE}_{\mathrm{Tr}}\)` is the __residual sum of squares__.
 
-* This estimator is also known as __Mallows' Cp__
-`\begin{aligned}
-\mathrm{Cp} &amp;= \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}\\
-\end{aligned}`
+* This estimator is also known as __Mallows' Cp__ : 
+`$$\mathrm{Cp} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}$$`
 
 ---
 
@@ -256,7 +254,7 @@ the data into equal parts `\(V_1,\ldots,V_K\)`.
 
 * [ISLR Fig. 5.5](http://www-bcf.usc.edu/~gareth/ISL/Chapter5/5.5.pdf)
 
-* In __$K$-fold cross-validation__ we use observations `\(i\notin V_k\)` for training the model and `\(i \in V_k\)` for evaluating it:
+* In __K-fold cross-validation__ we use observations `\(i\notin V_k\)` for training the model and `\(i \in V_k\)` for evaluating it:
 `$$\frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2$$`
 and finally we take the average to estimate the expected test error:
 `$$\widehat{\mathrm{Err}} = \frac{1}{K} \sum_{k=1}^{K}\left[ \frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2 \right]$$`
@@ -405,9 +403,7 @@ ps[which.min(LOOCV)]
 # Generalized cross-validation
 
 * In __generalized cross-validation__ we compute
-$$
- \widehat{\mathrm{Err}} =\frac{ \mathrm{MSE}_{\mathrm{Tr}}}{\left(1 - \frac{p}{n}\right)^2} 
-$$
+`$$\widehat{\mathrm{Err}} =\frac{ \mathrm{MSE}_{\mathrm{Tr}}}{\left(1 - \frac{p}{n}\right)^2}$$`
 where we approximate each `\(h_{ii}\)` by their average
 `\(\frac{1}{n}\sum_{i=1}^{n} h_{ii} = \frac{p}{n}\)`
 
@@ -437,7 +433,7 @@ ps[which.min(GCV)]
 
 __Bias__
 
-* `\(K\)`-fold CV with `\(K=5\)` or 10 gives a biased (upward) estimate of `\(\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})\)` because it uses less information ($4/5$ or `\(9/10\)` of the observations)
+* `\(K\)`-fold CV with `\(K=5\)` or 10 gives a biased (upward) estimate of `\(\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})\)` because it uses less information (4/5 or `\(9/10\)` of the observations)
 
 * LOOCV has very low bias (it uses `\(n-1\)` observations)
 
@@ -490,7 +486,7 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);
