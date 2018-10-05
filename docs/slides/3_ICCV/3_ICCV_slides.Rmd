@@ -49,6 +49,13 @@ So the higher the correlation between $y_i$ and its fitted value $\hat{f}(x_i)$,
 
 ---
 
+```{r, echo=FALSE, fig.align = 'center', out.width = '50%', out.height = '50%'}
+knitr::include_graphics("images/EMSEmany.jpg")
+```
+
+
+---
+
 # Optimism in the linear model
 
 * Prediction error is given by $\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) + \mathrm{OptF}$
