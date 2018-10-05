@@ -77,9 +77,6 @@ ErrFs = Bias2s + Vars + sigmatrue^2
 Now we compare these values to $\widehat{\mathrm{ErrF}} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2\sigma^2 p}{n}$ knowing that the true $\sigma=0.01$:
 
 ```{r}
-ds = 1:15
-ps = ds+1
-sigmatrue = 0.01
 hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n 
 plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
 lines(ps, hatErrFs, type="b", col=2)
@@ -93,12 +90,12 @@ Now we compute $\widehat{\mathrm{ErrF}} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2\
 
 ```{r}
 hatsigma2 = (n*MSEs.tr)/(n-ps)
-hatErrFs2 = MSEs.tr + (2*hatsigma2*ps)/n 
+Cps = MSEs.tr + (2*hatsigma2*ps)/n 
 plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
-lines(ps, hatErrFs2, type="b", col=2)
+lines(ps, Cps, type="b", col=2)
 lines(ps, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + hatOpt"), col=c(4,1,2), pch=19)
-ps[which.min(hatErrFs2)]
+ps[which.min(Cps)]
 ```
 
 This is because of the different estimates $\hat{\sigma}^2$ for $\sigma^2$:
@@ -149,7 +146,7 @@ ps[which.min(BICs)]
 # Cross-validation
 
 As noticed earlier, training an algorithm and evaluating
-its statistical performance on the same data yields an overoptimistic result. __Cross-validation__ (CV) was raised to fix this issue, starting from the remark that testing the output of the algorithm on new data would yield a good estimate of the expected test error $$\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$$ 
+its statistical performance on the same data yields an overoptimistic result. __Cross-validation__ (CV) was raised to fix this issue, starting from the remark that testing the output of the algorithm on new data would yield a good estimate $\widehat{\mathrm{Err}}$ of the expected test error $\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$
 
 In most real applications, only a limited amount of data is available, which leads to the idea of __splitting the data__: Part of data (the training set) is used
 for training the algorithm, and the remaining data (the validation set) are used for evaluating the performance of the algorithm. The validation set can play the role of new data as long as data are i.i.d..
@@ -157,7 +154,7 @@ A single data split yields a __validation estimate__ of the expected test error,
 $$\widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})}$$ 
 
 The major interest of CV lies in the universality of the data splitting
-heuristics. Therefore, CV is a non-parametric method which can be applied to any algorithm in any framework. This universality is not shared by e.g. Cp, which is specific of linear regression.
+heuristics. Therefore, CV is a non-parametric method which can be applied to any algorithm in any framework. This universality is not shared by e.g. Cp, which is specific to linear regression.
 
 ## Validation set approach
 
@@ -168,7 +165,7 @@ into two parts: a training set and a __validation__ or hold-out set.
 
 The model is fitted on the training set $T \subset \{1,\ldots,n\}$, and the fitted model $\hat{f}^{-V}$ is used to predict the responses for the
 observations in the validation set $V = \{1,\ldots,n\} \setminus T$, providing an estimate of the expected test error
-$$\widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})} = \frac{1}{\# V} \sum_{i \in V} (y_i - \hat{f}^{-V}(x_i))^2$$ù
+$$\widehat{\mathrm{Err}} = \frac{1}{\# V} \sum_{i \in V} (y_i - \hat{f}^{-V}(x_i))^2$$
 
 This scheme reduces the sample size used for fitting the
 model, but this is not a problem when $n$ is very large. If $n$ is not very large, however, the validation estimate of the
@@ -188,7 +185,7 @@ In __$K$-fold cross-validation__ we use observations $i\notin V_k$ for training 
 $$\frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2$$
 and finally we take the average to estimate the expected test error:
 
-$$\widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})} = \frac{1}{K} \sum_{k=1}^{K}\left[ \frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2 \right]$$
+$$\widehat{\mathrm{Err}} = \frac{1}{K} \sum_{k=1}^{K}\left[ \frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2 \right]$$
 
 By hand
 
@@ -237,7 +234,7 @@ For $i=1,\ldots,n$:
 * Hold out the $i$th training observation $(x_i,y_i)$
 * Use $n-1$ training observations for training the model $\hat{f}^{-i}$ and the hold-out observation $(x_i,y_i)$ to evaluate it by $(y_i - \hat{f}^{-i}(x_i))^2$
 * Finally take the average
-$$\widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}^{-i}(x_i))^2$$
+$$\widehat{\mathrm{Err}} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}^{-i}(x_i))^2$$
 
 
 Note that LOOCV is a special case of $K$-fold CV corresponding to $K = n$. 
@@ -293,7 +290,7 @@ ps[which.min(LOOCV)]
 In __generalized cross-validation__ we compute
 
 $$
- \widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})} =\frac{ \mathrm{MSE}_{\mathrm{Tr}}}{\left(1 - \frac{p}{n}\right)^2} 
+ \widehat{\mathrm{Err}} =\frac{ \mathrm{MSE}_{\mathrm{Tr}}}{\left(1 - \frac{p}{n}\right)^2} 
 $$
 where we approximate each $h_{ii}$ by their average
 $\frac{1}{n}\sum_{i=1}^{n} h_{ii} = \frac{p}{n}$

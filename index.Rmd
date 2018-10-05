@@ -25,7 +25,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* 3/10/18: The lecture of October 4 will start at 13:45 Lab713 instead of 14:00
+* No news
 
 # **Course Material**
 
@@ -35,7 +35,7 @@ Most of the course material can be found in the notes linked to below. The notes
 |--|--|--------------|--------|-------|
 | 1 | October 1 | Introduction | [Polynomials](docs/notes/1_Polynomials/1_Polynomials.html) | [Slides](docs/slides/1_Intro/1_Intro.html) |
 | 2 | October 4 | Bias-Variance Decomposition | [BiasVar](docs/notes/2_BiasVar/2_BiasVar.html) | [Slides](docs/slides/2_BiasVar/2_BiasVar_slides.html) |
-| 3 | October 5  | Optimism, IC and CV | [ICCV](docs/notes/3_ICCV/3_ICCV.html) | Slides |
+| 3 | October 5  | Optimism, IC and CV | [ICCV](docs/notes/3_ICCV/3_ICCV.html) | [Slides](docs/slides/3_ICCV/3_ICCV_slides.html) |
 |  |  |  |  | | |
 | 4 | October 8 | | | |
 | 5 | October 11|  |  |
