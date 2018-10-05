@@ -37,9 +37,9 @@ plot( y ~ x , train)
 
 The data were generated artificially by an equation such as
 
-$$y = f(x)+ \varepsilon$$
+$$Y = f(X)+ \varepsilon$$
 
-where $\varepsilon$ is an error component with distribution $N(0,\sigma^2)$ and $\sigma=10^{-2}$; $f(x)$ is a function which we leave unspecified, the only requirement is that this function should follow an essentially regular trend.
+where $\varepsilon$ is an error component with distribution $N(0,\sigma^2)$ and $\sigma=10^{-2}$; $f$ is a function which we leave unspecified, the only requirement is that this function should follow an essentially regular trend.
 Clearly, to generate the data, we had to choose a specific function (not a polynomial), but we do not disclose our choice.
 
 Say we wish to obtain an estimate $\hat{f}$ of $f$ today that allows us to predict $y$ as new observations of $x$ become available, i.e.

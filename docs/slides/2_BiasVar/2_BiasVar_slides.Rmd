@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F,
 * $(X,Y)$ have some unknown joint distribution
 * Model
 $$Y = f(X) + \varepsilon$$
-where $f(X)=\mathbb{E}(Y|X)$ is the regression function and $\varepsilon$ is the error term independent from $X$ with $\mathbb{E}(\varepsilon)=0$ and $\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2$
+where $f(X)=\mathbb{E}(Y|X)$ is the __regression function__ and $\varepsilon$ is the error term independent from $X$ with $\mathbb{E}(\varepsilon)=0$ and $\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2$
 * Observed training set: $(x_1,y_1),\ldots,(x_n,y_n)$ i.i.d. from $(X,Y)$
 * Observed test set: $(x^*_1,y^*_1),\ldots,(x^*_m,y^*_m)$ i.i.d. from $(X,Y)$
 
@@ -81,7 +81,7 @@ We assume that for the training set
 $$Y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$
 and for the test set
 $$Y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n$$
-where $f(x)$ is the unknown regression function, 
+where $f$ is the unknown regression function, 
 the predictors $x_1,\ldots,x_n$ are fixed and the errors 
 $\varepsilon_1,\ldots,\varepsilon_n$ and $\varepsilon^*_1,\ldots,\varepsilon^*_n$ are i.i.d. $N(0,\sigma^2)$. 
 
