@@ -142,13 +142,13 @@ class: inverse, middle, center
 # AIC and BIC
 
 * __AIC__ is given by
-$$\mathrm{AIC} =  -2 \cdot \mathrm{likelihood}(\hat{\beta},\hat{\sigma}^2) + 2p$$
-where for the linear model $-2 \cdot \mathrm{likelihood}(\hat{\beta},\hat{\sigma}^2) = n \log(\mathrm{MSE}_{\mathrm{Tr}})$
+$$\mathrm{AIC} =  -2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) + 2p$$
+where for the linear model $-2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) = n \log(\mathrm{MSE}_{\mathrm{Tr}})$
 
 * For linear models, Cp and AIC are proportional to each other, and the lowest Cp corresponds to the lowest AIC. 
 
 * __BIC__ is given by
-$$\mathrm{BIC} =  -2 \cdot \mathrm{likelihood}(\hat{\beta},\hat{\sigma}^2) + \log(n)p$$
+$$\mathrm{BIC} =  -2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) + \log(n)p$$
 
 * Since $\log(n) > 2$ for any $n > 7$,
 the BIC statistic generally results in the selection of smaller models than AIC
