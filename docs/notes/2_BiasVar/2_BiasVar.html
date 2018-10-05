@@ -223,21 +223,50 @@ div.tocify {
 </div>
 
 
+<div id="notation" class="section level1">
+<h1>Notation</h1>
+<ul>
+<li>Response <span class="math inline">\(Y\)</span></li>
+<li>Predictors <span class="math inline">\(X=(X_1,\ldots,X_p)^\mathsf{T}\)</span></li>
+<li><span class="math inline">\((X,Y)\)</span> have some unknown joint distribution</li>
+<li>Model <span class="math display">\[Y = f(X) + \varepsilon\]</span> where <span class="math inline">\(f(X)=\mathbb{E}(Y|X)\)</span> is the regression function and <span class="math inline">\(\varepsilon\)</span> is the error term independent from <span class="math inline">\(X\)</span> with <span class="math inline">\(\mathbb{E}(\varepsilon)=0\)</span> and <span class="math inline">\(\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2\)</span></li>
+<li>Observed training set: <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> i.i.d. from <span class="math inline">\((X,Y)\)</span></li>
+<li>Observed test set: <span class="math inline">\((x^*_1,y^*_1),\ldots,(x^*_m,y^*_m)\)</span> i.i.d. from <span class="math inline">\((X,Y)\)</span></li>
+<li><p>Vector of response (training set): <span class="math display">\[\underset{n\times 1}{\mathbf{y}} = 
+\left[
+\begin{array}{c}
+y_1   \\
+\cdots\\
+y_i  \\
+\cdots\\
+y_n \\
+\end{array}\right]\]</span></p></li>
+<li><p>Design matrix (training set): <span class="math display">\[\underset{n\times p}{\mathbf{X}} = \left[
+\begin{array}{cccccc}
+x_{11}  &amp; x_{12}  &amp; \cdots   &amp;  x_{1j}  &amp; \cdots   &amp;   x_{1p}  \\
+x_{21}  &amp; x_{22} &amp; \cdots   &amp;  x_{2j}  &amp; \cdots   &amp;   x_{2p}  \\
+\cdots   &amp; \cdots   &amp;  \cdots &amp; \cdots   &amp;  \cdots  \\
+x_{i1}  &amp; x_{i2} &amp; \cdots   &amp;  x_{ij}&amp; \cdots   &amp; x_{ip}    \\
+\cdots   &amp; \cdots   &amp;  \cdots  &amp;  \cdots   &amp;  \cdots\\
+x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{np}\\
+\end{array}\right]\]</span></p></li>
+</ul>
+</div>
 <div id="fixed-x-setting" class="section level1">
 <h1>Fixed-X setting</h1>
-<p>A statistical regression model seeks to describe the relationship between a response <span class="math inline">\(y \in \mathbb{R}\)</span> and a covariate vector <span class="math inline">\(x\in \mathbb{R}^p\)</span>, based on training data comprised of paired observations <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span>. Many modern regression models are ultimately aimed at prediction: given a new covariate value <span class="math inline">\(x^*\)</span>, we apply the model to predict the corresponding response value <span class="math inline">\(y^*\)</span>.</p>
+<p>A statistical regression model seeks to describe the relationship between a response <span class="math inline">\(Y \in \mathbb{R}\)</span> and a predictor vector <span class="math inline">\(X\in \mathbb{R}^p\)</span>, based on training data comprised of paired observations <span class="math inline">\((x_1,y_1),\ldots,(x_n,y_n)\)</span> i.i.d. from <span class="math inline">\((X,Y)\)</span>. Many modern regression models are ultimately aimed at prediction: given a new predictor value <span class="math inline">\(x^*\)</span>, we apply the model to predict the corresponding response value <span class="math inline">\(y^*\)</span>.</p>
 <p>A common assumption that is used in the estimation of prediction error is what we call a fixed-X assumption, where the training covariates values <span class="math inline">\(x_1,\ldots,x_n\)</span> are treated as fixed (i.e. non-random), as are the covariate values at which predictions are to be made, <span class="math inline">\(x^*_1,\ldots,x^*_n\)</span>, which are also assumed to equal the training values. This setting combines the following two assumptions about the problem:</p>
 <ol style="list-style-type: decimal">
 <li><p>The covariate values <span class="math inline">\(x_1,\ldots,x_n\)</span> used in training are not random (e.g., designed), and the only randomness in training is due to the responses <span class="math inline">\(y_1,\ldots,y_n\)</span>.</p></li>
 <li><p>The covariates <span class="math inline">\(x^*_1,\ldots,x^*_n\)</span> used for prediction exactly match <span class="math inline">\(x_1,\ldots,x_n\)</span></p></li>
 </ol>
-<p>Assume that for the training set <span class="math display">\[y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n\]</span> and for the test set <span class="math display">\[y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n\]</span> where <span class="math inline">\(f(x)\)</span> is the unknown regression function, the covariates <span class="math inline">\(x_1,\ldots,x_n\)</span> are fixed and the errors <span class="math inline">\(\varepsilon_1,\ldots,\varepsilon_n\)</span> and <span class="math inline">\(\varepsilon^*_1,\ldots,\varepsilon^*_n\)</span> are i.i.d. <span class="math inline">\(N(0,\sigma^2)\)</span>.</p>
+<p>Assume that for the training set <span class="math display">\[Y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n\]</span> and for the test set <span class="math display">\[Y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n\]</span> where <span class="math inline">\(f(x)=\mathbb{E}(Y|x)\)</span> is the unknown regression function, the covariates <span class="math inline">\(x_1,\ldots,x_n\)</span> are fixed and the errors <span class="math inline">\(\varepsilon_1,\ldots,\varepsilon_n\)</span> and <span class="math inline">\(\varepsilon^*_1,\ldots,\varepsilon^*_n\)</span> are i.i.d. <span class="math inline">\(N(0,\sigma^2)\)</span>.</p>
 <p>In the fixed-X setting, <strong>prediction error</strong> <span class="math inline">\(\mathrm{ErrF}\)</span> is defined by <span class="math display">\[\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2\right]\]</span></p>
 </div>
 <div id="bias-variance-decomposition" class="section level1">
 <h1>Bias-variance decomposition</h1>
-<p>We start by considering a specific value <span class="math inline">\(x_i\)</span> for <span class="math inline">\(x\)</span>. Suppose we want to predict <span class="math inline">\(y^*_i\)</span> by <span class="math inline">\(\hat{y}_i^* = \hat{f}(x_i)\)</span> where <span class="math inline">\(\hat{f}\)</span> is an estimate of <span class="math inline">\(f\)</span> based on the training data. The accuracy of <span class="math inline">\(\hat{y}^*_i\)</span> as a prediction for <span class="math inline">\(y^*_i\)</span> depends on two quantities, which we call the <strong>reducible error</strong> and the <strong>irreducible error</strong>. We have <span class="math display">\[\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}\]</span></p>
-<p>where <span class="math inline">\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)</span>. Note that, even if it were possible to form a perfect estimate for <span class="math inline">\(f\)</span>, so that our estimated response took the form <span class="math inline">\(\hat{y}^*_i = f(x_i)\)</span>, our prediction would still have some error in it. This is because <span class="math inline">\(y_i^* = f(x_i) + \varepsilon_i^*\)</span>.</p>
+<p>We start by considering a specific value <span class="math inline">\(x_i\)</span> for <span class="math inline">\(x\)</span>. Suppose we want to predict <span class="math inline">\(y^*_i\)</span> by <span class="math inline">\(\hat{y}_i^* = \hat{f}(x_i)\)</span> where <span class="math inline">\(\hat{f}\)</span> is an estimate of <span class="math inline">\(f\)</span> based on the training data. The accuracy of <span class="math inline">\(\hat{y}^*_i\)</span> as a prediction for <span class="math inline">\(y^*_i\)</span> depends on two quantities, which we call the <strong>reducible error</strong> and the <strong>irreducible error</strong>. We have <span class="math display">\[\mathbb{E}[(Y^*_{i} - \hat{Y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}\]</span></p>
+<p>where <span class="math inline">\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)</span>. Note that, even if it were possible to form a perfect estimate for <span class="math inline">\(f\)</span>, so that our estimated response took the form <span class="math inline">\(\hat{y}^*_i = f(x_i)\)</span>, our prediction would still have some error in it. This is because <span class="math inline">\(Y_i^* = f(x_i) + \varepsilon_i^*\)</span>.</p>
 <p>The reducible error can be decomposed into (squared) <strong>bias</strong> and <strong>variance</strong> of the estimator <span class="math inline">\(\hat{f}\)</span>, respectively: <span class="math display">\[\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
 \underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{\mathrm{Bias}^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}}\]</span></p>
 <p>Now the decomposition of fixed-X prediction error is simply</p>

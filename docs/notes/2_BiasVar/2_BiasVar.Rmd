@@ -14,11 +14,49 @@ knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F,
                       comment=NA, cache=T, R.options=list(width=220))
 ```
 
+# Notation
+
+* Response $Y$
+* Predictors $X=(X_1,\ldots,X_p)^\mathsf{T}$
+* $(X,Y)$ have some unknown joint distribution
+* Model
+$$Y = f(X) + \varepsilon$$
+where $f(X)=\mathbb{E}(Y|X)$ is the regression function and $\varepsilon$ is the error term independent from $X$ with $\mathbb{E}(\varepsilon)=0$ and $\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2$
+* Observed training set: $(x_1,y_1),\ldots,(x_n,y_n)$ i.i.d. from $(X,Y)$
+* Observed test set: $(x^*_1,y^*_1),\ldots,(x^*_m,y^*_m)$ i.i.d. from $(X,Y)$
+* Vector of response (training set): 
+$$\underset{n\times 1}{\mathbf{y}} = 
+\left[
+\begin{array}{c}
+y_1   \\
+\cdots\\
+y_i  \\
+\cdots\\
+y_n \\
+\end{array}\right]$$
+
+* Design matrix (training set):
+$$\underset{n\times p}{\mathbf{X}} = \left[
+\begin{array}{cccccc}
+x_{11}  & x_{12}  & \cdots   &  x_{1j}  & \cdots   &   x_{1p}  \\
+x_{21}  & x_{22} & \cdots   &  x_{2j}  & \cdots   &   x_{2p}  \\
+\cdots   & \cdots   &  \cdots & \cdots   &  \cdots  \\
+x_{i1}  & x_{i2} & \cdots   &  x_{ij}& \cdots   & x_{ip}    \\
+\cdots   & \cdots   &  \cdots  &  \cdots   &  \cdots\\
+x_{n1}   & x_{n2} & \cdots   & x_{nj}    &  \cdots   &   x_{np}\\
+\end{array}\right]$$
+
+
+
+
+
+
+
 # Fixed-X setting
 
-A statistical regression model seeks to describe the relationship between a response $y \in \mathbb{R}$ and a
-covariate vector $x\in \mathbb{R}^p$, based on training data comprised of paired observations $(x_1,y_1),\ldots,(x_n,y_n)$.
-Many modern regression models are ultimately aimed at prediction: given a new covariate value $x^*$, we apply the model to predict the corresponding response value $y^*$.
+A statistical regression model seeks to describe the relationship between a response $Y \in \mathbb{R}$ and a
+predictor vector $X\in \mathbb{R}^p$, based on training data comprised of paired observations $(x_1,y_1),\ldots,(x_n,y_n)$ i.i.d. from $(X,Y)$.
+Many modern regression models are ultimately aimed at prediction: given a new predictor value $x^*$, we apply the model to predict the corresponding response value $y^*$.
 
 A common assumption that is used in the estimation of prediction error is what we call a fixed-X assumption, where the training covariates values $x_1,\ldots,x_n$ are treated as fixed (i.e. non-random), as are the covariate values at which predictions are to be made, $x^*_1,\ldots,x^*_n$,
 which are also assumed to equal the training values.
@@ -30,10 +68,10 @@ randomness in training is due to the responses $y_1,\ldots,y_n$.
 2. The covariates $x^*_1,\ldots,x^*_n$ used for prediction exactly match $x_1,\ldots,x_n$
 
 Assume that for the training set
-$$y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$
+$$Y_{i}=f(x_i)+\varepsilon_i, \quad i=1,\ldots,n$$
 and for the test set
-$$y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n$$
-where $f(x)$ is the unknown regression function, 
+$$Y^*_{i}=f(x_i)+\varepsilon^*_i, \quad i=1,\ldots,n$$
+where $f(x)=\mathbb{E}(Y|x)$ is the unknown regression function, 
 the covariates $x_1,\ldots,x_n$ are fixed and the errors 
 $\varepsilon_1,\ldots,\varepsilon_n$ and $\varepsilon^*_1,\ldots,\varepsilon^*_n$ are i.i.d. $N(0,\sigma^2)$. 
 
@@ -48,11 +86,11 @@ We start by considering a specific value $x_i$ for $x$.
 Suppose we want to predict $y^*_i$ by $\hat{y}_i^* = \hat{f}(x_i)$ where $\hat{f}$ is an estimate of $f$ based on the training data.
 The accuracy of $\hat{y}^*_i$ as a prediction for $y^*_i$ depends on two quantities, which we call the __reducible error__ and the __irreducible error__. 
 We have 
-$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$
+$$\mathbb{E}[(Y^*_{i} - \hat{Y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$
 
 where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$. 
 Note that, even if it were possible to form a perfect estimate for
-$f$, so that our estimated response took the form $\hat{y}^*_i = f(x_i)$, our prediction would still have some error in it. This is because $y_i^* = f(x_i) + \varepsilon_i^*$. 
+$f$, so that our estimated response took the form $\hat{y}^*_i = f(x_i)$, our prediction would still have some error in it. This is because $Y_i^* = f(x_i) + \varepsilon_i^*$. 
 
 The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator $\hat{f}$, respectively:
 $$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
