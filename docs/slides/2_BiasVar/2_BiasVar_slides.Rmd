@@ -67,7 +67,7 @@ class: inverse, middle, center
 * The accuracy of $\hat{y}^*_i$ as a prediction for $y^*_i$ depends on two quantities, which we call the __reducible error__ and the __irreducible error__. 
 
 * We have 
-$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] + \mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \mathrm{Reducible+Irreducible}$$
+$$\mathbb{E}[(y^*_{i} - \hat{y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$
 where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$. 
 
 
@@ -79,10 +79,10 @@ where $\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2$.
 
 * The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator $\hat{f}$, respectively:
 $$\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2] =
-[\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2 + \mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = [\mathrm{Bias}(\hat{f}(x_i))]^2+\mathrm{Variance}(\hat{f}(x_i))$$
+\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{[\mathrm{Bias}(\hat{f}(x_i))]^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}(\hat{f}(x_i))}$$
 
 * Now the decomposition of fixed-X prediction error is simply
-$$\mathrm{ErrF} =  \sigma^2 + \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2 + \frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i)) = [\mathrm{Bias}(\hat{f})]^2+\mathrm{Variance}(\hat{f})$$
+$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}} = [\mathrm{Bias}(\hat{f})]^2+\mathrm{Variance}(\hat{f})$$
 
 * Bias and variance are conflicting entities, and we cannot
 minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
@@ -124,7 +124,7 @@ plot(x,ftrue, type="l", col=4)
 # Simulation
 
 * Consider the polynomial regression of degree $d$.
-We will perform a simulation to compute squared bias $[\mathrm{Bias}(\hat{f})]^2$ and variance $\mathrm{Variance}(\hat{f})$
+We will perform a simulation to compute  $[\mathrm{Bias}(\hat{f})]^2$ and  $\mathrm{Variance}(\hat{f})$
 
 
 ```{r}
@@ -311,7 +311,6 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ---
 
 ```{r}
-# setting
 sigmatrue=0.01
 n = length(x)
 B = 1000
