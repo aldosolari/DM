@@ -12,9 +12,7 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, 
-                      comment=NA, cache=T, R.options=list(width=220),
-                      fig.align='center', out.width='75%', fig.asp=.75)
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=T, R.options=list(width=220))
 ```
 
 # Outline
@@ -184,18 +182,15 @@ yhat = fitted(fit)
 
 ---
 
-# Results (d=3)
-
 .pull-left[
 
 ```{r}
+# 3rd degree polynomial
 d = 3
-# results
 set.seed(123)
 {{yhats = replicate(B,sim(d))}}
 matplot(x,yhats, type="l", col="gray", lty=1)
 lines(x,ftrue, col=4)
-# expected value
 Ehatf = apply(yhats,1,mean)
 lines(x,Ehatf)
 ```
@@ -204,11 +199,8 @@ lines(x,Ehatf)
 .pull-right[
 
 ```{r}
-# squared bias
 Bias2 = (ftrue - Ehatf)^2
-# variance
 Var = apply(yhats,1,var)
-# plot
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
@@ -217,18 +209,15 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 
 ---
 
-# Results (d=20)
-
 .pull-left[
 
 ```{r}
+# 20th degree polynomial
 d = 20
-# results
 set.seed(123)
 yhats = replicate(B,sim(d))
 matplot(x,yhats, type="l", col="gray", lty=1)
 lines(x,ftrue, col=4)
-# expected value
 Ehatf = apply(yhats,1,mean)
 lines(x,Ehatf)
 ```
@@ -237,11 +226,8 @@ lines(x,Ehatf)
 .pull-right[
 
 ```{r}
-# squared bias
 Bias2 = (ftrue - Ehatf)^2
-# variance
 Var = apply(yhats,1,var)
-# plot
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
@@ -318,18 +304,16 @@ legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 
 ---
 
-# Best model (d=5)
 
 .pull-left[
 
 ```{r}
-d = 5
-# results
+# best model!
+d = 5 
 set.seed(123)
 yhats = replicate(B,sim(d))
 matplot(x,yhats, type="l", col="gray", lty=1)
 lines(x,ftrue, col=4)
-# expected value
 Ehatf = apply(yhats,1,mean)
 lines(x,Ehatf)
 ```
@@ -338,11 +322,8 @@ lines(x,Ehatf)
 .pull-right[
 
 ```{r}
-# squared bias
 Bias2 = (ftrue - Ehatf)^2
-# variance
 Var = apply(yhats,1,var)
-# plot
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))

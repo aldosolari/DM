@@ -164,7 +164,7 @@ x = seq(.5,3,length=30)
 plot(x,ftrue, type="l", col=4)
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-1-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -190,80 +190,68 @@ B = 100
 
 ---
 
-# Results (d=3)
-
 .pull-left[
 
 
 ```r
+# 3rd degree polynomial
 d = 3
-# results
 set.seed(123)
 *yhats = replicate(B,sim(d))
 matplot(x,yhats, type="l", col="gray", lty=1)
 lines(x,ftrue, col=4)
-# expected value
 Ehatf = apply(yhats,1,mean)
 lines(x,Ehatf)
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-3-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
 
 ```r
-# squared bias
 Bias2 = (ftrue - Ehatf)^2
-# variance
 Var = apply(yhats,1,var)
-# plot
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-4-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 ]
 
 ---
-
-# Results (d=20)
 
 .pull-left[
 
 
 ```r
+# 20th degree polynomial
 d = 20
-# results
 set.seed(123)
 yhats = replicate(B,sim(d))
 matplot(x,yhats, type="l", col="gray", lty=1)
 lines(x,ftrue, col=4)
-# expected value
 Ehatf = apply(yhats,1,mean)
 lines(x,Ehatf)
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-5-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
 
 ```r
-# squared bias
 Bias2 = (ftrue - Ehatf)^2
-# variance
 Var = apply(yhats,1,var)
-# plot
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-6-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -313,7 +301,7 @@ ps[which.min(Reds)]
 
 ---
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-10-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -326,46 +314,41 @@ barplot(Irr, add=T, col=1, names.arg=" ")
 legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-11-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 
 ---
 
-# Best model (d=5)
 
 .pull-left[
 
 
 ```r
-d = 5
-# results
+# best model!
+d = 5 
 set.seed(123)
 yhats = replicate(B,sim(d))
 matplot(x,yhats, type="l", col="gray", lty=1)
 lines(x,ftrue, col=4)
-# expected value
 Ehatf = apply(yhats,1,mean)
 lines(x,Ehatf)
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-12-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
 
 ```r
-# squared bias
 Bias2 = (ftrue - Ehatf)^2
-# variance
 Var = apply(yhats,1,var)
-# plot
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```
 
-&lt;img src="2_BiasVar_slides_files/figure-html/unnamed-chunk-13-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](2_BiasVar_slides_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 ]
 
 

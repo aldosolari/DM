@@ -10,8 +10,7 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, 
-                      comment=NA, cache=T, R.options=list(width=220))
+knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, comment=NA, cache=T, R.options=list(width=220))
 ```
 
 From Azzalini and Scarpa, Chapter 3
@@ -39,7 +38,7 @@ The data were generated artificially by an equation such as
 
 $$Y = f(X)+ \varepsilon$$
 
-where $\varepsilon$ is an error component with distribution $N(0,\sigma^2)$ and $\sigma=10^{-2}$; $f$ is a function which we leave unspecified, the only requirement is that this function should follow an essentially regular trend.
+where $\varepsilon$ is an error component with distribution $N(0,\sigma^2)$ and $\sigma=0.01$; $f$ is a function which we leave unspecified, the only requirement is that this function should follow an essentially regular trend.
 Clearly, to generate the data, we had to choose a specific function (not a polynomial), but we do not disclose our choice.
 
 Say we wish to obtain an estimate $\hat{f}$ of $f$ today that allows us to predict $y$ as new observations of $x$ become available, i.e.
@@ -125,7 +124,7 @@ As already mentioned, we need to use an estimate of $f(x)$ to predict values of 
 
 We now evaluate the quality of the prediction using yesterday's fit of the polynomials for the new $y^*_i$, as if we could obtain tomorrow's data today. Let's try with the 20th degree polynomial:
 
-```{r, message=FALSE, warning=FALSE}
+```{r}
 # 20th degree polynomial fit
 fit <- lm( y ~ poly(x, degree=20), train)
 yhat <- predict(fit, newdata=test)
@@ -142,7 +141,7 @@ The figure shows yesterday and tomorrow's data with the predictions from the 20t
 
 Now we compute $\mathrm{MSE}_{\mathrm{Te}}$ for all possible degrees from 0 to $n-1$.
 
-```{r, message=FALSE, warning=FALSE}
+```{r}
 # compute predictions for all degrees
 yhats <- lapply(fits, predict)
 # compute MSE.te for all degrees
@@ -151,7 +150,8 @@ MSEs.te <- unlist(lapply(yhats,
            ))
 # plot
 plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
-which.min(MSEs.te)
+# which p gives minimum MSE.te?
+ps[which.min(MSEs.te)]
 ```
 
 Here the $\mathrm{MSE}_{\mathrm{Te}}$ decreases to a certain point and

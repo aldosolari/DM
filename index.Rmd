@@ -56,9 +56,24 @@ Most of the course material can be found in the notes linked to below. The notes
 |  |  |  |  | | |
 | 16 | November 12 | | |
 
+The lecture notes and course webpage were done with [R Markdown](https://rmarkdown.rstudio.com/).
+All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
+
+ 
+
+__Download the .Rmd files, modify as you like and decide the output format (PDF, HTML or Word)__.
+
+To extract the R code from a .Rmd file use
+```{r, eval=F}
+knitr::purl("../filename.Rmd")
+```
 
 
-    
+We will use R Markdown quite a bit in the class, and its use is __required__ for the Test (in lab) where the Programming exercises must be solved with R Markdown by generating an HTML file containing the answers, which will be uploaded to the "CONSEGNA" folder.
+
+You can read more about R Markdown in [Chapter 27 of r4ds](http://r4ds.had.co.nz/r-markdown.html#r-markdown-basics). This [document](https://m-clark.github.io/Introduction-to-Rmarkdown/) may be helpful to get started with R Markdown.
+R Markdown is an example of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), a concept introduced by Donald Knuth saying _you should write code that communicates primarily to humans, not computers_.
+
 
 # **Reading**
 

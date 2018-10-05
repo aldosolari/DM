@@ -112,7 +112,7 @@ lines(ps, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + Opt"), col=c(4,1,2), pch=19)
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-3-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ```r
 ps[which.min(hatErrFs)]
@@ -134,7 +134,7 @@ lines(ps, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + hatOpt"), col=c(4,1,2), pch=19)
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-4-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
 ```r
 ps[which.min(Cps)]
@@ -152,7 +152,7 @@ plot(ps, hatsigma2, type="b", xlab="p", ylab="Sigma2")
 abline(h=sigmatrue^2, col=4)
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-5-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -188,7 +188,7 @@ lines(ps, BICs, type="b", col=6)
 legend("topright",c("AIC","BIC"), col=c(5,6), lty=1)
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-6-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ```r
 ps[which.min(AICs)]
@@ -304,7 +304,7 @@ KCV = sapply(ds, function(d)
 plot(ps, KCV, type="b", log="y")
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-8-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ```r
 ps[which.min(KCV)]
@@ -393,7 +393,7 @@ LOOCV = sapply(ds, function(d)
 plot(ps, LOOCV, type="b")
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-11-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 ```r
 ps[which.min(LOOCV)]
@@ -418,7 +418,7 @@ GCV = MSEs.tr/(1-(ps)/n )^2
 plot(ps, GCV, type="b")
 ```
 
-&lt;img src="3_ICCV_slides_files/figure-html/unnamed-chunk-12-1.png" width="75%" style="display: block; margin: auto;" /&gt;
+![](3_ICCV_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 ```r
 ps[which.min(GCV)]
