@@ -38,7 +38,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 3 | October 5  | Optimism, IC and CV | [ICCV](docs/notes/3_ICCV/3_ICCV.html) | [Slides](docs/slides/3_ICCV/3_ICCV_slides.html) |
 |  |  |  |  | | |
 | 4 | October 8 | Non-parametric regression  | [NPR](docs/notes/4_NPR/4_NPR.html) | [Slides](docs/slides/4_NPR/4_NPR_slides.html) |
-| 5 | October 11|  |  |
+| 5 | October 11| EDA and the modelling process |  |
 | 6 | October 12 |  | |
 |  |  |  |  | | |
 | 7 | October 15 |  | | |
@@ -136,7 +136,7 @@ If you click on a specific Competition in the listing, you will go to the Compet
 
 | Competition | Problem | Entry | Submission | 
 |---|---|----|----|
-| Houses prices | Regression | October 8 | November 16  |
+| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | Regression | October 8 | November 16  |
 | OkCupid | Classification | October 15 | November 16 |
 | TBD | TBD | October 15 | November 16  |
 

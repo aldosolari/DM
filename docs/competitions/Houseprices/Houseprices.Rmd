@@ -1,0 +1,204 @@
+---
+title: "House prices"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=T, R.options=list(width=220))
+```
+
+# Outline
+
+* Description
+* Data
+* Evaluation
+* Benchmark
+* Timeline
+
+
+---
+
+# House Prices
+
+This competition uses the Ames IA housing data. There are 2930 properties in the data. The sale price was recorded along with 81 predictors, including:
+
+* Location (e.g. neighborhood) and lot information.
+* House components (garage, fireplace, pool, porch, etc.).
+* General assessments such as overall quality and condition.
+* Number of bedrooms, baths, and so on. 
+
+The training set has $n=1460$, the test set has $m=1470$.
+
+More details can be found in [De Cock (2011, Journal of Statistics Education)](http://ww2.amstat.org/publications/jse/v19n3/decock.pdf).
+
+See also the Kaggle competition [House Prices: Advanced Regression Techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
+
+---
+
+# Map (stolen from Max Kuhn)
+
+```{r ames-map, echo = FALSE, message = FALSE, fig.align='center', dev = "svg"}
+library(dplyr)
+library(AmesHousing)
+library(leaflet)
+library(htmltools)
+library(Cairo)
+ames <- make_ames()
+
+col_key <- c(
+  'NAmes',     '#0000FF',
+  'CollgCr',   '#FF0000',
+  'OldTown',   '#FFFFFF',
+  'Edwards',   '#FF00B6',
+  'Somerst',   '#FF3030',
+  'NridgHt',   '#009FFF',
+  'Gilbert',   '#DD00FF',
+  'Sawyer',    '#9A4D42',
+  'NWAmes',    '#00FFBE',
+  'SawyerW',   '#1F9698',
+  'Mitchel',   '#FFACFD',
+  'BrkSide',   '#720055',
+  'Crawfor',   '#F1085C',
+  'IDOTRR',    '#FE8F42',
+  'Timber',    '#004CFF',
+  'NoRidge',   '#ffff00',
+  'StoneBr',   '#B1CC71',
+  'SWISU',     '#02AD24',
+  'ClearCr',   '#FFD300',
+  'MeadowV',   '#886C00',
+  'BrDale',    '#FFB79F',
+  'Blmngtn',   '#858567',
+  'Veenker',   '#A10300',
+  'NPkVill',   '#00479E',
+  'Blueste',   '#DC5E93',
+  'Greens',    '#93D4FF',
+  'GreenHills', '#e5f2e5', 
+  'Landmrk',   '#C8FF00'
+) 
+col_key <- as.data.frame(matrix(col_key, byrow = TRUE, ncol = 2))
+names(col_key) <- c("Neighborhood", "color")
+col_key <- col_key %>%
+    mutate(
+      Neighborhood =
+        dplyr::recode(
+          Neighborhood,
+          "Blmngtn" = "Bloomington_Heights",
+          "Bluestem" = "Bluestem",
+          "BrDale" = "Briardale",
+          "BrkSide" = "Brookside",
+          "ClearCr" = "Clear_Creek",
+          "CollgCr" = "College_Creek",
+          "Crawfor" = "Crawford",
+          "Edwards" = "Edwards",
+          "Gilbert" = "Gilbert",
+          "Greens" = "Greens",
+          "GreenHills" = "Green_Hills",
+          "IDOTRR" = "Iowa_DOT_and_Rail_Road",
+          "Landmrk" = "Landmark",
+          "MeadowV" = "Meadow_Village",
+          "Mitchel" = "Mitchell",
+          "NAmes" = "North_Ames",
+          "NoRidge" = "Northridge",
+          "NPkVill" = "Northpark_Villa",
+          "NridgHt" = "Northridge_Heights",
+          "NWAmes" = "Northwest_Ames",
+          "OldTown" = "Old_Town",
+          "SWISU" = "South_and_West_of_Iowa_State_University",
+          "Sawyer" = "Sawyer",
+          "SawyerW" = "Sawyer_West",
+          "Somerst" = "Somerset",
+          "StoneBr" = "Stone_Brook",
+          "Timber" = "Timberland",
+          "Veenker" = "Veenker"
+        ))
+
+lon_rnd <- range(ames$Longitude)
+lat_rnd <- range(ames$Latitude)
+
+ia_map <- leaflet(width = "80%") %>%
+  addProviderTiles(providers$CartoDB.DarkMatterNoLabels)
+
+for(i in 1:nrow(col_key)) {
+  ia_map <- ia_map %>%
+    addCircles(
+      data = subset(ames, Neighborhood == col_key$Neighborhood[i]),
+      lng = ~Longitude, lat = ~Latitude,
+      color = col_key$color[i],
+      fill = TRUE,
+      fillColor = col_key$color[i],
+      radius = 6,
+      popup = htmlEscape(col_key$Neighborhood[i]),
+      opacity = .25)
+}
+ia_map
+```
+
+---
+
+# Data
+
+The training data has 82 columns which include 23 nominal, 23 ordinal, 14 discrete, and 20 continuous variables (and 2 additional observation identifiers). Here’s a brief version of what you’ll find in the data description file.
+
+```{r, echo=FALSE}
+knitr::kable(head(ames[,rev(1:ncol(ames))]), format = 'html')
+```
+
+[Data documentation](http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/62.txt)
+
+---
+
+# Evaluation
+
+* Submissions are evaluated on __Root-Mean-Squared-Error__ (RMSE) between the logarithm of the predicted value and the logarithm of the observed sales price. 
+
+$$\mathrm{RMSE}= \sqrt{\frac{1}{m}\sum_{i=1}^{m}\left[\log(y^*_i)- \log(\hat{y}_i)\right]^2}$$
+
+
+* Taking logs means that errors in predicting expensive houses and cheap houses will affect the result equally
+
+* During the competition, the leaderboard displays your partial score, which is the RMSE for $m=735$ (random) houses of the test set
+
+* At the end of the contest, the leaderboard will display the final score, which is the RMSE for the remaining $m=735$ houses of the test set
+
+* The final score will determine the final winner. This method prevents users from overfitting to the leaderboard
+
+* The __points__ will be calculated on the basis of the distribution of the competition' scores
+
+---
+
+# Benchmark
+
+
+```{r, eval=F}
+train <- read.csv("60.csv", stringsAsFactors=T)
+test <- read.csv("61.csv", stringsAsFactors=F)
+
+fit <- lm(log10(SalePrice) ~ Year.Built + Lot.Area + Gr.Liv.Area, data = train)
+yhat = 10^predict(fit, newdata=test)
+
+write.table(file="mySubmission.txt", yhat, row.names = FALSE, col.names = FALSE)
+```
+
+---
+
+# Timeline
+
+Entry: October 8
+
+Final submission: November 16
+
+The R code used to get the predictions __must be published online__ by November 17. 
+Keep only the necessary code (no plots, numeric summaries etc. )
+
+
+
+
+
