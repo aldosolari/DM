@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Exploratory data analysis and the modelling process</title>
+    <title>Exploratory data analysis and the modeling process</title>
     <meta charset="utf-8">
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -11,7 +11,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Exploratory data analysis and the modelling process
+# Exploratory data analysis and the modeling process
 ### Aldo Solari
 
 ---
@@ -19,12 +19,14 @@ class: center, middle, inverse, title-slide
 
 
 
+
 # Outline
 
 * Exploratory data analysis
-* The modelling process
-* Feaure engineering
+* The modeling process
 * Important concepts
+* Car Data
+* Expanded Car Data
 
 ---
 layout: false
@@ -34,32 +36,58 @@ class: inverse, middle, center
 
 ---
 
-# Explore
-
-Data exploration is the art of looking at your data, rapidly generating hypotheses, quickly testing them, then repeating again and again and again
-
-![](images/data-science-explore.png)
-
----
-
 # Exploratory data analysis
 
+* The use of __visualisation__,  __transformation__ and __modeling__ to explore your data is a task that statisticians call __exploratory data analysis__, or __EDA__ for short
 
-* In statistics, exploratory data analysis (__EDA__) is an approach to analyzing data sets to summarize their main characteristics, often with visual methods
+* Your goal during EDA is to develop an understanding of your data
 
-* A statistical model can be used or not, but primarily EDA is for seeing what the data can tell us beyond the formal modeling or hypothesis testing task
+* EDA is an iterative cycle:
+&lt;center&gt;
+![](images/data-science-explore.png)
+&lt;/center&gt;
+.center[Figure from r4ds, section 1.1]
+
+* EDA is not a formal process with a strict set of rules. EDA is fundamentally a creative process
+
 
 * Exploratory data analysis was promoted by __John Tukey__ to encourage statisticians to explore the data
 
 ---
 
-# Visualization and data transformation
+# Data visualization, transformation and modeling
 
-* __Visualisation__ is a great place to start with R programming, because the payoff is so clear: you get to make elegant and informative plots that help you understand data
+* __Data visualisation__ is a great place to start: make elegant and informative plots that help you understand data (see r4ds, section 3)
 
-* Visualisation alone is typically not enough, so  __data transformation__ allows you to select important variables, filter out key observations, create new variables, and compute summaries
+* Visualisation alone is typically not enough. __Data transformation__ allows you to select important variables, filter out key observations, create new variables, and compute summaries (see r4ds, section 5)
 
-* Finally, in __exploratory data analysis__, you'll combine visualisation and transformation with your curiosity and scepticism to ask and answer interesting questions about data
+* Patterns in your data provide clues about relationships. __Data modeling__ is a useful tool for extracting patterns out of data. 
+Find patterns with visualisation, then make them concrete and precise with a model. Repeat the process, but replace the old response variable with the residuals from the model (see r4ds, sections 22-25 for an introduction)
+
+* __Exploratory data analysis__ (see r4ds, section 7) is used to understand the major characteristics of the predictors and outcome so that any particular challenges associated with the data can be discovered prior to modeling. This can include investigations of correlation structures in the variables, patterns of missing data, and/or anomalous motifs in the data that might challenge the initial expectations of the modeler.
+
+
+---
+
+# EDA steps
+
+* One of the first steps of the exploratory data process when the ultimate purpose is to predict a response is to create visualizations that help elucidate knowledge of the response and then to uncover relationships between the predictors and the response (see FES, section 4)
+
+* Start with the response, understanding the characteristics of its distribution
+
+* Explore the relationships among the predictors and between predictors and the response:
+
+    - scatter plots of individual predictors and the response,
+    - a pairwise correlation plot among the predictors,
+    - a projection of high dimensional predictors into a lower dimensional space,
+    - line plots for time-based predictors,
+    - the first few levels of a regression or classification tree,
+    - a heat map across the samples and predictors, or
+    - mosaic plots for examining associations among categorical variables
+    - etc
+
+* EDA should not stop at this point, but should continue after initial models have been built. Post model building, visual tools can be used to assess model lack-of-fit and to evaluate the potential effectiveness of new predictors that were not in the original model
+
 
 ---
 layout: false
@@ -69,14 +97,32 @@ class: inverse, middle, center
 
 ---
 
-# The modelling process
+# The model versus the modeling process
+
+* The modeling technique is a __small part__ of the overall process
+
+* The process of developing an effective model is both __iterative__ and __heuristic__
+
+* It is difficult to know the needs of any data set prior to working with it and it is common for many approaches to be evaluated and modified before a model can be finalized
+
+* Common steps during model building are:
+
+    - estimating model parameters (i.e. training models)
+
+    - determining the values of tuning parameters that cannot be directly calculated from the data
+
+    - model selection (within a model type) and model comparison (between types)
+
+    - calculating the performance of the final model that will generalize to new data
+
+
+---
+
+# The modeling process
 
 ![](images/intro-process-1.svg)
 
-
-* The process of developing an effective model is both iterative and heuristic
-
-* It is difficult to know the needs of any data set prior to working with it
+.center[Figure from FEV, section 1.2.4]
 
 ---
 
@@ -84,7 +130,7 @@ class: inverse, middle, center
 
 * __(a)__ *Exploratory data analysis*. The initial activity begins with EDA investigate the data
 
-* __(b)__ *Early data analysis*. This could include evaluating simple summary measures or identifying predictors that have strong correlations with the outcome. The process might iterate between visualization and analysis until the modeler feels confident that the data are well understood. 
+* __(b)__ *Early quantitative analysis*. This could include evaluating simple summary measures or identifying predictors that have strong correlations with the outcome. The process might iterate between visualization and analysis until the modeler feels confident that the data are well understood. 
 
 * __(c)__ *Early feature engineering*. The first draft for how the predictors will be represented in the models is created based on the previous analysis.
 
@@ -108,7 +154,7 @@ class: inverse, middle, center
 
 * __(h)__ *Parameter tuning*. By this point, it may be apparent which models tend to work best for the problem at hand and another, more extensive, round of model tuning can be conducted on fewer models
 
-* __(i)__ *Evaluation of performance*. After more tuning and modification of the predictor representation, the two candidate models (#2 and #4) have been finalized. These models can be evaluated on an external test set as a final bake off between the models 
+* __(i)__ *Performance evaluation*. After more tuning and modification of the predictor representation, the two candidate models (#2 and #4) have been finalized. These models can be evaluated on an external test set as a final evaluation between the models 
 
 * __(h)__ *Final model*. The final model is then chosen and this fitted model will be used going forward to predict new samples 
 
@@ -122,39 +168,522 @@ class: inverse, middle, center
 
 * However, the rate of "winning" is not high enough to enact a strategy of "always use model X"
 
+---
+layout: false
+class: inverse, middle, center
+
+# Important concepts
+
+---
+
+# Important concepts
+
+1. __Overfitting__ Overfitting is the situation where a model fits very well to the current data but fails when predicting new samples. Often, models that are very flexible have a higher likelihood of overfitting the data. 
+
+2. __ Model Bias and Variance__ 
+    
+3.  __Experience Driven Modeling and Empirically Driven Modeling__
+    - Subject matter experts may have a good sense of what predictors should be in the model based on previous experience prior to looking at the data
+    - However, there can be a strong desire to be __data driven__ rather than __experience driven__
+    - Usually a combination of the two approaches works best
+
+4. __Feature selection__
+    - Models can have reduced performance due to __irrelevant predictors__ causing excess model variation
+    - When conducting a search for a subset of predictor to use, it is important to realize that there may not be a unique set of predictors that will produce the best performance
+    
+5. __Feature engineering__
+    
+---
+
+# Feature engineering
+
+* The idea that there are different ways to represent predictors in a model, and that some of these representations are better than others, leads to the idea of feature engineering - the process of creating representations of data that increase the effectiveness of a model
+
+* Key relationships that are not directly available as predictors may be between the response and:
+    -  a transformation of a predictor,
+    - an interaction of two or more predictors such as a product or ratio,
+    - a functional relationship among predictors, or
+    - an equivalent re-representation of a predictor.
+
 
 ---
 layout: false
 class: inverse, middle, center
 
-# Feature engineering
+# Car data
 
 ---
 
-# Preprocessing and feature engineering
+# Car data
 
-Key relationships that are not directly available as predictors may be between the response and:
+* From Azzalini and Scarpa, Chapter 2
 
-* a transformation of a predictor,
-* an interaction of two or more predictors such as a product or ratio,
-* a functional relationship among predictors, or
-* an equivalent re-representation of a predictor.
+* The cars data were obtained by simple manipulation of original data which referred to the characteristics of 203 automobile models imported into the USA in 1985. 
 
-Adjusting and reworking the predictors to enable models to better uncover predictor-response relationships has been termed __feature engineering__
+* The original data are available at: [ftp://ftp.ics.uci.edu/pub/machine-learning-databases/autos](ftp://ftp.ics.uci.edu/pub/machine-learning-databases/autos)
+and their manipulation on our part simply consisted of converting one unit of measurement to another, and eliminating some variables
+
+* Goal: identify a relationship that allows us to predict the consumption of fuel or, equivalently, the distance covered per unit of fuel as a function of certain characteristics of a car
+
+---
+
+# Variables
+
+* brand   :             manufacturer (factor, 22 levels), casa produttrice (fattore, 22 livelli) 
+* fuel    :       type of engine fuel (factor, 2 levels: diesel, gasoline), tipo di alimentazione del motore (fattore, 2 livelli) 
+* aspiration :          type of engine aspiration (factor, 2 levels: standard, turbo), tipo di aspirazione del motore (fattore, 2 livelli)   
+* bodystyle :         type of body style (factor, 5 levels: hardtop, wagon, sedan, hatchback, convertible),  tipo di carrozzeria (fattore, 5 livelli)  
+* drive.wheels :       type of drive wheels (factor,  3 levels: 4wd, fwd, rwd), tipo di trazione (fattore,  3 livelli)    
+* engine.location :    location of engine (factor, 2 levels: front, rear), posizione del motore (fattore, 2 livelli)  
+* wheel.base :         distance between axes (cm), distanza tra gli assi (cm) 
+* length :             length (cm), lunghezza (cm)      
+* width :              width (cm), larghezza (cm)    
+* height :             height (cm), altezza (cm)    
+* curb.weight :        weight (kg), peso (kg)   
+* engine size :        engine size (l), cilindrata (l)   
+* compression.ratio :   compression ratio, rapporto di compressione   
+* HP :                  horsepower, cavalli motore   
+* peak.rot     :       number of peak revolutions per minute, numero di giri massimi del motore al minuto    
+* __city.distance__ :      city distance covered (km/l), percorrenza urbana (km/l)   
+* highway.distance :    highway distance (km/l), percorrenza extra urbana (km/l)  
+* n.cylinders  :       number of cylinders, numero di cilindri
 
 ---
 
-# Models sensitivities and needs
 
-* Some models cannot tolerate predictors that measure the same underlying quantity (multicollinearity or correlation between predictors)
 
-* Many models cannot use observations with any missing values
+```r
+rm(list=ls())
+auto &lt;- read.table("http://azzalini.stat.unipd.it/Book-DM/auto.dat", header=TRUE, quote="\"")
+dim(auto)
+```
 
-* Some models are severely compromised when irrelevant predictors are in the data
+```
+[1] 203  18
+```
 
-Feature engineering and variable selection can help mitigate many of these issues
+```r
+# any missing value?
+sum(is.na(auto))
+```
+
+```
+[1] 0
+```
+
 
 ---
+
+
+```r
+# variable types
+str(auto)
+```
+
+```
+'data.frame':	203 obs. of  18 variables:
+ $ brand            : Factor w/ 21 levels "alfa-romeo","audi",..: 1 1 1 2 2 2 2 2 2 2 ...
+ $ fuel             : Factor w/ 2 levels "diesel","gas": 2 2 2 2 2 2 2 2 2 2 ...
+ $ aspiration       : Factor w/ 2 levels "std","turbo": 1 1 1 1 1 1 1 1 2 2 ...
+ $ bodystyle        : Factor w/ 5 levels "convertible",..: 1 1 3 4 4 4 4 5 4 3 ...
+ $ drive.wheels     : Factor w/ 3 levels "4wd","fwd","rwd": 3 3 3 2 1 2 2 2 2 1 ...
+ $ engine.location  : Factor w/ 2 levels "front","rear": 1 1 1 1 1 1 1 1 1 1 ...
+ $ wheel.base       : num  225 225 240 254 252 ...
+ $ length           : num  429 429 435 449 449 ...
+ $ width            : num  163 163 166 168 169 ...
+ $ height           : num  124 124 133 138 138 ...
+ $ curb.weight      : num  1156 1156 1280 1060 1281 ...
+ $ engine.size      : num  2.13 2.13 2.49 1.79 2.23 ...
+ $ compression.ratio: num  9 9 9 10 8 8.5 8.5 8.5 8.3 7 ...
+ $ HP               : int  111 111 154 102 115 110 110 110 140 160 ...
+ $ peak.rot         : int  5000 5000 5000 5500 5500 5500 5500 5500 5500 5500 ...
+ $ city.distance    : num  8.93 8.93 8.08 10.2 7.65 ...
+ $ highway.distance : num  11.48 11.48 11.05 12.75 9.35 ...
+ $ n.cylinders      : int  4 4 6 4 5 5 5 5 5 5 ...
+```
+
+---
+
+
+
+```r
+# reduced data
+names(auto)[which(names(auto)=="city.distance")] &lt;- "y"
+vars &lt;- c("y", "engine.size","n.cylinders","curb.weight","fuel")
+train &lt;- auto[,vars]
+# pairs
+pairs(train[,-5], col=train$fuel)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+
+
+.pull-left[
+
+```r
+# histogram of y
+hist(train$y)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+
+.pull-right[
+
+```r
+# density plot of y
+plot(density(train$y))
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+
+---
+
+.pull-left[
+
+```r
+# scatterplot
+plot(y~engine.size, train, col=fuel) 
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+# jitter
+plot(jitter(y)~jitter(engine.size), train, col=fuel) 
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+]
+
+---
+
+`$$Y = \beta_1 + \beta_2 \mathrm{engine.size} + \beta_3 \mathrm{engine.size}^2 + \beta_4 \mathrm{engine.size}^3 + \beta_5 I\{\mathrm{fuel} = \mathrm{gas}\} + \varepsilon$$`
+
+
+```r
+fit1 &lt;- lm(y ~ poly(engine.size, degree=3, raw=T) + fuel, train)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+
+`$$1/y = \beta_1 + \beta_2 \mathrm{engine.size} +  \beta_3 I\{\mathrm{fuel} = \mathrm{gas}\}+ \varepsilon$$`
+
+
+```r
+fit2&lt;-lm(1/y ~ engine.size + fuel, train)
+```
+
+.pull-left[
+![](6_EDA_slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+![](6_EDA_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+`$$\log(y) = \beta_1 + \beta_2 \log(\mathrm{engine.size}) +  \beta_3 I\{\mathrm{fuel} = \mathrm{gas}\} + \varepsilon$$`
+
+```r
+fit3 &lt;- lm(log(y) ~ log(engine.size) + fuel, train)
+```
+
+.pull-left[
+![](6_EDA_slides_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+![](6_EDA_slides_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+
+---
+
+.pull-left[
+
+```r
+plot(fit3, which=1)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+plot(fit3, which=4)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
+
+---
+
+
+```r
+train[which(cooks.distance(fit3) &gt; .07), ]
+```
+
+```
+       y engine.size n.cylinders curb.weight fuel
+56 7.227      1.1471           2      1079.6  gas
+57 7.227      1.1471           2      1079.6  gas
+58 7.227      1.1471           2      1081.8  gas
+59 6.802      1.3110           2      1134.0  gas
+```
+
+```r
+table(train$n.cylinders)
+```
+
+```
+
+  2   3   4   5   6   8  12 
+  4   1 157  11  24   5   1 
+```
+
+
+---
+
+
+`$$\log(y) = \beta_1 + \beta_2 \log(\mathrm{engine.size}) +  \beta_3 I\{\mathrm{fuel} = \mathrm{gas}\}  + \beta_4 \log(\mathrm{curb.weight})+ \beta_5I\{\mathrm{n.cylinders} = 2\} + \varepsilon$$`
+
+
+```r
+# MSE.tr
+fit1 = update(fit1, . ~ . +  log(curb.weight) + I(n.cylinders==2), train)
+mean(resid(fit1)^2) 
+```
+
+```
+[1] 1.07706
+```
+
+```r
+fit2 = update(fit2, . ~ . +  log(curb.weight) + I(n.cylinders==2), train)
+mean((train$y - 1/fitted(fit2))^2) 
+```
+
+```
+[1] 1.143411
+```
+
+```r
+fit3 = update(fit3, . ~ . +  log(curb.weight) + I(n.cylinders==2), train)
+mean((train$y - exp(fitted(fit3)))^2) 
+```
+
+```
+[1] 1.016788
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Expanded car data
+
+---
+
+# Expanded car data
+
+
+* The data that are used here are an extended version of the ubiquitous `mtcars` data set that contains information on the design and performance characteristics of older model cars (1973-74). [fueleconomy.gov](fueleconomy.gov) was used to obtain fuel efficiency data on cars from 2015-2019.
+
+* Over this time range, duplicate ratings were eliminated; these occur when the same car is sold for several years in a row. As a result, there are 4422 cars that are listed in the data. The predictors include the automaker and addition information about the cars (e.g. cylinders, etc).
+
+* In our analysis, the data from 2015-2108 are used for training to see if we can predict the 435 cars that were new in 2019. We will restrict ourselves to cars that use some type of gas.
+
+* Non-combustion engines have their MPG estimated even though there are no real gallons. Let's get rid of these for simplicity.
+
+---
+
+# dplyr and ggplot2
+
+* Two packages developed by Hadley Wickham greatly simplify the task of exploring and graphing data:
+    - `dplyr` for exploring (r4ds, section 5)
+    - `ggplot2` for graphing (r4ds, section 3)
+    
+* `ggplot2` implements the __grammar of graphics__, a coherent system for describing and building graphs
+
+* `dplyr` implements the __split-apply-combine strategy__ for data analysis. The strategy, package author Hadley Wickham explains, is to 
+
+&gt; break up a big problem into manageable pieces, operate on each piece independently and then put all the pieces back together.
+    
+* Additionally, the __piping syntax__ offered in the `magrittr` package (included with `dplyr`) helps to write more understandable `dplyr` code (see r4ds, section 18)
+
+* Documentation and examples for both packages are widely available on the web
+
+---
+
+
+```r
+rm(list=ls())
+PATH &lt;- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
+load(paste(PATH,"car_data_splits.RData", sep=""))
+# remove non-combustion engines
+library(dplyr)
+removals &lt;- c("CNG", "Electricity")
+train &lt;- 
+  car_train %&gt;% 
+  filter(!(fuel_type %in% removals)) %&gt;%
+  mutate(fuel_type = relevel(fuel_type, "Gasoline_or_natural_gas"))
+test &lt;-
+  car_test %&gt;% 
+  filter(!(fuel_type %in% removals)) %&gt;%
+  mutate(fuel_type = relevel(fuel_type, "Gasoline_or_natural_gas"))
+# training and test set by year
+train %&gt;% pull(year) %&gt;% table()
+```
+
+```
+.
+2015 2016 2017 2018 
+1259  859  975  825 
+```
+
+```r
+test %&gt;% dim()
+```
+
+```
+[1] 434  30
+```
+
+---
+
+# Data visualization with ggplot2
+
+* Among the variables in the expanded car data
+    - `mpg`, a car’s fuel efficiency on the highway, in miles per gallon (MPG). A car with a low fuel efficiency consumes more fuel than a car with a high fuel efficiency when they travel the same distance. This is the response
+    - `eng_displ`, a car's engine size
+    - `fuel_type`, fuel type
+
+* We begin with these variables to illustrate how the `ggplot2` can be used to create data graphics
+
+* `ggplot2` main reference: [https://ggplot2.tidyverse.org/](https://ggplot2.tidyverse.org/)
+
+* You begin a plot with the function `ggplot()`. The first argument of `ggplot()` is the dataset to use in the graph, and `aes(x, y, ...)` to specify which variables to map to the x and y axes
+
+* You complete your graph by adding one or more layers to `ggplot()`. For univariate displays, `geom_histogram()` and  `geom_density()` create an histogram or density plot
+
+---
+
+
+
+.pull-left[
+
+```r
+ggplot(data = train, aes(x=mpg)) + 
+  geom_histogram(binwidth=5) 
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(data = train, aes(x=mpg)) + 
+  geom_density(adjust=0.8) 
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+]
+
+---
+
+
+* Now use `aes(x = eng_displ, y = mpg)` put `eng_displ` on the x-axis and `mpg` on the y-axis. The function `geom_point()` adds a layer of points to your plot, which creates a scatterplot
+
+* The values of `eng_displ` and `mpg` are rounded so the points appear on a grid and many points overlap each other. This problem is known as __overplotting__. This arrangement makes it hard to see where the mass of the data is
+
+* You can avoid this gridding by setting the `position` adjustment to jitter
+
+* Or you can use the `alpha` aesthetic, which controls the transparency of the points:
+
+* To add `fuel_type`, which is categorical, you can map the colors of your points or split your plot into __facets__, subplots that each display one subset of the data
+
+---
+
+.pull-left[
+
+```r
+ggplot(data = train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg), position = "jitter") 
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(data = train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg), alpha = I(1/10)) 
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+]
+
+---
+
+.pull-left[
+
+```r
+ggplot(data = train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg, color=fuel_type))
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(data = train) + 
+  geom_point(mapping = aes(x = eng_displ, y = mpg, color=fuel_type)) + 
+  facet_wrap(~ fuel_type)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+]
+
+---
+
+.pull-left[
+
+```r
+ggplot(data = train, aes(x = eng_displ, y = mpg)) + 
+  geom_point() +
+  geom_smooth()
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg, group = as.factor(plug_in_hybrid), color = as.factor(plug_in_hybrid))) + 
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+
+![](6_EDA_slides_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+]
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

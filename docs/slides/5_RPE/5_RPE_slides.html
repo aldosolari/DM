@@ -179,6 +179,7 @@ Show that
 n = 20
 beta = 1
 sigma = sqrt(3)
+p = 1
 set.seed(123)
 # observed training set
 x = rnorm(n)
@@ -189,11 +190,21 @@ hatbeta &lt;- sum(x*y)/sum(x^2)
 x1star = rnorm(1)
 y1star = beta*x1star + rnorm(1,0,sigma)
 # error
-(y1star - hatbeta*x1star)^2
+( y1star - hatbeta*x1star )^2
 ```
 
 ```
 [1] 0.2132094
+```
+
+```r
+# RCp
+RSS = sum( (y - x*hatbeta)^2 )
+(RSS*(n-1))/((n-p)*(n-p-1))
+```
+
+```
+[1] 2.168106
 ```
 
 ---
