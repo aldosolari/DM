@@ -475,6 +475,13 @@ test %>% dim()
 
 ---
 
+```{r}
+knitr::kable(head(train), format="html")
+```
+
+
+---
+
 # Data visualization with ggplot2
 
 * Among the variables in the expanded car data
@@ -507,14 +514,14 @@ theme_set(thm)
 
 .pull-left[
 ```{r}
-ggplot(data = train, aes(x=mpg)) + 
+ggplot(data = train, mapping=aes(x=mpg)) + 
   geom_histogram(binwidth=5) 
 ```
 ]
 
 .pull-right[
 ```{r}
-ggplot(data = train, aes(x=mpg)) + 
+ggplot(train, aes(x=mpg)) + 
   geom_density(adjust=0.8) 
 ```
 ]
@@ -536,15 +543,15 @@ ggplot(data = train, aes(x=mpg)) +
 
 .pull-left[
 ```{r}
-ggplot(data = train) + 
-  geom_point(mapping = aes(x = eng_displ, y = mpg), position = "jitter") 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
+  geom_point(position = "jitter") 
 ```
 ]
 
 .pull-right[
 ```{r}
-ggplot(data = train) + 
-  geom_point(mapping = aes(x = eng_displ, y = mpg), alpha = I(1/10)) 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
+  geom_point(alpha = I(1/10)) 
 ```
 ]
 
@@ -569,7 +576,7 @@ ggplot(data = train) +
 
 .pull-left[
 ```{r}
-ggplot(data = train, aes(x = eng_displ, y = mpg)) + 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
   geom_point() +
   geom_smooth()
 ```

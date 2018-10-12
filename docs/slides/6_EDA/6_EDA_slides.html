@@ -564,6 +564,245 @@ test %&gt;% dim()
 
 ---
 
+
+```r
+knitr::kable(head(train), format="html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; cylinders &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; eng_displ &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; drive &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fuel_type &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; hatch_lug_vol &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; hatch_pas_vol &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; two_door_lug_vol &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; four_door_lug_vol &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; make &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; model &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; two_door_pass_vol &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; four_door_pass_vol &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; transmission &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; car_class &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; year &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; start_stop &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; spark_ignited_direct_injection &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; flexible_fuel &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; plug_in_hybrid &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; hybrid &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; port_fuel_injection &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; hellcat &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; ieloop &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; partial_zero_emissions &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; eco &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; z06 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; zr1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; turbo_charged &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; super_charged &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; mpg &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FrontWheel_Drive &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ILX &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Automatic_S5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Compact_Cars &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.2285 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FrontWheel_Drive &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ILX &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Automatic_AM8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Compact_Cars &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2016 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.1342 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FrontWheel_Drive &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ILX &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Automatic_AMS8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Compact_Cars &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2017 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.1342 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FrontWheel_Drive &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ILX &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Manual_6spd &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Compact_Cars &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.8000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FrontWheel_Drive &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MDX 2WD &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Automatic_S6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Small_Sport_Utility_Vehicle_2WD &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2015 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.8039 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FrontWheel_Drive &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acura &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MDX 2WD &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Automatic_S9 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Small_Sport_Utility_Vehicle_2WD &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2016 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+
 # Data visualization with ggplot2
 
 * Among the variables in the expanded car data
@@ -586,21 +825,21 @@ test %&gt;% dim()
 .pull-left[
 
 ```r
-ggplot(data = train, aes(x=mpg)) + 
+ggplot(data = train, mapping=aes(x=mpg)) + 
   geom_histogram(binwidth=5) 
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
 ```r
-ggplot(data = train, aes(x=mpg)) + 
+ggplot(train, aes(x=mpg)) + 
   geom_density(adjust=0.8) 
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -621,21 +860,21 @@ ggplot(data = train, aes(x=mpg)) +
 .pull-left[
 
 ```r
-ggplot(data = train) + 
-  geom_point(mapping = aes(x = eng_displ, y = mpg), position = "jitter") 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
+  geom_point(position = "jitter") 
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
 ```r
-ggplot(data = train) + 
-  geom_point(mapping = aes(x = eng_displ, y = mpg), alpha = I(1/10)) 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
+  geom_point(alpha = I(1/10)) 
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -647,7 +886,7 @@ ggplot(data = train) +
   geom_point(mapping = aes(x = eng_displ, y = mpg, color=fuel_type))
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -658,7 +897,7 @@ ggplot(data = train) +
   facet_wrap(~ fuel_type)
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -666,12 +905,12 @@ ggplot(data = train) +
 .pull-left[
 
 ```r
-ggplot(data = train, aes(x = eng_displ, y = mpg)) + 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
   geom_point() +
   geom_smooth()
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -682,7 +921,7 @@ ggplot(data = train, mapping = aes(x = eng_displ, y = mpg, group = as.factor(plu
   geom_smooth(se = FALSE)
 ```
 
-![](6_EDA_slides_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+![](6_EDA_slides_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
 ]
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
