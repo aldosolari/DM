@@ -41,7 +41,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 5 | October 11| Random-X prediction error | [RPE](docs/notes/5_RPE/5_RPE.html)  | [Slides](docs/slides/5_RPE/5_RPE_slides.html) |
 | 6 | October 12 | EDA and the modelling process | - | [Slides](docs/slides/6_EDA/6_EDA_slides.html) |
 |  |  |  |  | | |
-| 7 | October 15 |  | | |
+| 7 | October 15 | Titanic data | -  | [Slides](docs/slides/7_Titanic/7_Titanic_slides.html)  |
 | 8 | October 18 | | |
 | 9 | October 19 |  | | |
 |  |  |  |  | | |
@@ -121,6 +121,10 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 - AS 2
 - r4ds 1, 2, 3
 
+**October 12** The Titanic dataset
+
+- ISLR 2.2.3, 5.1.5
+
 # **Competitions**
 
 The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off).
@@ -137,8 +141,8 @@ If you click on a specific Competition in the listing, you will go to the Compet
 | Competition | 1st: From-To | 2nd: From-To | 3rd: From-To | 
 |----|----|----|----|
 | [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| OkCupid  | 15/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| TBD | 15/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
+| OkCupid  | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
+| Bikeshare | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
 
 
 There are two references that use the `caret` R package that you can use for improving your predictive modeling skills:

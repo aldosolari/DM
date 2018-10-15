@@ -1,0 +1,649 @@
+---
+title: "The Titanic data set"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Introduction
+* Missing values
+* EDA
+* Feature engineering
+* Evaluation
+
+---
+layout: false
+class: inverse, middle, center
+
+# Introduction
+
+---
+
+# Introduction
+
+![](https://vignette.wikia.nocookie.net/foreverknight/images/7/7f/Route_of_Titanic.svg/revision/latest/scale-to-width-down/640?cb=20090303115410)
+
+On April 15, 1912, during her maiden voyage, the Titanic sank
+after colliding with an iceberg, killing 1502 out of 2224
+passengers and crew
+
+---
+
+# Goal 
+
+* One of the reasons that the shipwreck led to such loss of life
+was that there were not enough lifeboats for the passengers
+and crew
+
+* Although there was some element of luck involved in
+surviving the sinking, some groups of people were more likely
+to survive than others, such as women, children, and the
+upper-class
+
+* The goal is to predict a 0 or 1 value for the survived
+variable for each passenger in the test set
+
+---
+
+# References
+
+Read [Varian (2014) Big Data: New Tricks for Econometrics](https://www.aeaweb.org/articles?id=10.1257/jep.28.2.3). In particular 
+
+* Titanic example (section *Classification and Regression Trees*)
+
+* R code (download [Data Set](https://www.aeaweb.org/jep/data/2802/2802-0003_data.zip) in *Additional Materials*)
+
+See the Kaggle competition 
+[Titanic: Machine Learning from Disaster](https://www.kaggle.com/c/titanic). In particular
+
+* [Exploring Survival on the Titanic](https://www.kaggle.com/mrisdal/exploring-survival-on-the-titanic) is a tutorial
+
+* [Tidy TitaRnic
+](https://www.kaggle.com/headsortails/tidy-titarnic) provides an extensive EDA
+
+* [Titanic using Name only](https://www.kaggle.com/cdeotte/titanic-using-name-only-0-81818) gives a nice example of feature engineering
+
+---
+
+# Classification setting
+
+* Response $Y \in \{0,1\}$
+
+* Predictors $X=(X_1,\ldots,X_p)^\mathsf{T}$
+
+* $(X,Y)$ have some unknown joint distribution
+
+* The __regression function__ is
+$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$
+
+* The __Bayes' classification rule__ is
+$$C(x) = \left\{\begin{array}{ll}
+1 & \mathrm{if\,\,} f(x)>1/2 \\
+0 & \mathrm{otherwise}\\
+\end{array}\right.$$
+
+---
+
+# Bayes error rate
+
+* A __classification rule__ is any function $\hat{C}: x \mapsto \{0,1\}$
+
+* For example, the __plug-in rule__
+$$\hat{C}(x) = \left\{\begin{array}{ll}
+1 & \mathrm{if\,\,} \hat{f}(x)>1/2 \\
+0 & \mathrm{otherwise}\\
+\end{array}\right.$$
+where $\hat{f}$ is an estimate of $f$ based on training data
+
+* The Bayes classification rule is __optimal__ because it has the smallest error rate:
+$$\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{C}(x))\right] \quad \forall \, \hat{C}$$
+where the expectation averages the probability over all possible values of
+$X$
+
+* The Bayes error rate $\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]$ is analogous to the irreducible error
+
+---
+
+# Missclassification rate and accuracy
+
+* Training set: $(x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)$
+* Test set: $(x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)$
+
+
+* __Missclassification rate (training set)__
+
+$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$
+
+* __Missclassification rate (test set)__
+$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$
+
+* __Accuracy (test set)__
+$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$
+
+
+---
+
+
+```{r}
+# import data
+PATH <- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
+train <- read.csv(paste(PATH,"titanic_tr.csv",sep=""), 
+                  header = TRUE, stringsAsFactors = FALSE)
+n <- nrow(train)
+test <- read.csv(paste(PATH,"titanic_te.csv",sep=""), 
+                 header = TRUE, stringsAsFactors = FALSE)
+m <- nrow(test)
+# combined train and test
+combi <- rbind(train, test)
+# check type of variables
+str(combi)
+```
+
+---
+
+# Type of variables
+
+| Name | Description |
+|---|----|
+| pclass   |       Passenger Class (1 = 1st; 2 = 2nd; 3 = 3rd) |
+| survived    |   Survival (0 = No; 1 = Yes) |
+| name      |      Name |
+| sex      |       Sex |
+| age      |       Age |
+| sibsp     |      Number of Siblings/Spouses Aboard |
+| parch     |      Number of Parents/Children Aboard |
+| ticket    |      Ticket Number |
+| fare      |      Passenger Fare |
+| cabin     |      Cabin |
+| embarked   |     Port of Embarkation  (C = Cherbourg; Q = Queenstown; S = Southampton) |
+
+* See the info file [http://biostat.mc.vanderbilt.edu/twiki/pub/Main/DataSets/titanic3info.txt](http://biostat.mc.vanderbilt.edu/twiki/pub/Main/DataSets/titanic3info.txt)
+
+---
+
+```{r}
+# copy of the response as a factor for better readability
+combi$survived01 <- combi$survived
+combi$survived <- as.factor(combi$survived01)
+levels(combi$survived) = c("Death","Alive")
+# test survived NA
+testsurvived <- combi$survived[(n+1):(n+m)]
+combi$survived[(n+1):(n+m)] <- NA
+combi$survived01[(n+1):(n+m)] <- NA
+# convert pclass, sex, embarked to factors
+combi$pclass <- as.factor(combi$pclass)
+combi$sex <- as.factor(combi$sex)
+combi$embarked <- as.factor(combi$embarked)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Missing values
+
+---
+
+# Where are the missing values?
+
+```{r}
+# cabin has missing values coded as "" instead of NA
+combi$cabin[combi$cabin==""] <- NA
+# where are the missing values?
+summary(combi)
+```
+
+---
+
+
+
+```{r}
+library(VIM)
+aggr(combi, prop = FALSE, combined = TRUE, numbers = TRUE, sortVars = TRUE, sortCombs = TRUE)
+```
+
+---
+
+
+```{r, echo=F}
+aggr(combi, prop = FALSE, combined = TRUE, numbers = TRUE, sortVars = TRUE, sortCombs = TRUE, plot=F)
+```
+
+---
+
+```{r}
+# 1 missing value in fare
+combi[which(is.na(combi$fare)), ]
+```
+
+---
+
+# Imputing missing values
+
+```{r}
+aggregate(fare ~ pclass + embarked, combi, FUN=median)
+combi$fare[which(is.na(combi$fare))] <- 8.0500
+```
+
+
+---
+
+```{r}
+# 2 missing in embarked
+combi[which(is.na(combi$embarked)), ]
+```
+
+---
+
+# Tickets
+
+![](https://upload.wikimedia.org/wikipedia/commons/a/ad/Ticket_for_the_Titanic%2C_1912.jpg)
+
+
+---
+
+```{r}
+# different people have the same ticket number
+head(table(combi$ticket))
+# number of people who share the same ticket
+table(table(combi$ticket))
+# ticket frequency
+combi$ticketFreq <- ave(1:nrow(combi),combi$ticket,FUN=length)
+```
+
+---
+
+# Ticket price
+
+```{r}
+# passengers who shared their ticket also had the same fare values
+combi[combi$ticket=="110152",]
+# ticket price 
+combi$price <- combi$fare/combi$ticketFreq
+```
+
+---
+
+```{r}
+boxplot(price ~ pclass + embarked + sex, data=combi, subset=pclass==1 & sex=="female"); abline(h=40)
+combi$embarked[which(is.na(combi$embarked))] <- c("S","S")
+```
+
+
+---
+
+```{r}
+# Age by pclass and sex
+aggregate(age ~ pclass + sex, combi, FUN=mean)
+# Model age as a function of pclass and sex
+fit.age <- lm(age ~ sex + pclass, 
+          data = combi[!is.na(combi$age),])
+# Imputation of age missing values
+combi$age[is.na(combi$age)] <- predict(fit.age, 
+          newdata=combi[is.na(combi$age),])
+```
+
+---
+
+# Back to train and test 
+
+```{r}
+train <- combi[1:n,]
+test <- combi[(n+1):(n+m),]
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# EDA
+
+---
+
+# Null model 
+
+* Training set: 38.38% of passengers survived, 61.62% died
+* The __null model__ uses only the information of the response: it predicts 'all-dead'
+
+```{r}
+round(mean(train$survived01),2)
+yhat <- rep("Death",m)
+# confusion matrix
+table(Predicted=yhat, True=testsurvived)
+# accuracy
+mean(yhat == testsurvived)
+```
+
+
+
+---
+
+* What is the relationship between age and survival?
+
+```{r}
+summary(glm(survived ~ age, train, family="binomial"))$ coefficients 
+```
+
+---
+
+* What about this plot?
+
+```{r, echo=FALSE}
+ageclass = cut(train$age, breaks = c(0,10,20,30,40,50,60,70,80))
+barplot(prop.table(table(train$survived,ageclass),2), xlab="Age class")
+```
+
+---
+
+* A better visualization
+
+```{r}
+plot(survived ~ age, train)
+```
+
+---
+
+* Rich people survived at a higher rate?
+
+```{r}
+# survived ~ pclass
+plot(survived~pclass, train)
+```
+
+---
+
+```{r}
+# pclass-only logistic model
+fit <- glm(survived ~ pclass, train, family="binomial")
+phat <- predict(fit,newdata=test, type = "response")
+yhat <- ifelse(phat > 0.5, "Alive","Death")
+# confusion matrix
+table(Predicted=yhat, True=testsurvived)
+# accuracy
+mean(yhat == testsurvived)
+```
+
+---
+
+* What about pclass and age combined?
+
+```{r, echo=F}
+class.jitter <- as.numeric(train$pclass)+.7*runif(n)
+plot(age ~ class.jitter,xlim=c(.95,3.8),cex=1, xlab="Passenger class",xaxt="n", train)
+axis(side=1,at=c(1.4,2.4,3.4),label=c("1st","2nd","3rd"))
+points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
+```
+
+---
+
+* Classification tree partition
+
+```{r, echo=F}
+class.jitter <- as.numeric(train$pclass)+.7*runif(n)
+plot(age ~ class.jitter,xlim=c(.95,3.8),cex=1, xlab="Passenger class",xaxt="n", train)
+axis(side=1,at=c(1.4,2.4,3.4),label=c("1st","2nd","3rd"))
+points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
+abline(v=2.85)
+rect(1.85,18,4.0,89,col=rgb(0.5,0.5,0.5,1/4))
+rect(2.85,-5,4.0,89,col=rgb(0.5,0.5,0.5,1/4))
+```
+
+
+---
+
+```{r}
+library(rpart)
+library(rpart.plot)
+fit <- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =  3))
+rpart.plot(fit, type=0, extra=2)
+```
+
+---
+
+
+```{r}
+yhat <- predict(fit, newdata=test, type="class")
+# confusion matrix
+table(Predicted=yhat, True=testsurvived)
+# accuracy
+mean(yhat == testsurvived)
+```
+
+---
+
+* Women first?
+
+```{r}
+plot(survived ~ sex, train)
+```
+
+---
+
+```{r}
+# gender-only logistic model
+fit <- glm(survived ~ sex, train, family="binomial")
+phat <- predict(fit,newdata=test, type = "response")
+yhat <- ifelse(phat > 0.5, "Alive","Death")
+# confusion matrix
+table(Predicted=yhat, True=testsurvived)
+# accuracy
+mean(yhat == testsurvived)
+```
+
+
+---
+
+* Women and children first?
+
+```{r ggplot, include = FALSE}
+library(ggplot2)
+thm <- theme_bw() + 
+  theme(
+    panel.background = element_rect(fill = "transparent", colour = NA), 
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    legend.position = "top",
+    legend.background = element_rect(fill = "transparent", colour = NA),
+    legend.key = element_rect(fill = "transparent", colour = NA)
+  )
+theme_set(thm)
+```
+
+```{r}
+ggplot(train, aes(x=age, y=survived01, col=sex)) +
+  geom_jitter(height = 0.05) + 
+  geom_smooth() + 
+  facet_wrap( ~ sex)
+```
+
+---
+
+# Conditional inference trees
+
+* One problem with trees is that they tend to overfit the data
+* The most common solution to this problem is to prune the
+tree by imposing a cost for complexity (e.g. number of
+terminal nodes)
+* Conditional inference trees choose the structure of
+the tree using a sequence of hypothesis tests
+* The resulting trees tend to need very little pruning
+
+---
+
+```{r, fig.width = 15}
+library(party)
+fit <- ctree(survived ~ pclass + sex + age + sibsp, data = train)
+plot(fit)
+```
+
+---
+
+```{r}
+yhat <- predict(fit, newdata=test, type="response")
+# confusion matrix
+table(Predicted=yhat, True=testsurvived)
+# accuracy
+mean(yhat == testsurvived)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Feature engineering
+
+---
+
+# Title
+
+```{r}
+combi$name[1]
+library(dplyr)
+library(stringr)
+combi <- combi %>% 
+     mutate(title = str_extract(name, "[a-zA-Z]+\\."))
+table(combi$title)
+combi$title <- factor(combi$title)
+```
+
+---
+
+```{r}
+plot(survived ~ title, combi[1:n,])
+```
+
+---
+
+# Man, boy or woman?
+
+```{r}
+combi$wbm <- "man"
+combi$wbm[grep('Master',combi$name)] <- "boy"
+combi$wbm[combi$sex=="female"] <- "woman"
+combi$wbm <- factor(combi$wbm)
+```
+
+---
+
+```{r}
+plot(survived ~ wbm, combi[1:n,])
+```
+
+
+---
+
+# Family size
+
+```{r}
+combi$familysize <- combi$sibsp + combi$parch + 1
+```
+
+---
+
+```{r}
+plot(survived ~ familysize, combi[1:n,])
+```
+
+---
+
+# Gender surname model
+
+| Rule | Prediction |
+|---|----|
+| Man | Death |
+| Boy and all females and boys in his family live | Alive |
+| Boy and not all females and boys in his family live | Death |
+| Female and all females and boys in her family die | Death |
+| Female and not all females and boys in her family die | Alive |
+
+---
+
+# Surname survival
+
+```{r}
+combi$surname <- substring(combi$name,0,regexpr(",",combi$name)-1)
+combi$surname[combi$wbm=='man'] <- 'noGroup'
+combi$surnameFreq <- ave(1:nrow(combi),combi$surname,FUN=length)
+combi$surname[combi$surnameFreq<=1] <- 'noGroup'
+combi$surnamesurvival <- NA
+combi$surnamesurvival[1:n] <- ave(combi$survived01[1:n],combi$surname[1:n])
+for (i in (n+1):(n+m)) combi$surnamesurvival[i] <- combi$surnamesurvival[which(combi$surname==combi$surname[i])[1]]
+```
+
+---
+
+```{r}
+combi$yhat <- "Death"
+combi$yhat[combi$wbm=='woman'] <- "Alive"
+combi$yhat[combi$wbm=='boy' & combi$surnamesurvival == 1] <- "Alive"
+combi$yhat[combi$wbm=='woman' & combi$surnamesurvival == 0] <- "Death"
+```
+
+
+---
+
+```{r}
+ggplot(combi[(n+1):(n+m),]) +
+    geom_jitter(aes(x=wbm,y=yhat)) +
+    labs(title="17 predictions change from gender model on test set") +
+    geom_rect(alpha=0,color="black",aes(xmin=0.5,xmax=1.5,ymin=0.55,ymax=1.45)) +
+    geom_rect(alpha=0,color="black",aes(xmin=2.5,xmax=3.5,ymin=1.55,ymax=2.45))
+```
+
+
+---
+
+```{r}
+yhat <- combi$yhat[(n+1):(n+m)]
+# confusion matrix
+table(Predicted=yhat, True=testsurvived)
+# accuracy
+mean(yhat == testsurvived)
+```
+
+---
+
+# Cabin?
+
+```{r}
+# the first character of cabin is the deck
+table(substr(combi$cabin, 1, 1))
+```
+
+---
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Titanic_cutaway_diagram.png/322px-Titanic_cutaway_diagram.png)
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Evaluation
+
+---
+
+
+| Model | Test set Accuracy |
+|---|----|
+| All-dead | 0.6220096 |
+| pclass-only | 0.6722488 |
+| rpart pclass + age | 0.6866029 |
+| ctree pclass + sex + age + sibsp | 0.7631579 |
+| Gender-only | 0.7655502 |
+| Gender surname | 0.8014354 |

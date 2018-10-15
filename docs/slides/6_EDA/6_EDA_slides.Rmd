@@ -429,9 +429,9 @@ class: inverse, middle, center
 
 * Over this time range, duplicate ratings were eliminated; these occur when the same car is sold for several years in a row. As a result, there are 4422 cars that are listed in the data. The predictors include the automaker and addition information about the cars (e.g. cylinders, etc).
 
-* In our analysis, the data from 2015-2108 are used for training to see if we can predict the 435 cars that were new in 2019. We will restrict ourselves to cars that use some type of gas.
+* In our analysis, the data from 2015-2108 are used for training to see if we can predict the 435 cars that were new in 2019. We will restrict ourselves to cars that use some type of gas [(learn about the labels)](https://www.fueleconomy.gov/feg/label/docs/EPA_FE_Label-052311.pdf)
 
-* Non-combustion engines have their MPG estimated even though there are no real gallons. Let's get rid of these for simplicity.
+* Non-combustion engines have their MPG estimated even though there are no real gallons. Let's get rid of these for simplicity
 
 ---
 
@@ -459,7 +459,7 @@ PATH <- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
 load(paste(PATH,"car_data_splits.RData", sep=""))
 # remove non-combustion engines
 library(dplyr)
-removals <- c("CNG", "Electricity")
+removals <- c("CNG", "Electricity") # CNG = Compressed Natural Gas
 train <- 
   car_train %>% 
   filter(!(fuel_type %in% removals)) %>%
@@ -488,6 +488,7 @@ knitr::kable(head(train), format="html")
     - `mpg`, a car’s fuel efficiency on the highway, in miles per gallon (MPG). A car with a low fuel efficiency consumes more fuel than a car with a high fuel efficiency when they travel the same distance. This is the response
     - `eng_displ`, a car's engine size
     - `fuel_type`, fuel type
+    - `plug_in_hybrid`, Plug-In Hybrid Vehicle: Electricity Gasoline (Series PHEV) 
 
 * We begin with these variables to illustrate how the `ggplot2` can be used to create data graphics
 
@@ -533,11 +534,11 @@ ggplot(train, aes(x=mpg)) +
 
 * The values of `eng_displ` and `mpg` are rounded so the points appear on a grid and many points overlap each other. This problem is known as __overplotting__. This arrangement makes it hard to see where the mass of the data is
 
-* You can avoid this gridding by setting the `position` adjustment to jitter
+* You can avoid this gridding by setting the `position` adjustment to jitter or you can use the `alpha` aesthetic, which controls the transparency of the points:
 
-* Or you can use the `alpha` aesthetic, which controls the transparency of the points:
+* To add `fuel_type`, which is categorical, with `color` you can map the colors of your points or with `facet_wrap` you can split your plot into __facets__, subplots that each display one subset of the data
 
-* To add `fuel_type`, which is categorical, you can map the colors of your points or split your plot into __facets__, subplots that each display one subset of the data
+* To see the pattern of the relationship you can use `geom_smooth`, a smooth line fitted to the data
 
 ---
 
@@ -551,7 +552,7 @@ ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) +
 .pull-right[
 ```{r}
 ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
-  geom_point(alpha = I(1/10)) 
+  geom_point(alpha = I(1/5)) 
 ```
 ]
 
@@ -559,15 +560,15 @@ ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) +
 
 .pull-left[
 ```{r}
-ggplot(data = train) + 
-  geom_point(mapping = aes(x = eng_displ, y = mpg, color=fuel_type))
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg, color=fuel_type)) + 
+  geom_point(alpha = I(1/2))
 ```
 ]
 
 .pull-right[
 ```{r}
-ggplot(data = train) + 
-  geom_point(mapping = aes(x = eng_displ, y = mpg, color=fuel_type)) + 
+ggplot(data = train, mapping = aes(x = eng_displ, y = mpg, color=fuel_type)) + 
+  geom_point(alpha = I(1/2)) + 
   facet_wrap(~ fuel_type)
 ```
 ]
@@ -577,7 +578,7 @@ ggplot(data = train) +
 .pull-left[
 ```{r}
 ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) + 
-  geom_point() +
+  geom_point(alpha = I(1/2)) +
   geom_smooth()
 ```
 ]
@@ -585,8 +586,9 @@ ggplot(data = train, mapping = aes(x = eng_displ, y = mpg)) +
 .pull-right[
 ```{r}
 ggplot(data = train, mapping = aes(x = eng_displ, y = mpg, group = as.factor(plug_in_hybrid), color = as.factor(plug_in_hybrid))) + 
-  geom_point() +
-  geom_smooth(se = FALSE)
+  geom_point(alpha = I(1/2)) +
+  geom_smooth(method = lm, formula = y ~ log(x)) + 
+   facet_wrap(~ plug_in_hybrid)
 ```
 ]
 
