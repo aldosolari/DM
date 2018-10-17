@@ -42,7 +42,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 6 | October 12 | EDA and the modelling process | - | [Slides](docs/slides/6_EDA/6_EDA_slides.html) |
 |  |  |  |  | | |
 | 7 | October 15 | Titanic data | -  | [Slides](docs/slides/7_Titanic/7_Titanic_slides.html)  |
-| 8 | October 18 | | |
+| 8 | October 18 | Bagging | [BAG](docs/notes/8_BAG/8_BAG.html) | [Slides](docs/slides/8_BAG/8_BAG_slides.html) |
 | 9 | October 19 |  | | |
 |  |  |  |  | | |
 | 10 | October 22 | | | |
@@ -124,6 +124,10 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 **October 12** The Titanic dataset
 
 - ISLR 2.2.3, 5.1.5
+
+**October 18** Bagging
+
+- ISLR tbd
 
 # **Competitions**
 

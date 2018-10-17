@@ -1,0 +1,33 @@
+---
+title: "Bike sharing"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+# Outline
+
+* Description
+* Data
+* Evaluation
+* Benchmark
+* Timeline
+
+
+---
+
+# Bike sharing
+
+
+
+
