@@ -131,7 +131,8 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 # **Competitions**
 
-The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off).
+The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off). I would like to thank BeeViva and in particular [Livio Finos](http://www.liviofinos.net/), [Dario Solari](https://www.linkedin.com/in/dariosolari/?originalSubdomain=it) and [Tomaso "Minni" Minelli](https://github.com/minni). The competitions offered in this course would not have been possible without their constant and precious support.
+
 
 If you click on a specific Competition in the listing, you will go to the Competition's homepage. The following information is provided in the tabs:
 
