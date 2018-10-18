@@ -1,0 +1,28 @@
+---
+title: "DM competitions"
+output: html_document
+---
+
+__List of participants__
+
+*1st round (October-November)*
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+```{r, echo=FALSE}
+library(dplyr)
+library(readr)
+who <- read_csv("/Users/aldosolari/Documents/mygithub/DM/docs/competitions/DMcompetitions.csv")
+who %>% 
+  rename(Team = "Team name (repeat Username if single)")  %>% 
+  arrange(Team) %>%
+  mutate(n=1:nrow(who)) %>%
+  select(n,Surname, Name, Team) %>%
+  knitr::kable()
+
+```
+
+

@@ -32,25 +32,29 @@ class: center, middle, inverse, title-slide
 
 # House Prices
 
-This competition uses the Ames IA housing data. There are 2930 properties in the data. The sale price was recorded along with 81 predictors, including:
+* This competition uses the Ames IA housing data. There are 2930 properties in the data. The sale price was recorded along with 81 predictors, including:
 
-* Location (e.g. neighborhood) and lot information.
-* House components (garage, fireplace, pool, porch, etc.).
-* General assessments such as overall quality and condition.
-* Number of bedrooms, baths, and so on. 
+    - Location (e.g. neighborhood) and lot information.
+    - House components (garage, fireplace, pool, porch, etc.).
+    - General assessments such as overall quality and condition.
+    - Number of bedrooms, baths, and so on. 
 
-The training set has `\(n=1460\)`, the test set has `\(m=1470\)`.
+* The training set has `\(n=1460\)`, the test set has `\(m=1470\)`.
 
-More details can be found in [De Cock (2011, Journal of Statistics Education)](http://ww2.amstat.org/publications/jse/v19n3/decock.pdf).
+* More details can be found in [De Cock (2011, Journal of Statistics Education)](http://ww2.amstat.org/publications/jse/v19n3/decock.pdf).
 
-See also the Kaggle competition [House Prices: Advanced Regression Techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
+* See also the Kaggle competition [House Prices: Advanced Regression Techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
+
+* Team: No
+
+* Weight: 30%
 
 ---
 
 
 # Data
 
-The training data has 82 columns which include 23 nominal, 23 ordinal, 14 discrete, and 20 continuous variables (and 2 additional observation identifiers). Here’s a brief version of what you’ll find in the data description file:
+The training data has 82 columns which include 23 nominal, 23 ordinal, 14 discrete, and 20 continuous variables (and 2 additional observation identifiers). Here’s a brief version of what you'll find in the data description file:
 
 [Data documentation](http://bee-fore.s3-eu-west-1.amazonaws.com/datasets/62.txt)
 
@@ -58,20 +62,29 @@ The training data has 82 columns which include 23 nominal, 23 ordinal, 14 discre
 
 # Evaluation
 
-* Submissions are evaluated on __Root-Mean-Squared-Error__ (RMSE) between the logarithm of the predicted value and the logarithm of the observed sales price. 
+* Submissions are evaluated on __Root Mean Squared Logarithmic Error__ (RMSLE) between the logarithm of the predicted value and the logarithm of the observed sales price
 
-`$$\mathrm{RMSE}= \sqrt{\frac{1}{m}\sum_{i=1}^{m}\left[\log(y^*_i)- \log(\hat{y}_i)\right]^2}$$`
+`$$\mathrm{RMSLE}= \sqrt{\frac{1}{m}\sum_{i=1}^{m}\left[\log(y^*_i)- \log(\hat{y}_i)\right]^2}$$`
 
 
 * Taking logs means that errors in predicting expensive houses and cheap houses will affect the result equally
 
-* During the competition, the leaderboard displays your partial score, which is the RMSE for `\(m=735\)` (random) houses of the test set
+* During the competition, the leaderboard displays your partial score, which is the RMSLE for `\(m=735\)` (random) houses of the test set. At the end of the contest, the leaderboard will display the final score, which is the RMSLE for the remaining `\(m=735\)` houses of the test set. The final score will determine the final winner. This method prevents users from overfitting to the leaderboard
 
-* At the end of the contest, the leaderboard will display the final score, which is the RMSE for the remaining `\(m=735\)` houses of the test set
+---
 
-* The final score will determine the final winner. This method prevents users from overfitting to the leaderboard
+The __points__ will be calculated on the basis of the distribution of the competition' scores
 
-* The __points__ will be calculated on the basis of the distribution of the competition' scores
+![](Houseprices_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+```
+Benchmark score 21.32 
+ Benchmark % of points: 3.66 %
+```
+
+
+
+However, I reserve the right to regrade differently (meaning your % of points may be calculated differently)
 
 ---
 

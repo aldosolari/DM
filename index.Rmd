@@ -145,9 +145,10 @@ If you click on a specific Competition in the listing, you will go to the Compet
 | Competition | 1st: From-To | 2nd: From-To | 3rd: From-To | 
 |----|----|----|----|
 | [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| OkCupid  | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| Bikeshare | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
+| [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
+| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
 
+- [List of participants (1st round)](docs/competitions/Participants.html)
 
 There are two references that use the `caret` R package that you can use for improving your predictive modeling skills:
 
