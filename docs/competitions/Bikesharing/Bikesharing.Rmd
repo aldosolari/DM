@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 
 * Team: Yes (1st round and attending students)
 
-* Weight: 30%
+* Weight: 1/3
 
 ---
 
@@ -94,11 +94,36 @@ However, I reserve the right to regrade differently (meaning your % of points ma
 
 ---
 
-# Benchmark
 
 ```{r, eval=FALSE}
-train <- read.csv("../99.csv")
-test<- read.csv("../100.csv")
+# Benchmark
+library(fasttime)
+library(lubridate)
+library(rpart)
+
+train <- read.csv("99.csv", stringsAsFactors=T)
+test <- read.csv("100.csv", , stringsAsFactors=F)
+train$count = log1p(train$count)
+
+train %>% 
+  mutate(datetime = fastPOSIXct(datetime, "GMT")) %>% 
+  mutate(hour = hour(datetime),
+         month = month(datetime),
+         year = year(datetime),
+         wday = wday(datetime)) -> train
+
+test %>% 
+  mutate(datetime = fastPOSIXct(datetime, "GMT")) %>% 
+  mutate(hour = hour(datetime),
+         month = month(datetime),
+         year = year(datetime),
+         wday = wday(datetime)) -> test
+
+
+fml <- count ~ season + holiday + workingday + weather + temp + atemp + humidity + hour
+fit <- rpart(fml, data=train)
+yhat <- expm1(predict(fit, newdata=test))
+write.table(file="mybike.txt", yhat, row.names = FALSE, col.names = FALSE)
 ```
 
 ---

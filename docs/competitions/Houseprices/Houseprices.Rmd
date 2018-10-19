@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 
 * Team: No
 
-* Weight: 30%
+* Weight: 1/3
 
 ---
 

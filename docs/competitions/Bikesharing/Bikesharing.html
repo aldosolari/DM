@@ -38,7 +38,7 @@ class: center, middle, inverse, title-slide
 
 * Team: Yes (1st round and attending students)
 
-* Weight: 30%
+* Weight: 1/3
 
 ---
 
@@ -98,12 +98,37 @@ However, I reserve the right to regrade differently (meaning your % of points ma
 
 ---
 
-# Benchmark
 
 
 ```r
-train &lt;- read.csv("../99.csv")
-test&lt;- read.csv("../100.csv")
+# Benchmark
+library(fasttime)
+library(lubridate)
+library(rpart)
+
+train &lt;- read.csv("99.csv", stringsAsFactors=T)
+test &lt;- read.csv("100.csv", , stringsAsFactors=F)
+train$count = log1p(train$count)
+
+train %&gt;% 
+  mutate(datetime = fastPOSIXct(datetime, "GMT")) %&gt;% 
+  mutate(hour = hour(datetime),
+         month = month(datetime),
+         year = year(datetime),
+         wday = wday(datetime)) -&gt; train
+
+test %&gt;% 
+  mutate(datetime = fastPOSIXct(datetime, "GMT")) %&gt;% 
+  mutate(hour = hour(datetime),
+         month = month(datetime),
+         year = year(datetime),
+         wday = wday(datetime)) -&gt; test
+
+
+fml &lt;- count ~ season + holiday + workingday + weather + temp + atemp + humidity + hour
+fit &lt;- rpart(fml, data=train)
+yhat &lt;- expm1(predict(fit, newdata=test))
+write.table(file="mybike.txt", yhat, row.names = FALSE, col.names = FALSE)
 ```
 
 ---
