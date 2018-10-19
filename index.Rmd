@@ -128,10 +128,12 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 **October 18** Bagging
 
 - ISLR 8.2.1
+- AS 5.8.1
 
 **October 19** Random Forests
 
 - ISLR 8.2.2
+- AS 5.8.3
 
 # **Competitions**
 
@@ -167,11 +169,12 @@ All students must follow a __code of conduct__, which covers issues such as plag
 
 * you must __publish on-line__ the code used to get the final prediction.
 
-* you are encouraged to use online resources (unseen models, other people analyses, etc.) as long as you __cite__ a resource you borrow code from
-
 * you can join the competitions __only once__ per academic year. The score will expire at the end of the academic year
 
+* you are encouraged to use online resources (unseen models, other people analyses, etc.) as long as you __cite__ a resource you borrow code from. Full copy/paste from other people code will have a multiplier of 0  
+
 * you are expected to be able to __explain your code by your self__ if required by the teacher
+
 
 **ACKNOWLEDGEMENTS**
 

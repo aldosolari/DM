@@ -23,14 +23,8 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Random Forests
+* Spam data
 
----
-layout: false
-class: inverse, middle, center
-
-# Random Forests
-
----
 
 # Random Forests intuition
 
@@ -89,22 +83,50 @@ trees, without increasing the variance `\(\sigma^2\)` too much
 
 ---
 
+ESL p. 589 Bagging and random forest applied to the
+spam data
+
+![](images/randomforest.jpg)
+
+---
+
+* [ISL, Fig. 8.10](http://www-bcf.usc.edu/~gareth/ISL/Chapter8/8.10.pdf) 
+
+* Results from random forests for the 15-class gene expression
+data set with `\(p = 500\)` predictors. The test error is displayed as a function of
+the number of trees. Each colored line corresponds to a different value of `\(m\)`, the
+number of predictors available for splitting at each interior tree node. Random
+forests `\((m &lt; p)\)` lead to a slight improvement over bagging `\((m = p)\)`. A single
+classification tree has an error rate of 45.7%
+
+---
+
 # Variable importance
 
 * We can calculate the importance of a predictor `\(X_j\)`
 
-* The function \texttt{importance} of the R package randomForests with argument type=1 :
+* The function `importance` of the R package `randomForests` with argument `type=1` :
 
-* For each tree, record the accuracy on the OOB observations
+1. For each tree, record the accuracy on the OOB observations
 
-* Do the same is done but with `\(X_j\)` values randomly permuted in the OOB observations
+2. Do the same is done but with `\(X_j\)` values randomly permuted in the OOB observations
 
-* Compute the decrease in each tree's accuracy 
+3. Compute the decrease in each tree's accuracy 
 
 * If the average decrease over all the trees is large, then the predictor
 is considered important - its value makes a big difference in predicting the response
 
 * If the average decrease is small, then the predictor doesn't make much difference to the response
+
+---
+
+[Efron and Hastie (2016) Computer Age Statistical Inference:
+Algorithms, Evidence and Data Science](https://web.stanford.edu/~hastie/CASI/) (CASI) p. 332
+
+&lt;img src="images/varimp.jpg" width="70%" height="70%" style="display: block; margin: auto;" /&gt;
+
+
+
 
 ---
 
@@ -138,6 +160,209 @@ variables are contributing the most strongly to your model
 
 * Because the trees in a random forest ensemble are unpruned and potentially
 quite deep, there's still a danger of overfitting
+
+---
+layout: false
+class: inverse, middle, center
+
+# Spam data
+
+---
+
+
+```r
+#Load the data and split into training and test sets.
+rm(list=ls())
+spam &lt;- read.csv("https://web.stanford.edu/~hastie/CASI_files/DATA/SPAM.csv",header=T)
+spam$spam = as.factor(ifelse(spam$spam==T,"spam","email"))
+train = spam[!spam$testid, -2]
+test.y = spam[spam$testid,1]
+test = spam[spam$testid, -c(1,2)]
+n = nrow(train)
+m = nrow(test)
+```
+
+---
+
+
+```r
+library("caret")
+
+cv &lt;- trainControl(
+  method = "cv",
+  number = 10
+)
+```
+
+---
+
+
+```r
+tree &lt;- train(
+  spam ~ ., train,
+  method = "rpart2",
+  tuneLength = 9,
+  trControl=cv)
+plot(tree)
+```
+
+![](9_RF_slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+```r
+rf &lt;- train(
+  spam~., train,
+  ntree = 50,
+  method = "rf",
+  trControl=cv)
+```
+
+--
+
+
+```r
+rf
+```
+
+```
+Random Forest 
+
+3065 samples
+  57 predictor
+   2 classes: 'email', 'spam' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 2759, 2759, 2758, 2758, 2758, 2759, ... 
+Resampling results across tuning parameters:
+
+  mtry  Accuracy   Kappa    
+   2    0.9363755  0.8657343
+  29    0.9422419  0.8788754
+  57    0.9357198  0.8650163
+
+Accuracy was used to select the optimal model using the largest value.
+The final value used for the model was mtry = 29.
+```
+
+---
+
+
+```r
+plot(rf)
+```
+
+![](9_RF_slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+plot(varImp(rf))
+```
+
+![](9_RF_slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+models = list(
+    tree=tree,
+    rf=rf
+  )
+
+resamps = resamples(models)
+bwplot(resamps, metric = "Accuracy")
+```
+
+![](9_RF_slides_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+yhat.tree = predict(tree, newdata=test)
+confusionMatrix(yhat.tree, test.y)
+```
+
+```
+Confusion Matrix and Statistics
+
+          Reference
+Prediction email spam
+     email   878   94
+     spam     63  501
+                                          
+               Accuracy : 0.8978          
+                 95% CI : (0.8815, 0.9125)
+    No Information Rate : 0.6126          
+    P-Value [Acc &gt; NIR] : &lt; 2e-16         
+                                          
+                  Kappa : 0.7826          
+ Mcnemar's Test P-Value : 0.01665         
+                                          
+            Sensitivity : 0.9330          
+            Specificity : 0.8420          
+         Pos Pred Value : 0.9033          
+         Neg Pred Value : 0.8883          
+             Prevalence : 0.6126          
+         Detection Rate : 0.5716          
+   Detection Prevalence : 0.6328          
+      Balanced Accuracy : 0.8875          
+                                          
+       'Positive' Class : email           
+                                          
+```
+
+```r
+yhat.rf = predict(rf, newdata=test)
+confusionMatrix(yhat.rf, test.y)
+```
+
+```
+Confusion Matrix and Statistics
+
+          Reference
+Prediction email spam
+     email   907   47
+     spam     34  548
+                                          
+               Accuracy : 0.9473          
+                 95% CI : (0.9349, 0.9579)
+    No Information Rate : 0.6126          
+    P-Value [Acc &gt; NIR] : &lt;2e-16          
+                                          
+                  Kappa : 0.8884          
+ Mcnemar's Test P-Value : 0.1824          
+                                          
+            Sensitivity : 0.9639          
+            Specificity : 0.9210          
+         Pos Pred Value : 0.9507          
+         Neg Pred Value : 0.9416          
+             Prevalence : 0.6126          
+         Detection Rate : 0.5905          
+   Detection Prevalence : 0.6211          
+      Balanced Accuracy : 0.9424          
+                                          
+       'Positive' Class : email           
+                                          
+```
+
+---
+
+
+```r
+models = list(
+  tree = tree,
+  rf = rf)
+
+phats.all &lt;- extractProb(models, testX = test, testY = test.y)
+phats &lt;- subset(phats.all, dataType == "Test")
+
+plotClassProbs(phats)
+```
+
+![](9_RF_slides_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

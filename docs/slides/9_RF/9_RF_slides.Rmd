@@ -19,14 +19,8 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 # Outline
 
 * Random Forests
+* Spam data
 
----
-layout: false
-class: inverse, middle, center
-
-# Random Forests
-
----
 
 # Random Forests intuition
 
@@ -85,22 +79,52 @@ trees, without increasing the variance $\sigma^2$ too much
 
 ---
 
+ESL p. 589 Bagging and random forest applied to the
+spam data
+
+![](images/randomforest.jpg)
+
+---
+
+* [ISL, Fig. 8.10](http://www-bcf.usc.edu/~gareth/ISL/Chapter8/8.10.pdf) 
+
+* Results from random forests for the 15-class gene expression
+data set with $p = 500$ predictors. The test error is displayed as a function of
+the number of trees. Each colored line corresponds to a different value of $m$, the
+number of predictors available for splitting at each interior tree node. Random
+forests $(m < p)$ lead to a slight improvement over bagging $(m = p)$. A single
+classification tree has an error rate of 45.7%
+
+---
+
 # Variable importance
 
 * We can calculate the importance of a predictor $X_j$
 
-* The function \texttt{importance} of the R package randomForests with argument type=1 :
+* The function `importance` of the R package `randomForests` with argument `type=1` :
 
-* For each tree, record the accuracy on the OOB observations
+1. For each tree, record the accuracy on the OOB observations
 
-* Do the same is done but with $X_j$ values randomly permuted in the OOB observations
+2. Do the same is done but with $X_j$ values randomly permuted in the OOB observations
 
-* Compute the decrease in each tree's accuracy 
+3. Compute the decrease in each tree's accuracy 
 
 * If the average decrease over all the trees is large, then the predictor
 is considered important - its value makes a big difference in predicting the response
 
 * If the average decrease is small, then the predictor doesn't make much difference to the response
+
+---
+
+[Efron and Hastie (2016) Computer Age Statistical Inference:
+Algorithms, Evidence and Data Science](https://web.stanford.edu/~hastie/CASI/) (CASI) p. 332
+
+```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
+knitr::include_graphics("images/varimp.jpg")
+```
+
+
+
 
 ---
 
@@ -133,3 +157,109 @@ variables are contributing the most strongly to your model
 
 * Because the trees in a random forest ensemble are unpruned and potentially
 quite deep, there's still a danger of overfitting
+
+---
+layout: false
+class: inverse, middle, center
+
+# Spam data
+
+---
+
+```{r}
+#Load the data and split into training and test sets.
+rm(list=ls())
+spam <- read.csv("https://web.stanford.edu/~hastie/CASI_files/DATA/SPAM.csv",header=T)
+spam$spam = as.factor(ifelse(spam$spam==T,"spam","email"))
+train = spam[!spam$testid, -2]
+test.y = spam[spam$testid,1]
+test = spam[spam$testid, -c(1,2)]
+n = nrow(train)
+m = nrow(test)
+```
+
+---
+
+```{r}
+library("caret")
+
+cv <- trainControl(
+  method = "cv",
+  number = 10
+)
+```
+
+---
+
+```{r, message=FALSE, warning=FALSE}
+tree <- train(
+  spam ~ ., train,
+  method = "rpart2",
+  tuneLength = 9,
+  trControl=cv)
+plot(tree)
+
+rf <- train(
+  spam~., train,
+  ntree = 50,
+  method = "rf",
+  trControl=cv)
+```
+
+--
+
+```{r}
+rf
+```
+
+---
+
+```{r}
+plot(rf)
+```
+
+---
+
+```{r}
+plot(varImp(rf))
+```
+
+---
+
+```{r, message=FALSE, warning=FALSE}
+models = list(
+    tree=tree,
+    rf=rf
+  )
+
+resamps = resamples(models)
+bwplot(resamps, metric = "Accuracy")
+```
+
+---
+
+```{r, message=FALSE, warning=FALSE}
+yhat.tree = predict(tree, newdata=test)
+confusionMatrix(yhat.tree, test.y)
+
+yhat.rf = predict(rf, newdata=test)
+confusionMatrix(yhat.rf, test.y)
+```
+
+---
+
+```{r}
+models = list(
+  tree = tree,
+  rf = rf)
+
+phats.all <- extractProb(models, testX = test, testY = test.y)
+phats <- subset(phats.all, dataType == "Test")
+
+plotClassProbs(phats)
+```
+
+
+
+
+
