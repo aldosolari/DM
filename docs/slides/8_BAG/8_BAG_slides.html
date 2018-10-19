@@ -265,6 +265,28 @@ on the original training data)
 
 ---
 
+* [ISL, Fig. 8.7](http://www-bcf.usc.edu/~gareth/ISL/Chapter8/8.7.pdf) 
+
+* Top Row: A two-dimensional classification example in which
+the true decision boundary is linear, and is indicated by the shaded regions.
+A classical approach that assumes a linear boundary (left) will outperform a decision
+tree that performs splits parallel to the axes (right)
+
+* Bottom Row: Here the
+true decision boundary is non-linear. Here a linear model is unable to capture
+the true decision boundary (left), whereas a decision tree is successful (right)
+
+---
+
+* ESL p. 288: Data with two features and two classes, separated by a linear
+boundary. The 100 data points shown have two features and two classes, separated by the gray
+linear boundary `\(x_1 + x_2 = 1\)`. Consider a classification rule with a single split along either `\(x_1\)` or `\(x_2\)` that produces the largest decrease in training misclassification error. Bagging doesn't help here. The decision boundary obtained from bagging over
+`\(B = 50\)` bootstrap samples is shown by the blue curve in the left panel. The test error rate is 0.166
+
+![](images/decrule.jpg)
+
+---
+
 # Out-of-bag error
 
 * Each bagged tree makes use of `\(\approx 2/3\)` of the original observations
@@ -283,6 +305,29 @@ ESL p. 592:
 
 ![](images/OOB.jpg)
 
+---
+
+
+[ISL, Fig. 8.8](http://www-bcf.usc.edu/~gareth/ISL/Chapter8/8.8.pdf) 
+
+Bagging and random forest results for the Heart data. The test error (black and orange) is shown as a function of `\(B\)`, the number of bootstrapped training sets used. Random forests were applied with `\(m=\sqrt{p}\)`. The dashed line indicates the test error resulting from a single classification tree. The green and blue traces show the OOB error, which in this case is considerably lower
+
+
+---
+
+# Variable importance measures
+
+* For bagged regression trees, we record the total
+amount that the RSS is decreased due to splits over a given
+predictor, averaged over all `\(B\)` trees. A large value indicates
+an important predictor
+
+* Similarly, for bagged classification trees, we add up the
+total amount that the Gini index is decreased by splits over
+a given predictor, averaged over all `\(B\)` trees
+
+* [ISL, Fig. 8.9](http://www-bcf.usc.edu/~gareth/ISL/Chapter8/8.9.pdf) A variable importance plot for the Heart data. Variable importance is computed using the mean
+decrease in Gini index, and expressed relative to the maximum
 
 ---
 layout: false
@@ -434,6 +479,46 @@ score(predict.bag(treelist, newdata=test),
           model accuracy specificity
 1 bagging, test  0.90625   0.9479277
 ```
+
+---
+
+
+```r
+library(randomForest)
+p = ncol(test)
+fit &lt;- randomForest(fml, data = train, ntree = B, mtry = p, importance=T)
+# out-of-bag estimate of error
+plot(fit)
+```
+
+![](8_BAG_slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+# variable importance 
+importance(fit)[1:5,]
+```
+
+```
+            email      spam MeanDecreaseAccuracy MeanDecreaseGini
+make    0.2175574  1.239780            0.9962166         3.826646
+address 2.7356496  1.400143            3.1291438         3.338099
+all     0.3671352  2.119701            1.7727708         5.198160
+X3d     3.5703783 -1.737859            2.9169628         1.943352
+our     6.6877253  7.502483            9.4193315        19.160549
+```
+
+---
+
+
+```r
+# variable importance plot
+varImpPlot(fit, type=1)
+```
+
+![](8_BAG_slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
