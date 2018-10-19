@@ -28,9 +28,116 @@ class: center, middle, inverse, title-slide
 layout: false
 class: inverse, middle, center
 
-# Introduction
+# Random Forests
 
 ---
+
+# Random Forests intuition
+
+* Create even more variation in individual trees
+
+* Bagging varies the __rows__ of the training set (randomly draw observations)
+
+* Random forests varies also the __columns__ of the training set (randomly draw predictors)
+
+---
+
+# Random Forests tuning parameter
+
+* Before each split, select `\(m \leq p\)` of the predictors at random as candidates for splitting
+
+* `\(m\)` is the \alert{tuning parameter}
+
+* Typically `\(m = \sqrt{p}\)` for classification and `\(m=p/3\)` for regression
+
+* `\(m=p\)` gives Bagging as a special case
+
+
+---
+
+# Why is Random Forests working?
+
+* Random sampling of the predictors __decorrelates__ the trees. This reduces the variance when we 
+average the trees
+
+* Recall that given a set of identical distributed (but not necessarily independent) variables `\(Z_1,\ldots,Z_B\)` with pairwise correlation `\(\mathbb{C}\mathrm{orr}(Z_j, Z_l) = \rho\)`, mean `\(\mathbb{E}(Z_j) = \mu\)` and variance `\(\mathbb{V}\mathrm{ar}(Z_j) = \sigma^2\)`, then (see next slide)
+
+$$
+\displaystyle \mathbb{V}\mathrm{ar}(\bar{Z}) = \rho \sigma^2 + \frac{(1-\rho)}{B} \sigma^2
+$$
+ 
+* The idea in random forests is to improve the variance
+reduction of bagging by reducing the correlation `\(\rho\)` between the
+trees, without increasing the variance `\(\sigma^2\)` too much
+
+---
+
+*  `\(\displaystyle \rho = \frac{1}{\sigma^2}[ \mathbb{E}(Z_i Z_j) - \mathbb{E}(Z_i) \mathbb{E}(Z_j)]\)`
+
+* `\(\mathbb{E}(Z_i Z_j) = \rho \sigma^2 + \mu^2\)` if `\(i\neq j\)` 
+
+* `\(\mathbb{E}(Z_i^2) = \sigma^2 + \mu^2\)`
+
+* `\(\displaystyle \mathbb{E}[(\sum_{j=1}^{B}Z_j)^2] = \sum_{i=1}^{B}\sum_{j=1}^B \mathbb{E}(Z_i Z_j)  =  B \mathbb{E}(Z_i^2) + (B^2-B)\mathbb{E}(Z_i Z_j)\)`
+
+* `\(\displaystyle \mathbb{E}(\sum_{j=1}^{B}Z_j) = \sum_{j=1}^{B} \mathbb{E}(Z_j)=  B \mu\)`
+
+`\begin{eqnarray*}
+\mathbb{V}\mathrm{ar}(\bar{Z}) &amp;=&amp; \frac{1}{B^2} \mathbb{V}\mathrm{ar}(\sum_{j=1}^{B}Z_j) \\
+&amp;=&amp;  \frac{1}{B^2} \{ \mathbb{E}[(\sum_{j=1}^{B}Z_j)^2] - [ \mathbb{E}(\sum_{j=1}^{B}Z_j) ]^2  \} 
+\end{eqnarray*}`
+
+---
+
+# Variable importance
+
+* We can calculate the importance of a predictor `\(X_j\)`
+
+* The function \texttt{importance} of the R package randomForests with argument type=1 :
+
+* For each tree, record the accuracy on the OOB observations
+
+* Do the same is done but with `\(X_j\)` values randomly permuted in the OOB observations
+
+* Compute the decrease in each tree's accuracy 
+
+* If the average decrease over all the trees is large, then the predictor
+is considered important - its value makes a big difference in predicting the response
+
+* If the average decrease is small, then the predictor doesn't make much difference to the response
+
+---
+
+# randomForest()
+
+
+```r
+fit &lt;- randomForest(y ~ ., 
+           data = train,
+           ntree = B,
+           mtry = m, # default sqrt(p) or p/3
+           nodesize = ns, # default 1 or 5
+           importance=TRUE) # default: F
+```
+
+* In bagging and random forests trees are grown large without pruning, only the minimum number of observations per node - `nodesize` -  is fixed `\(=1\)` for classification and `\(=5\)` for regression
+
+* Number of randomly selected predictors `mtry` `\(=\sqrt{p}\)` for classification and `\(=p/3\)` for regression. Note that `mtry` `\(=p\)` is bagging
+
+---
+
+# Bagging and random forest takeaways
+
+* Bagging stabilizes decision trees and improves accuracy by reducing variance
+
+*  Random forests further improve decision tree performance by de-correlating
+the individual trees in the bagging ensemble
+
+*  Random forests' variable importance measures can help you determine which
+variables are contributing the most strongly to your model
+
+* Because the trees in a random forest ensemble are unpruned and potentially
+quite deep, there's still a danger of overfitting
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
