@@ -100,12 +100,12 @@ cross-validation) and of the bagging classifier (with $B = 50$):
 
 Why is bagging working? Here is a simplified setup with $K = 2$
 classes "1" and "2" to help understand the basic phenomenon. 
-Suppose that for a given $x$, we have $B$ independent classifiers $\hat{c}^b(x), b=1,\ldots,B$, and each classifier has a misclassification rate of 40%. Assume without loss of generality that the true class at $x$ is "1", so
+Suppose that for a given $x$, we have an odd number $B$ of independent classifiers $\hat{c}^b(x), b=1,\ldots,B$, and each classifier has a misclassification rate of 40%. Assume without loss of generality that the true class at $x$ is "1", so
 $$\mathrm{Pr}(\hat{c}^b(x) = 2 ) = 0.4$$
 Let $Z = \sum_{b=1}^{B}I\{\hat{c}^b(x) = 2\}$ be the number of votes for class "2", and note that 
 $$Z \sim \mathrm{Binomial}(B,0.4)$$
 Therefore the misclassification rate of the bagged classifier is
-$$\mathrm{Pr}(\bar{c}^b(x) = 2 ) = \mathrm{Pr}(Z \geq B/2)$$
+$$\mathrm{Pr}(\bar{c}^b(x) = 2 ) = \mathrm{Pr}(Z \geq (B+1)/2)$$
 which goes $\rightarrow 0$ as $B\rightarrow \infty$. In other words, the
 bagged classifier has perfect predictive accuracy as the number of
 sampled data sets $B\rightarrow \infty$
@@ -148,14 +148,12 @@ $$\mathrm{Pr}(\hat{c}^b(x) = 2 ) = 0.6$$
 
 Then by the same arguments,  
 $$\lim_{B\rightarrow \infty }\mathrm{Pr}(\bar{c}^b(x) = 2 )  \rightarrow 1$$
- In other words, the
-bagged classifier is perfectly inaccurate as the number of bootstrapped
-data sets 
+In other words, the bagged classifier is perfectly inaccurate as the number of bootstrapped data sets.
 
 Again, the independence assumption doesn’t hold with trees, but
 the take-away message is clear: bagging a good classifier can
 improve predictive accuracy, but bagging a bad one can seriously
-degrade predictive accuracy
+degrade predictive accuracy.
 
 ## Disadvantages
 
@@ -193,77 +191,87 @@ n = nrow(train)
 m = nrow(test)
 ```
 
-## Model's formula
+
+
+## Accuracy and specificity
 
 ```{r}
-# Use all the predictors 
-preds <- setdiff(colnames(train),"spam")
-fml <- as.formula(paste("spam",
-                  paste(preds,collapse=' + '),sep=' ~ '))
-fml
-```
-
-## Accuracy measures
-
-```{r}
-# A function to calculate and return various measures on the model: prediction accuracy and specificity (the proportion of correctly predicted emails to all true emails)
-score <- function(pred, truth, name="model") {
+# A function to calculate prediction accuracy and specificity 
+score <- function(phat, truth, name="model") {
   ctable <- table(truth=truth,
-                  pred=(pred>0.5))
+                  yhat=(phat>0.5))
   accuracy <- sum(diag(ctable))/sum(ctable)
   specificity <- ctable[1,1]/sum(ctable[1,])
   data.frame(model=name, accuracy=accuracy, specificity=specificity)
 }
 ```
 
+## Null model
+
+```{r}
+# null model
+phat0 = rep(mean(train$spam=="email"),m)
+yhat0 = rep("email",m)
+# confusion matrix
+table(Predicted=yhat0, True=test$spam)
+# score
+score(phat0, test$spam, name="null model")
+```
+
 ## Fit a classification tree
 
 ```{r}
-# Load the rpart library and fit a classification tree model
 library(rpart)
-fit.tree <- rpart(fml, train)
 library(rpart.plot)
-rpart.plot(fit.tree)
-
-#Confusion matrix
-phat = predict(fit.tree, newdata=test)[,"spam"]
-yhat = ifelse(phat>.5,"spam","email")
-table(pred=yhat, truth=test$spam)
-
-#Evaluate the bagged classification trees in test set
-score(predict(fit.tree, newdata=test)[,"spam"], test$spam, name="tree, test")
+pnames <- setdiff(colnames(train),"spam")
+fml <- as.formula(paste("spam", paste(pnames,collapse=' + '),sep=' ~ '))
+fit1 <- rpart(fml, train); rpart.plot(fit1)
+phat1 = predict(fit1, newdata=test)[,"spam"]
+yhat1 = ifelse(phat1>.5,"spam","email")
+# confusion matrix
+table(pred=yhat1, truth=test$spam)
+# score 
+score(phat1, test$spam, name="tree")
 ```
 
 ## Bagging classification trees
 
 ```{r}
-# Use B bootstrap samples of the training set
+# Obtain B bootstrap samples
 set.seed(123)
 B <- 50
-
-samples <- sapply(1:B,
-                  FUN = function(iter)
-                  {sample(1:n, size=n, replace=T)})
-
-# Train the individual classification trees and return them in a list.
-# Note: this step can take a few minutes.
+obs <- sapply(1:B, 
+              function(b)
+              sample(1:n, size=n, replace=T)
+              )
+# Train classification trees and return them in a list.
 treelist <-lapply(1:B,
-                  FUN=function(iter)
-                  {samp <- samples[,iter];
-                  rpart(fml, train[samp,])})
+                  function(b)
+                  rpart(fml, train[obs[,b],])
+                  )
 
-# predict.bag assumes the underlying classifier returns decision probabilities, not decisions
+# predict.bag (probability)
 predict.bag <- function(treelist, newdata) {
-  preds <- sapply(1:length(treelist),
-                  FUN=function(iter) {
-                  predict(treelist[[iter]], newdata=newdata)[,"spam"]})
-  predsums <- rowSums(preds)
-  predsums/length(treelist)
+  phats <- sapply(1:length(treelist),
+                  function(b)
+                  predict(treelist[[b]], newdata=newdata)[,"spam"]
+                  )
+  pbar <- rowMeans(phats)
 }
+phat2 = predict.bag(treelist, newdata=test)
+yhat2 = ifelse(phat2>.5,"spam","email")
+# confusion matrix
+table(pred=yhat2, truth=test$spam)
+# score
+score(phat2, test$spam, name="bagging")
+```
 
-#Evaluate the bagged classification trees in the test set
-score(predict.bag(treelist, newdata=test),
-                 test$spam,
-                 name="bagging, test")
+## Out-of-bag estimate of error
 
+```{r}
+library(randomForest)
+p = ncol(test)
+fit <- randomForest(fml, data = train, ntree = B, mtry = p)
+# out-of-bag estimate of error
+plot(fit)
 ```

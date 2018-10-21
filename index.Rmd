@@ -25,7 +25,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* October 15: Competitions [registration](https://docs.google.com/forms/d/e/1FAIpQLSfeMNn7uHbZaxPVWduLYdN0dgEm_EnbjjVaPH1SV7VXwF_lTw/viewform?usp=pp_url), 1st round (October-November)
+* No news
 
 # **Course Material**
 
@@ -45,7 +45,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 8 | October 18 | Bagging | [BAG](docs/notes/8_BAG/8_BAG.html) | [Slides](docs/slides/8_BAG/8_BAG_slides.html) |
 | 9 | October 19 | Random Forests | - | [Slides](docs/slides/9_RF/9_RF_slides.html) |
 |  |  |  |  | | |
-| 10 | October 22 | | | |
+| 10 | October 22 | Spam and Boston data | - | - |
 | 11 | October 25 |  | |
 | 12 | October 26 |  | |
 |  |  |  |  | | |
@@ -134,6 +134,9 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 - ISLR 8.2.2
 - AS 5.8.3
+
+**October 22** Spam and Boston data
+
 
 # **Competitions**
 

@@ -1,0 +1,61 @@
+---
+title: "Class Imbalance"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Introduction
+* 
+
+---
+
+* With class predictions, a common summary method is to produce a confusion matrix which is a simple cross-tabulation between the observed and predicted classes
+
+* Accuracy is the most obvious metric for characterizing the performance of models
+
+* However, it suffers when there is a class imbalance; suppose 95% of the data have a specific class. 95% accuracy can be achieved by predicting samples to be the majority class
+
+* There are measures that correct for the natural event rate, such as Cohen's Kappa
+
+---
+
+# Two classes
+
+* There are a number of specialized metrics that can be used when there are two classes. Usually, one of these classes can be considered the event of interest or the positive class.
+
+* One common way to think about performance is to consider false negatives and false positives.
+    - the sensitivity is the true positive rate
+    - the specificity is the rate of correctly predicted negatives, or 1 - false positive rate.
+
+From this, assuming that Class1 is the event of interest:
+
+---
+
+# Conditional and Unconditional Measures
+
+Sensitivity and specificity can be computed from the sens and spec functions, respectively.
+
+It should be noted that these are conditional measures since we need to know the true outcome.
+
+The event rate is the prevalence (or the Bayesian prior). Sensitivity and specificity analogous to the likelihood values.
+
+There are unconditional analogs to the posterior values called the positive predictive values and the negative predicted values.
+
+A variety of other measures are available for two class systems, especially for information retrieval.
+
+One thing to consider: what happens if our threshold to call a sample an event is not optimal?
+
