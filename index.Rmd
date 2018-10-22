@@ -95,7 +95,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 - ISLR 1, 2.1, 2.2.1, 7.1 
 - AS 3.1, 3.2
-- [Breiman (2001)](http://www2.math.uu.se/~thulin/mm/breiman.pdf), [Carmichael and Marron (2018)](https://arxiv.org/pdf/1801.00371.pdf)
+- [Breiman (2001)](http://www2.math.uu.se/~thulin/mm/breiman.pdf), [Carmichael and Marron (2018)](https://arxiv.org/pdf/1801.00371.pdf) (optional)
 
 
 **October 4** Bias-variance decomposition
@@ -114,7 +114,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 **October 11** Random-X prediction error
 
-- [Rosset and Tibshirani (2018) From Fixed-X to Random-X Regression](https://arxiv.org/pdf/1704.08160.pdf)
+- [Rosset and Tibshirani (2018) From Fixed-X to Random-X Regression](https://arxiv.org/pdf/1704.08160.pdf) (optional)
 
 **October 12** EDA and the modeling process
 
@@ -136,6 +136,8 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 - AS 5.8.3
 
 **October 22** Spam and Boston data
+
+- [Ehrlinger (2015) ggRandomForests: Visually Exploring a Random Forest for Regression](https://arxiv.org/abs/1501.07196) (optional)
 
 
 # **Competitions**
