@@ -403,8 +403,8 @@ score <- function(phat, truth, name="model") {
 
 ```{r}
 # null model
-phat0 = rep(mean(train$spam=="email"),m)
-yhat0 = rep("email",m)
+phat0 = rep(mean(train$spam=="spam"),m)
+yhat0 = ifelse(phat0>.5,"spam","email")
 # confusion matrix
 table(Predicted=yhat0, True=test$spam)
 # score

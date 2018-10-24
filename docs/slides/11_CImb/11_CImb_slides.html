@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Class Imbalance</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Class Imbalance
+### Aldo Solari
+
+---
+
+
+
+
+
+# Outline
+
+* Default data
+* Class imbalance
+* Down-sampling and up-sampling
+
+---
+
+# Default data set
+
+* A simulated data set containing information on 10000 customers
+
+* We are interested in predicting whether an individual will `default` on his or her credit card payment, on the basis of annual income and monthly credit card balance
+
+* `default` A factor with levels `No` and `Yes` indicating whether the customer defaulted on their debt
+
+* `student` A factor with levels `No` and `Yes` indicating whether the customer is a student
+
+* `balance` The average balance that the customer has remaining on their credit card after making their monthly payment
+
+* `income` Income of customer
+
+---
+
+
+```r
+rm(list=ls())
+library(ISLR)
+n = nrow(Default)/2
+m = n
+set.seed(30)
+istrain = sample(c(rep(T,n),rep(F,length=m)))
+train = Default[istrain,]
+test = Default[!istrain,]
+```
+
+
+---
+
+
+```r
+# event of interest = 1
+contrasts(train$default)
+```
+
+```
+    Yes
+No    0
+Yes   1
+```
+
+```r
+# null model
+fit0 = glm(default ~ 1, train, family="binomial")
+phat0 = predict(fit0, newdata=test, type="response")
+yhat0 = ifelse(phat0 &gt; 0.5, "Yes", "No")
+
+# logistic model
+fit = glm(default ~ . , train, family="binomial")
+phat = predict(fit, newdata=test, type="response")
+yhat = ifelse(phat &gt; 0.5, "Yes", "No")
+```
+
+
+---
+
+
+```r
+# null model
+table(predicted=yhat0, true=test$default)
+```
+
+```
+         true
+predicted   No  Yes
+       No 4834  166
+```
+
+```r
+mean(yhat0==test$default)
+```
+
+```
+[1] 0.9668
+```
+
+```r
+# logistic model
+table(predicted=yhat, true=test$default)
+```
+
+```
+         true
+predicted   No  Yes
+      No  4812  107
+      Yes   22   59
+```
+
+```r
+mean(yhat==test$default)
+```
+
+```
+[1] 0.9742
+```
+
+---
+
+# Class imbalance
+
+* With class predictions, a common summary method is to produce a confusion matrix which is a simple cross-tabulation between the observed and predicted classes
+
+* Accuracy is the most obvious metric for characterizing the performance of models
+
+* However, it suffers when there is a __class imbalance__; for the defaul data,  96.6% of the subjects have `No` default. Then we can expect 96.6% accuracy by predicting samples to be `No` default
+
+---
+
+# Sensitivity and specificity
+
+* One of these classes can be considered the event of interest or the __positive class__ (e.g. `Yes` default)
+
+* One common way to think about performance is to consider false negatives and false positives
+
+* the sensitivity is the true positive rate
+`$$\mathrm{sensitivity}=\frac{\#\,\mathrm{Truly\,\,Yes\,\,predicted\,\,correctly}}{\#\,\mathrm{Truly\,\,Yes}}$$`
+
+* the specificity is the rate of correctly predicted negatives, or 1 - false positive rate.
+`$$\mathrm{specificity}=\frac{\#\,\mathrm{Truly\,\,No\,\,predicted\,\,correctly}}{\#\,\mathrm{Truly\,\,No}}$$`
+
+* Null model: sensitivity = 0/166, specificity = 4834/4834 = 100%
+
+* Logistic model: sensitivity = 59/166=35.5%, specificity = 4812/4834 = 99.5%
+
+
+---
+
+# Changing the probability threshold
+
+* For two classes, the 50% cutoff is customary; if the probability of default is &gt;= 50%, they would be labelled as `Yes` default
+
+* What happens when you change the cutoff?
+
+* Increasing it makes it harder to be called `Yes` default. Then fewer predicted default events, higher specificity, lower sensitivity
+
+* Decreasing the cutoff makes it easier to be called `Yes` default. Then more predicted events, lower specificity, higher sensitivity
+
+* With two classes, the __Receiver Operating Characteristic__ (ROC) curve can be used to estimate performance using a combination of sensitivity and specificity
+
+---
+
+
+```
+Area under the curve: 0.9577
+```
+
+![](11_CImb_slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+
+# The Receiver Operating Characteristic (ROC) Curve
+
+* The ROC curve has some major advantages:
+
+      - It can allow models to be optimized for performance before a definitive cutoff is determined
+
+      - It is __robust__ to class imbalances; no matter the event rate, it does a good job at characterizing model performance
+
+* The ROC curve can be used to pick an optimal cutoff based on the trade-offs between the types of errors that can occur
+
+* When there are two classes, it is advisable to focus on the __Area Under the Curve__ (AUC) instead of sensitivity and specificity
+
+---
+
+# Dealing with Class Imbalances
+
+* In our data, only 3.3% of the subjects have default `Yes`
+
+* This complicates the analysis since many models will overfit to the majority class
+
+* There are two main strategies to deal with this:
+
+    - __Cost-sensitive learning__ where a higher cost is attached to the minority classes. In this way, the fitting process puts more emphasis on those samples
+
+    - __Sampling procedures__ that modify the rows of the data to re-balance the training set
+
+* We will focus on sampling procedures
+
+---
+
+# Class Imbalance Sampling
+
+* There are a variety of methods for subsampling the data. Some exclude or replicate rows in the training set (__down-sampling__ and __up-sampling__) while others try to synthesize new data points to balance the classes (__SMOTE__ and __ROSE__)
+
+* The simplest method for dealing with the problem is to down-sample the data to make the number of `Yes` and `No` the same
+
+* While it seems like throwing away most of the data is a bad idea, it tends top produce less pathological distributions of the class probabilities and might improve the ROC curve
+
+* It is critical that:
+
+      - the sampling should be done __inside__ of cross-validation. Otherwise, the performance estimates can be optimistic
+      - these sampling methods take place on the training set and not the test set
+      
+* `caret` allows the user to specify down-sampling when using train so that it is conducted inside of cross-validation
+
+
+---
+
+
+```r
+library(caret)
+ctrl &lt;- trainControl(method = "repeatedcv",
+                     number = 10,
+                     repeats = 2,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary
+                     )
+
+# logistic regression
+set.seed(123)
+fit.none &lt;- train(default ~ ., data = train, 
+              method = "glm",
+              metric = "ROC",
+              trControl = ctrl)
+
+# logistic regression with downsampling
+ctrl$sampling &lt;- "down"
+set.seed(123)
+fit.down &lt;- train(default ~ ., data = train, 
+              method = "glm",
+              metric = "ROC",
+              trControl = ctrl)
+```
+
+---
+
+
+```r
+phat.none = predict(fit.none, test, type = "prob")[,"Yes"]
+phat.down = predict(fit.down, test,  type = "prob")[,"Yes"]
+yhat.none = ifelse(phat.none &gt; .5, "Yes","No")
+yhat.down = ifelse(phat.down &gt; .5, "Yes","No")
+phats =data.frame(No=c(1-phat.none,1-phat.down),
+                  Yes=c(phat.none,phat.down),
+                  obs=rep(test$default,2),
+                  pred = c(yhat.none,yhat.down),
+                  model = c(rep("glm.none",m), rep("glm.down",m)),
+                  dataType = rep("Test",2*m),
+                  object = c(rep("none",m), rep("down",m))
+)
+```
+
+---
+
+
+```r
+plotClassProbs(phats)
+```
+
+![](11_CImb_slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+library(pROC)
+# logistic regression
+roc.none &lt;- roc(
+	response = test$default,
+	predictor = phat.none,
+	levels = c("Yes","No")
+	)
+auc(roc.none)
+```
+
+```
+Area under the curve: 0.9577
+```
+
+```r
+# logistic regression with downsampling
+roc.down &lt;- roc(
+	response = test$default,
+	predictor = phat.down,
+	levels = c("Yes","No")
+	)
+auc(roc.down)
+```
+
+```
+Area under the curve: 0.958
+```
+
+---
+
+
+```r
+plot(roc.none, legacy.axes = TRUE, print.thres = .5)
+plot(roc.down, print.thres = .5, add=TRUE)
+```
+
+![](11_CImb_slides_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+
+* Now we compare two approaches:
+
+* __Outside__ :  down/up-sampling the training set before fitting
+
+* __Inside__ : down/up-sampling inside of cross-validation 
+
+* With the outside approach, we will see that cross-validation suggests that up-sampling is nearly perfect 
+
+* The reason that up-sampling appears to perform so well is that the observations in the `Yes` class are replicated and have a large potential to be in both the model building and hold-out sets
+
+
+---
+
+
+```r
+library(caret)
+# down-sampling (outside)
+set.seed(123)
+train_down = downSample(x = train[,-1], y=train$default, yname="default")
+table(train_down$default)
+```
+
+```
+
+ No Yes 
+167 167 
+```
+
+```r
+# up-sampling (outside)
+set.seed(123)
+train_up = upSample(x = train[,-1], y=train$default, yname="default")
+table(train_up$default)
+```
+
+```
+
+  No  Yes 
+4833 4833 
+```
+
+---
+
+
+```r
+ctrl &lt;- trainControl(method = "cv",
+                     number = 10,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary)
+set.seed(123)
+fit &lt;- train(default ~ ., data = train, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+set.seed(123)
+fit_do &lt;- train(default ~ ., data = train_down, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+set.seed(123)
+fit_uo &lt;- train(default ~ ., data = train_up, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+```
+
+---
+
+
+```r
+models_out &lt;- list(original = fit,
+                   down = fit_do,
+                   up = fit_uo)
+
+res_out &lt;- resamples(models_out)
+bwplot(res_out, metric = "ROC")
+```
+
+![](11_CImb_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+phat = predict(fit, test, type = "prob")[,"Yes"]
+phat_do = predict(fit_do, test,  type = "prob")[,"Yes"]
+phat_uo = predict(fit_uo, test,  type = "prob")[,"Yes"]
+
+library(pROC)
+roc(response = test$default,predictor = phat,levels = c("Yes","No"))$auc
+```
+
+```
+Area under the curve: 0.882
+```
+
+```r
+roc(response = test$default,predictor = phat_do,levels = c("Yes","No"))$auc
+```
+
+```
+Area under the curve: 0.928
+```
+
+```r
+roc(response = test$default,predictor = phat_uo,levels = c("Yes","No"))$auc
+```
+
+```
+Area under the curve: 0.8604
+```
+
+---
+
+
+```r
+ctrl &lt;- trainControl(method = "cv",
+                     number = 10,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary,
+                     sampling = "down"
+                     )
+set.seed(123)
+fit_di &lt;- train(default ~ ., data = train, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+set.seed(123)
+fit_ui &lt;- train(default ~ ., data = train, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+```
+
+---
+
+
+```r
+models_in &lt;- list(original = fit,
+                   down = fit_di,
+                   up = fit_ui)
+res_in &lt;- resamples(models_in)
+bwplot(res_in, metric = "ROC")
+```
+
+![](11_CImb_slides_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+phat = predict(fit, test, type = "prob")[,"Yes"]
+phat_di = predict(fit_di, test,  type = "prob")[,"Yes"]
+phat_ui = predict(fit_ui, test,  type = "prob")[,"Yes"]
+
+library(pROC)
+roc(response = test$default,predictor = phat,levels = c("Yes","No"))$auc
+```
+
+```
+Area under the curve: 0.882
+```
+
+```r
+roc(response = test$default,predictor = phat_di,levels = c("Yes","No"))$auc
+```
+
+```
+Area under the curve: 0.9368
+```
+
+```r
+roc(response = test$default,predictor = phat_ui,levels = c("Yes","No"))$auc
+```
+
+```
+Area under the curve: 0.9368
+```
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

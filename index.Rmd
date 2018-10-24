@@ -46,13 +46,13 @@ Most of the course material can be found in the notes linked to below. The notes
 | 9 | October 19 | Random Forests | - | [Slides](docs/slides/9_RF/9_RF_slides.html) |
 |  |  |  |  | | |
 | 10 | October 22 | Spam and Boston data | - | - |
-| 11 | October 25 |  | |
-| 12 | October 26 |  | |
+| 11 | October 25 | Class imbalance | - | [Slides](docs/slides/11_CImb/11_CImb_slides.html) | 
+| 12 | October 26 | Ridge regression | |
 |  |  |  |  | | |
-| 13 | October 29 | | |
+| 13 | October 29 | LASSO | |
 |  |  |  |  | | |
-| 14 | November 8 | |
-| 15 | November 9 | | |
+| 14 | November 8 |  |
+| 15 | November 9 |  | |
 |  |  |  |  | | |
 | 16 | November 12 | | |
 
@@ -138,6 +138,13 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 **October 22** Spam and Boston data
 
 - [Ehrlinger (2015) ggRandomForests: Visually Exploring a Random Forest for Regression](https://arxiv.org/abs/1501.07196) (optional)
+
+**October 25** Class imbalance
+
+
+**October 26** Ridge regression
+
+
 
 
 # **Competitions**
