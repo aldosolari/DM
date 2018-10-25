@@ -1,0 +1,145 @@
+---
+title: "Ridge regression"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Credit data 
+* Riboflavin data
+* 
+
+---
+
+# Credit data
+
+* `Balance` : average credit card debt (response) 
+* `Age`
+* `Cards` : number of credit cards
+* `Education` : years of education
+* `Income` : in thousands of dollars
+* `Limit` : credit limit
+* `Rating` : credit rating
+* `Gender`
+* `Student` : student status
+* `Status` : marital status
+* `Ethnicity` : Caucasian, African American
+or Asian
+
+---
+
+```{r}
+library(readr)
+Credit <- read_csv("http://www-bcf.usc.edu/~gareth/ISL/Credit.csv")
+plot(Credit[,c("Balance","Limit","Rating")])
+```
+
+---
+
+# Collinearity
+
+* `Limit` and `Rating` are very highly correlated with each other, i.e. they are __collinear__
+
+* Collinearity is problematic for regression, since it can be difficult to separate out the individual effects of collinear variables on the response
+
+
+```{r}
+round( summary(lm(Balance ~ Limit + Rating, Credit))$coeff , 4)
+```
+
+* The importance of the `Limit` variable has been masked due to the presence of collinearity
+
+* [ISL Figure 3.15](http://www-bcf.usc.edu/~gareth/ISL/Chapter3/3.15.pdf) 
+
+---
+
+$$Y = 3 + 1\cdot X_1 + 1\cdot X_2 + \varepsilon$$
+
+```{r}
+set.seed(473)
+x1 <- rnorm(20)
+x2 <- rnorm(20, mean=x1, sd=.01)
+y <- rnorm(20, mean=3+x1+x2)
+round( summary(lm(y~x1+x2))$coef , 4)
+```
+
+
+---
+
+# Riboflavin data
+
+* The data has been kindly provided by [DSM](https://www.dsm.com/corporate/home.html) (Kaiseraugst, Switzerland)
+
+* The response variable is the logarithm of the riboflavin (vitamin B2) production rate in [Bacillus subtilis](https://en.wikipedia.org/wiki/Bacillus_subtilis)
+
+* $n=71$ observations
+
+* $p=4088$ predictors measuring the logarithm of the expression level of 4088 genes
+
+* Data sets containing more variables than observations, i.e. $p > n$ are referred to as __high-dimensional__
+
+* How to perform __high-dimensional regression__?
+
+---
+
+```{r}
+library(hdi)
+data(riboflavin)
+Riboflavin = as.data.frame( cbind(y=riboflavin$y, x=riboflavin$x) )
+names(Riboflavin) = c("y",attr(riboflavin$x, "dimnames")[[2]])
+dim(Riboflavin)
+```
+
+---
+
+```{r}
+coef( lm( y ~ ., Riboflavin) )[1:100]
+```
+
+---
+
+# What goes wrong in high-dimensions?
+
+* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.22.pdf) Least squares regression in the low-dimensional setting ( $n=20$, $p=2$) and in the high-dimensional setting ( $n=2$, $p=2$ )
+
+* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.23.pdf) Simulated example with $n = 20$ training observations with $p$ predictors that are completely unrelated to the response. Here $\mathrm{MSE}_{\mathrm{Tr}} \rightarrow 0$ as $p\rightarrow n$, while $\mathrm{MSE}_{\mathrm{Te}} \uparrow$ as $p\rightarrow n$
+
+---
+
+# Overfitting
+
+```{r}
+n = 10
+p = 9
+set.seed(123)
+X = matrix(rnorm(n*p),nrow=n, ncol=p)
+y = X[,1] + rnorm(n,0,0.5)
+fit = lm(y~ 0 + X)
+round(summary(fit)$coef,4)
+```
+
+---
+
+```{r}
+yhat = predict(fit)
+plot(X[,1],y, xlab="x1")
+ix = sort(X[,1], index.return=T)$ix
+lines(X[ix,1], yhat[ix])
+abline(a=0,b=1, col=4)
+```
+
+
+

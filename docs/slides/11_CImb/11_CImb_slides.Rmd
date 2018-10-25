@@ -84,6 +84,13 @@ mean(yhat==test$default)
 
 ---
 
+layout: false
+class: inverse, middle, center
+
+# Class imbalance
+
+---
+
 # Class imbalance
 
 * With class predictions, a common summary method is to produce a confusion matrix which is a simple cross-tabulation between the observed and predicted classes
@@ -274,15 +281,24 @@ plot(roc.down, print.thres = .5, add=TRUE)
 
 ---
 
+layout: false
+class: inverse, middle, center
+
+# Down-sampling and up-sampling
+
+---
+
 * Now we compare two approaches:
 
 * __Outside__ :  down/up-sampling the training set before fitting
 
 * __Inside__ : down/up-sampling inside of cross-validation 
 
-* With the outside approach, we will see that cross-validation suggests that up-sampling is nearly perfect 
+* If we use the outside approach, we will see that cross-validation suggests up-sampling to be nearly perfect 
 
 * The reason that up-sampling appears to perform so well is that the observations in the `Yes` class are replicated and have a large potential to be in both the model building and hold-out sets
+
+* This is related to the concept of __information leakage__ which is where the hold-out set data are used (directly or indirectly) during the training process. This can lead to overly optimistic results that do not replicate on future data points and can occur in subtle ways
 
 
 ---

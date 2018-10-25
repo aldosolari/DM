@@ -80,8 +80,8 @@ R Markdown is an example of [literate programming](https://en.wikipedia.org/wiki
 Readings should be complete by the following class. There are three primary references:
 
 - [Introduction to Statistical Learning with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (ISLR)
-- [R for Data Science](http://r4ds.had.co.nz/) (r4ds)
 - [Analisi dei dati e data mining](http://azzalini.stat.unipd.it/Book-DM/index.html) (AS)
+- [R for Data Science](http://r4ds.had.co.nz/) (r4ds)
 
 As a supplement to the textbook ISLR, you may also want to watch the excellent course lecture videos (linked below)
 
@@ -140,7 +140,6 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 - [Ehrlinger (2015) ggRandomForests: Visually Exploring a Random Forest for Regression](https://arxiv.org/abs/1501.07196) (optional)
 
 **October 25** Class imbalance
-
 
 **October 26** Ridge regression
 

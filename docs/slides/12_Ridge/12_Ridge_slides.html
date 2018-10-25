@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ridge regression</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Ridge regression
+### Aldo Solari
+
+---
+
+
+
+
+
+# Outline
+
+* Credit data 
+* Riboflavin data
+* 
+
+---
+
+# Credit data
+
+* `Balance` : average credit card debt (response) 
+* `Age`
+* `Cards` : number of credit cards
+* `Education` : years of education
+* `Income` : in thousands of dollars
+* `Limit` : credit limit
+* `Rating` : credit rating
+* `Gender`
+* `Student` : student status
+* `Status` : marital status
+* `Ethnicity` : Caucasian, African American
+or Asian
+
+---
+
+
+```r
+library(readr)
+Credit &lt;- read_csv("http://www-bcf.usc.edu/~gareth/ISL/Credit.csv")
+plot(Credit[,c("Balance","Limit","Rating")])
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+
+# Collinearity
+
+* `Limit` and `Rating` are very highly correlated with each other, i.e. they are __collinear__
+
+* Collinearity is problematic for regression, since it can be difficult to separate out the individual effects of collinear variables on the response
+
+
+
+```r
+round( summary(lm(Balance ~ Limit + Rating, Credit))$coeff , 4)
+```
+
+```
+             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept) -377.5368    45.2542 -8.3426   0.0000
+Limit          0.0245     0.0638  0.3840   0.7012
+Rating         2.2017     0.9523  2.3120   0.0213
+```
+
+* The importance of the `Limit` variable has been masked due to the presence of collinearity
+
+* [ISL Figure 3.15](http://www-bcf.usc.edu/~gareth/ISL/Chapter3/3.15.pdf) 
+
+---
+
+`$$Y = 3 + 1\cdot X_1 + 1\cdot X_2 + \varepsilon$$`
+
+
+```r
+set.seed(473)
+x1 &lt;- rnorm(20)
+x2 &lt;- rnorm(20, mean=x1, sd=.01)
+y &lt;- rnorm(20, mean=3+x1+x2)
+round( summary(lm(y~x1+x2))$coef , 4)
+```
+
+```
+            Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)   2.5347     0.2396 10.5787   0.0000
+x1           39.9802    21.3313  1.8743   0.0782
+x2          -37.8708    21.3976 -1.7699   0.0947
+```
+
+
+---
+
+# Riboflavin data
+
+* The data has been kindly provided by [DSM](https://www.dsm.com/corporate/home.html) (Kaiseraugst, Switzerland)
+
+* The response variable is the logarithm of the riboflavin (vitamin B2) production rate in [Bacillus subtilis](https://en.wikipedia.org/wiki/Bacillus_subtilis)
+
+* `\(n=71\)` observations
+
+* `\(p=4088\)` predictors measuring the logarithm of the expression level of 4088 genes
+
+* Data sets containing more variables than observations, i.e. `\(p &gt; n\)` are referred to as __high-dimensional__
+
+* How to perform __high-dimensional regression__?
+
+---
+
+
+```r
+library(hdi)
+data(riboflavin)
+Riboflavin = as.data.frame( cbind(y=riboflavin$y, x=riboflavin$x) )
+names(Riboflavin) = c("y",attr(riboflavin$x, "dimnames")[[2]])
+dim(Riboflavin)
+```
+
+```
+[1]   71 4089
+```
+
+---
+
+
+```r
+coef( lm( y ~ ., Riboflavin) )[1:100]
+```
+
+```
+(Intercept)     AADK_at     AAPA_at     ABFA_at      ABH_at     ABNA_at     ABRB_at     ACCA_at     ACCB_at     ACCC_at     ACDA_at     ACKA_at     ACOA_at     ACOB_at     ACOC_at     ACOL_at     ACOR_at     ACPA_at 
+-2.04286709  2.66498746 -2.16773713 -0.90204415 -1.36239163 -1.12395692  1.80341933  1.77030566  0.04895629 -1.77897762  2.87871238  3.09031706 -1.71121111  3.61659914 -2.71881162  0.53536079 -1.04826773 -0.20873401 
+    ACSA_at     ACUA_at     ACUB_at     ACUC_at     ADAA_at     ADAB_at     ADDA_at     ADDB_at     ADEC_at     ADHA_at     ADHB_at      ADK_at     AHPC_at     AHPF_at     AHRC_at     ALAS_at      ALD_at     ALDX_at 
+-1.92256737 -2.41654532 -1.76593431  6.34334112  1.73608095 -1.23913307 -1.24858497  1.66389296 -0.66900097  1.90018145 -4.81855093  0.33413745  0.48211084 -0.20039815 -0.53329911  4.50154225 -0.65453871 -0.74650627 
+    ALDY_at     ALKA_at     ALSD_at     ALSR_at     ALSS_at     ALST_at     AMHX_at     AMPS_at     AMYC_at     AMYD_at     AMYE_at     AMYX_at     ANSA_at     ANSB_at     ANSR_at     APPA_at     APPB_at     APPC_at 
+ 1.38732907 -0.25703937  3.21285329 -1.34814259 -4.16228098  5.11751318 -1.80911059  0.27154095  0.34434621 -0.11283781  0.95456839  1.87926516 -4.30714076 -1.65699081 -0.58712488  2.59164003 -0.83931985 -2.06755571 
+    APPD_at     APPF_at     APRE_at     APRX_at      APT_at     ARAA_at     ARAB_at     ARAD_at     ARAE_at     ARAL_at     ARAM_at     ARAN_at     ARAP_at     ARAQ_at     ARAR_at     ARGB_at     ARGC_at     ARGD_at 
+ 2.18898421 -3.80756793  4.08954861  0.09820901 -3.45116308 -0.32434621  4.03237534 -0.34840374 -0.21522426 -2.09292044  1.07242536  2.17828300 -2.51813771 -1.31425090 -1.89524240  2.31358027 -2.45305386          NA 
+    ARGE_at     ARGF_at     ARGG_at     ARGH_at     ARGJ_at     ARGS_at     AROA_at     AROB_at     AROC_at     AROD_at     AROE_at     AROF_at     AROH_at     AROI_at     arsB_at     arsC_at     arsR_at      ASD_at 
+         NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA          NA 
+   ASK_r_at     ASNB_at     ASNH_at     ASNS_at     ASPB_at     ASPS_at     ATPA_at     ATPB_at     ATPC_at     ATPD_at 
+         NA          NA          NA          NA          NA          NA          NA          NA          NA          NA 
+```
+
+---
+
+# What goes wrong in high-dimensions?
+
+* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.22.pdf) Least squares regression in the low-dimensional setting ( `\(n=20\)`, `\(p=2\)`) and in the high-dimensional setting ( `\(n=2\)`, `\(p=2\)` )
+
+* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.23.pdf) Simulated example with `\(n = 20\)` training observations with `\(p\)` predictors that are completely unrelated to the response. Here `\(\mathrm{MSE}_{\mathrm{Tr}} \rightarrow 0\)` as `\(p\rightarrow n\)`, while `\(\mathrm{MSE}_{\mathrm{Te}} \uparrow\)` as `\(p\rightarrow n\)`
+
+---
+
+# Overfitting
+
+
+```r
+n = 10
+p = 9
+set.seed(123)
+X = matrix(rnorm(n*p),nrow=n, ncol=p)
+y = X[,1] + rnorm(n,0,0.5)
+fit = lm(y~ 0 + X)
+round(summary(fit)$coef,4)
+```
+
+```
+   Estimate Std. Error t value Pr(&gt;|t|)
+X1   0.5427     0.3000  1.8087   0.3215
+X2  -0.2119     0.2113 -1.0027   0.4991
+X3  -0.6062     0.4249 -1.4266   0.3892
+X4   0.1444     0.5307  0.2721   0.8308
+X5  -0.2669     0.1404 -1.9011   0.3083
+X6  -0.6750     0.2589 -2.6068   0.2332
+X7  -0.3819     0.3526 -1.0832   0.4746
+X8   0.1647     0.3160  0.5212   0.6941
+X9   0.8158     0.6458  1.2633   0.4263
+```
+
+---
+
+
+```r
+yhat = predict(fit)
+plot(X[,1],y, xlab="x1")
+ix = sort(X[,1], index.return=T)$ix
+lines(X[ix,1], yhat[ix])
+abline(a=0,b=1, col=4)
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
