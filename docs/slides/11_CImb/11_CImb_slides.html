@@ -472,6 +472,7 @@ fit_di &lt;- train(default ~ ., data = train,
               nbagg = 50,
               metric = "ROC",
               trControl = ctrl)
+ctrl$sampling = "up"
 set.seed(123)
 fit_ui &lt;- train(default ~ ., data = train, 
               method = "treebag",
@@ -522,7 +523,7 @@ roc(response = test$default,predictor = phat_ui,levels = c("Yes","No"))$auc
 ```
 
 ```
-Area under the curve: 0.9368
+Area under the curve: 0.8613
 ```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

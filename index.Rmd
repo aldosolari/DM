@@ -47,7 +47,7 @@ Most of the course material can be found in the notes linked to below. The notes
 |  |  |  |  | | |
 | 10 | October 22 | Spam and Boston data | - | - |
 | 11 | October 25 | Class imbalance | - | [Slides](docs/slides/11_CImb/11_CImb_slides.html) | 
-| 12 | October 26 | Ridge regression | |
+| 12 | October 26 | Ridge regression | - | [Slides](docs/slides/12_Ridge/12_Ridge_slides.html) |
 |  |  |  |  | | |
 | 13 | October 29 | LASSO | |
 |  |  |  |  | | |

@@ -22,9 +22,82 @@ class: center, middle, inverse, title-slide
 
 # Outline
 
-* Credit data 
-* Riboflavin data
-* 
+* Problems in linear regression
+* Problem 1: collinearity 
+* Problem 2: overfitting
+* Problem 3: high-dimensional data
+* Ridge regression
+
+---
+
+# Matrix notation
+
+* Vector of response: 
+`$$\underset{n\times 1}{\mathbf{y}} = 
+\left[
+\begin{array}{c}
+y_1   \\
+\cdots\\
+y_i  \\
+\cdots\\
+y_n \\
+\end{array}\right]$$`
+
+* Design matrix:
+`$$\underset{n\times p}{\mathbf{X}} = \left[
+\begin{array}{cccccc}
+x_{1}^\mathsf{T}   \\
+x_{2}^\mathsf{T}  \\
+\cdots   \\
+x_{i}^\mathsf{T}    \\
+\cdots\\
+x_{n}^\mathsf{T}\\
+\end{array}\right] = \left[
+\begin{array}{cccccc}
+x_{11}  &amp; x_{12}  &amp; \cdots   &amp;  x_{1j}  &amp; \cdots   &amp;   x_{1p}  \\
+x_{21}  &amp; x_{22} &amp; \cdots   &amp;  x_{2j}  &amp; \cdots   &amp;   x_{2p}  \\
+\cdots   &amp; \cdots   &amp;  \cdots &amp; \cdots   &amp;  \cdots  \\
+x_{i1}  &amp; x_{i2} &amp; \cdots   &amp;  x_{ij}&amp; \cdots   &amp; x_{ip}    \\
+\cdots   &amp; \cdots   &amp;  \cdots  &amp;  \cdots   &amp;  \cdots\\
+x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{np}\\
+\end{array}\right]$$`
+
+---
+
+# Linear regression
+
+* Suppose `\(\mathrm{rank}(\mathbf{X}) = p\)`
+
+* Least squares problem: 
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2 = \min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2$$`
+where  `\(\| \underset{p \times 1}{v} \|_{2} = \sqrt{\sum_{j=1}^{p} v_j^2}\)` denotes the `\(L_2\)` norm
+
+
+
+* Normal equations: `\(\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T}\mathbf{y}\)`
+
+* OLS estimator: `$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+
+* Fitted values: `\(\underset{n\times 1}{\hat{\mathbf{y}} } = \mathbf{X}\hat{\boldsymbol{\beta}}\)`
+
+* Test data: `\(\underset{m\times 1}{\mathbf{y}^*}\)`, `\(\underset{m\times p}{\mathbf{X}^*}\)`, prediction on test data: `\(\underset{m\times 1}{\hat{\mathbf{y}}^*} = \mathbf{X}^*\hat{\boldsymbol{\beta}}\)`
+
+
+---
+
+# Problems in linear regression
+
+1. Collinearity
+
+2. Overfitting: when `\(p \approx n\)`, the linear regression fit often has low bias but high variance 
+
+3. High-dimensional data: when `\(p&gt;n\)`, we have super-collinearity 
+---
+
+layout: false
+class: inverse, middle, center
+
+# Problem 1: collinearity
 
 ---
 
@@ -63,7 +136,6 @@ plot(Credit[,c("Balance","Limit","Rating")])
 * Collinearity is problematic for regression, since it can be difficult to separate out the individual effects of collinear variables on the response
 
 
-
 ```r
 round( summary(lm(Balance ~ Limit + Rating, Credit))$coeff , 4)
 ```
@@ -80,6 +152,8 @@ Rating         2.2017     0.9523  2.3120   0.0213
 * [ISL Figure 3.15](http://www-bcf.usc.edu/~gareth/ISL/Chapter3/3.15.pdf) 
 
 ---
+
+True model
 
 `$$Y = 3 + 1\cdot X_1 + 1\cdot X_2 + \varepsilon$$`
 
@@ -99,6 +173,103 @@ x1           39.9802    21.3313  1.8743   0.0782
 x2          -37.8708    21.3976 -1.7699   0.0947
 ```
 
+---
+layout: false
+class: inverse, middle, center
+
+# Problem 2: Overfitting
+
+---
+
+# Overfitting
+
+* `\(n=10\)` and `\(p=9\)`
+* Model: `\(Y = \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_9X_9 +  \varepsilon\)`
+* True `\(\boldsymbol{\beta} = (1,0,0,\ldots,0)^\mathsf{T}\)`
+
+
+```r
+n = 10
+p = 9
+set.seed(1793)
+X = matrix(rnorm(n*p),nrow=n, ncol=p)
+y = X[,1] + rnorm(n,0,0.5)
+fit = lm(y~ 0 + X)
+coef(fit)
+```
+
+```
+        X1         X2         X3         X4         X5         X6         X7         X8         X9 
+ 13.527953  -5.466373 -24.512290  -6.610876   2.732160 -10.670639  15.472750  16.831498 -11.331475 
+```
+
+* Overfitting refers to the phenomenon of modelling the noise
+rather than the signal
+
+* Large estimates of regression coefficients (in absolute value)
+are often an indication of overfitting
+
+---
+
+
+
+```r
+yhat = predict(fit)
+plot(X[,1],y, xlab="x1")
+ix = sort(X[,1], index.return=T)$ix
+lines(X[ix,1], yhat[ix])
+abline(a=0,b=1, col=4)
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+# Complete overfitting
+
+
+```r
+y = c(-1,0); x1 = c(.75,.5); x2 = c(1,.5)
+summary(lm(y~0+x1+x2))
+```
+
+```
+
+Call:
+lm(formula = y ~ 0 + x1 + x2)
+
+Residuals:
+ALL 2 residuals are 0: no residual degrees of freedom!
+
+Coefficients:
+   Estimate Std. Error t value Pr(&gt;|t|)
+x1        4         NA      NA       NA
+x2       -4         NA      NA       NA
+
+Residual standard error: NaN on 0 degrees of freedom
+Multiple R-squared:      1,	Adjusted R-squared:    NaN 
+F-statistic:   NaN on 2 and 0 DF,  p-value: NA
+```
+
+---
+
+# Observations space
+
+![](images/overfit.jpg)
+
+---
+
+* In `\(p\geq n\)` settings overfitting is a real threat: it
+is possible to form a linear combination of the predictors
+that perfectly explains the response, including the noise
+
+* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.22.pdf) Least squares regression in the low-dimensional setting with `\(n=20\)`, `\(p=2\)` and in the `\(n=p=2\)` setting
+
+---
+layout: false
+class: inverse, middle, center
+
+# Problem 3: High-dimensional data
 
 ---
 
@@ -113,6 +284,8 @@ x2          -37.8708    21.3976 -1.7699   0.0947
 * `\(p=4088\)` predictors measuring the logarithm of the expression level of 4088 genes
 
 * Data sets containing more variables than observations, i.e. `\(p &gt; n\)` are referred to as __high-dimensional__
+
+* An high-dimensional `\(\mathbf{X}\)` suffers from __super-collinearity__ : `\(p&gt;n\)` implies that the columns of `\(\mathbf{X}\)` are linearly dependent, i.e.  `\(\mathrm{rank}(\mathbf{X})&lt;p\)`. Then `\(\mathbf{X}^\mathsf{T}\mathbf{X}\)` is singular and it does not have an inverse
 
 * How to perform __high-dimensional regression__?
 
@@ -155,52 +328,184 @@ coef( lm( y ~ ., Riboflavin) )[1:100]
 
 ---
 
-# What goes wrong in high-dimensions?
+# The failure of least squares in high dimensions
 
-* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.22.pdf) Least squares regression in the low-dimensional setting ( `\(n=20\)`, `\(p=2\)`) and in the high-dimensional setting ( `\(n=2\)`, `\(p=2\)` )
+* When `\(\mathrm{rank}(\mathbf{X}) &lt; p\)`, e.g. this happens when `\(p&gt;n\)`, there are infinitely many solutions in the least square problem
 
-* [ISL Figure 6.22](http://www-bcf.usc.edu/~gareth/ISL/Chapter6/6.23.pdf) Simulated example with `\(n = 20\)` training observations with `\(p\)` predictors that are completely unrelated to the response. Here `\(\mathrm{MSE}_{\mathrm{Tr}} \rightarrow 0\)` as `\(p\rightarrow n\)`, while `\(\mathrm{MSE}_{\mathrm{Te}} \uparrow\)` as `\(p\rightarrow n\)`
+* Suppose `\(p&gt;n\)` and `\(\mathrm{rank}(\mathbf{X}) = n\)`. Let `\(U=\mathrm{span}(\mathbf{X})\)` be the `\(n\)`-dimensional space spanned by the columns of `\(\mathbf{X}\)` and `\(V=U^\bot\)` the `\(p-n\)` dimensional space orthogonal complement of `\(U\)`, i.e. i.e. the non-trivial null space of `\(\mathbf{X}\)`
+
+* Then `\(\mathbf{X}\mathbf{v} = \mathbf{0}_p\)` for all `\(\mathbf{v} \in V\)`, and `\(\mathbf{X}^\mathsf{T}\mathbf{X}\mathbf{v} = \mathbf{X}^\mathsf{T}\mathbf{0}_p = \mathbf{0}_n\)`, the solution of the normal equations is
+`$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-}\mathbf{X}^\mathsf{T} \mathbf{y} + \mathbf{v} \quad \forall\,\, \mathbf{v} \in V$$`
+where `\(\mathbf{A}^-\)` denotes the Moore-Penrose inverse of the matrix `\(\mathbf{A}\)`
+
 
 ---
 
-# Overfitting
+# Regularization
+
+* How we deal with problems 1., 2. and 3.? The short answer is __regularization__
+
+* Least squares: 
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2$$`
+
+* __Penalized form__
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2+ P(\boldsymbol{\beta})$$`
+where `\(P(\cdot)\)` is some (typically convex) penalty function
+
+* __Constrained form__
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \quad \mathrm{subject\,\,to\,\,} \boldsymbol{\beta}\in C$$`
+where `\(C\)` is some (typically convex) set
+
+* At its core, regularization provides us a way of navigating the bias-variance trade-off
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Ridge regression
+
+---
+
+# Ridge regression
+
+* Penalized least squares:
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2 + \lambda\sum_{j=1}^{p}\beta_j^2 = \min_{\boldsymbol{\beta} \in \mathbb{R}^p} \underbrace{ \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 }_{\mathrm{RSS} }+ \underbrace{\lambda\| \boldsymbol{\beta}\|^2_2}_{\mathrm{penalty}}$$`
+Here `\(\lambda \in [0,\infty)\)` is the __tuning parameter__ which controls the strenght of the penalty term
+
+* The minimum of the RSS is attained at `\(\boldsymbol{\beta}=\hat{\boldsymbol{\beta}}\)` while the minimum of the ridge penalty is attained at `\(\boldsymbol{\beta}=\mathbf{0}_p\)`. The effect of the penalty in this balancing act is to __shrink__ the
+coefficient estimates towards zero
+
+* The solution of the minimzation problem is the __ridge estimator__ :
+`$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}^\lambda} = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+where `\(\mathbf{I}_p\)` is the `\(p\times p\)` identity matrix
+
+* For any design matrix `\(\mathbf{X}\)`, the quantity
+`\((\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\)` is always invertible provided that `\(\lambda &gt; 0\)`; thus,
+there is always a unique solution `\(\hat{\boldsymbol{\beta}}^\lambda\)`
+
+---
 
 
-```r
-n = 10
-p = 9
-set.seed(123)
-X = matrix(rnorm(n*p),nrow=n, ncol=p)
-y = X[,1] + rnorm(n,0,0.5)
-fit = lm(y~ 0 + X)
-round(summary(fit)$coef,4)
-```
+# Solution path
 
-```
-   Estimate Std. Error t value Pr(&gt;|t|)
-X1   0.5427     0.3000  1.8087   0.3215
-X2  -0.2119     0.2113 -1.0027   0.4991
-X3  -0.6062     0.4249 -1.4266   0.3892
-X4   0.1444     0.5307  0.2721   0.8308
-X5  -0.2669     0.1404 -1.9011   0.3083
-X6  -0.6750     0.2589 -2.6068   0.2332
-X7  -0.3819     0.3526 -1.0832   0.4746
-X8   0.1647     0.3160  0.5212   0.6941
-X9   0.8158     0.6458  1.2633   0.4263
-```
+* As `\(\lambda \rightarrow 0\)`, `\(\hat{\boldsymbol{\beta}}^\lambda \rightarrow \hat{\boldsymbol{\beta}}\)`
+
+* As `\(\lambda \rightarrow \infty\)`, `\(\hat{\boldsymbol{\beta}}^\lambda \rightarrow \mathbf{0}_p\)`
+
+* __Solution path__ of the ridge estimator:
+`$$\{\hat{\boldsymbol{\beta}}^{\lambda}: \lambda \in [0,\infty) \}$$`
+
+---
+
+# Standardization
+
+* Some care is needed in the application of ridge regression
+
+* First of all, usually the intercept term is not included in the penalty
+
+* Second, the size of the regression coefficient depends on the
+scale with which the associated predictor is measured, and the penalty term `\(\sum_{j=1}^{p}\beta_j\)` is unfair if the predictors are not on the same scale
+
+* If predictors are not in the same units already, they are standardized to have mean zero and standard deviation 1 prior to model fitting
+
+* If we center the columns of `\(\mathbf{X}\)`, then the intercept estimate ends up just being `\(\hat{\beta}_0=\bar{y}\)`. Usually the response is also standardized to have mean zero and standard deviation 1 and the intercept term is not included in the model
+
+* This can be accomplished without any loss of generality because the coefficients can be returned on the original scale
 
 ---
 
 
 ```r
-yhat = predict(fit)
-plot(X[,1],y, xlab="x1")
-ix = sort(X[,1], index.return=T)$ix
-lines(X[ix,1], yhat[ix])
-abline(a=0,b=1, col=4)
+fit = lm(Balance ~ ., Credit)
+Xraw = model.matrix(fit)
+yraw = Credit$Balance
+X = scale(Xraw[,-1])[,]
+y = scale(yraw)[,]
+p = ncol(X)
+n = nrow(X)
 ```
 
-![](12_Ridge_slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+lambdas = exp(seq(-4,12,length.out = 100))
+hatbetas =sapply(lambdas, function(lambda)
+solve(t(X)%*%X + lambda*diag(p)) %*% t(X) %*% y
+)
+matplot(log(lambdas), t(hatbetas), type="l", lty=1, ylab="standardized coefficients")
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+
+# glmnet()
+
+
+```r
+glmnet(X, y,
+family="gaussian",
+alpha = 0, # 0 = ridgde, default = 1 (LASSO)
+nlambda = 100, # default
+standardize = TRUE, # default
+intercept=TRUE # default
+)
+```
+
+* See the [glmnet vignette](https://web.stanford.edu/hastie/glmnet/glmnet alpha.html)
+
+---
+
+
+```r
+library(glmnet)
+fit = glmnet(Xraw, yraw, alpha = 0, family="gaussian")
+# solution path
+plot(fit, xvar="lambda")
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+
+True model
+
+`$$Y = 3 + 1\cdot X_1 + 1\cdot X_2 + \varepsilon$$`
+
+
+```r
+set.seed(473)
+x1 &lt;- rnorm(20)
+x2 &lt;- rnorm(20, mean=x1, sd=.01)
+y &lt;- rnorm(20, mean=3+x1+x2)
+# OLS estimate
+coef(lm(y~x1+x2))
+```
+
+```
+(Intercept)          x1          x2 
+   2.534666   39.980190  -37.870805 
+```
+
+```r
+# Ridge estimate
+require(MASS)
+lm.ridge(y~x1+x2, lambda=1)
+```
+
+```
+               x1       x2 
+2.699856 1.138304 1.037330 
+```
+
+
+* It can be shown that ridge regression improves the estimates for the coefficients of strongly positively correlated predictors with similar true coefficients 
+
+
+---
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

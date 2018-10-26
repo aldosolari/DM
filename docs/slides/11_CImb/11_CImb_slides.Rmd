@@ -381,6 +381,7 @@ fit_di <- train(default ~ ., data = train,
               nbagg = 50,
               metric = "ROC",
               trControl = ctrl)
+ctrl$sampling = "up"
 set.seed(123)
 fit_ui <- train(default ~ ., data = train, 
               method = "treebag",

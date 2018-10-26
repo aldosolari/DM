@@ -49,12 +49,12 @@ y^*_n \\
 * Design matrix:
 $$\underset{n\times p}{\mathbf{X}} = \left[
 \begin{array}{cccccc}
-x_{1}   \\
-x_{2}  \\
+x_{1}^\mathsf{T}   \\
+x_{2}^\mathsf{T}  \\
 \cdots   \\
-x_{i}    \\
+x_{i}^\mathsf{T}    \\
 \cdots\\
-x_{n}\\
+x_{n}^\mathsf{T}\\
 \end{array}\right] = \left[
 \begin{array}{cccccc}
 x_{11}  & x_{12}  & \cdots   &  x_{1j}  & \cdots   &   x_{1p}  \\
