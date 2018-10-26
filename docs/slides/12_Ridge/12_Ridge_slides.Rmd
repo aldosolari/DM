@@ -23,6 +23,7 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 * Problem 2: overfitting
 * Problem 3: high-dimensional data
 * Ridge regression
+* Bias-variance decomposition
 
 ---
 
@@ -397,6 +398,61 @@ plot(fit, xvar="norm")
 
 ---
 
+```{r}
+fit = glmnet(Xraw, yraw, alpha = 0, family="gaussian")
+# solution path
+plot(fit, xvar="lambda")
+```
+
+---
+
+# Choice of the penalty parameter
+
+* Throughout the introduction of ridge regression and the
+subsequent discussion of its properties the penalty parameter is considered known or `given'
+
+* In practice, it is unknown and the user needs to make an
+informed decision on its value
+
+* Cross-validation
+
+* Generalized cross-validation
+
+---
+
+```{r}
+# K-fold cross validation
+K <- 5
+fit.cv <-cv.glmnet(Xraw,yraw,alpha=0, nfolds = K)
+plot(fit.cv)
+```
+
+---
+
+```{r}
+# lambda selected by K fold cross validation
+hatlambda <-fit.cv$lambda.min
+hatlambda
+```
+
+---
+
+```{r}
+predict(fit.cv, s=hatlambda, type ="coefficients")
+```
+
+---
+
+
+```{r}
+plot(fit, xvar="lambda")
+abline(v=log(hatlambda))
+```
+
+---
+
+# Collinearity
+
 True model
 
 $$Y = 3 + 1\cdot X_1 + 1\cdot X_2 + \varepsilon$$
@@ -419,5 +475,20 @@ lm.ridge(y~x1+x2, lambda=1)
 
 ---
 
+# High-dimensional data
 
+```{r}
+X = model.matrix(lm(y ~ . ,Riboflavin))
+fit = glmnet(X,riboflavin$y, alpha=0, family="gaussian")
+plot(fit, xvar="lambda")
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Bias-variance decomposition
+
+---
 

@@ -27,6 +27,7 @@ class: center, middle, inverse, title-slide
 * Problem 2: overfitting
 * Problem 3: high-dimensional data
 * Ridge regression
+* Bias-variance decomposition
 
 ---
 
@@ -462,7 +463,7 @@ intercept=TRUE # default
 
 ```r
 library(glmnet)
-fit = glmnet(Xraw, yraw, alpha = 0, family="gaussian")
+fit = glmnet(X, y, alpha = 0, family="gaussian")
 # solution path
 plot(fit, xvar="lambda")
 ```
@@ -470,6 +471,104 @@ plot(fit, xvar="lambda")
 ![](12_Ridge_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 ---
+
+
+```r
+plot(fit, xvar="norm")
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+fit = glmnet(Xraw, yraw, alpha = 0, family="gaussian")
+# solution path
+plot(fit, xvar="lambda")
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+---
+
+# Choice of the penalty parameter
+
+* Throughout the introduction of ridge regression and the
+subsequent discussion of its properties the penalty parameter is considered known or `given'
+
+* In practice, it is unknown and the user needs to make an
+informed decision on its value
+
+* Cross-validation
+
+* Generalized cross-validation
+
+---
+
+
+```r
+# K-fold cross validation
+K &lt;- 5
+fit.cv &lt;-cv.glmnet(Xraw,yraw,alpha=0, nfolds = K)
+plot(fit.cv)
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+# lambda selected by K fold cross validation
+hatlambda &lt;-fit.cv$lambda.min
+hatlambda
+```
+
+```
+[1] 43.52271
+```
+
+---
+
+
+```r
+predict(fit.cv, s=hatlambda, type ="coefficients")
+```
+
+```
+14 x 1 sparse Matrix of class "dgCMatrix"
+                               1
+(Intercept)        -402.60719884
+(Intercept)           .         
+X1                    0.02924725
+Income               -4.99082034
+Limit                 0.11279528
+Rating                1.64037760
+Cards                15.99116103
+Age                  -0.98501420
+Education            -0.44648608
+GenderMale            3.72864011
+StudentYes          378.50094637
+MarriedYes          -12.32909002
+EthnicityAsian       12.83254912
+EthnicityCaucasian    8.48895335
+```
+
+---
+
+
+
+```r
+plot(fit, xvar="lambda")
+abline(v=log(hatlambda))
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+---
+
+# Collinearity
 
 True model
 
@@ -504,6 +603,26 @@ lm.ridge(y~x1+x2, lambda=1)
 
 * It can be shown that ridge regression improves the estimates for the coefficients of strongly positively correlated predictors with similar true coefficients 
 
+
+---
+
+# High-dimensional data
+
+
+```r
+X = model.matrix(lm(y ~ . ,Riboflavin))
+fit = glmnet(X,riboflavin$y, alpha=0, family="gaussian")
+plot(fit, xvar="lambda")
+```
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Bias-variance decomposition
 
 ---
     </textarea>
