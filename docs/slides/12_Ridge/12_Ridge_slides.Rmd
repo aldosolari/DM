@@ -117,7 +117,7 @@ or Asian
 
 ```{r}
 library(readr)
-Credit <- read_csv("http://www-bcf.usc.edu/~gareth/ISL/Credit.csv")
+Credit <- read_csv("http://www-bcf.usc.edu/~gareth/ISL/Credit.csv")[,-1]
 plot(Credit[,c("Balance","Limit","Rating")])
 ```
 
@@ -409,7 +409,7 @@ plot(fit, xvar="lambda")
 # Choice of the penalty parameter
 
 * Throughout the introduction of ridge regression and the
-subsequent discussion of its properties the penalty parameter is considered known or `given'
+subsequent discussion of its properties the penalty parameter is considered known or given
 
 * In practice, it is unknown and the user needs to make an
 informed decision on its value
@@ -479,7 +479,7 @@ lm.ridge(y~x1+x2, lambda=1)
 
 ```{r}
 X = model.matrix(lm(y ~ . ,Riboflavin))
-fit = glmnet(X,riboflavin$y, alpha=0, family="gaussian")
+fit = glmnet(X,riboflavin$y, alpha=0, family="gaussian", standardize = FALSE)
 plot(fit, xvar="lambda")
 ```
 
@@ -491,4 +491,116 @@ class: inverse, middle, center
 # Bias-variance decomposition
 
 ---
+
+# Expectation and variance
+
+
+
+
+The expectation of the ridge estimator
+$$\mathbb{E}(\hat{\boldsymbol{\beta}}^{\lambda}) =  \mathbf{X}^\mathsf{T}\mathbf{X}(\lambda\mathbf{I}_{p\times p}  + \mathbf{X}^\mathsf{T}\mathbf{X})^{-1} \boldsymbol{\beta}$$
+
+* The linear operator 
+$$\mathbf{W}^{\lambda} = [\mathbf{I}_{p\times p}+ \lambda(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$$
+transforms the OLS estimator into the ridge estimator $$\mathbf{W}^{\lambda} \hat{\boldsymbol{\beta}} = \hat{\boldsymbol{\beta}}^{\lambda}$$
+
+The variance of the ridge estimator
+$$\mathbb{V}\mathrm{ar}(\hat{\boldsymbol{\beta}}^{\lambda}) =  \mathbf{W}^{\lambda}  \mathbb{V}\mathrm{ar}(\hat{\boldsymbol{\beta}}) (\mathbf{W}^{\lambda})^\mathsf{T} = \sigma^2 \mathbf{W}^{\lambda} (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}(\mathbf{W}^{\lambda})^\mathsf{T}$$
+
+---
+
+# Exercize: prostate cancer data
+
+The training and test data are 
+$$\underset{n\times 1}{\mathbf{y}}, \underset{n\times p}{\mathbf{X}}, \quad \underset{m\times 1}{\mathbf{y}^*}, \underset{m\times p}{\mathbf{X}^*}$$
+with $n=67$, $m=30$ and $p=8$ for the Prostate Cancer data set, where the response and each predictor of the design matrix are standardized to have mean 0 and variance 1, separately for the training and test set. 
+
+The response variable is lpsa, and the predictor variables are lcavol, lweight, age, lbph, svi, lcp, gleason, pgg45
+
+---
+
+```{r,  warning=FALSE, message=FALSE}
+rm(list=ls())
+# training and test data
+require(ElemStatLearn)
+train <- prostate[prostate$train,-10]
+test <- prostate[!prostate$train,-10]
+# n.ro of observations
+n <- nrow(train)
+m <- nrow(test)
+
+# design matrix (without the intercept)
+X<-as.matrix(
+  scale(train[,-9]) # standardized 
+  )
+X.star <- as.matrix(
+  scale(test[,-9]) # standardized 
+  )
+p = ncol(X)
+# response
+y = scale(train[,"lpsa"]) # standardized
+y.star = scale(test[,"lpsa"]) # standardized
+```
+
+---
+
+* Compute the rigde estimate
+$$\hat{\boldsymbol{\beta}}^\lambda = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_{p})^{-1}\mathbf{X}^\mathsf{T}\mathbf{y}$$
+for $\lambda=10$.
+
+```{r, echo=FALSE}
+#1.
+lambda <- 10
+hatbeta <- solve(t(X) %*% X + lambda*diag(p)) %*% t(X) %*% y
+print(hatbeta)
+```
+
+---
+
+* For $\lambda = 0, 1, 2,\ldots ,9,10$, plot the solution path of the estimated coeffients $\hat{\beta}_1^\lambda,\ldots,\hat{\beta}_p^\lambda$ and the corresponding variances $\mathbb{V}\mathrm{ar}(\hat{\beta}_1^\lambda), \ldots, \mathbb{V}\mathrm{ar}(\hat{\beta}_p^\lambda)$, which are the elements in the diagonal of the variance/covariance matrix
+$$\mathbb{V}\mathrm{ar}(\hat{\boldsymbol{\beta}}^\lambda) = \sigma^2 \mathbf{W}_\lambda (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}\mathbf{W}^\mathsf{T}_\lambda$$ where $\mathbf{W}_\lambda = [\mathbf{I}_{p\times p} + \lambda(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$ and is set to $\sigma^2=1$.
+
+```{r, echo=FALSE}
+
+#2.
+lambdas = 0:10
+nlambda = length(lambdas) 
+hatbetas <- matrix(NA,ncol=p, nrow=nlambda)
+Vars <- matrix(NA,ncol=p, nrow=nlambda)
+for (l in 1:nlambda){
+  lambda = lambdas[l]
+  hatbetas[l,] = solve(t(X) %*% X + lambda*diag(p)) %*% t(X) %*% y
+  W = solve(diag(p) + lambda*solve(t(X) %*% X))
+  Vars[l,] = diag( W%*% solve(t(X) %*% X) %*% t(W)  )
+}
+matplot(lambdas, hatbetas, type="l")
+matplot(lambdas, Vars, type="l")
+```
+
+---
+
+* Compare the LOOCV estimate and the test MSE for the linear model and the ridge regression model with $\lambda=5$. 
+
+```{r, echo=FALSE}
+
+#3. 
+lambda = 5
+LOOCV <- vector()
+for (i in 1:n){
+  X_i <- X[-i,]
+  hatbeta_i = solve(t(X_i) %*% X_i + lambda*diag(p)) %*% t(X_i) %*% y[-i] 
+  LOOCV[i] = ( X[i,] %*% hatbeta_i - y[i])^2
+}
+cat("LOOCV ridge: ", mean(LOOCV))
+hatbeta <- solve(t(X) %*% X + lambda*diag(p)) %*% t(X) %*% y
+yhat.ridge = X.star %*% hatbeta
+cat("MSE ridge: ", mean((yhat.ridge - y.star)^2))
+
+library(boot)
+train.std = data.frame(y,X)
+fit.lm = glm(y ~ 0 + ., train.std, family = gaussian) 
+cat("LOOCV lm: ", cv.glm(train.std, fit.lm)$delta[1])
+yhat.lm = predict(fit.lm, newdata=data.frame(X.star))
+cat("MSE lm: ", mean((yhat.lm - y.star)^2))
+```
 
