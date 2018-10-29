@@ -25,7 +25,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* No news
+* October 29: Suggested reading: Clark (2018) [Introduction to Machine Learning]( https://m-clark.github.io/introduction-to-machine-learning/)
 
 # **Course Material**
 
