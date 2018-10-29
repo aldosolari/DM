@@ -350,7 +350,7 @@ fit.lasso &lt;- glmnet(X, y, alpha=1)
 plot(fit.lasso, xvar="lambda")
 ```
 
-![](13_Lasso_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](13_Lasso_slides_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -433,7 +433,7 @@ Selection Algorithm: exhaustive
 plot(summary.bests$cp, xlab="k", ylab="Cp", type="b")
 ```
 
-![](13_Lasso_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](13_Lasso_slides_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -443,7 +443,7 @@ plot(summary.bests$cp, xlab="k", ylab="Cp", type="b")
 plot(fit.bests, scale="bic")
 ```
 
-![](13_Lasso_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](13_Lasso_slides_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -564,7 +564,7 @@ for (k in 1:K){
 plot(1:p,apply(KCV,2,mean), type="b")
 ```
 
-![](13_Lasso_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](13_Lasso_slides_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -595,7 +595,7 @@ predictors(lmProfile)
 plot(lmProfile, type = c("g", "o"))
 ```
 
-![](13_Lasso_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](13_Lasso_slides_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ```r
 yhat.CV = predict(lmProfile$fit, newdata=test)
