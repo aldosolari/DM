@@ -49,12 +49,12 @@ Most of the course material can be found in the notes linked to below. The notes
 | 11 | October 25 | Class imbalance | - | [Slides](docs/slides/11_CImb/11_CImb_slides.html) | 
 | 12 | October 26 | Ridge regression | - | [Slides](docs/slides/12_Ridge/12_Ridge_slides.html) |
 |  |  |  |  | | |
-| 13 | October 29 | LASSO | |
+| 13 | October 29 | Lasso and best subset selection | - | [Slides](docs/slides/13_Lasso/13_Lasso_slides.html)  |
 |  |  |  |  | | |
-| 14 | November 8 |  |
-| 15 | November 9 |  | |
+| 14 | November 12 |  | |
+| 15 | November 15 |  | |
 |  |  |  |  | | |
-| 16 | November 12 | | |
+| 16 | November 16 | | |
 
 The lecture notes and course webpage were done with [R Markdown](https://rmarkdown.rstudio.com/).
 All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
@@ -143,6 +143,12 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 **October 26** Ridge regression
 
+- ISLR 6.2.1, 6.4
+- AS 3.6.3
+
+**October 29** Lasso and best subset selection
+
+- ISLR 6.1, 6.2.2, 6.2.3
 
 
 
