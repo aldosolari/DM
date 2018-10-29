@@ -25,7 +25,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* October 26: Webex room 840 705 128
+* No news
 
 # **Course Material**
 
@@ -148,7 +148,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 **October 29** Lasso and best subset selection
 
-- ISLR 6.1, 6.2.2, 6.2.3
+- ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
 
 
 

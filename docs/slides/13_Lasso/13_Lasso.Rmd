@@ -401,6 +401,50 @@ err.fwdAIC = mean( (yhat.fwdAIC - test$lpsa)^2 )
 err.fwdAIC
 ```
 
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Variable selection and cross-validation
+
+---
+
+# Variable selection and cross-validation
+
+* Consider the following approach: best subset selection __outside__ cross-validation
+
+1. Perform best subset selection and obtain $B_k, k=0,1,\ldots,p$
+
+2. Use cross-validation to select $k$ and
+to estimate the prediction error of the final model
+
+* Here the training set is being used for three purposes:
+
+1. predictor selection
+2. model fitting 
+3. performance evaluation
+
+* Unless the number of observations is large, especially in relation to the number of predictors, one training set may not be able to fulfill these needs
+
+* To obtain accurate estimates of the test
+error, we must use only the training observations to perform all aspects of
+model-fitting, including variable selection.
+
+---
+
+# Variable selection inside cross-validation
+
+* Since variable selection is part of the model building process,  cross-validation should account for the __variability of the selection__ when calculating estimates of the test error
+
+* In order to incorporate the variation due to variable selection, it is wiser to perform best subset selection __inside__ cross-validation
+
+* Note that possibly different subsets of the "best" predictors are generated at each iteration of the cross-validation
+
+* When conducting a search for a subset of variables, it is important to realize that there may not be a unique set of predictors that will produce the best performance
+
 ---
 
 ```{r}
@@ -451,27 +495,6 @@ err.CV
 
 ---
 
-```{r}
-rbind(err.full,
-      err.ridge,
-      err.lasso,
-      err.BIC,
-      err.fwdAIC,
-      err.CV)
-```
-
----
-
-# Variable selection and cross-validation
-
-* Since variable selection is part of the model building process,  cross-validation should account for the variability of the selection when calculating performance
-
-* To get performance estimates that incorporate the variation due to variable selection, it is wiser to perform subset selection inside an outer layer of K-fold cross-validation
-
-* Note that possibly different subsets of the "best" predictors are generated at each iteration
-
----
-
 # ESL Chapter 7.10.2
 
 * Consider a classification problem with a large number of predictors 
@@ -484,7 +507,7 @@ fairly strong (univariate) correlation with the class labels
 2. Using just this subset of predictors, build a multivariate classifier.
 
 3. Use cross-validation to estimate the unknown tuning parameters and
-to estimate the prediction error of the final model.
+to estimate the prediction error of the final model
 
 * Is this a correct application of cross-validation? 
 

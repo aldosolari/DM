@@ -28,6 +28,7 @@ class: center, middle, inverse, title-slide
 * Problem 3: high-dimensional data
 * Ridge regression
 * Bias-variance trade-off
+* Constrained estimation
 
 ---
 
@@ -401,6 +402,10 @@ there is always a unique solution `\(\hat{\boldsymbol{\beta}}^\lambda\)`
 * __Solution path__ of the ridge estimator:
 `$$\{\hat{\boldsymbol{\beta}}^{\lambda}: \lambda \in [0,\infty) \}$$`
 
+* All regression coefficients are shrunken towards zero as the tuning parameter `\(\lambda\)` increases
+
+* This behaviour is not strictly monotone in `\(\lambda\)`: `\(\lambda_a &gt; \lambda_b\)` does not necessarily imply `\(|\hat{\beta}^{\lambda_a}_j| &lt; |\hat{\beta}^{\lambda_b}_j|\)`
+
 ---
 
 # Standardization
@@ -573,7 +578,6 @@ lm.ridge(y~x1+x2, lambda=1)
 
 It can be shown that ridge regression improves estimates for the coefficients of strongly positively correlated predictors with similar values of true coefficients 
 
-
 ---
 
 # High-dimensional data
@@ -588,6 +592,126 @@ class: inverse, middle, center
 # Bias-variance trade-off
 
 ---
+
+# Assumptions
+
+* Consider a fixed `\(X\)` setting
+
+* Assume that the true model is linear 
+`$$\mathbf{y} =  \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}$$`
+where the the distribution of the errors is Gaussian, i.e. `\(\boldsymbol{\varepsilon} \sim N(\mathbf{0}_n,\sigma^2 \mathbf{I}_{n})\)`
+
+* These are strong assumptions
+
+---
+
+# Ridge regression bias-variance trade-off
+
+* The linear operator 
+`$$\mathbf{W}^{\lambda} = [\mathbf{I}_{p\times p} + \lambda(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$$`
+transforms the OLS estimator into the ridge estimator 
+`$$\mathbf{W}^{\lambda} \hat{\boldsymbol{\beta}} = \hat{\boldsymbol{\beta}}^{\lambda}$$`
+
+* Bias `$$\mathbb{E}(\hat{\boldsymbol{\beta}}^{\lambda}) =  \mathbf{X}^\mathsf{T}\mathbf{X}(\lambda\mathbf{I}_{p}  + \mathbf{X}^\mathsf{T}\mathbf{X})^{-1} \boldsymbol{\beta}$$`
+
+
+* Variance
+`$$\mathbb{V}\mathrm{ar}(\hat{\boldsymbol{\beta}}^{\lambda}) = \sigma^2 \mathbf{W}^{\lambda} (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}(\mathbf{W}^{\lambda})^\mathsf{T}$$`
+
+
+---
+
+# Shrinkage
+
+* Estimates are shrunk towards zero
+
+* Consequence
+    - Introduces bias
+    - Reduces variance
+
+---
+
+# Theorem 2 of Theobald, 1974
+
+* There exists `\(\lambda &gt; 0\)` such that `\((\mathbb{B}\mathrm{ias} )^2 +   \mathbb{V}\mathrm{ar}\)` of the ridge regression estimator is lower than the OLS estimator 
+
+* For a certain value of `\(\lambda\)`, the decrease in variance of the ridge
+regression estimator exceeds the increase in its bias
+
+* The optimal choice of `\(\lambda\)` depends on the quantities `\(\boldsymbol{\beta}\)` and `\(\sigma^2\)`. These are unknown in practice
+
+---
+
+![](12_Ridge_slides_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+---
+
+# Predicting a Gaussian random variable
+
+* `\(Y = \mu + \varepsilon\)` with `\(\varepsilon \sim N(0,\sigma^2)\)`
+
+* Training data: `\(Y_1,\ldots,Y_n\)`
+
+* Sample mean: `\(\bar{Y} = \frac{1}{n}\sum_{i=1}^{n} Y_i\)`
+
+* Bias-Variance decomposition 
+$$
+`\begin{aligned}
+\mathbb{E}\{[Y - \bar{Y} ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \bar{Y} ) ]^2 + \mathbb{V}\mathrm{ar}( \bar{Y} )\\
+&amp; = \sigma^2 + 0 + \sigma^2/n
+\end{aligned}`
+$$
+
+* Rao-Blackwell theorem says that `\(\bar{Y}\)` has lower variance than any other unbiased estimator
+
+* Is `\(\bar{Y}\)` the optimal prediction for `\(Y\)` ?
+
+---
+
+# Shrunken sample mean
+
+* Shrunken sample mean: `\(\hat{Y} = \lambda \bar{Y}\)` with `\(\lambda \in [0,1]\)` 
+
+* Bias-Variance decomposition 
+$$
+`\begin{aligned}
+\mathbb{E}\{[Y - \hat{Y} ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \hat{Y} ) ]^2 + \mathbb{V}\mathrm{ar}( \hat{Y} )\\
+&amp; = \sigma^2 + [\mu - \lambda \mu]^2 + \lambda^2(\sigma^2/n)
+\end{aligned}`
+$$
+
+* Solving `\(\displaystyle \frac{\partial}{\partial \lambda} \mathbb{E}\{[Y - \hat{Y} ]^2 \}  = 0\)` gives the value
+`$$\lambda=\frac{\mu^2}{\mu^2 + \sigma^2/n}$$` 
+that minimizes `\(\mathbb{E}\{[Y - \hat{Y} ]^2 \}\)`
+
+* However, the optimal `\(\lambda\)` depends on unknown parameters
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Constrained estimation
+
+---
+
+# Constrained estimation
+
+* Solving the penalized problem
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 + \lambda\| \boldsymbol{\beta}\|^2_2$$`
+is equivalent to solving the constrained problem
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|^2_2 \leq t$$`
+
+* The constrained problem can be solved by means of the Karuch-Kuhn-Tucker (KTT) multiplier method, which minimizes a function subject to inequality constraint
+
+---
+
+![](images/l2.jpg)
+
+---
+
+![](images/biasvar.jpg)
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
