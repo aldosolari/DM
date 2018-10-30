@@ -65,7 +65,7 @@ k = which.min(MSE.te)
 k
 ```
 
-My comment here. 
+My comment. 
 
 **Exercize 2**
 
@@ -100,5 +100,5 @@ names(freq)[which.max(freq)]
 
 d. 
 
-My answer here.  
+My answer.  
 

@@ -192,7 +192,7 @@ All students must follow a __code of conduct__, which covers issues such as plag
 * you are expected to be able to __explain your code by your self__ if required by the teacher
 
 
-# Exams
+# **Exams**
 
 The exam consists of two parts:
 
@@ -222,14 +222,14 @@ from the book ISLR. For the programming exercises, the following R code will be 
 
 In the "TESTO" folder, you will also find 
 
-* PDF file with the description of the exercises (see [example](https://aldosolari.github.io/DM/exams/example.pdf))
+* PDF file with the description of the exercises (see [example](https://aldosolari.github.io/DM/exams/example_text.pdf))
 * RMarkdown file (see [example](https://aldosolari.github.io/DM/exams/example.Rmd))
 
 In the RMarkdown file you have to write the R code solving the exercises. Then use the **Knit** button to generate an HTML file containing the answers, which will be uploaded to the "CONSEGNA" folder (see [example](https://aldosolari.github.io/DM/exams/example_solution.html)). Other formats will not be accepted. 
 
 
 
-**ACKNOWLEDGEMENTS**
+# **Acknowledgements**
 
 Most of the ideas and materials for this course were collected from several sources. I'll make a bibliography at the earliest. 
 
