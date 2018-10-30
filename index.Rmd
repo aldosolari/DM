@@ -60,7 +60,6 @@ The lecture notes and course webpage were done with [R Markdown](https://rmarkdo
 All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
 
  
-
 __Download the .Rmd files, modify as you like and decide the output format (PDF, HTML or Word)__.
 
 To extract the R code from a .Rmd file use
@@ -168,9 +167,9 @@ If you click on a specific Competition in the listing, you will go to the Compet
 
 | Competition | 1st: From-To | 2nd: From-To | 3rd: From-To | 
 |----|----|----|----|
-| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
+| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
+| [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
+| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | ?/6/19 - ?/6/19  |
 
 - [List of participants (1st round)](docs/competitions/Participants.html)
 
@@ -191,6 +190,43 @@ All students must follow a __code of conduct__, which covers issues such as plag
 * you are encouraged to use online resources (unseen models, other people analyses, etc.) as long as you __cite__ a resource you borrow code from. Full copy/paste from other people code will have a multiplier of 0  
 
 * you are expected to be able to __explain your code by your self__ if required by the teacher
+
+
+# Exams
+
+The exam consists of two parts:
+
+  * **Test** (in Lab)
+  * **Competitions** (Homework)
+  
+See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html)** for more information.
+
+Test calendar :
+
+|When | Where | Hours |
+|---|---|---|
+| November 24, 2018 | LAB713 | 14:00 |
+| Febrary 7, 2019 | LAB713 | 14:00 |
+| Febrary 22, 2019 | LAB713 | 8:30 |
+
+The **Test** consists of
+
+* answering to multiple-choice/open **questions** about theory
+* solving **programming exercises** with R 
+
+Some of the questions and/or programming exercises may be taken 
+from the book ISLR. For the programming exercises, the following R code will be available in the "TESTO" folder:
+
+* [Code from ISLR](https://aldosolari.github.io/DM/exams/codeISLR.pdf)
+* Code from the lectures
+
+In the "TESTO" folder, you will also find 
+
+* PDF file with the description of the exercises (see [example](https://aldosolari.github.io/DM/exams/example.pdf))
+* RMarkdown file (see [example](https://aldosolari.github.io/DM/exams/example.Rmd))
+
+In the RMarkdown file you have to write the R code solving the exercises. Then use the **Knit** button to generate an HTML file containing the answers, which will be uploaded to the "CONSEGNA" folder (see [example](https://aldosolari.github.io/DM/exams/example_solution.html)). Other formats will not be accepted. 
+
 
 
 **ACKNOWLEDGEMENTS**

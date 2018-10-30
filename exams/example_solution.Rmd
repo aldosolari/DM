@@ -1,0 +1,104 @@
+---
+title: "Data Mining"
+output: html_document
+---
+
+Name: Aldo 
+
+Surname: Solari
+
+Badge number: 2575
+
+
+**Exercize I**
+
+a. 
+
+```{r}
+set.seed(123)
+p = 20
+n = 1000
+X = matrix(rnorm(p*n), ncol=p)
+beta = c(rep(1,p/4),rep(0,3*p/4))
+y = X%*%beta + rnorm(n)
+```
+
+b.
+
+```{r}
+combi = data.frame(y=y, X=X)
+train = combi[1:100,]
+test = combi[101:1000,]
+```
+
+c. 
+
+```{r}
+library(leaps)
+fit <- regsubsets(y ~ .,train, nvmax=p)
+plot(1:p, summary(fit)$rss/n)
+```
+
+d.
+
+```{r}
+predict.regsubsets =function(object ,newdata ,id ,...){
+form=as.formula(object$call[[2]])
+mat=model.matrix(form, newdata)
+coefi =coef(object, id=id)
+xvars =names(coefi)
+mat[,xvars]%*%coefi
+}
+
+MSE.te = vector()
+for (k in 1:p){
+yhat = predict.regsubsets(fit, newdata=test, id=k)
+MSE.te[k] = mean( (yhat - test$y)^2 )
+}
+plot(1:p,MSE.te)
+```
+
+e.
+
+```{r}
+k = which.min(MSE.te)
+k
+```
+
+My comment here. 
+
+**Exercize 2**
+
+a.
+
+```{r}
+X = matrix(c(0, 3, 0,
+             2, 0, 0, 
+             0, 1, 3, 
+             0, 1, 2,
+            -1, 0, 1,
+             1, 1, 1), 
+          byrow=TRUE, nrow=6)
+y = c("red","red","red","green","green","red")
+dist = apply(X,1, function(x) sqrt(sum(x^2)) )
+dist
+```
+
+b.
+
+```{r}
+y[which.min(dist)]
+```
+
+c.
+
+```{r}
+K = 3
+freq = table(y[sort(dist, index.return=T)$ix[1:K]])
+names(freq)[which.max(freq)]
+```
+
+d. 
+
+My answer here.  
+
