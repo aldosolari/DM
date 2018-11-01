@@ -1,0 +1,302 @@
+---
+title: "Orange data"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Orange data
+* Missing data
+* Zero- and near zero-variance predictors
+* Encoding missingness
+* Scoring categorical predictors
+
+---
+
+# KDD cup
+
+*  The Conference on Knowledge Discovery and Data Mining
+(KDD) is the premier conference on machine learning methods
+
+* Every year KDD hosts a data mining cup, where teams analyze a dataset
+
+* The KDD Cup is a huge deal and the inspiration for the famous **Netflix Prize** and even **Kaggle** competitions
+
+* The KDD Cup 2009 provided the **Orange data**, a dataset about customers of the French Telecom company Orange
+
+---
+
+# Orange data
+
+* The goal is to predict the propensity of customers to cancel their account, an event called **churn**
+
+* Other goals were to predict the customers tendency to use
+new products and services (called **appetency**), and willingness to respond favorably to marketing pitches (called **upselling**)
+
+* The contest supplied $p=230$ predictors about $n=50000$ credit card accounts
+
+* For privacy reasons, predictors are anonymized: you don’t know the meaning of any of the predictors
+
+* Churn problem: class 7.3% positive class (3672/50000)
+
+* This dataset is an opportunity to deal with a very large database, including 
+    - heterogeneous noisy data (numerical and categorical predictors with missing values)
+    - Class imbalance
+
+---
+
+# Existing analyses
+
+*  Guyon, Lemaire, Boullé, Dror, Vogel (2009)[ Analysis of the KDD Cup 2009: Fast Scoring on a Large Orange Customer Database](http://proceedings.mlr.press/v7/guyon09/guyon09.pdf)
+
+* Chapter 6 of Zumel and Mount (2014) [Practical Data Science with R](https://www.manning.com/books/practical-data-science-with-r) ,  Manning Publications 
+
+* The support site of Zumel and Mount (code and data) on [GitHub](https://github.com/WinVector/zmPDSwR) 
+
+
+---
+
+# Data
+
+* Training set with $n = 22253$ observations 
+
+* Test set with $m = 27747$ observations
+
+* Response variable : `churn` = -1 (no churn), +1 (churn)
+
+* Class imbalance: 7% positive class in the train set (1633/22253)
+
+* $p=230$ predictors: `Var1`, `Var2`, .. , `Var230`
+
+* We don't know the meaning of any variable 
+
+* The contest metric is the area under the curve (AUC)
+
+* The winning team achieved an AUC of 0.76
+
+---
+
+```{r}
+# import data
+load("/Users/aldosolari/Desktop/Orange.Rdata")
+#train <- read.csv("train.csv")
+#test <- read.csv("test.csv")
+#test$churn = NA
+n = nrow(train)
+m = nrow(test)
+combi = rbind(train,test)
+train = combi[1:n,]
+test = combi[(n+1):(n+m),]
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Missing data
+
+---
+
+# Handling missing data
+
+* Missing data are not rare in real data sets
+
+* The first and most important question when encountering missing data is *why are these values missing?*
+
+* Missing values are generally caused by three mechanisms:
+    - A structural deficiency in the data
+    - A random occurrence, or
+    - A specific cause
+    
+    
+* When the number of observations or predictors exceeds the bounds of effective visualization, then numeric summaries will be better equipped to diagnose the nature and degree of missingness
+
+---
+
+```{r}
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+# predictors by % of missingness
+pMiss2 = apply(train,2,pMiss)
+hist(pMiss2, xlim=c(0,100))
+```
+
+
+---
+
+```{r}
+# observations by % of missingness
+pMiss1 = apply(train,1,pMiss)
+hist(pMiss1, xlim=c(0,100))
+```
+
+---
+
+```{r}
+# Zero-variance predictors due to complete missingness
+vars_miss = which(pMiss2==100)
+names(vars_miss)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Zero- and Near Zero-Variance Predictors
+
+---
+
+## Zero- and near zero-variance predictors
+
+* In some situations, the data generating mechanism can create predictors that only have a single unique value (i.e. **zero-variance predictor**)
+
+* For many models (excluding e.g. tree-based models), this may cause the model to crash or the fit to be unstable
+
+* To identify these types of predictors, the following two metrics can be calculated: 
+
+    - the **frequency ratio**: the frequency of the most prevalent value over the second most frequent value, which would be near one for well-behaved predictors and very large for highly-unbalanced data 
+
+    - the **percent of unique values** is the number of unique values divided by the total number of samples (times 100) that approaches zero as the granularity of the data increases
+
+* If the frequency ratio is greater than a pre-specified threshold `freqCut` = 95/5 and the unique value percentage is less than a threshold `uniqueCut` = 10, we might consider a predictor to be __near zero-variance__
+
+---
+
+```{r}
+library(caret)
+vars_zv = nearZeroVar(train, freqCut = 95/5, uniqueCut = 10)
+setdiff(vars_zv, vars_miss)
+```
+
+---
+
+## Type of predictors
+
+```{r}
+#Identify which predictors are categorical and numeric.
+vars <- setdiff(names(train),c('churn', 
+                               names(train)[vars_zv]
+                               ))
+table(sapply(train[,vars],class))
+```
+
+---
+
+```{r}
+# categorical predictors
+vars_cat <- vars[sapply(train[,vars],class) %in% c('factor','logical')]
+vars_cat
+```
+
+---
+
+```{r}
+# numerical predictors
+vars_num<- vars[sapply(train[,vars],class) %in% c('numeric','integer')]
+vars_num
+```
+
+
+---
+
+## Calibration set
+
+* Split the data into three sets: training, calibration, and test.
+
+* The calibration set is used to simulate the unseen test set during modeling 
+
+* We'll look at performance on the calibration set to estimate if we’re overfitting 
+
+---
+
+```{r}
+set.seed(123)
+train.all = train
+is.calib <- rbinom(n=nrow(train.all),size=1,prob=0.25)>0
+# further split training data into training and calibration.
+train = train.all[!is.calib,]
+calib = train.all[is.calib,]
+```
+
+---
+
+## Single categorical predictor
+
+* `Var218` is a categorical predictor
+
+* Let's see how `churn` varies with the levels of `Var218`
+
+```{r}
+# Tabulate levels of Var218.
+table218 <- table(
+   Var218=train[,'Var218'],  
+   churn=train[,'churn'], 
+# Include NA values in tabulation
+   useNA='ifany') 	
+table218
+# Churn rates grouped by Var218 levels
+table218[,2]/(table218[,1]+table218[,2])
+```
+
+---
+
+# Var218
+
+* Levels frequencies: cJvF = 11314 (51%), UYBR = 10612 (48%), <NA> = 327 (1%)
+
+* When variable 218 takes on 
+    - cJvF, then 6% of the customers churn
+    - UYBR, then 8% of the customers churn
+    - not available (NA), then 27% of the customers churn
+    
+* Variable 218 seems like a predictor that's easy to use and helpful with prediction
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Scoring categorical predictors
+
+---
+
+## Scoring categorical predictors
+
+* We also need to design a strategy for what to do if a new level not seen during training were to occur during model use
+
+* We'll build a function that converts NA to a level (as it seems to be pretty informative) and also treats novel values as uninformative
+
+---
+
+# Null model
+
+```{r}
+# positive class %
+mean(train$churn=="1")
+# null model
+phat.null = rep(mean(train$churn=="1"),m)
+library(pROC)
+roc.null <- roc(
+    response = as.factor(test$churn),
+    predictor = phat.null,
+    levels = c("1","-1")
+    )
+auc(roc.null)
+```
+

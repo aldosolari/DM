@@ -25,7 +25,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* October 29: Suggested reading: Clark (2018) [Introduction to Machine Learning]( https://m-clark.github.io/introduction-to-machine-learning/)
+* October 30: The Exams section was added
 
 # **Course Material**
 
@@ -51,7 +51,7 @@ Most of the course material can be found in the notes linked to below. The notes
 |  |  |  |  | | |
 | 13 | October 29 | Lasso and best subset selection | - | [Slides](docs/slides/13_Lasso/13_Lasso_slides.html)  |
 |  |  |  |  | | |
-| 14 | November 12 |  | |
+| 14 | November 12 | Orange data | |
 | 15 | November 15 |  | |
 |  |  |  |  | | |
 | 16 | November 16 | | |
@@ -150,6 +150,11 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 - ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
 
 
+**November 12** Orange data
+
+- ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
+
+
 
 # **Competitions**
 
@@ -177,6 +182,10 @@ There are two references that use the `caret` R package that you can use for imp
 
 - [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) (APM)
 - [Feature Engineering and Selection](http://www.feat.engineering/) (FEV)
+
+and the following short introduction
+
+- [Introduction to Machine Learning]( https://m-clark.github.io/introduction-to-machine-learning/)
 
 
 All students must follow a __code of conduct__, which covers issues such as plagiarism, falsification, unauthorized assistance, cheating, and other grievous acts of academic dishonesty. Violations of the code of conduct will not be taken lightly. For the competitions,
