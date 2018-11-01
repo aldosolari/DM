@@ -51,7 +51,7 @@ Most of the course material can be found in the notes linked to below. The notes
 |  |  |  |  | | |
 | 13 | October 29 | Lasso and best subset selection | - | [Slides](docs/slides/13_Lasso/13_Lasso_slides.html)  |
 |  |  |  |  | | |
-| 14 | November 12 | Orange data | |
+| 14 | November 12 | Orange data | -  | [Slides](docs/slides/14_Orange/14_Orange_slides.html) |
 | 15 | November 15 |  | |
 |  |  |  |  | | |
 | 16 | November 16 | | |
@@ -152,7 +152,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 **November 12** Orange data
 
-- ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
+
 
 
 
