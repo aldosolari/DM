@@ -214,7 +214,7 @@ Test calendar :
 
 |When | Where | Hours |
 |---|---|---|
-| November 24, 2018 | LAB713 | 14:00 |
+| November 23, 2018 | LAB713 | 14:00 |
 | Febrary 7, 2019 | LAB713 | 14:00 |
 | Febrary 22, 2019 | LAB713 | 8:30 |
 

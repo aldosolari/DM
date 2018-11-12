@@ -23,10 +23,11 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Orange data
-* Missing data
+* Missing values
 * Zero- and near zero-variance predictors
-* Encoding missingness
-* Scoring categorical predictors
+* Supervised Encoding Methods
+* Binning numerical predictors
+* Variable selection
 
 ---
 
@@ -56,7 +57,7 @@ new products and services (called **appetency**), and willingness to respond fav
 
 * Churn problem: class 7.3% positive class (3672/50000)
 
-* This dataset is an opportunity to deal with a very large database, including 
+* This dataset is an opportunity to deal with a very large dataset, including 
     - heterogeneous noisy data (numerical and categorical predictors with missing values)
     - Class imbalance
 
@@ -87,7 +88,7 @@ new products and services (called **appetency**), and willingness to respond fav
 
 * We don't know the meaning of any variable 
 
-* The contest metric is the area under the curve (AUC)
+* The contest metric is the Area Under the Curve (AUC)
 
 * The winning team achieved an AUC of 0.76
 
@@ -96,7 +97,7 @@ new products and services (called **appetency**), and willingness to respond fav
 
 ```r
 # import data
-load("/Users/aldosolari/Desktop/Orange.Rdata")
+load("/Users/aldosolari/Documents/mygithub/DM/dataset/Orange.Rdata")
 #train &lt;- read.csv("train.csv")
 #test &lt;- read.csv("test.csv")
 #test$churn = NA
@@ -113,7 +114,7 @@ test = combi[(n+1):(n+m),]
 layout: false
 class: inverse, middle, center
 
-# Missing data
+# Missing values
 
 ---
 
@@ -128,6 +129,7 @@ class: inverse, middle, center
     - A random occurrence, or
     - A specific cause
     
+* See [Chapter 8](http://www.feat.engineering/handling-missing-data.html) of FES
     
 * When the number of observations or predictors exceeds the bounds of effective visualization, then numeric summaries will be better equipped to diagnose the nature and degree of missingness
 
@@ -168,6 +170,7 @@ names(vars_miss)
  [1] "Var8"   "Var15"  "Var20"  "Var31"  "Var32"  "Var39"  "Var42"  "Var48"  "Var52"  "Var55"  "Var79"  "Var141" "Var167" "Var169" "Var175" "Var185" "Var209" "Var230"
 ```
 
+
 ---
 
 layout: false
@@ -195,7 +198,148 @@ class: inverse, middle, center
 
 
 ```r
+V2 = train[,"Var2"]
+class(V2)
+```
+
+```
+[1] "integer"
+```
+
+```r
+table(V2, useNA = "ifany")
+```
+
+```
+V2
+    0     5  &lt;NA&gt; 
+  536     1 21716 
+```
+
+```r
+# frequency ratio
+freqV2 = sort(table(V2), decreasing = TRUE)
+freqV2[1]/freqV2[2]
+```
+
+```
+  0 
+536 
+```
+
+```r
+# percent unique values
+length(table(V2))/n
+```
+
+```
+[1] 8.987552e-05
+```
+
+
+---
+
+
+```r
+V16 = train[,"Var16"]
+class(V16)
+```
+
+```
+[1] "numeric"
+```
+
+```r
+# frequency ratio
+freqV16 = sort(table(V16), decreasing = TRUE)
+freqV16[1]/freqV16[2]
+```
+
+```
+     0 
+1.0625 
+```
+
+```r
+# percent unique values
+length(table(V16))/n
+```
+
+```
+[1] 0.01599784
+```
+
+---
+
+
+```r
+V210 = train[,"Var210"]
+class(V210)
+```
+
+```
+[1] "factor"
+```
+
+```r
+table(V210)
+```
+
+```
+V210
+ 3av_  7A3j  DM_V  g5HH  oT7d  uKAI 
+   37   207    65   710    76 21158 
+```
+
+```r
+# frequency ratio
+freqV210 = sort(table(V210), decreasing = TRUE)
+freqV210[1]/freqV210[2]
+```
+
+```
+uKAI 
+29.8 
+```
+
+```r
+# percent unique values
+length(table(V210))/n
+```
+
+```
+[1] 0.0002696266
+```
+
+---
+
+
+```r
 library(caret)
+nearZeroVar(train[,1:10], 
+            freqCut = 95/5, 
+            uniqueCut = 10, 
+            saveMetrics = TRUE)
+```
+
+```
+       freqRatio percentUnique zeroVar   nzv
+Var1    2.683333   0.053925313   FALSE FALSE
+Var2  536.000000   0.008987552   FALSE  TRUE
+Var3  108.750000   0.328045657   FALSE  TRUE
+Var4   77.666667   0.013481328   FALSE  TRUE
+Var5   64.666667   1.190850672   FALSE  TRUE
+Var6    2.365169   5.028535478   FALSE FALSE
+Var7    1.783157   0.031456433   FALSE FALSE
+Var8    0.000000   0.000000000    TRUE  TRUE
+Var9    3.600000   0.305576776   FALSE FALSE
+Var10  57.000000   1.096481373   FALSE  TRUE
+```
+
+---
+
+
+```r
 vars_zv = nearZeroVar(train, freqCut = 95/5, uniqueCut = 10)
 setdiff(vars_zv, vars_miss)
 ```
@@ -242,6 +386,41 @@ vars_cat
 
 
 ```r
+# Var203 
+unique(train[,"Var203"])
+```
+
+```
+[1] 9_Y1 HLqf F3hy &lt;NA&gt;
+Levels: 9_Y1 F3hy HLqf dgxZ pybr
+```
+
+```r
+# number of unique values 
+sapply(train[,vars_cat], function(x) length(unique(x)) )
+```
+
+```
+Var192 Var193 Var197 Var198 Var199 Var200 Var202 Var203 Var204 Var205 Var206 Var207 Var208 Var211 Var212 Var214 Var216 Var217 Var218 Var220 Var221 Var222 Var223 Var225 Var226 Var227 Var228 Var229 
+   331     42    206   2892   2979   8623   4891      4    100      4     22     13      3      2     72   8623   1419   8999      3   2892      7   2892      5      4     23      7     30      5 
+```
+
+```r
+# number of levels
+sapply(train[,vars_cat], nlevels )
+```
+
+```
+Var192 Var193 Var197 Var198 Var199 Var200 Var202 Var203 Var204 Var205 Var206 Var207 Var208 Var211 Var212 Var214 Var216 Var217 Var218 Var220 Var221 Var222 Var223 Var225 Var226 Var227 Var228 Var229 
+   361     51    225   4291   5073  15415   5713      5    100      3     21     14      2      2     81  15415   2016  13990      2   4291      7   4291      4      3     23      7     30      4 
+```
+
+
+
+---
+
+
+```r
 # numerical predictors
 vars_num&lt;- vars[sapply(train[,vars],class) %in% c('numeric','integer')]
 vars_num
@@ -256,16 +435,38 @@ vars_num
 [116] "Var186" "Var187" "Var188" "Var189" "Var190"
 ```
 
+---
+
+layout: false
+class: inverse, middle, center
+
+# Supervised Encoding Methods
+
+---
+
+# Supervised Encoding Methods
+
+* There are several methods of encoding categorical predictors to numeric columns using the outcome data as a guide (so that they are __supervised__ methods)
+
+* These techniques are well suited to cases where the predictor has many possible values or when new levels appear after model training
+
+* A simple method is called __effect__ or __likelihood encoding__: the effect of the factor level on the outcome is measured and this effect is used as the numeric encoding
+
+* For regression problems, we might calculate the mean or median response value for each level of the categorical predictor from the training data and use this value to represent the factor level in the model
+
+* For binary classification problems, we might calculare the odds or log-odds of the event and use this as the encoding
+
+* However, one issue with effect encoding is that it increases the possibility of overfitting
 
 ---
 
 ## Calibration set
 
-* Split the data into three sets: training, calibration, and test.
+* Three sets: training, calibration, and test
 
 * The calibration set is used to simulate the unseen test set during modeling 
 
-* We'll look at performance on the calibration set to estimate if we’re overfitting 
+* We will look at performance on the calibration set to detect if we are overfitting 
 
 ---
 
@@ -274,14 +475,14 @@ vars_num
 set.seed(123)
 train.all = train
 is.calib &lt;- rbinom(n=nrow(train.all),size=1,prob=0.25)&gt;0
-# further split training data into training and calibration.
+# split full training data into training and calibration
 train = train.all[!is.calib,]
 calib = train.all[is.calib,]
 ```
 
 ---
 
-## Single categorical predictor
+## Var218
 
 * `Var218` is a categorical predictor
 
@@ -326,24 +527,329 @@ table218[,2]/(table218[,1]+table218[,2])
     - cJvF, then 6% of the customers churn
     - UYBR, then 8% of the customers churn
     - not available (NA), then 27% of the customers churn
-    
-* Variable 218 seems like a predictor that's easy to use and helpful with prediction
 
+* We will build a function that 
+    - converts NA to a level
+    - treats novel levels (if any) as uninformative
+
+---
+
+
+```r
+y = train$churn
+x = train[ ,"Var218"]
+xstar = calib[,'Var218']
+
+# how often (%) y is positive for the training data
+pPos &lt;- sum(y==1)/length(y)
+pPos
+```
+
+```
+[1] 0.07302934
+```
+
+```r
+# how often (%) y is positive for NA values for the training data
+pPosNA &lt;- prop.table(table(as.factor(y[is.na(x)])))["1"]
+pPosNA
+```
+
+```
+        1 
+0.2510288 
+```
+
+---
+
+
+```r
+# how often (%) y is positive for the levels of the categorical predictor for the training data
+tab &lt;- table(as.factor(y),x)
+tab
+```
+
+```
+    x
+     cJvF UYBR
+  -1 7999 7330
+  1   520  641
+```
+
+```r
+pPosLev &lt;- (tab["1",]+1.0e-3*pPos)/(colSums(tab)+1.0e-3)
+pPosLev
+```
+
+```
+      cJvF       UYBR 
+0.06104003 0.08041651 
+```
+
+
+---
+
+
+```r
+# compute effect scores
+score &lt;- pPosLev[xstar]
+score[1:10]
+```
+
+```
+      &lt;NA&gt;       UYBR       cJvF       UYBR       cJvF       cJvF       cJvF       cJvF       UYBR       cJvF 
+        NA 0.08041651 0.06104003 0.08041651 0.06104003 0.06104003 0.06104003 0.06104003 0.08041651 0.06104003 
+```
+
+```r
+# compute effect scores for NA levels of xstar
+score[is.na(xstar)] &lt;- pPosNA
+
+# compute effect scores for levels of xstar that weren't seen during training
+score[is.na(score)] &lt;- pPos
+score[1:10]
+```
+
+```
+      &lt;NA&gt;       UYBR       cJvF       UYBR       cJvF       cJvF       cJvF       cJvF       UYBR       cJvF 
+0.25102881 0.08041651 0.06104003 0.08041651 0.06104003 0.06104003 0.06104003 0.06104003 0.08041651 0.06104003 
+```
+
+---
+
+
+```r
+# Given a vector of training response (y), a categorical training predictor (x), and a calibration categorical training predictor (xstar), use y and x to compute the effect scoring and then apply the scoring to xstar
+score_cat &lt;- function(y,x,xstar){
+  pPos &lt;- sum(y==1)/length(y)
+  pPosNA &lt;- prop.table(table(as.factor(y[is.na(x)])))["1"]
+  tab &lt;- table(as.factor(y),x)
+  pPosLev &lt;- (tab["1",]+1.0e-3*pPos)/(colSums(tab)+1.0e-3)
+  pred &lt;- pPosLev[xstar]
+  pred[is.na(xstar)] &lt;- pPosNA
+  pred[is.na(pred)] &lt;- pPos
+  pred
+}
+```
+
+
+---
+
+
+```r
+library('ROCR')
+calcAUC &lt;- function(phat,truth) {
+  perf &lt;- performance(prediction(phat,truth=="1"),'auc')
+  as.numeric(perf@y.values)
+}
+```
+
+
+---
+
+
+```r
+# Once we have the scoring, we can find the categorical variables that have a good AUC both on the training data and on the calibration data
+for(v in vars_cat) {
+  pi &lt;- paste('score', v, sep='')
+  train[,pi] &lt;- score_cat(train$churn,train[,v],train[,v])
+  calib[,pi] &lt;- score_cat(train$churn,train[,v],calib[,v])
+  test[,pi] &lt;- score_cat(train$churn,train[,v],test[,v])
+  train.auc &lt;- calcAUC(train[,pi],train$churn)
+  nlvls &lt;- length(unique(train[,pi]))
+  if(train.auc &gt;= 0.8) {
+    calib.auc &lt;- calcAUC(calib[,pi],calib$churn)
+    print(sprintf("%s, trainAUC: %4.3f calibrationAUC: %4.3f",
+                  paste(pi,"(",nlvls,")"), train.auc,calib.auc))
+  }
+}
+```
+
+```
+[1] "scoreVar198 ( 146 ), trainAUC: 0.819 calibrationAUC: 0.522"
+[1] "scoreVar199 ( 217 ), trainAUC: 0.815 calibrationAUC: 0.565"
+[1] "scoreVar200 ( 23 ), trainAUC: 0.841 calibrationAUC: 0.562"
+[1] "scoreVar202 ( 114 ), trainAUC: 0.905 calibrationAUC: 0.536"
+[1] "scoreVar214 ( 23 ), trainAUC: 0.841 calibrationAUC: 0.562"
+[1] "scoreVar217 ( 125 ), trainAUC: 0.941 calibrationAUC: 0.575"
+[1] "scoreVar220 ( 146 ), trainAUC: 0.819 calibrationAUC: 0.522"
+[1] "scoreVar222 ( 146 ), trainAUC: 0.819 calibrationAUC: 0.522"
+```
+
+---
+
+
+layout: false
+class: inverse, middle, center
+
+# Binning numerical predictors
+
+---
+
+# Binning numerical predictors
+
+* __Binning__, also known as categorization or discretization, is the process of translating a quantitative variable into a set of two or more categories
+
+* For example, a variable might be translated into quantiles
+
+* Binning may avoid the problem of having to specify the relationship between the predictor and outcome
+
+* However, there are a number of problematic issues with turning continuous data categorical. Categorizing predictors should be a method of last resort
+
+---
+
+
+```r
+score_num &lt;- function(y,x,xtilde){
+  cuts &lt;- unique(as.numeric(quantile(x,probs=seq(0, 1, 0.1),na.rm=T)))
+  x.cut &lt;- cut(x,cuts)
+  xtilde.cut &lt;- cut(xtilde,cuts)
+  score_cat(y,x.cut,xtilde.cut)
+}
+```
+
+---
+
+
+```r
+for(v in vars_num) {
+  pi &lt;- paste('score',v,sep='')
+  train[,pi] &lt;- score_num(train$churn,train[,v],train[,v])
+  calib[,pi] &lt;- score_num(train$churn,train[,v],calib[,v])
+  test[,pi] &lt;- score_num(train$churn,train[,v],test[,v])
+  train.auc &lt;- calcAUC(train[,pi],train$churn)
+  if(train.auc &gt;= 0.55) {
+    calib.auc &lt;- calcAUC(calib[,pi],calib$churn)
+    print(sprintf("%s, trainAUC: %4.3f calibrationAUC: %4.3f",
+                  pi,train.auc,calib.auc))
+   }
+}
+```
+
+```
+[1] "scoreVar6, trainAUC: 0.556 calibrationAUC: 0.543"
+[1] "scoreVar7, trainAUC: 0.553 calibrationAUC: 0.551"
+[1] "scoreVar13, trainAUC: 0.570 calibrationAUC: 0.552"
+[1] "scoreVar28, trainAUC: 0.552 calibrationAUC: 0.530"
+[1] "scoreVar73, trainAUC: 0.601 calibrationAUC: 0.607"
+[1] "scoreVar74, trainAUC: 0.578 calibrationAUC: 0.560"
+[1] "scoreVar81, trainAUC: 0.551 calibrationAUC: 0.549"
+[1] "scoreVar113, trainAUC: 0.568 calibrationAUC: 0.512"
+[1] "scoreVar125, trainAUC: 0.552 calibrationAUC: 0.536"
+[1] "scoreVar126, trainAUC: 0.637 calibrationAUC: 0.646"
+[1] "scoreVar189, trainAUC: 0.570 calibrationAUC: 0.562"
+```
 
 ---
 
 layout: false
 class: inverse, middle, center
 
-# Scoring categorical predictors
+# Variable selection
 
 ---
 
-## Scoring categorical predictors
+* If effect encodings are not consistent with future data, this will result in overfitting 
 
-* We also need to design a strategy for what to do if a new level not seen during training were to occur during model use
+* We will select effect encodings that perform well in the calibration data
 
-* We'll build a function that converts NA to a level (as it seems to be pretty informative) and also treats novel values as uninformative
+* To measure the goodness of fit in the calibration data, we will use the log-likelihood 
+
+* For an observation with churn = 1 and an estimated probability of 0.9 of being churn, the log likelihood is log(0.9); for an observation with churn=-1, the same score of 0.9 is a log likelihood of log(1-0.9)
+
+`$$\log \ell = \sum_{i=1}^{m}(I\{y^*_i=1\}\log(x_i^*) + I\{y^*_i=-1\}\log(1-x_i^*))$$`
+where `\(y^*_i\)` is the `\(i\)`th response in the calibration set and `\(x^{*}_i\)` is the `\(i\)`th effect scoring of the predictor of interest
+
+* The null model has probability of churn = (number of churn clients)/(the total number of clients) and log-likelihood `\(\log \ell_0\)`
+
+* We will select predictors with a deviance improvement 
+`$$2( \log \ell - \log \ell_0 )$$`
+greater than some cutoff 
+
+---
+
+
+```r
+# Define a convenience function to compute log likelihood.
+loglik &lt;- function(y,x) {
+    sum(ifelse(y==1,log(x),log(1-x)))
+}
+
+# null model log-likelihood
+loglik0 &lt;- loglik(y=calib$churn,
+                  x=sum(calib$churn==1)/length(calib$churn)
+                  )
+```
+
+
+---
+
+
+```r
+#vars_score &lt;- paste('score',c(vars_cat,vars_num),sep='')
+vars_sel &lt;- c()
+cutoff &lt;- 5
+
+# Run through categorical predictors and pick based on a deviance improvement (related to difference in log likelihoods)
+for(v in vars_cat) {
+  pi &lt;- paste('score',v,sep='')
+  deviance &lt;- 2*( (loglik(calib$churn, calib[,pi]) - loglik0))
+  if(deviance&gt;cutoff) {
+    print(sprintf("%s, calibrationScore: %g",
+                  pi,deviance))
+    vars_sel &lt;- c(vars_sel,pi)
+  }
+}
+```
+
+```
+[1] "scoreVar193, calibrationScore: 21.9554"
+[1] "scoreVar205, calibrationScore: 24.1322"
+[1] "scoreVar206, calibrationScore: 28.3265"
+[1] "scoreVar211, calibrationScore: 7.66146"
+[1] "scoreVar218, calibrationScore: 59.7186"
+[1] "scoreVar221, calibrationScore: 11.1505"
+[1] "scoreVar225, calibrationScore: 20.4016"
+[1] "scoreVar227, calibrationScore: 20.5856"
+[1] "scoreVar228, calibrationScore: 8.76659"
+[1] "scoreVar229, calibrationScore: 24.9989"
+```
+
+
+---
+
+
+```r
+# Run through numerical predictor and pick based on a deviance improvement (related to difference in log likelihoods)
+for(v in vars_num) {
+  pi &lt;- paste('score',v,sep='')
+  deviance &lt;- 2*( (loglik(calib$churn,calib[,pi]) - loglik0))
+  if(deviance&gt;cutoff) {
+    print(sprintf("%s, calibrationScore: %g",
+                  pi,deviance))
+    vars_sel &lt;- c(vars_sel,pi)
+  }
+}
+```
+
+```
+[1] "scoreVar6, calibrationScore: 8.93739"
+[1] "scoreVar7, calibrationScore: 10.7107"
+[1] "scoreVar13, calibrationScore: 9.09552"
+[1] "scoreVar38, calibrationScore: 6.68585"
+[1] "scoreVar65, calibrationScore: 5.65415"
+[1] "scoreVar73, calibrationScore: 52.2945"
+[1] "scoreVar74, calibrationScore: 16.2695"
+[1] "scoreVar76, calibrationScore: 5.6245"
+[1] "scoreVar81, calibrationScore: 20.1007"
+[1] "scoreVar125, calibrationScore: 6.95256"
+[1] "scoreVar126, calibrationScore: 121.793"
+[1] "scoreVar134, calibrationScore: 7.92441"
+[1] "scoreVar144, calibrationScore: 5.87638"
+[1] "scoreVar153, calibrationScore: 5.18528"
+[1] "scoreVar189, calibrationScore: 32.3873"
+```
+
 
 ---
 
@@ -373,6 +879,35 @@ auc(roc.null)
 
 ```
 Area under the curve: 0.5
+```
+
+---
+
+# Logistic model
+
+
+```r
+fml &lt;- paste('churn == 1 ~ ',paste(vars_sel,collapse=' + '),sep='')
+fml
+```
+
+```
+[1] "churn == 1 ~ scoreVar193 + scoreVar205 + scoreVar206 + scoreVar211 + scoreVar218 + scoreVar221 + scoreVar225 + scoreVar227 + scoreVar228 + scoreVar229 + scoreVar6 + scoreVar7 + scoreVar13 + scoreVar38 + scoreVar65 + scoreVar73 + scoreVar74 + scoreVar76 + scoreVar81 + scoreVar125 + scoreVar126 + scoreVar134 + scoreVar144 + scoreVar153 + scoreVar189"
+```
+
+```r
+fit = glm(fml, data=train)
+phat = predict(fit, newdata=test)
+roc.glm &lt;- roc(
+    response = as.factor(test$churn),
+    predictor = phat,
+    levels = c("1","-1")
+    )
+auc(roc.glm)
+```
+
+```
+Area under the curve: 0.7099
 ```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
