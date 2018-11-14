@@ -25,7 +25,17 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* November 12: webex room 840 705 128
+* __Final deadline__ 1st round of competitions: November 16, 2018 h 12:00
+
+* __Test (in Lab)__ : November 23, 2018 h 14:00 LAB713
+
+* __Oral examination (optional)__ : November 29, 2018 h 15:00
+
+* Before November 16, students doing competitions within a team must fill the following form:  [Peer Ratings of Team Members](https://docs.google.com/forms/d/e/1FAIpQLSc6waRm0_mDTw5-Ibq_qG7VCXy-abZhaTvIbKZJplkKLYHfAg/viewform?usp=sf_link)
+
+* Example of how to create the file to be published on-line containing the code used to get the final prediction: [.Rmd](docs/competitions/publish_example.Rmd) and [.html](docs/competitions/publish_example.html) 
+
+* On November 16, the winners of each competition will give a presentation of 15 min about the strategy and the code used
 
 # **Course Material**
 
@@ -52,9 +62,8 @@ Most of the course material can be found in the notes linked to below. The notes
 | 13 | October 29 | Lasso and best subset selection | - | [Slides](docs/slides/13_Lasso/13_Lasso_slides.html)  |
 |  |  |  |  | | |
 | 14 | November 12 | Orange data | -  | [Slides](docs/slides/14_Orange/14_Orange_slides.html) |
-| 15 | November 15 |  | |
-|  |  |  |  | | |
-| 16 | November 16 | | |
+| 15 | November 15 | [Quiz](https://docs.google.com/forms/d/e/1FAIpQLSeAeV1fJlrxoBZZtmcye-NCeQDzGjpw7VT9vGB8Eb9RmaPDUQ/viewform?usp=sf_link) and Exercizes  | | |
+| 16 | November 16 | Competitions results | |
 
 The lecture notes and course webpage were done with [R Markdown](https://rmarkdown.rstudio.com/).
 All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
@@ -153,6 +162,9 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 **November 12** Orange data
 
 
+**November 15** Quiz and Exercises 
+
+**November 16** Competitions results 
 
 
 
@@ -190,16 +202,17 @@ and the following short introduction
 
 All students must follow a __code of conduct__, which covers issues such as plagiarism, falsification, unauthorized assistance, cheating, and other grievous acts of academic dishonesty. Violations of the code of conduct will not be taken lightly. For the competitions,
 
-* you are encouraged to work in a team. The competition score will be adjusted based on __peer ratings__ (see [peer ratings in coorperative learning teams](http://www4.ncsu.edu/unity/lockers/users/f/felder/public/Papers/kaufman-asee.PDF)). This multiplier will range from 1.05 (for people who go above and beyond) down to 0 (for people who don’t participate). As a last resort you may fire a team member who refuses to participate. Please contact the instructor well before it comes to this.
+* you are encouraged to work in a team. The competition score will be adjusted based on __peer ratings__ (see [peer ratings in coorperative learning teams](http://www4.ncsu.edu/unity/lockers/users/f/felder/public/Papers/kaufman-asee.PDF)). This multiplier will range from 1.05 (for people who go above and beyond) down to 0 (for people who don’t participate). As a last resort you may fire a team member who refuses to participate. Please contact the instructor well before it comes to this
 
-* you must __publish on-line__ the code used to get the final prediction.
+* you must __publish on-line__ the code used to get the final prediction
 
 * you can join the competitions __only once__ per academic year. The score will expire at the end of the academic year
 
-* you are encouraged to use online resources (unseen models, other people analyses, etc.) as long as you __cite__ a resource you borrow code from. Full copy/paste from other people code will have a multiplier of 0  
+* you are encouraged to use online resources (unseen models, other people analyses, etc.) as long as you __cite__ a resource you borrow code from. Blind copy/paste from other people code will have a multiplier of 0  
 
 * you are expected to be able to __explain your code by your self__ if required by the teacher
 
+Example of how to create the file to be published on-line containing the code used to get the final prediction: [.Rmd](docs/competitions/publish_example.Rmd) and [.html](docs/competitions/publish_example.html) 
 
 # **Exams**
 
@@ -212,11 +225,11 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 Test calendar :
 
-|When | Where | Hours |
-|---|---|---|
-| November 23, 2018 | LAB713 | 14:00 |
-| Febrary 7, 2019 | LAB713 | 14:00 |
-| Febrary 22, 2019 | LAB713 | 8:30 |
+|When | Where | Hours | Oral |
+|---|---|---|---|
+| November 23, 2018 | LAB713 | 14:00 | November 29, 2018 15:00 |
+| Febrary 7, 2019 | LAB713 | 14:00 | - |
+| Febrary 22, 2019 | LAB713 | 8:30 | - |
 
 The **Test** consists of
 
