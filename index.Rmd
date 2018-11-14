@@ -62,8 +62,8 @@ Most of the course material can be found in the notes linked to below. The notes
 | 13 | October 29 | Lasso and best subset selection | - | [Slides](docs/slides/13_Lasso/13_Lasso_slides.html)  |
 |  |  |  |  | | |
 | 14 | November 12 | Orange data | -  | [Slides](docs/slides/14_Orange/14_Orange_slides.html) |
-| 15 | November 15 | [Quiz](https://docs.google.com/forms/d/e/1FAIpQLSeAeV1fJlrxoBZZtmcye-NCeQDzGjpw7VT9vGB8Eb9RmaPDUQ/viewform?usp=sf_link) and Exercizes  | | |
-| 16 | November 16 | Competitions results | |
+| 15 | November 15 | [Quiz](https://docs.google.com/forms/d/e/1FAIpQLSeAeV1fJlrxoBZZtmcye-NCeQDzGjpw7VT9vGB8Eb9RmaPDUQ/viewform?usp=sf_link) and [programming exercize](https://aldosolari.github.io/DM/exams/exercize_text.pdf)  | - | - |
+| 16 | November 16 | Competitions results and discussion | - | - |
 
 The lecture notes and course webpage were done with [R Markdown](https://rmarkdown.rstudio.com/).
 All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
@@ -162,9 +162,9 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 **November 12** Orange data
 
 
-**November 15** Quiz and Exercises 
+**November 15** Quiz and programming exercise
 
-**November 16** Competitions results 
+**November 16** Competitions results and discussion
 
 
 
