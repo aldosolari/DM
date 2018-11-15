@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, comment=
 library(dplyr)
 library(readr)
 who <- read_csv("/Users/aldosolari/Documents/mygithub/DM/docs/competitions/DMcompetitions.csv")
+# who <- who[-which(who$Surname==""),]
 who2 = who %>% 
   rename(Team = "Team name (repeat Username if single)", TeamN = "Number of components of the team")  %>% 
   arrange(Team) %>%

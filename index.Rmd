@@ -37,6 +37,8 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 * On November 16, the winners of each competition will give a presentation of 15 min about the strategy and the code used
 
+* The list of partecipants to the 1st round of competitions will be __definive__ on November 16. Students that want to withdraw should send an e-mail. 
+
 # **Course Material**
 
 Most of the course material can be found in the notes linked to below. The notes are supplemented by readings which are listed in the [#Reading](#reading) section.
@@ -158,9 +160,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 - ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
 
-
 **November 12** Orange data
-
 
 **November 15** Quiz and programming exercise
 
