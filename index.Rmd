@@ -190,8 +190,6 @@ If you click on a specific Competition in the listing, you will go to the Compet
 | [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
 | [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | ?/6/19 - ?/6/19  |
 
-- [List of participants (1st round)](docs/competitions/Participants.html)
-
 There are two references that use the `caret` R package that you can use for improving your predictive modeling skills:
 
 - [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) (APM)
@@ -215,6 +213,19 @@ All students must follow a __code of conduct__, which covers issues such as plag
 * you are expected to be able to __explain your code by your self__ if required by the teacher
 
 Example of how to create the file to be published on-line containing the code used to get the final prediction: [.Rmd](docs/competitions/publish_example.Rmd) and [.html](docs/competitions/publish_example.html) 
+
+
+### 1st round
+
+* [List of participants (1st round)](docs/competitions/Participants.html)
+
+| Competition | Partial | Final | 
+|----|----|----|
+| House prices | [partial ](docs/competitions/Houseprices/Houseprices_partial1.html) | final |
+| Bikesharing | [partial](docs/competitions/Bikesharing/Bikesharing_partial1.html) | final |
+| OkCupid | [partial](docs/competitions/OkCupid/OkCupid_partial1.html) | final |
+
+
 
 # **Exams**
 
