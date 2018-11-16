@@ -221,9 +221,9 @@ Example of how to create the file to be published on-line containing the code us
 
 | Competition | Partial | Final | 
 |----|----|----|
-| House prices | [partial ](docs/competitions/Houseprices/Houseprices_partial1.html) | final |
-| Bikesharing | [partial](docs/competitions/Bikesharing/Bikesharing_partial1.html) | final |
-| OkCupid | [partial](docs/competitions/OkCupid/OkCupid_partial1.html) | final |
+| House prices | [partial](docs/competitions/Houseprices/Houseprices_partial1.html) | [final](docs/competitions/Houseprices/Houseprices_final1.html)  |
+| Bikesharing  | [partial](docs/competitions/Bikesharing/Bikesharing_partial1.html) | [final](docs/competitions/Bikesharing/Bikesharing_final1.html) |
+| OkCupid | [partial](docs/competitions/OkCupid/OkCupid_partial1.html) | [final](docs/competitions/OkCupid/OkCupid_final1.html) |
 
 
 
