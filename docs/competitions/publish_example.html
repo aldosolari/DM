@@ -130,15 +130,26 @@ $(document).ready(function () {
 <p>NICKNAME: solari.aldo</p>
 <p>TEAM: solari.aldo</p>
 <p>ROUND: 1st</p>
+<div id="summary" class="section level3">
+<h3>Summary</h3>
+<p>My strategy was</p>
+<ol style="list-style-type: decimal">
+<li>transform SalePrice target to log(x + 1)</li>
+<li>transform excessively skewed predictors with log(x + 1)</li>
+<li>dummy encoding for categorical predictors. For any level of that was NA, set to zero</li>
+<li>missing values in numeric predictors, impute mean of that predictor</li>
+<li>lasso regression</li>
+</ol>
+</div>
 <div id="references" class="section level3">
-<h3>References:</h3>
+<h3>References</h3>
 <ul>
 <li><p>Copy/paste from Kaggle’s Kernel <a href="https://www.kaggle.com/jimthompson/regularized-linear-models-in-r">Regularized Linear Models</a></p></li>
 <li><p>Keep in mind that omitting a reference (online resources, articles, books, other students work, etc.) and/or full copy/paste of R code is forbidden and it implies a ZERO score</p></li>
 </ul>
 </div>
-<div id="models" class="section level3">
-<h3>Models</h3>
+<div id="models-used" class="section level3">
+<h3>Models used</h3>
 <ul>
 <li>Lasso</li>
 </ul>
@@ -146,7 +157,7 @@ $(document).ready(function () {
 <div id="non-standard-r-packages" class="section level3">
 <h3>Non-standard R packages</h3>
 <ul>
-<li>moments</li>
+<li>moments (to compute skewness)</li>
 </ul>
 </div>
 <div id="r-code-to-reproduce-the-last-submission" class="section level3">

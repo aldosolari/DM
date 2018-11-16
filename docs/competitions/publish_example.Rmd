@@ -13,20 +13,29 @@ TEAM: solari.aldo
 
 ROUND: 1st
 
+### Summary
 
-### References:
+My strategy was
+
+1. transform SalePrice target to log(x + 1) 
+2. transform excessively skewed predictors with log(x + 1)
+3. dummy encoding for categorical predictors. For any level of that was NA, set to zero
+4. missing values in numeric predictors, impute mean of that predictor
+5. lasso regression
+
+### References
 
 * Copy/paste from Kaggle's Kernel [Regularized Linear Models](https://www.kaggle.com/jimthompson/regularized-linear-models-in-r)
 
 * Keep in mind that omitting a reference (online resources, articles, books, other students work, etc.) and/or full copy/paste of R code is forbidden and it implies a ZERO score
 
-### Models
+### Models used
 
 * Lasso
 
 ### Non-standard R packages
 
-* moments
+* moments (to compute skewness)
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
