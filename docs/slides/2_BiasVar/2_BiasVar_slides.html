@@ -137,7 +137,7 @@ where `\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)`.
 \underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{[\mathrm{Bias}(\hat{f}(x_i))]^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}(\hat{f}(x_i))}$$`
 
 * Now the decomposition of fixed-X prediction error is simply
-`$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}} = [\mathrm{Bias}(\hat{f})]^2+\mathrm{Variance}(\hat{f})$$`
+`$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}} = \sigma^2 + [\mathrm{Bias}(\hat{f})]^2+\mathrm{Variance}(\hat{f})$$`
 
 * Bias and variance are conflicting entities, and we cannot
 minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
