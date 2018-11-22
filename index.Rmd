@@ -25,21 +25,11 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* __Final deadline__ 1st round of competitions: November 16, 2018 h 12:00
+* __Test (in Lab)__ : 23/11/2018 h 14:00 LAB713
 
-* __Test (in Lab)__ : November 23, 2018 h 14:00 LAB713
+* __Oral examination (optional)__ : Around 29/11/2018
 
-* __Oral examination (optional)__ : November 29, 2018 h 15:00
 
-* Before November 16, students doing competitions within a team must fill the following form:  [Peer Ratings of Team Members](https://docs.google.com/forms/d/e/1FAIpQLSc6waRm0_mDTw5-Ibq_qG7VCXy-abZhaTvIbKZJplkKLYHfAg/viewform?usp=sf_link)
-
-* Example of how to create the file to be published on-line containing the code used to get the final prediction: [.Rmd](docs/competitions/publish_example.Rmd) and [.html](docs/competitions/publish_example.html) 
-
-* On November 16, the winners of each competition will give a presentation of 15 min about the strategy and the code used
-
-* The list of partecipants to the 1st round of competitions will be __definive__ on November 16. Students that want to withdraw should send an e-mail
-
-* webex room number: 840 705 128
 
 # **Course Material**
 
@@ -183,12 +173,17 @@ If you click on a specific Competition in the listing, you will go to the Compet
 4. *Timeline* for joining the competition: an entry deadline and a submission deadline (after which no new submissions will be accepted). After the deadline passes, partecipants get a final score.
 5. *Leaderboard*. Submissions can be made through through manual upload in the competition platform. Submissions are scored immediately and summarized on a live leaderboard.
 
+There are three rounds (time windows) for joining the competitions:
 
 | Competition | 1st: From-To | 2nd: From-To | 3rd: From-To | 
 |----|----|----|----|
 | [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
 | [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
 | [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | ?/6/19 - ?/6/19  |
+
+
+If a student does not join the competitions in the above round, before  it must send her/his submission via e-mail
+
 
 There are two references that use the `caret` R package that you can use for improving your predictive modeling skills:
 
@@ -217,13 +212,16 @@ Example of how to create the file to be published on-line containing the code us
 
 ### 1st round
 
-* [List of participants (1st round)](docs/competitions/Participants.html)
+* [List of participants](docs/competitions/Participants.html)
 
-| Competition | Partial | Final | 
-|----|----|----|
-| House prices | [partial](docs/competitions/Houseprices/Houseprices_partial1.html) | [final](docs/competitions/Houseprices/Houseprices_final1.html)  |
-| Bikesharing  | [partial](docs/competitions/Bikesharing/Bikesharing_partial1.html) | [final](docs/competitions/Bikesharing/Bikesharing_final1.html) |
-| OkCupid | [partial](docs/competitions/OkCupid/OkCupid_partial1.html) | [final](docs/competitions/OkCupid/OkCupid_final1.html) |
+* [Results](docs/competitions/Competitions1_points.html) (temporary, not definitive!)
+
+
+| Competition | Partial | Final | Points |
+|----|----|----|----|
+| House prices | [partial](docs/competitions/Houseprices/Houseprices_partial1.html) | [final](docs/competitions/Houseprices/Houseprices_final1.html)  | [points](docs/competitions/Houseprices/Houseprices_points1.html) |
+| Bikesharing  | [partial](docs/competitions/Bikesharing/Bikesharing_partial1.html) | [final](docs/competitions/Bikesharing/Bikesharing_final1.html) | [points](docs/competitions/Bikesharing/Bikesharing_points1.html) |
+| OkCupid | [partial](docs/competitions/OkCupid/OkCupid_partial1.html) | [final](docs/competitions/OkCupid/OkCupid_final1.html) | [points](docs/competitions/OkCupid/OkCupid_points1.html) |
 
 
 
@@ -240,9 +238,9 @@ Test calendar :
 
 |When | Where | Hours | Oral |
 |---|---|---|---|
-| November 23, 2018 | LAB713 | 14:00 | November 29, 2018 15:00 |
-| Febrary 7, 2019 | LAB713 | 14:00 | - |
-| Febrary 22, 2019 | LAB713 | 8:30 | - |
+| November 23, 2018 | LAB713 | 14:00 | TBD |
+| Febrary 7, 2019 | LAB713 | 14:00 | TBD |
+| Febrary 22, 2019 | LAB713 | 8:30 | TBD |
 
 The **Test** consists of
 
@@ -253,7 +251,7 @@ Some of the questions and/or programming exercises may be taken
 from the book ISLR. For the programming exercises, the following R code will be available in the "TESTO" folder:
 
 * [Code from ISLR](https://aldosolari.github.io/DM/exams/codeISLR.pdf)
-* Code from the lectures
+* [Code from the lectures](https://aldosolari.github.io/DM/exams/codeNOTES.pdf)
 
 In the "TESTO" folder, you will also find 
 

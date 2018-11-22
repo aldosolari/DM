@@ -91,10 +91,8 @@ plot(ecdf(score), verticals = T, pch=".", main="Partial score distribution", xla
 fdr = ecdf(score)
 bm = 21.32
 cat("Benchmark score", bm, "\n",
-"Benchmark % of points:", round((1-fdr(bm)+.00001)*100,2), "%")
+"Benchmark % of points:", round((1-fdr(bm-.00001))*100,2), "%")
 ```
-
-
 
 However, I reserve the right to regrade differently (meaning your % of points may be calculated differently)
 
