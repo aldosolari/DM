@@ -25,10 +25,12 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* __Test (in Lab)__ : 23/11/2018 h 14:00 LAB713
+* __Link to the R code__ : please insert the link to the R code for each competition [here](https://docs.google.com/forms/d/e/1FAIpQLSek_phLiJDY9ROWagz3pbCkYobMJvIsLtKRPXyH0Snz8jTzdA/viewform?usp=sf_link). Deadline: 28/11/18 h 18:00
 
-* __Oral examination (optional)__ : Around 29/11/2018
+* __Test (Lab) 23/11/2018__ : [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html)
 
+
+* __Oral examination (optional)__ : TBD
 
 
 # **Course Material**
@@ -238,9 +240,9 @@ Test calendar :
 
 |When | Where | Hours | Oral |
 |---|---|---|---|
-| November 23, 2018 | LAB713 | 14:00 | TBD |
-| Febrary 7, 2019 | LAB713 | 14:00 | TBD |
-| Febrary 22, 2019 | LAB713 | 8:30 | TBD |
+| 23/11/2018 | LAB713 | 14:00 | TBD |
+| 7/2/2019 | LAB713 | 14:00 | TBD |
+| 22/2/2019 | LAB713 | 8:30 | TBD |
 
 The **Test** consists of
 
@@ -260,7 +262,9 @@ In the "TESTO" folder, you will also find
 
 In the RMarkdown file you have to write the R code solving the exercises. Then use the **Knit** button to generate an HTML file containing the answers, which will be uploaded to the "CONSEGNA" folder (see [example](https://aldosolari.github.io/DM/exams/example_solution.html)). Other formats will not be accepted. 
 
+Past exams:
 
+* 23/11/2018: [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html)
 
 # **Acknowledgements**
 
