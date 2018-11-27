@@ -184,7 +184,7 @@ There are three rounds (time windows) for joining the competitions:
 | [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | ?/6/19 - ?/6/19  |
 
 
-If a student does not join the competitions in the above round, before  it must send her/his submission via e-mail
+If a student does not take part in the competitions in the above time windows, he/she must take the __oral exam__ and send via e-mail his/her predictions along with the (reproducible) R code at least one week before the exam.
 
 
 There are two references that use the `caret` R package that you can use for improving your predictive modeling skills:
