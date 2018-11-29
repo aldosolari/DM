@@ -1,0 +1,113 @@
+---
+title: "Data Mining Test (Lab)"
+date: "23/11/2018"
+output:
+  html_document: default
+---
+
+Name: 
+
+Surname:
+
+Badge number:
+
+
+## EXERCIZE 1
+
+a. 
+
+```{r}
+set.seed(1)
+x = rnorm(100)
+y = x - 2*x^2 + rnorm(100)
+train = data.frame(y,x)
+library(boot)
+LOOCV <- vector()
+LOOCV[1] <- cv.glm(train, glm(y ~ 1))$delta[1]
+for (d in 1:4){
+LOOCV[d+1] = cv.glm(train, glm(y ~ poly(x,d)) )$delta[1]
+}
+names(LOOCV) <- c("i","ii","iii","iv","v")
+LOOCV
+```
+
+b. 
+
+Text answer
+
+
+## EXERCIZE 2
+
+a. 
+
+```{r}
+phat = c(0.1, 0.15, 0.2, 0.2, 0.55, 0.6, 0.6, 0.65, 0.7, 0.75)
+yhat = ifelse(phat>.5,"red","green")
+tab = table(yhat)
+names(tab)[which.max(tab)]
+barhat = mean(phat)
+barhat
+```
+
+b.
+ 
+Text answer
+
+
+## EXERCIZE 3
+
+a.
+
+```{r}
+library(MASS)
+train = Boston[1:300,]
+test = Boston[301:506,]
+p = ncol(train)-1
+n = nrow(train)
+library(leaps)
+fit <- regsubsets(medv ~ .,train, nvmax=p)
+predict.regsubsets =function(object, newdata ,id ,...){
+form=as.formula(object$call[[2]])
+mat=model.matrix(form, newdata)
+coefi =coef(object, id=id)
+xvars =names(coefi)
+mat[,xvars]%*%coefi
+}
+MSE.te = vector()
+for (k in 1:p){
+yhat = predict.regsubsets(fit, newdata=test, id=k)
+MSE.te[k] = mean( (yhat - test$medv)^2 )
+}
+names(MSE.te)<-paste("k=",1:p, sep="")
+MSE.te
+```
+
+b.
+
+Text answer
+
+## EXERCIZE 4
+
+a.
+
+```{r}
+n=21
+sigma=2
+x = -1 + ( (1:n)-1 )/10
+fx = (x-3)*(x-2)*(x-1)*x*(x+1)*(x+2)*(x+3)
+ds = 1:10
+ps = ds+1
+Bias2s = sapply(ps, function(p) 
+  mean( ( fx - fitted(lm(fx ~ poly(x,degree=(p-1)))) )^2 )
+  )
+Vars = ps*(sigma^2)/n
+Errs = Bias2s + Vars + sigma^2
+names(Errs) = paste("d =", ds)
+Errs
+```
+
+b.
+
+Text answer
+
+
