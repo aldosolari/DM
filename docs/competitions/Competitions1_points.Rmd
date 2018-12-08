@@ -8,8 +8,6 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 ```
 
 
-
-
 ```{r, echo=FALSE}
 library(dplyr)
 library(readr)
@@ -98,9 +96,35 @@ pub = pub_na[complete.cases(pub_na),]
 pub_ames = pub %>% arrange(Badge)
 #============================
 
+
+
 pub_all = data.frame(pub_ames[,1:4] ,Ames = pub_ames[,5], BikeSharing=pub_bike[,5], OkCupid=pub_okcupid[,5], Points = pub_ames[,5] + pub_bike[,5] + pub_okcupid[,5])
 row.names(pub_all) = as.character(1:nrow(pub_all))
 knitr::kable(pub_all, row.names = T)
 ```
 
+# Adjustments
 
+* Peer rating: 
+    - Daniele Parimbelli + 0.463
+    - Ongaro	Andrea + 0.451
+    - Arguirov	Kristofer + 0.230
+    - Perrini	Danilo + 0.452
+    - Panizza	Susanna	+ 0.340 
+    - Buzzini	Roberto + 0.238
+    
+* Non-reproducible code: points = min(submitted, published)
+    - ConcoBeach (Bikesharing): min(4.57, 4.62) = 4.57
+    - Blur (OkCupid): min(4.92, 4.92) = 4.92
+    - Maria Letizia Sciartilli (Ames): t.b.d.
+    
+* Publication on github
+    - Paolo D’Angelo -0.5 (All: missing Summary, Models used, Non-standard R packages, R code with unnecessary printing, but lesson learnt included)
+    - Nicolò Ghioldi -0.5 (All: missing Summary)
+    - Elisa Pirotta -0.5 (House prices and OkCupid: missing Summary, Non-standard R packages; Bikesharing: missing Summary)
+    - Sonia Cucchi -0.5 (House prices: R code with a lot of unnecessary printing; OKCupid: missing Summary, R code with unnecessary printing)
+    - Federico Melograna -0.5 (House prices: missing Summary, R code with a lot of unnecessary printing)
+    - Piovesana Dario -0.5 (House prices: R code with a lot of unnecessary printing)
+    - Sara Pisaniello -0.1 (OKCupid: missing Summary, R code with unnecessary printing)
+    - Nicholas Giuseppe Missineo -0.1 (House prices: R code with unnecessary printing)
+    - Giacomo Floriani -0.1 (House prices: missing Non-standard R packages)

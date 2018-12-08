@@ -25,12 +25,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # **Latest announcements**
 
-* __Link to the R code__ : please insert the link to the R code for each competition [here](https://docs.google.com/forms/d/e/1FAIpQLSek_phLiJDY9ROWagz3pbCkYobMJvIsLtKRPXyH0Snz8jTzdA/viewform?usp=sf_link). Deadline: 28/11/18 h 18:00
-
-* __Test (Lab) 23/11/2018__ : [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html)
-
-
-* __Oral examination (optional)__ : TBD
+* Exam [marks](https://aldosolari.github.io/DM/exams/DM231118/DM231118_esiti.pdf) (23/11/2018)
 
 
 # **Course Material**
@@ -216,8 +211,7 @@ Example of how to create the file to be published on-line containing the code us
 
 * [List of participants](docs/competitions/Participants.html)
 
-* [Results](docs/competitions/Competitions1_points.html) (temporary, not definitive!)
-
+* [Results](docs/competitions/Competitions1_points.html) 
 
 | Competition | Partial | Final | Points |
 |----|----|----|----|
@@ -240,7 +234,7 @@ Test calendar :
 
 |When | Where | Hours | Oral |
 |---|---|---|---|
-| 23/11/2018 | LAB713 | 14:00 | TBD |
+| 23/11/2018 | LAB713 | 14:00 | 13/12/2018 |
 | 7/2/2019 | LAB713 | 14:00 | TBD |
 | 22/2/2019 | LAB713 | 8:30 | TBD |
 
@@ -264,7 +258,7 @@ In the RMarkdown file you have to write the R code solving the exercises. Then u
 
 Past exams:
 
-* 23/11/2018: [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html)
+* 23/11/2018: [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM231118/DM231118_esiti.pdf)
 
 # **Acknowledgements**
 

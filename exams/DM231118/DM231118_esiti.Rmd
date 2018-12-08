@@ -1,0 +1,41 @@
+---
+title: "Data Mining"
+output:
+  pdf_document: default
+date: "Prova d'esame del 23 Novembre 2018"
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = F, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+**DATA MINING M**
+
+```{r}
+rm(list=ls())
+library(readxl)
+library(dplyr)
+esiti <- read_excel("~/Documents/mygithub/DM/exams/DM231118/esiti_DM231118.xlsx")
+names(esiti)[7]<-"COMP"
+DMM = esiti %>% filter(TIPO=="DMM") %>% select(-TIPO, -NOME)
+options(knitr.kable.NA = '')
+knitr::kable(DMM)
+```
+
+**DATA MINING (MODULO DATA SCIENCE)**
+
+```{r}
+rm(list=ls())
+library(readxl)
+library(dplyr)
+esiti <- read_excel("~/Documents/mygithub/DM/exams/DM231118/esiti_DM231118.xlsx")
+names(esiti)[7]<-"COMP"
+DMDS = esiti %>% filter(TIPO != "DMM") %>% select(-TIPO, -NOME, -"DA REGISTRARE")
+DMDS$VOTO[!is.na(DMDS$SOMMA)] = round(as.numeric(DMDS$VOTO[!is.na(DMDS$SOMMA)]),2)
+options(knitr.kable.NA = '')
+knitr::kable(DMDS, digits=2)
+```
+
+La visione dei compiti (facoltativa) avrà luogo giovedì 13 Dicembre dalle 15:00 alle 16:00 presso lo studio del docente (U7-2030). Chi desidera rifiutare il voto o richiedere la prova orale facoltativa può farlo scrivendo una mail entro le h. 14:00 del 13/12/2018. La prova orale si svolgerà dopo la visione dei compiti. 
+
+
