@@ -116,12 +116,11 @@ knitr::kable(pub_all, row.names = T)
 * Non-reproducible code: points = min(submitted, published)
     - ConcoBeach (Bikesharing): min(4.57, 4.62) = 4.57
     - Blur (OkCupid): min(4.92, 4.92) = 4.92
-    - Maria Letizia Sciartilli (Ames): t.b.d.
+    - Maria Letizia Sciartilli (Ames): min(4.09, 3.98) = 3.98
     
 * Publication on github
     - Paolo D’Angelo -0.5 (All: missing Summary, Models used, Non-standard R packages, R code with unnecessary printing, but lesson learnt included)
     - Nicolò Ghioldi -0.5 (All: missing Summary)
-    - Elisa Pirotta -0.5 (House prices and OkCupid: missing Summary, Non-standard R packages; Bikesharing: missing Summary)
     - Sonia Cucchi -0.5 (House prices: R code with a lot of unnecessary printing; OKCupid: missing Summary, R code with unnecessary printing)
     - Federico Melograna -0.5 (House prices: missing Summary, R code with a lot of unnecessary printing)
     - Piovesana Dario -0.5 (House prices: R code with a lot of unnecessary printing)
