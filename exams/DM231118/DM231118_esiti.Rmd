@@ -36,6 +36,4 @@ options(knitr.kable.NA = '')
 knitr::kable(DMDS, digits=2)
 ```
 
-La visione dei compiti (facoltativa) avrà luogo giovedì 13 Dicembre dalle 15:00 alle 16:00 presso lo studio del docente (U7-2030). Chi desidera rifiutare il voto o richiedere la prova orale facoltativa può farlo scrivendo una mail entro le h. 14:00 del 13/12/2018. La prova orale si svolgerà dopo la visione dei compiti. 
-
-
+* Martina Caronte rifiuta il voto

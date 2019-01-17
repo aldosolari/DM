@@ -1,13 +1,18 @@
 ---
-title: "**Data Mining**"
+title: "Data Mining"
+description: |
+  Master Degree in Statistics and Economics, University of Milano-Bicocca 
+author:
+  - name: Aldo Solari
+    url: https://aldosolari.github.io/
+    affiliation: DEMS
+    affiliation_url: https://www.unimib.it/ateneo/dipartimenti-e-scuole/alla-scoperta-%E2%80%A6/dipartimento-economia-metodi-quantitativi-e-strategie-impresa
+date: "`r Sys.Date()`"
 output:
-  html_document:
-    theme: cosmo
-    toc: yes
-    toc_float: yes
+  radix::radix_article:
+    toc: true
+    toc_depth: 1
 ---
-
-Teacher: [Aldo Solari](https://aldosolari.github.io/)
 
 This course aims to provide statistical and computational tools for *data mining* and *supervised learning* by using the R software environment for statistical computing. Special emphasis is given to applied predictive modelling. 
 
@@ -23,12 +28,12 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 | Thursday | Lab713 | 13:30-15:30|
 | Friday | Lab713 | 12:30-15:30|
 
-# **Latest announcements**
+# Latest announcements
 
-* Exam [marks](https://aldosolari.github.io/DM/exams/DM231118/DM231118_esiti.pdf) (23/11/2018)
+* No news
 
 
-# **Course Material**
+# Course material
 
 Most of the course material can be found in the notes linked to below. The notes are supplemented by readings which are listed in the [#Reading](#reading) section.
 
@@ -60,10 +65,9 @@ The lecture notes and course webpage were done with [R Markdown](https://rmarkdo
 All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
 
  
-__Download the .Rmd files, modify as you like and decide the output format (PDF, HTML or Word)__.
+Download the .Rmd files, modify as you like and decide the output format (PDF, HTML or Word). To extract the R code from a .Rmd file use
 
-To extract the R code from a .Rmd file use
-```{r, eval=F}
+```{r, eval=F, echo=TRUE}
 knitr::purl("../filename.Rmd")
 ```
 
@@ -74,7 +78,7 @@ You can read more about R Markdown in [Chapter 27 of r4ds](http://r4ds.had.co.nz
 R Markdown is an example of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), a concept introduced by Donald Knuth saying _you should write code that communicates primarily to humans, not computers_.
 
 
-# **Reading**
+# Reading
 
 Readings should be complete by the following class. There are three primary references:
 
@@ -113,7 +117,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 **October 11** Random-X prediction error
 
-- [Rosset and Tibshirani (2018) From Fixed-X to Random-X Regression](https://arxiv.org/pdf/1704.08160.pdf) (optional)
+- [Rosset and Tibshirani (2018) ArXiv](https://arxiv.org/pdf/1704.08160.pdf) (optional)
 
 **October 12** EDA and the modeling process
 
@@ -136,8 +140,6 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 **October 22** Spam and Boston data
 
-- [Ehrlinger (2015) ggRandomForests: Visually Exploring a Random Forest for Regression](https://arxiv.org/abs/1501.07196) (optional)
-
 **October 25** Class imbalance
 
 **October 26** Ridge regression
@@ -157,7 +159,7 @@ With regard to the exercises at the end of each chapter of ISLR, there are solut
 
 
 
-# **Competitions**
+# Competitions
 
 The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off). I would like to thank BeeViva and in particular [Livio Finos](http://www.liviofinos.net/), [Dario Solari](https://www.linkedin.com/in/dariosolari/?originalSubdomain=it) and [Tomaso "Minni" Minelli](https://github.com/minni). The competitions offered in this course would not have been possible without their constant and precious support.
 
@@ -221,7 +223,7 @@ Example of how to create the file to be published on-line containing the code us
 
 
 
-# **Exams**
+# Exams
 
 The exam consists of two parts:
 
@@ -232,11 +234,14 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 Test calendar :
 
-|When | Where | Hours | Oral |
-|---|---|---|---|
-| 23/11/2018 | LAB713 | 14:00 | 13/12/2018 |
-| 7/2/2019 | LAB713 | 14:00 | TBD |
-| 22/2/2019 | LAB713 | 8:30 | TBD |
+| N.ro |When | Where | Hours | Oral |
+|---|---|---|---|---|
+| 1 | 23/11/2018 | LAB713 | 14:00 | 13/12/2018 |
+| 2 | 7/2/2019 | LAB713 | 14:00 | TBD |
+| 3 | 22/2/2019 | LAB713 | 8:30 | TBD |
+| 4 | - | - | - | - |
+| 5 | - | - | - | - |
+| 6 | - | - | - | - |
 
 The **Test** consists of
 
@@ -260,9 +265,29 @@ Past exams:
 
 * 23/11/2018: [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM231118/DM231118_esiti.pdf)
 
-# **Acknowledgements**
+## Acknowledgments {.appendix}
 
-Most of the ideas and materials for this course were collected from several sources. I'll make a bibliography at the earliest. 
+Much of the course content was inspired by the following courses:
 
-This page was last updated on `r Sys.time()` Eastern Time.
+* [Analisi dei dati (Data Mining)](https://www.didattica.unipd.it/off/2018/LM/SC/SS1736/000ZZ/SCP4062891/N0)
+* [STOR 390: Introduction to Data Science](https://idc9.github.io/stor390/)
+* [36-402: Undergraduate Advanced Data Analysis](http://www.stat.cmu.edu/~cshalizi/uADA/17/)
+* [36-708: Statistical Machine Learning](http://www.stat.cmu.edu/~larry/=sml/)
+* [Statistics 36-462/36-662: Data Mining](http://www.stat.cmu.edu/~ryantibs/datamining/)
+* [Applied Machine Learning](https://github.com/topepo/NY-ML-2018)
+
+
+and on a number of other sources. 
+
+## Disclaimer {.appendix}
+
+The course material contains images obtained by routine Google Images searches. 
+Some of these images may perhaps be copyright. They are included here for
+educational noncommercial purposes and are considered
+to be covered by the doctrine of Fair Use. In any event
+they are easily available from Google Images.
+It’s not feasible to give full scholarly credit to the
+creators of these images. We hope they can be satisfied
+with the positive role they are playing in the educational
+process.
 
