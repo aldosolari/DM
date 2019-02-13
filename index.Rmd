@@ -30,7 +30,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # Latest announcements
 
-* Il secondo round di competizioni si svolgerà dal 28/1/2018 al 5/2/19. Per partecipare è necessaria l'iscrizione scrivendo al docente una mail che specifichi nome, cognome e numero di matricola.
+* Sono disponibili gli esiti della prova del 7 Febbraio 2019: [Text](https://aldosolari.github.io/DM/exams/DM070219/DM070219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM070219/DM070219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/070219/DM070219_esiti.pdf)
 
 
 # Course material
@@ -264,6 +264,10 @@ In the RMarkdown file you have to write the R code solving the exercises. Then u
 Past exams:
 
 * 23/11/2018: [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM231118/DM231118_esiti.pdf)
+
+
+* 07/02/2019: [Text](https://aldosolari.github.io/DM/exams/DM070219/DM070219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM070219/DM070219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/070219/DM070219_esiti.pdf)
+
 
 ## Acknowledgments {.appendix}
 
