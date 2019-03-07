@@ -30,8 +30,7 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # Latest announcements
 
-* Sono disponibili gli esiti della prova del 7 Febbraio 2019: [Text](https://aldosolari.github.io/DM/exams/DM070219/DM070219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM070219/DM070219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM070219/DM070219_esiti.pdf)
-
+* No news
 
 # Course material
 
@@ -267,6 +266,9 @@ Past exams:
 
 
 * 07/02/2019: [Text](https://aldosolari.github.io/DM/exams/DM070219/DM070219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM070219/DM070219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM070219/DM070219_esiti.pdf)
+
+
+* 22/02/2019: [Text](https://aldosolari.github.io/DM/exams/DM220219/DM220219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM220219/DM220219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM220219/DM220219_esiti.pdf)
 
 
 ## Acknowledgments {.appendix}

@@ -1,0 +1,37 @@
+---
+title: "Data Mining"
+output:
+  pdf_document: default
+date: "Prova d'esame del 22 Febbraio 2019"
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = F, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+**DATA MINING M**
+
+```{r}
+rm(list=ls())
+library(readxl)
+library(dplyr)
+esiti <- read_excel("~/Documents/mygithub/DM/exams/DM220219/esiti_DM220219.xlsx")
+names(esiti)[7]<-"COMP"
+DMM = esiti %>% filter(TIPO=="DMM") %>% select(-TIPO, - ESITO)
+options(knitr.kable.NA = '')
+knitr::kable(DMM)
+```
+
+**DATA MINING (MODULO DATA SCIENCE)**
+
+```{r}
+rm(list=ls())
+library(readxl)
+library(dplyr)
+esiti <- read_excel("~/Documents/mygithub/DM/exams/DM220219/esiti_DM220219.xlsx")
+names(esiti)[7]<-"COMP"
+DMDS = esiti %>% filter(TIPO != "DMM") %>% select(-TIPO, -"DA REGISTRARE")
+knitr::kable(DMDS, digits=2)
+```
+
+La visione del compito è prevista Lunedì 11 Marzo 2019 ore 14:00 presso l'ufficio del docente. Si prega di comunicare l’eventuale rifiuto del voto entro le ore 16:00 del giorno 11/3/2019. Il testo con le soluzioni è disponibile sul sito del corso.

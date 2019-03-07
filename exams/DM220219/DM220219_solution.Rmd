@@ -1,0 +1,103 @@
+---
+title: "Data Mining (Lab)"
+date: "22/02/2019"
+output:
+  html_document: default
+---
+
+Name: 
+
+Surname:
+
+Badge number:
+
+
+## EXERCIZE 1
+
+a. 
+
+```{r}
+predict.bag = function(train,newdata,fml,ntree){
+# samples
+samples <- sapply(1:ntree,
+FUN = function(iter)
+{sample(1:nrow(train), size=nrow(train), replace=T)
+})
+# treelist
+treelist <-lapply(1:ntree,
+FUN=function(iter)
+{samp <- samples[,iter];
+rpart(fml, train[samp,])
+})
+# predictions
+preds <- sapply(1:length(treelist),
+FUN=function(iter) {
+predict(treelist[[iter]], newdata=test)})
+# output
+predsums <- rowSums(preds)
+out = predsums/length(treelist)
+return(out)
+}
+```
+
+b.
+
+```{r}
+library(MASS)
+set.seed(123)
+istrain =  sample(c(T,F), nrow(Boston), rep=T)
+train = Boston[istrain,]
+test = Boston[!istrain,]
+# rpart
+library(rpart)
+fit = rpart(medv ~ ., train)
+mean( (predict(fit, newdata=test) - test$medv)^2 )
+# bagging
+set.seed(123)
+yhat = predict.bag(train=train, newdata=test, fml="medv ~ .", ntree=100)
+mean( (yhat - test$medv)^2 )
+```
+
+Text answer.
+
+
+## EXERCIZE 2
+
+```{r}
+rm(list=ls())
+set.seed(123)
+n = 1000
+p = 20
+X = matrix(rnorm(p*n), ncol=p)
+beta = c(2,rep(1,p))
+y = beta[1] + X%*%beta[-1] + rnorm(n,mean=0,sd=100)
+combi = data.frame(y=y, X=X)
+train = combi[1:100,]
+test = combi[101:1000,]
+library(leaps)
+fit <- regsubsets(y ~ .,train, nvmax=20)
+hatbeta = matrix(0, ncol=21, nrow=10)
+where = summary(fit)$which
+dk = vector()
+for (k in 1:10){
+ hatbeta[k,where[k,]] <- coef(fit,k)
+ dk[k] <- sqrt( sum( (hatbeta[k,] - beta)^2 )  )
+ }
+plot(1:10,dk)
+```
+
+Text answer.
+
+## EXERCIZE 3
+
+```{r}
+rm(list=ls())
+n=100
+sigma=10
+d = 99
+p = d+1
+Var = p*(sigma^2)/n
+Err = Var + sigma^2
+Err
+```
+

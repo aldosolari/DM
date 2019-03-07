@@ -25,7 +25,7 @@ p = ncol(X)
 n = nrow(X)
 y = longley$GNP.deflator
 lambda <- 0.005
-hatbeta <- solve(t(X) %*% X + lambda*diag(1:p)) %*% t(X) %*% y
+hatbeta <- solve(t(X) %*% X + lambda*diag(p)) %*% t(X) %*% y
 print(hatbeta)
 ```
 
