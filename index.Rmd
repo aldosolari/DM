@@ -30,7 +30,9 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 # Latest announcements
 
-* No news
+* Gli studenti che devono sostenere l'esame nelle sessioni di Giugno/Luglio e Settembre e che non hanno svolto le competizioni sono pregati di contattare il docente via e-mail
+
+* Calendario esami: 3 Luglio LAB719 h 14:00; 16 Luglio LAB713 h 14:00; 18 Settembre LAB713 14:00
 
 # Course material
 
@@ -175,9 +177,9 @@ There are three rounds (time windows) for joining the competitions:
 
 | Competition | 1st: From-To | 2nd: From-To | 3rd: From-To | 
 |----|----|----|----|
-| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
-| [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | ?/6/19 - ?/6/19  |
-| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | ?/6/19 - ?/6/19  |
+| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | 24/6/19 - 28/6/19  |
+| [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | 24/6/19 - 28/6/19  |
+| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | 24/6/19 - 28/6/19  |
 
 
 If a student does not take part in the competitions in the above time windows, he/she must take the __oral exam__ and send via e-mail his/her predictions along with the (reproducible) R code at least one week before the exam.
@@ -233,14 +235,14 @@ See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.ht
 
 Test calendar :
 
-| N.ro |When | Where | Hours | Oral |
+| N.ro |When | Where | Hours |
 |---|---|---|---|---|
-| 1 | 23/11/2018 | LAB713 | 14:00 | 13/12/2018 |
-| 2 | 7/2/2019 | LAB713 | 14:00 | TBD |
-| 3 | 22/2/2019 | LAB713 | 8:30 | TBD |
-| 4 | - | - | - | - |
-| 5 | - | - | - | - |
-| 6 | - | - | - | - |
+| 1 | 23/11/2018 | LAB713 | 14:00 | 
+| 2 | 7/2/2019 | LAB713 | 14:00 | 
+| 3 | 22/2/2019 | LAB713 | 8:30 | 
+| 4 | 5/7/2019 | LAB719 | 14:00 |
+| 5 | 16/7/2019 | LAB713 | 14:00 |
+| 6 | 18/9/2019 | LAB713 | 14:00 |
 
 The **Test** consists of
 
