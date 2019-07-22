@@ -274,6 +274,8 @@ Past exams:
 
 * 05/07/2019: [Marks](exams/DM050719/DM050719_esiti.pdf)
 
+* 16/07/2019: [Marks](exams/DM160719/DM160719_esiti.pdf)
+
 
 ## Acknowledgments {.appendix}
 
