@@ -1,0 +1,24 @@
+---
+title: "Data Mining"
+output:
+  pdf_document: default
+date: "Prova d'esame del 18 Settembre 2019"
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = F, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+**DATA MINING (MODULO DATA SCIENCE)**
+
+| Matricola | Cognome | Nome | Quiz | Lab | Competizioni | Esito | 
+|----|----|----|----|----|----|----|----|
+| 790625 |	CURRI	| JOANA | 1.5 | 6 | 10.32 | 18 | 
+| 835166 |	MODAFERRI	| GIORGIA | 2.5 | 7.5 | 10.65 | 20.65 | 
+| 823968 |	PISANIELLO	| SARA | NA | NA | NA | Assente | 
+| 833063 |	SACCAGGI |	GIACOMO | 2 | 10 | 10.2 | 22.2 |
+
+Si prega di comunicare l’eventuale rifiuto del voto entro le ore 14:00 del giorno 20 Luglio 2019. Per la visione del
+compito si prega di contattare il docente via mail. 
+
+
