@@ -1,11 +1,11 @@
 ---
-title: "Introduction to the course"
+title: "Data Mining"
+subtitle: "Introduction to the course"
 author: Aldo Solari
 output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
-      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true    
@@ -14,18 +14,17 @@ output:
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, 
                       comment=NA, cache=F, R.options=list(width=220),
-                      fig.align='center', out.width='50%', fig.asp=.5)
+                      fig.align='center', out.width='75%', fig.asp=.5)
 ```
 
 
 # Outline
 
 * Course overview
+* Data mining
 * The two cultures
 * Data science
-* Big data
-* Your turn
-
+* Polynomials
 
 ---
 layout: false
@@ -43,17 +42,16 @@ Aldo Solari
 
 **Web page** https://aldosolari.github.io/
 
-**Office hours** Wednesday, 17:00-18:00, room 2030, building U7, II floor
+**Office hours** Wednesday, 17:30-18:30, room 2030, building U7, II floor
 
 **Course page** https://aldosolari.github.io/DM/
 
 
 | When | Where | Hours |
 |---|---|----|
-| Monday | Lab713 | 12:30-15:30 |
-| Thursday | Lab713 | 13:30-15:30|
-| Friday | Lab713 | 12:30-15:30|
-
+| Monday | Lab717 | 13:30-15:30 |
+| Thursday | Lab717 | 13:30-16:30|
+| Friday | Lab717 | 9:30-12:30 |
 .center[**Time table**]
 
 ---
@@ -75,6 +73,24 @@ Aldo Solari
     - estimating predictive performance
 
 ---
+
+# Exam
+
+* The exams consists of two parts:
+
+    - Test (in lab)
+        - questions about theory (open and/or multiple choice)
+        - data analysis in R 
+  
+    - Competitions (homework)
+        - Attending students can form a team (max. 3 persons)
+
+* The final grade is a weighted average of test (1/2) and competitions (1/2)
+
+* See the [course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html) for more information
+
+---
+
 
 # Competitions
 
@@ -100,53 +116,18 @@ Aldo Solari
 ]
 
 .pull-left[
-* [SUS](http://sus.stat.unipd.it/) Padua (8/9/15)
-* [SUS^2](http://www.labeconomia.unisa.it/sus2/) Salerno (7/6/16)
-* [SUS^3](http://local.disia.unifi.it/sus3/) Florence (27/6/17)
-* [SUS^4](https://www.unipa.it/dipartimenti/seas/sus4/) Palermo (19/6/18)
-* SUS^5 Milan ! 
+* [SUS](http://sus.stat.unipd.it/) Padua 8.9.15)
+* [SUS^2](http://www.labeconomia.unisa.it/sus2/) Salerno 7.6.16
+* [SUS^3](http://local.disia.unifi.it/sus3/) Florence 27.6.17
+* [SUS^4](https://www.unipa.it/dipartimenti/seas/sus4/) Palermo 19.6.18
+* [SUS^5](http://www.sus5.unibocconi.eu/wps/wcm/connect/Site/SUS5/Home) Milan 18.6.19
+* [SUS^6] Pisa
 ]
 
 
 ---
 
-# Exam
-
-* The exams consists of two parts:
-
-    - Test (in lab)
-        - Programming exercises (selected R scripts available)
-        - "Few" multiple-choice/open questions about theory 
-
-    - Competitions (homework)
-        - Attending students can form a team (max. 3 persons)
-
-* The final grade is a weighted average of test (1/2) and competitions (1/2)
-
-* See the [course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html) for more information
-
----
-
-# This year competitions
-
-* **House prices** (30%) Individual competition
-
-* **OkCupid** (40%) Individual/Team
-
-* **BikeSharing** (30%) Individual/Team
-
-* There are 3 rounds (time windows) per academic year in which you can join the competitions and submit your predictions
-
-* You can join the competitions __only once__ per academic year. The score will expire at the end of the academic year
-
-
-| Competition | Problem | 1st: From-To | 2nd: From-To | 3rd: From-To | 
-|----|----|----|----|----|
-| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | Regression | 8/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| [OkCupid](docs/competitions/OkCupid/OkCupid.html) | Classification | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | Regression | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
-.center[Competitions timeline]
-
+# SUS^5
 
 
 
@@ -413,80 +394,6 @@ __Computational problem__
 Solve (by hand!) the system of equations $\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T} \mathbf{y}$
 
 Gauss solution: fast optimization algorithm (Gaussian elimination)
-
----
-layout: false
-class: inverse, middle, center
-
-# Big Data
-
----
-
-# Big data revolution
-
-```{r, echo=FALSE, fig.align = 'center', out.width = '50%', out.height = '50%'}
-knitr::include_graphics("images/magazines.jpg")
-```
-
-
----
-
-# Big data
-
-> is a term for data sets that are so large or complex that traditional data processing application software is inadequate to deal with them
-
-
-> Wikipedia
-
-* If you have several gigabytes of data or several million
-observations, standard relational databases become unwieldy;
-databases to manage data of this size are generically known
-as NoSQL databases
-
-* Tools for manipulating big data are given in the next table (but won't be covered in this course)
-
----
-
-.pull-left[
-
-![](images/tools.png)
-
-]
-
-.pull-right[
-Reading: [Varian (2013) Big Data: New Tricks for Econometrics](http://people.ischool.berkeley.edu/~hal/Papers/2013/ml.pdf)
-]
-
-
----
-
-# Data: tall and fat
-
-The outcome of the big-data processing:
-
-data set = $n \times p$ matrix
-
-BIG $n$ = TALL = computational problem
-
-BIG $p$ = FAT = curse of dimensionality
-
-Which of the two is more problematic? Why?
-
----
-
-# The end of theory?
-
-Petabytes allow us to say: correlation is enough
-
-
-![](images/end.jpg)
-
-
-Anderson (2008) The End of Theory: The Data Deluge Makes
-the Scientific Method Obsolete, Wired Magazine 16.07
-
-
-
 
 ---
 layout: false

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>Introduction to the course</title>
-    <meta charset="utf-8">
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
@@ -11,7 +11,8 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Introduction to the course
+# Data Mining
+## Introduction to the course
 ### Aldo Solari
 
 ---
@@ -23,11 +24,10 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Course overview
+* Data mining
 * The two cultures
 * Data science
-* Big data
-* Your turn
-
+* Polynomials
 
 ---
 layout: false
@@ -45,17 +45,16 @@ Aldo Solari
 
 **Web page** https://aldosolari.github.io/
 
-**Office hours** Wednesday, 17:00-18:00, room 2030, building U7, II floor
+**Office hours** Wednesday, 17:30-18:30, room 2030, building U7, II floor
 
 **Course page** https://aldosolari.github.io/DM/
 
 
 | When | Where | Hours |
 |---|---|----|
-| Monday | Lab713 | 12:30-15:30 |
-| Thursday | Lab713 | 13:30-15:30|
-| Friday | Lab713 | 12:30-15:30|
-
+| Monday | Lab717 | 14:00-15:30 |
+| Thursday | Lab717 | 14:00-16:30|
+| Friday | Lab717 | 10:00-12:30 |
 .center[**Time table**]
 
 ---
@@ -77,6 +76,24 @@ Aldo Solari
     - estimating predictive performance
 
 ---
+
+# Exam
+
+* The exams consists of two parts:
+
+    - Test (in lab)
+        - questions about theory (open and/or multiple choice)
+        - data analysis in R 
+  
+    - Competitions (homework)
+        - Attending students can form a team (max. 3 persons)
+
+* The final grade is a weighted average of test (1/2) and competitions (1/2)
+
+* See the [course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html) for more information
+
+---
+
 
 # Competitions
 
@@ -102,53 +119,18 @@ Aldo Solari
 ]
 
 .pull-left[
-* [SUS](http://sus.stat.unipd.it/) Padua (8/9/15)
-* [SUS^2](http://www.labeconomia.unisa.it/sus2/) Salerno (7/6/16)
-* [SUS^3](http://local.disia.unifi.it/sus3/) Florence (27/6/17)
-* [SUS^4](https://www.unipa.it/dipartimenti/seas/sus4/) Palermo (19/6/18)
-* SUS^5 Milan ! 
+* [SUS](http://sus.stat.unipd.it/) Padua 8.9.15)
+* [SUS^2](http://www.labeconomia.unisa.it/sus2/) Salerno 7.6.16
+* [SUS^3](http://local.disia.unifi.it/sus3/) Florence 27.6.17
+* [SUS^4](https://www.unipa.it/dipartimenti/seas/sus4/) Palermo 19.6.18
+* [SUS^5](http://www.sus5.unibocconi.eu/wps/wcm/connect/Site/SUS5/Home) Milan 18.6.19
+* [SUS^6] Pisa
 ]
 
 
 ---
 
-# Exam
-
-* The exams consists of two parts:
-
-    - Test (in lab)
-        - Programming exercises (selected R scripts available)
-        - "Few" multiple-choice/open questions about theory 
-
-    - Competitions (homework)
-        - Attending students can form a team (max. 3 persons)
-
-* The final grade is a weighted average of test (1/2) and competitions (1/2)
-
-* See the [course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html) for more information
-
----
-
-# This year competitions
-
-* **House prices** (30%) Individual competition
-
-* **OkCupid** (40%) Individual/Team
-
-* **BikeSharing** (30%) Individual/Team
-
-* There are 3 rounds (time windows) per academic year in which you can join the competitions and submit your predictions
-
-* You can join the competitions __only once__ per academic year. The score will expire at the end of the academic year
-
-
-| Competition | Problem | 1st: From-To | 2nd: From-To | 3rd: From-To | 
-|----|----|----|----|----|
-| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | Regression | 8/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| [OkCupid](docs/competitions/OkCupid/OkCupid.html) | Classification | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19 | ?/6/19 - ?/6/19  |
-| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | Regression | 16/10/18 - 16/11/18 | ?/1/19 - ?/1/19  | ?/6/19 - ?/6/19  |
-.center[Competitions timeline]
-
+# SUS^5
 
 
 
@@ -414,78 +396,6 @@ Gauss solution: fast optimization algorithm (Gaussian elimination)
 layout: false
 class: inverse, middle, center
 
-# Big Data
-
----
-
-# Big data revolution
-
-&lt;img src="images/magazines.jpg" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
-
-
----
-
-# Big data
-
-&gt; is a term for data sets that are so large or complex that traditional data processing application software is inadequate to deal with them
-
-
-&gt; Wikipedia
-
-* If you have several gigabytes of data or several million
-observations, standard relational databases become unwieldy;
-databases to manage data of this size are generically known
-as NoSQL databases
-
-* Tools for manipulating big data are given in the next table (but won't be covered in this course)
-
----
-
-.pull-left[
-
-![](images/tools.png)
-
-]
-
-.pull-right[
-Reading: [Varian (2013) Big Data: New Tricks for Econometrics](http://people.ischool.berkeley.edu/~hal/Papers/2013/ml.pdf)
-]
-
-
----
-
-# Data: tall and fat
-
-The outcome of the big-data processing:
-
-data set = `\(n \times p\)` matrix
-
-BIG `\(n\)` = TALL = computational problem
-
-BIG `\(p\)` = FAT = curse of dimensionality
-
-Which of the two is more problematic? Why?
-
----
-
-# The end of theory?
-
-Petabytes allow us to say: correlation is enough
-
-
-![](images/end.jpg)
-
-
-Anderson (2008) The End of Theory: The Data Deluge Makes
-the Scientific Method Obsolete, Wired Magazine 16.07
-
-
-
-
----
-layout: false
-class: inverse, middle, center
-
 # Your turn
 
 ---
@@ -527,7 +437,7 @@ test &lt;- data.frame(x=df$x, y=df$y.tomorrow)
 plot( y ~ x , train)
 ```
 
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-5-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-4-1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -570,7 +480,7 @@ plot( y ~ x , train)
 lines( yhat ~ x, train)
 ```
 
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-6-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-5-1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 ```r
 # MSE.tr
@@ -600,7 +510,7 @@ MSEs.tr &lt;- unlist( lapply(fits, deviance) )/n
 plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
 ```
 
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-7-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-6-1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -620,7 +530,7 @@ MSEs.te &lt;- unlist(lapply(yhats,
 plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
 ```
 
-&lt;img src="1_Intro_files/figure-html/unnamed-chunk-8-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="1_Intro_files/figure-html/unnamed-chunk-7-1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 ```r
 # best?
@@ -631,9 +541,9 @@ ps[which.min(MSEs.te)]
 [1] 5
 ```
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
 "highlightLanguage": "R",
 "countIncrementalSlides": false,
 "highlightLines": true
@@ -641,16 +551,74 @@ ps[which.min(MSEs.te)]
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -664,7 +632,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

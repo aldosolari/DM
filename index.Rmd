@@ -20,52 +20,38 @@ The goal of *predictive modeling* is to construct models that generate accurate 
 
 Participating in predictive modelling *competitions* can help you gain practical experience and  improve your data modelling skills in various domains such as credit, insurance, marketing, sales' forecasting etc.  At the same time you get to do it in a competitive context against dozens of participants where each one tries to build the most predictive algorithm. Since 2015, this course utilises [BeeViva](http://www.bee-viva.com/competitions), the __first__ Italian public data platform for hosting [#Competitions](#competitions). 
 
-See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html)** for more information. 
-
-| When | Where | Hours |
-|---|---|----|
-| Monday | Lab713 | 12:30-15:30 |
-| Thursday | Lab713 | 13:30-15:30|
-| Friday | Lab713 | 12:30-15:30|
 
 # Latest announcements
 
-* Gli studenti che devono sostenere l'esame nelle sessioni di Giugno/Luglio e Settembre e che non hanno svolto le competizioni sono pregati di contattare il docente via e-mail
-
-* Calendario esami: 5 Luglio LAB719 h 14:00; 16 Luglio LAB713 h 14:00; 18 Settembre LAB713 14:00
+* First lecture: October 1st, Lab. 717 h. 13:30
 
 # Course material
 
 Most of the course material can be found in the notes linked to below. The notes are supplemented by readings which are listed in the [#Reading](#reading) section.
 
-| N | Date |  Lecture    | Notes | Slides|
-|--|--|--------------|--------|-------|
-| 1 | October 1 | Introduction | [Polynomials](docs/notes/1_Polynomials/1_Polynomials.html) | [Slides](docs/slides/1_Intro/1_Intro.html) |
-| 2 | October 4 | Bias-Variance Decomposition | [BiasVar](docs/notes/2_BiasVar/2_BiasVar.html) | [Slides](docs/slides/2_BiasVar/2_BiasVar_slides.html) |
-| 3 | October 5  | Optimism, IC and CV | [ICCV](docs/notes/3_ICCV/3_ICCV.html) | [Slides](docs/slides/3_ICCV/3_ICCV_slides.html) |
-|  |  |  |  | | |
-| 4 | October 8 | Non-parametric regression  | [NPR](docs/notes/4_NPR/4_NPR.html) | [Slides](docs/slides/4_NPR/4_NPR_slides.html) |
-| 5 | October 11| Random-X prediction error | [RPE](docs/notes/5_RPE/5_RPE.html)  | [Slides](docs/slides/5_RPE/5_RPE_slides.html) |
-| 6 | October 12 | EDA and the modelling process | - | [Slides](docs/slides/6_EDA/6_EDA_slides.html) |
-|  |  |  |  | | |
-| 7 | October 15 | Titanic data | -  | [Slides](docs/slides/7_Titanic/7_Titanic_slides.html)  |
-| 8 | October 18 | Bagging | [BAG](docs/notes/8_BAG/8_BAG.html) | [Slides](docs/slides/8_BAG/8_BAG_slides.html) |
-| 9 | October 19 | Random Forests | - | [Slides](docs/slides/9_RF/9_RF_slides.html) |
-|  |  |  |  | | |
-| 10 | October 22 | Spam and Boston data | - | - |
-| 11 | October 25 | Class imbalance | - | [Slides](docs/slides/11_CImb/11_CImb_slides.html) | 
-| 12 | October 26 | Ridge regression | - | [Slides](docs/slides/12_Ridge/12_Ridge_slides.html) |
-|  |  |  |  | | |
-| 13 | October 29 | Lasso and best subset selection | - | [Slides](docs/slides/13_Lasso/13_Lasso_slides.html)  |
-|  |  |  |  | | |
-| 14 | November 12 | Orange data | -  | [Slides](docs/slides/14_Orange/14_Orange_slides.html) |
-| 15 | November 15 | [Quiz](https://docs.google.com/forms/d/e/1FAIpQLSeAeV1fJlrxoBZZtmcye-NCeQDzGjpw7VT9vGB8Eb9RmaPDUQ/viewform?usp=sf_link) and [programming exercize](https://aldosolari.github.io/DM/exams/exercize_text.pdf)  | - | - |
-| 16 | November 16 | Competitions results and discussion | - | [Slides](docs/slides/16_Github/16_Github_slides.html) |
+| N | Date | Lab | Hours | Topics | Material |
+|--|--|--------|--------|--------|--------|
+| 1 | 1.10.19 | 717 | 13:30 - 16:30 (3h) | Introduction to the course | [Slides](docs/slides/1_Intro/1_Intro.html) |
+| 2 | 3.10.19 | 713 | 9:30 - 12:30 (3h) | Bias-variance decomposition |  [Slides](docs/slides/2_BiasVar/2_BiasVar.html) |
+| 3 | 7.10.19 | 717 | 13:30 - 14:30 (1h) | Optimism | TBD |
+| 4 | 8.10.19 | 717 | 13:30 - 16:30 (3h) | IC and CV | TBD |
+| 5 | 10.10.19 | 717 | 9:30 - 12:30 (3h) | Non-parametric regression | TBD |
+| 6 | 14.10.19 | 717 | 13:30 - 14:30 (1h)  | TBD | TBD |
+| 7 | 15.10.19 | 717 | 13:30 -  14:30 (1h) | TBD | TBD |
+| 8 | 17.10.19 | 717 | 9:30 - 12:30 (3h) | The modelling process | TBD |
+| 9 | 21.10.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
+| 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
+| 11 | 24.10.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
+| 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
+| 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
+| 14 | 31.10.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
+| 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
+| 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
+| 17 | 7.11.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
 
-The lecture notes and course webpage were done with [R Markdown](https://rmarkdown.rstudio.com/).
-All of the course material is on the [github repo](https://github.com/aldosolari/DM) including the [.Rmd files](https://github.com/aldosolari/DM/tree/master/docs/notes) for the [notes](https://github.com/aldosolari/DM/tree/master/docs/notes). The course material is in the lecture notes and reading. The [slides](https://github.com/aldosolari/DM/tree/master/docs/slides) are visual aids for the lectures.
 
- 
+The lecture notes and course webpage were created with [R Markdown](https://rmarkdown.rstudio.com/).
+All of the course material is on the [github repo](https://github.com/aldosolari/DM). 
 Download the .Rmd files, modify as you like and decide the output format (PDF, HTML or Word). To extract the R code from a .Rmd file use
 
 ```{r, eval=F, echo=TRUE}
@@ -73,7 +59,7 @@ knitr::purl("../filename.Rmd")
 ```
 
 
-We will use R Markdown quite a bit in the class, and its use is __required__ for the Test (in lab) where the Programming exercises must be solved with R Markdown by generating an HTML file containing the answers, which will be uploaded to the "CONSEGNA" folder.
+We will use R Markdown quite a bit in the class, and its use is __required__ for the Test (in lab) where the data analysis must be solved with R Markdown by generating an HTML file, which will be uploaded to the "CONSEGNA" folder.
 
 You can read more about R Markdown in [Chapter 27 of r4ds](http://r4ds.had.co.nz/r-markdown.html#r-markdown-basics). This [document](https://m-clark.github.io/Introduction-to-Rmarkdown/) may be helpful to get started with R Markdown.
 R Markdown is an example of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), a concept introduced by Donald Knuth saying _you should write code that communicates primarily to humans, not computers_.
@@ -81,147 +67,114 @@ R Markdown is an example of [literate programming](https://en.wikipedia.org/wiki
 
 # Reading
 
-Readings should be complete by the following class. There are three primary references:
+**Books**
 
-- [Introduction to Statistical Learning with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (ISLR)
+There are two primary references:
+
 - [Analisi dei dati e data mining](http://azzalini.stat.unipd.it/Book-DM/index.html) (AS)
+- [Introduction to Statistical Learning with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (ISLR)
+
+As a supplement to the textbook ISLR, you may also want to watch the excellent course lecture  [videos](https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/). A more advanced reference is
+
+- [The Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/) (ESL)
+
+For improving R programming and predictive modeling skills, there are three references: 
+
 - [R for Data Science](http://r4ds.had.co.nz/) (r4ds)
+- [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) (APM)
+- [Feature Engineering and Selection](http://www.feat.engineering/) (FEV)
 
-As a supplement to the textbook ISLR, you may also want to watch the excellent course lecture videos (linked below)
-
-- [Video](https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/)
-
-With regard to the exercises at the end of each chapter of ISLR, there are solutions provided by students you can use to check your work
-
-- [Solutions](https://blog.princehonest.com/stat-learning/)
+**Lectures**
 
 **October 1** Introduction to the course
 
 - ISLR 1, 2.1, 2.2.1, 7.1 
 - AS 3.1, 3.2
-- [Breiman (2001)](http://www2.math.uu.se/~thulin/mm/breiman.pdf), [Carmichael and Marron (2018)](https://arxiv.org/pdf/1801.00371.pdf) (optional)
+- Data Mining and Statistics: [Friedman (1998)](http://docs.salford-systems.com/dm-stat.pdf)
+- The Two Cultures: [Breiman (2001)](http://www2.math.uu.se/~thulin/mm/breiman.pdf)
+- 50 years of Data Science: [Donoho (2015)](https://courses.csail.mit.edu/18.337/2015/docs/50YearsDataScience.pdf)
+- Data Science vs Statistics: [Carmichael and Marron (2018)](https://arxiv.org/pdf/1801.00371.pdf) 
 
 
-**October 4** Bias-variance decomposition
+**October 3** Bias-variance decomposition
 
 - ISLR  2.2.2, 6.1.3
 - AS 3.3, 3.5.3
 
-**October 5** Optimism, information criteria and cross-validation
+**October 7** TBD
 
-- ISLR 5.1.1-5.1.4
-- AS  3.5.1, 3.5.2
+- TBD
 
-**October 8** Nonparametric regression
+**October 8** 
 
-- the [caret](http://topepo.github.io/caret/index.html) package
+- TBD
 
-**October 11** Random-X prediction error
+**October 10** 
 
-- [Rosset and Tibshirani (2018) ArXiv](https://arxiv.org/pdf/1704.08160.pdf) (optional)
+- TBD
 
-**October 12** EDA and the modeling process
+**October 14** 
 
-- AS 2
-- r4ds 1, 2, 3
+- TBD
 
-**October 12** The Titanic dataset
+**October 15** 
 
-- ISLR 2.2.3, 5.1.5
+- TBD
 
-**October 18** Bagging
+**October 17** 
 
-- ISLR 8.2.1
-- AS 5.8.1
+- TBD
 
-**October 19** Random Forests
+**October 21** 
 
-- ISLR 8.2.2
-- AS 5.8.3
+- TBD
 
-**October 22** Spam and Boston data
+**October 22** 
 
-**October 25** Class imbalance
+- TBD
 
-**October 26** Ridge regression
+**October 24** 
 
-- ISLR 6.2.1, 6.4
-- AS 3.6.3
+- TBD
 
-**October 29** Lasso and best subset selection
+**October 28** 
 
-- ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
+- TBD
 
-**November 12** Orange data
+**October 29** 
 
-**November 15** Quiz and programming exercise
+- TBD
 
-**November 16** Competitions results and discussion
+**October 31** 
 
+- TBD
+
+**October 4** 
+
+- TBD
+
+**October 5** 
+
+- TBD
+
+**October 7** 
+
+- TBD
 
 
 # Competitions
 
+Please read carefully the [competition instructions](https://aldosolari.github.io/DM/).
+Time window for joining the competitions:
+
+| Competition | Problem | Period |  
+|----|----|----|
+| TBD | Regression | 21.10.19 - 15.11.19 |
+| TBD | Classification |  21.10.19 - 15.11.19 |
+
+If a student does not take part in the competitions in the above time window, he/she must send via e-mail his/her predictions and publish on github the (reproducible) R code at least one week before the exam.
+
 The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off). I would like to thank BeeViva and in particular [Livio Finos](http://www.liviofinos.net/), [Dario Solari](https://www.linkedin.com/in/dariosolari/?originalSubdomain=it) and [Tomaso "Minni" Minelli](https://github.com/minni). The competitions offered in this course would not have been possible without their constant and precious support.
-
-
-If you click on a specific Competition in the listing, you will go to the Competition's homepage. The following information is provided in the tabs:
-
-1. *Description* gives a description of the problem
-2. *Data* is where you can download the data splitted into training set and test set
-3. *Evaluation* describes how to format your submission file and how your submissions will be evaluated. Each competition employs a metric (RMSE, Accuracy, etc.) that serves as the objective measure for how competitors are ranked on the leaderboard.
-4. *Timeline* for joining the competition: an entry deadline and a submission deadline (after which no new submissions will be accepted). After the deadline passes, partecipants get a final score.
-5. *Leaderboard*. Submissions can be made through through manual upload in the competition platform. Submissions are scored immediately and summarized on a live leaderboard.
-
-There are three rounds (time windows) for joining the competitions:
-
-| Competition | 1st: From-To | 2nd: From-To | 3rd: From-To | 
-|----|----|----|----|
-| [Houses prices](docs/competitions/Houseprices/Houseprices.html) | 8/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | 24/6/19 - 28/6/19  |
-| [OkCupid](docs/competitions/OkCupid/OkCupid.html)  | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19 | 24/6/19 - 28/6/19  |
-| [Bikesharing](docs/competitions/Bikesharing/Bikesharing.html) | 16/10/18 - 16/11/18 | 28/1/19 - 5/2/19  | 24/6/19 - 28/6/19  |
-
-
-If a student does not take part in the competitions in the above time windows, he/she must take the __oral exam__ and send via e-mail his/her predictions along with the (reproducible) R code at least one week before the exam.
-
-
-There are two references that use the `caret` R package that you can use for improving your predictive modeling skills:
-
-- [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) (APM)
-- [Feature Engineering and Selection](http://www.feat.engineering/) (FEV)
-
-and the following short introduction
-
-- [Introduction to Machine Learning]( https://m-clark.github.io/introduction-to-machine-learning/)
-
-
-All students must follow a __code of conduct__, which covers issues such as plagiarism, falsification, unauthorized assistance, cheating, and other grievous acts of academic dishonesty. Violations of the code of conduct will not be taken lightly. For the competitions,
-
-* you are encouraged to work in a team. The competition score will be adjusted based on __peer ratings__ (see [peer ratings in coorperative learning teams](http://www4.ncsu.edu/unity/lockers/users/f/felder/public/Papers/kaufman-asee.PDF)). This multiplier will range from 1.05 (for people who go above and beyond) down to 0 (for people who don’t participate). As a last resort you may fire a team member who refuses to participate. Please contact the instructor well before it comes to this
-
-* you must __publish on-line__ the code used to get the final prediction
-
-* you can join the competitions __only once__ per academic year. The score will expire at the end of the academic year
-
-* you are encouraged to use online resources (unseen models, other people analyses, etc.) as long as you __cite__ a resource you borrow code from. Blind copy/paste from other people code will have a multiplier of 0  
-
-* you are expected to be able to __explain your code by your self__ if required by the teacher
-
-Example of how to create the file to be published on-line containing the code used to get the final prediction: [.Rmd](docs/competitions/publish_example.Rmd) and [.html](docs/competitions/publish_example.html) 
-
-
-### 1st round
-
-* [List of participants](docs/competitions/Participants.html)
-
-* [Results](docs/competitions/Competitions1_points.html) 
-
-| Competition | Partial | Final | Points |
-|----|----|----|----|
-| House prices | [partial](docs/competitions/Houseprices/Houseprices_partial1.html) | [final](docs/competitions/Houseprices/Houseprices_final1.html)  | [points](docs/competitions/Houseprices/Houseprices_points1.html) |
-| Bikesharing  | [partial](docs/competitions/Bikesharing/Bikesharing_partial1.html) | [final](docs/competitions/Bikesharing/Bikesharing_final1.html) | [points](docs/competitions/Bikesharing/Bikesharing_points1.html) |
-| OkCupid | [partial](docs/competitions/OkCupid/OkCupid_partial1.html) | [final](docs/competitions/OkCupid/OkCupid_final1.html) | [points](docs/competitions/OkCupid/OkCupid_points1.html) |
-
 
 
 # Exams
@@ -231,52 +184,26 @@ The exam consists of two parts:
   * **Test** (in Lab)
   * **Competitions** (Homework)
   
-See the **[course syllabus](https://aldosolari.github.io/DM/syllabus/syllabus.html)** for more information.
-
 Test calendar :
 
-| N.ro |When | Where | Hours |
+| N.ro | Date | Lab | Hours |
 |---|---|---|---|---|
-| 1 | 23/11/2018 | LAB713 | 14:00 | 
-| 2 | 7/2/2019 | LAB713 | 14:00 | 
-| 3 | 22/2/2019 | LAB713 | 8:30 | 
-| 4 | 5/7/2019 | LAB719 | 14:00 |
-| 5 | 16/7/2019 | LAB713 | 14:00 |
-| 6 | 18/9/2019 | LAB713 | 14:00 |
+| 1 | 18.11.19 | TBD | 14:00 | 
+| 2 | 30.1.20 | TBD | 14:00 | 
+| 3 | 13.2.20 | TBD | 14:00 | 
+
 
 The **Test** consists of
 
-* answering to multiple-choice/open **questions** about theory
-* solving **programming exercises** with R 
+* **questions** about the theory (open and/or multiple-choice)
+* **data analysis** with R 
 
-Some of the questions and/or programming exercises may be taken 
-from the book ISLR. For the programming exercises, the following R code will be available in the "TESTO" folder:
+For the data analysis, the following R code will be available in the "TESTO" folder:
 
 * [Code from ISLR](https://aldosolari.github.io/DM/exams/codeISLR.pdf)
-* [Code from the lectures](https://aldosolari.github.io/DM/exams/codeNOTES.pdf)
 
-In the "TESTO" folder, you will also find 
+For the data analysis, you have to write the R code in a .Rmd file and then use the **Knit** button to generate an HTML file, which will be uploaded to the "CONSEGNA" folder. Other formats will not be accepted. 
 
-* PDF file with the description of the exercises (see [example](https://aldosolari.github.io/DM/exams/example_text.pdf))
-* RMarkdown file (see [example](https://aldosolari.github.io/DM/exams/example.Rmd))
-
-In the RMarkdown file you have to write the R code solving the exercises. Then use the **Knit** button to generate an HTML file containing the answers, which will be uploaded to the "CONSEGNA" folder (see [example](https://aldosolari.github.io/DM/exams/example_solution.html)). Other formats will not be accepted. 
-
-Past exams:
-
-* 23/11/2018: [Text](https://aldosolari.github.io/DM/exams/DM231118/DM231118_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM231118/DM231118_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM231118/DM231118_esiti.pdf)
-
-
-* 07/02/2019: [Text](https://aldosolari.github.io/DM/exams/DM070219/DM070219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM070219/DM070219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM070219/DM070219_esiti.pdf)
-
-
-* 22/02/2019: [Text](https://aldosolari.github.io/DM/exams/DM220219/DM220219_text.pdf) - [Solution](https://aldosolari.github.io/DM/exams/DM220219/DM220219_solution.html) - [Marks](https://aldosolari.github.io/DM/exams/DM220219/DM220219_esiti.pdf)
-
-* 05/07/2019: [Marks](exams/DM050719/DM050719_esiti.pdf)
-
-* 16/07/2019: [Marks](exams/DM160719/DM160719_esiti.pdf)
-
-* 18/09/2019: [Marks](exams/DM180919/DM180919_esiti.pdf)
 
 
 ## Acknowledgments {.appendix}
@@ -284,12 +211,10 @@ Past exams:
 Much of the course content was inspired by the following courses:
 
 * [Analisi dei dati (Data Mining)](https://www.didattica.unipd.it/off/2018/LM/SC/SS1736/000ZZ/SCP4062891/N0)
+* [Statistical/Machine Learning](https://www.tau.ac.il/~saharon/StatLearn.html)
 * [STOR 390: Introduction to Data Science](https://idc9.github.io/stor390/)
-* [36-402: Undergraduate Advanced Data Analysis](http://www.stat.cmu.edu/~cshalizi/uADA/17/)
 * [36-708: Statistical Machine Learning](http://www.stat.cmu.edu/~larry/=sml/)
-* [Statistics 36-462/36-662: Data Mining](http://www.stat.cmu.edu/~ryantibs/datamining/)
-* [Applied Machine Learning](https://github.com/topepo/NY-ML-2018)
-
+* [36-402: Undergraduate Advanced Data Analysis](http://www.stat.cmu.edu/~cshalizi/uADA/17/)
 
 and on a number of other sources. 
 
