@@ -129,7 +129,7 @@ Aldo Solari
 
 
 ```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
-knitr::include_graphics("images/sus5winners.JPG")
+knitr::include_graphics("images/sus5winners.jpg")
 ```
 .center[Team **GoldFisher** (from the left): Beatrice Somaschini, Federico Melograna, Alice Giampino, Nicholas Missineo  - **Best Predictive Performance**]
 
