@@ -608,4 +608,3 @@ plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
 ps[which.min(MSEs.te)]
 ```
 
-

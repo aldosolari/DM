@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Bias-variance decomposition
+### Aldo Solari
+
+---
+
+
+
+
+# Outline
+
+* Prediction error
+* Bias-variance decomposition 
+* Bias-variance trade-off
+
+
+---
+
+# Matrix notation
+
+Training set 
+`$$(x_1,y_1),\ldots,(x_n,y_n)$$` 
+Test set 
+`$$(x_1,y^*_1),\ldots,(x_n,y^*_n)$$`
+where `\(x_1,\ldots,x_n\)` are treated as fixed (Fixed-X setting).
+
+In **matrix notation**: vector of response `\(\mathbf{y}\)` and design matrix `\(\mathbf{X}\)`
+
+`$$\underset{n\times 1}{\mathbf{y}} = 
+\left[
+\begin{array}{c}
+y_1   \\
+\cdots\\
+y_i  \\
+\cdots\\
+y_n \\
+\end{array}\right] \qquad
+\underset{n\times p}{\mathbf{X}} = \left[
+\begin{array}{cccccc}
+x_{1}^\mathsf{T}   \\
+x_{2}^\mathsf{T}  \\
+\cdots   \\
+x_{i}^\mathsf{T}    \\
+\cdots\\
+x_{n}^\mathsf{T}\\
+\end{array}\right] = \left[
+\begin{array}{cccccc}
+x_{11}  &amp; x_{12}  &amp; \cdots   &amp;  x_{1j}  &amp; \cdots   &amp;   x_{1p}  \\
+x_{21}  &amp; x_{22} &amp; \cdots   &amp;  x_{2j}  &amp; \cdots   &amp;   x_{2p}  \\
+\cdots   &amp; \cdots   &amp;  \cdots &amp; \cdots   &amp;  \cdots  \\
+x_{i1}  &amp; x_{i2} &amp; \cdots   &amp;  x_{ij}&amp; \cdots   &amp; x_{ip}    \\
+\cdots   &amp; \cdots   &amp;  \cdots  &amp;  \cdots   &amp;  \cdots\\
+x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{np}\\
+\end{array}\right]$$`
+
+
+---
+
+# Design matrix of a 3rd degree polynomial 
+
+
+```
+  Intercept         x       x^2       x^3
+1         1 0.5000000 0.2500000 0.1250000
+2         1 0.5862069 0.3436385 0.2014433
+3         1 0.6724138 0.4521403 0.3040254
+4         1 0.7586207 0.5755054 0.4365903
+5         1 0.8448276 0.7137337 0.6029819
+6         1 0.9310345 0.8668252 0.8070442
+```
+
+Note that we have only 1 variable, `\(x\)`, but the 3rd degree polynomial model has dimension `\(p=4\)` because it includes the intercept and `\(x,x^2,x^3\)`
+
+---
+
+# The signal and the noise
+
+The responses `\(y_1, \ldots, y_n\)` are realizations of the random variables
+`$$Y_i = f(x_i)+ \varepsilon_i, \quad i=1,\ldots,n$$`
+where
+
+* `\(f\)` is the unknown __regression function__ (signal)
+
+* `\(\varepsilon\)` is the **error** (noise) &lt;br&gt;
+with 
+`\(\varepsilon_1,\ldots,\varepsilon_n\)` i.i.d. with `\(\mathbb{E}(\varepsilon)=0\)` and `\(\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2\)`. 
+
+
+---
+
+# Signal
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+
+# Noise
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+
+# Overfitting
+
+Mistaking noise for signal
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Prediction error
+
+
+* Suppose we have estimated `\(f\)` by `\(\hat{f}\)` by using the training set
+
+* Loss function = mean squared error (MSE)
+
+* The __prediction error__ `\(\mathrm{ErrF}\)` (Fixed-X setting) is 
+`$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right]= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$`
+
+* This is the error that we wish to minimize, i.e. `\(\mathrm{MSE}_{\mathrm{Te}}\)` on average
+
+---
+layout: false
+class: inverse, middle, center
+
+# Bias-Variance Decomposition 
+
+---
+
+# Sources of error
+
+1. **Irreducible error** &lt;br&gt;
+Can we ever predict `\(Y\)` from `\(X\)` with zero error? No. Even
+the true regression function `\(f\)` cannot do this
+
+2. **Estimation bias** &lt;br&gt;
+What happens if our fitted function `\(\hat{f}\)` belongs to a model
+class that is far from the true `\(f\)`? E.g. we choose to fit a
+regression line in a setting where the true relationship is far
+from linear?
+
+3. **Estimation variance** &lt;br&gt;
+What happens if our fitted function `\(\hat{f}\)` is itself quite variable?
+In other words, over different copies of the training data, we
+end up constructing substantially different `\(\hat{f}\)`?
+
+
+---
+
+# Irreducible and reducible error 
+
+* Suppose we predict `\(y^*_i\)` by `\(\hat{y}_i^* = \hat{f}(x_i)\)` where `\(\hat{f}\)` is an estimate of `\(f\)` based on the training data
+
+* The accuracy of `\(\hat{y}^*_i\)` as a prediction for `\(y^*_i\)` depends on two quantities, which we call the __reducible error__ and the __irreducible error__ 
+
+* We have 
+`$$\mathbb{E}[(Y^*_{i} - \hat{Y}^*_i)^2] = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] = \underbrace{\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2]}_{\mathrm{Reducible}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{Irreducible}}$$`
+where `\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)`
+
+* (Justify the second equality)
+
+---
+
+# Reducible error
+
+* The reducible error can be decomposed into (squared) __bias__ and __variance__ of the estimator `\(\hat{f}\)`, respectively:
+
+`\begin{aligned}
+\mathbb{E}[(f(x_i)  -  \hat{f}(x_i))^2] &amp; = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i))^2]\\
+&amp; =
+\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{[\mathrm{Bias}(\hat{f}(x_i))]^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Variance}(\hat{f}(x_i))}\\
+\end{aligned}`
+
+* Summing up, the decomposition of the prediction error is
+
+`$$\mathrm{ErrF} =  \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Bias}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Variance}}$$`
+
+* Bias and variance are conflicting entities, and we cannot
+minimize both simultaneously. We must therefore choose a __trade-off__ between bias and variance.
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Simulation 
+
+---
+
+
+
+```r
+ftrue &lt;- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
+x = seq(.5,3,length=30)
+plot(x,ftrue, type="l", col=4)
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+# Simulation
+
+* Consider the polynomial regression of degree `\(d\)`.
+We will perform a simulation to compute  `\(\mathrm{Bias}^2\)` and  `\(\mathrm{Variance}\)`
+
+
+
+```r
+# setting
+sigmatrue=0.01
+n = length(x)
+B = 100
+# simulation function
+sim = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+}
+```
+
+---
+
+.pull-left[
+
+
+```r
+# 3rd degree polynomial
+d = 3
+set.seed(123)
+yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1, ylim=c(.45,.55))
+lines(x,ftrue, col=4)
+Ehatf = apply(yhats,1,mean)
+lines(x,Ehatf)
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+
+```r
+Bias2 = (ftrue - Ehatf)^2
+Var = apply(yhats,1,var)
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1), ylim=c(0,0.00012))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+]
+
+---
+
+.pull-left[
+
+
+```r
+# 12th degree polynomial
+d = 12
+set.seed(123)
+yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1, ylim=c(.45,.55))
+lines(x,ftrue, col=4)
+Ehatf = apply(yhats,1,mean)
+lines(x,Ehatf)
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+
+```r
+Bias2 = (ftrue - Ehatf)^2
+Var = apply(yhats,1,var)
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1), ylim=c(0,0.00012))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+# Linear model
+
+* Note that the expected value `\(\mathbb{E}\hat{f}(x_i)\)` can be obtained by fitting the polynomial model using `\(y_i = f(x_i)\)`. This allows to compute the squared bias `\([\mathrm{Bias}(\hat{f})]^2= \frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2\)`
+
+
+```r
+d = 3
+# expected value 
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
+Bias2 = mean( (ftrue - Ehatf)^2 )
+```
+
+* Theoretical results show that for the linear model `$$\mathrm{Variance}(\hat{f})=\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$`
+Importantly, in the linear model the variance is unaffected by the form of `\(f(x)\)`. 
+
+
+```r
+# true variance
+p = d+1
+Var = (sigmatrue^2)*p/n
+```
+
+* Now we easily compute the decomposition of `\(\mathrm{ErrF}\)` into squared bias and variance of the polynomial regression for all possible degrees from 0 to `\(n-1\)` without using simulations
+
+---
+
+
+```r
+ds = 1:20
+ps = ds+1
+Bias2s = sapply(ps, function(p) 
+  mean( ( ftrue - fitted(lm(ftrue ~ poly(x,degree=(p-1)))) )^2 )
+  )
+Vars = ps*(sigmatrue^2)/n
+Reds = Bias2s+Vars 
+barplot(Reds, ylab="Prediction error", names.arg=ds)
+barplot(Vars, add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+# best degree
+ds[which.min(Reds)]
+```
+
+---
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+Irr = rep(sigmatrue^2,length(ps))
+ErrFs = Reds + Irr
+barplot(ErrFs, ylab="Reducible error", names.arg=ps)
+barplot(Irr, add=T, col=1, names.arg=" ")
+legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+
+---
+
+
+.pull-left[
+
+
+```r
+# best model!
+d = 5 
+set.seed(123)
+yhats = replicate(B,sim(d))
+matplot(x,yhats, type="l", col="gray", lty=1)
+lines(x,ftrue, col=4)
+Ehatf = apply(yhats,1,mean)
+lines(x,Ehatf)
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+
+```r
+Bias2 = (ftrue - Ehatf)^2
+Var = apply(yhats,1,var)
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+![](2_BiasVar_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+
+```r
+sigmatrue=0.01
+n = length(x)
+B = 1000
+# simulation function
+sim2 = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+ystar = ftrue + rnorm(n,0,sigmatrue)
+MSE.te = mean((ystar - yhat)^2)
+} 
+# MSE.te empirical
+d = 5
+mean(replicate(B,sim2(d)))
+```
+
+```
+[1] 0.0001222711
+```
+
+```r
+# MSE.te theoretical
+Ehatf = fitted(lm(ftrue ~ poly(x,degree=d)))
+Bias2 = mean( (ftrue - Ehatf)^2 )
+p = d+1
+Var = (sigmatrue^2)*p/n
+Bias2 + Var + sigmatrue^2
+```
+
+```
+[1] 0.0001217199
+```
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Bias-variance trade-off
+
+---
+
+# Bias-variance trade-off
+
+* Reducible Error = Bias `\(^2\)` + Variance
+
+* Models `\(\hat{f}\)` with low bias tend to have high variance
+
+* Models `\(\hat{f}\)` with low variance tend to have high bias
+
+* We can see that even if our prediction is unbiased, i.e.
+`\(\mathbb{E}\hat{f}(x_i)= f(x_i)\)`, we can still incur a large error if it is highly
+variable 
+
+* On the other hand, `\(\hat{f}(x_i)=0\)` has 0 variance but will be
+terribly biased
+
+* To predict well, we need to balance the bias and the variance
+
+---
+
+![](images/tiroasegno.png)
+
+---
+
+# ISLR figures 2.9-2.12 
+
+* [Fig. 2.9](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf)
+
+* [Fig. 2.10](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf)
+
+* [Fig. 2.11](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf)
+
+* [Fig. 2.12](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf)
+
+---
+
+# Summary
+
+* **Data**: training set / test set
+
+* **Signal/noise**: regression function / error
+
+* **Overfitting**: mistaking noise for signal
+
+* **Performance**: MSE on the same data / MSE on new data (on average)
+
+* **Prediction error**: reducible + irreducible
+
+* **Reducible error**: bias `\(^2\)` + variance
+
+*  **Tradeoff**: allow some bias if it decreases more variance
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
