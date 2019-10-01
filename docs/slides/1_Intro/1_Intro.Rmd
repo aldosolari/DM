@@ -48,8 +48,8 @@ Aldo Solari
 | When | Where | Hours |
 |---|---|----|
 | Monday | Lab717 | 13:30-15:30 |
-| Thursday | Lab717 | 13:30-16:30|
-| Friday | Lab717 | 9:30-12:30 |
+| Tuesday | Lab717 | 13:30-16:30|
+| Thursday | Lab717 | 9:30-12:30 |
 .center[**Time table**]
 
 ---
