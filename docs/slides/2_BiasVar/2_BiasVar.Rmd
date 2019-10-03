@@ -315,7 +315,7 @@ Bias2 = mean( (ftrue - Ehatf)^2 )
 ```
 
 * Theoretical results show that for the linear model $$\mathrm{Variance}(\hat{f})=\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}[\hat{f}(x_i)] = \frac{\sigma^2 p}{n}$$
-Importantly, in the linear model the variance is unaffected by the form of $f(x)$. 
+Importantly, the variance is unaffected by the form of $f(x)$
 
 ```{r}
 # true variance
@@ -323,7 +323,6 @@ p = d+1
 Var = (sigmatrue^2)*p/n
 ```
 
-* Now we easily compute the decomposition of $\mathrm{ErrF}$ into squared bias and variance of the polynomial regression for all possible degrees from 0 to $n-1$ without using simulations
 
 ---
 
