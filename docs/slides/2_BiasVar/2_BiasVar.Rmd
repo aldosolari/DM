@@ -140,12 +140,11 @@ abline(a=0,b=1, col=4, lwd=2)
 
 # Prediction error
 
-
 * Suppose we have estimated $f$ by $\hat{f}$ by using the training set
 
 * Loss function = mean squared error (MSE)
 
-* The __prediction error__ $\mathrm{ErrF}$ (Fixed-X setting) is 
+* For the Fixed-X setting, the __prediction error__ $\mathrm{ErrF}$ is 
 $$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right]= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$
 
 * This is the error that we wish to minimize, i.e. $\mathrm{MSE}_{\mathrm{Te}}$ on average
@@ -450,18 +449,6 @@ terribly biased
 ---
 
 ![](images/tiroasegno.png)
-
----
-
-# ISLR figures 2.9-2.12 
-
-* [Fig. 2.9](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.9.pdf)
-
-* [Fig. 2.10](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.10.pdf)
-
-* [Fig. 2.11](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.11.pdf)
-
-* [Fig. 2.12](http://www-bcf.usc.edu/~gareth/ISL/Chapter2/2.12.pdf)
 
 ---
 

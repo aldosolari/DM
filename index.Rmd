@@ -24,7 +24,7 @@ Participating in predictive modelling *competitions* can help you gain practical
 # Latest announcements
 
 
-* Please compile the [Sign-up sheet](https://docs.google.com/forms/d/e/1FAIpQLSf5MROAQ42S6bUMsIU_IpcXe2poV2VV8qY8fnF9u1iUl7MYlA/viewform?usp=pp_url)
+* La lezione del 7 Ottobre inizierà alle ore 13:30 e durerà 1 ora
 
 
 
@@ -36,9 +36,9 @@ Most of the course material can be found in the notes linked to below. The notes
 |--|--|--------|--------|--------|--------|
 | 1 | 1.10.19 | 717 | 13:30 - 16:30 (3h) | Introduction to the course | [Slides](docs/slides/1_Intro/1_Intro.html) |
 | 2 | 3.10.19 | 713 | 9:30 - 12:30 (3h) | Bias-variance decomposition |  [Slides](docs/slides/2_BiasVar/2_BiasVar.html) |
-| 3 | 7.10.19 | 717 | 13:30 - 14:30 (1h) | Optimism | TBD |
-| 4 | 8.10.19 | 717 | 13:30 - 16:30 (3h) | IC and CV | TBD |
-| 5 | 10.10.19 | 717 | 9:30 - 12:30 (3h) | Non-parametric regression | TBD |
+| 3 | 7.10.19 | 717 | 13:30 - 14:30 (1h) | Optimism  | [Slides](docs/slides/3_Optim/3_Optim.html) |
+| 4 | 8.10.19 | 717 | 13:30 - 16:30 (3h) | Cross-validation | [Slides](docs/slides/4_CV/4_CV.html) |
+| 5 | 10.10.19 | 717 | 9:30 - 12:30 (3h) | Non-parametric regression | [Slides](docs/slides/5_NPR/5_NPR.html) |
 | 6 | 14.10.19 | 717 | 13:30 - 14:30 (1h)  | TBD | TBD |
 | 7 | 15.10.19 | 717 | 13:30 -  14:30 (1h) | TBD | TBD |
 | 8 | 17.10.19 | 717 | 9:30 - 12:30 (3h) | The modelling process | TBD |
@@ -104,17 +104,20 @@ For improving R programming and predictive modeling skills, there are three refe
 - ISLR  2.2.2, 6.1.3
 - AS 3.3, 3.5.3
 
-**October 7** TBD
+**October 7** Optimism and Information Criteria
 
-- TBD
+- ISLR 6.1.3
+- AS  3.5.3
+- FRom Fixed-X to Random-X regression: [Rosset and Tibshirani (2018)](https://arxiv.org/pdf/1704.08160.pdf)
+  
+**October 8** Cross-validation
 
-**October 8** 
+- ISLR 5.1.1-5.1.4
+- AS  3.5.1, 3.5.2
 
-- TBD
+**October 10** Non-parametric regression
 
-**October 10** 
-
-- TBD
+- the [caret](http://topepo.github.io/caret/index.html) package
 
 **October 14** 
 

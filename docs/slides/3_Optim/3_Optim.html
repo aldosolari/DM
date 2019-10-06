@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Optimism and information criteria
+### Aldo Solari
+
+---
+
+
+
+
+# Outline
+
+* Optimism
+* Information criteria
+* Random-X view
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Optimism 
+
+---
+
+# Optimism
+
+Optimism is the **expected** difference of the test error and training error
+
+`\begin{aligned}
+\mathrm{Opt} &amp;= \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) - \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}})
+\end{aligned}`
+
+---
+
+# Fixed-X optimism
+
+* For the Fixed-X setting, we have
+
+`$$\mathrm{OptF} = \mathbb{E}\left[ \frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2 - \frac{1}{n}\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2 \right]$$`
+
+* `\(\mathrm{OptF}\)` can be also expressed as 
+
+`$$\mathrm{OptF} =  \frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(y_i,\hat{f}(x_i))$$`
+
+So the higher the correlation between `\(y_i\)` and its fitted value `\(\hat{f}(x_i)\)`, the greater the optimism
+
+---
+
+&lt;img src="3_Optim_files/figure-html/unnamed-chunk-1-1.png" width="80%" height="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Optimism for linear models
+
+* Prediction error is given by `\(\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) + \mathrm{OptF}\)`
+
+* Optimism is important because it leads to an estimate of `\(\mathrm{ErrF}\)`:
+`\begin{aligned}
+\widehat{\mathrm{ErrF}} &amp;= \mathrm{MSE}_{\mathrm{Tr}} + \mathrm{OptF}\\
+\end{aligned}`
+
+* For linear models, it can be shown that
+`$$\mathrm{OptF} =  \frac{2\sigma^2 p}{n}$$`
+
+---
+
+
+
+```r
+rm(list=ls())
+library(readr)
+df &lt;- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train &lt;- data.frame(x=df$x, y=df$y.yesterday)
+# compute MSE.tr
+n &lt;- nrow(train)
+ds = 1:15
+ps = ds + 1
+x = seq(.5,3,length=30)
+fun &lt;- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d), train)
+fits &lt;- lapply(ds, fun)
+MSEs.tr &lt;- unlist( lapply(fits, deviance) )/n
+# compute ErrF
+sigmatrue = 0.01
+ftrue &lt;- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
+x = seq(.5,3,length=30)
+Bias2s = sapply(ps, function(p) 
+  mean( ( ftrue - fitted(lm(ftrue ~ poly(x,degree=(p-1)))) )^2 )
+)
+Vars = ps*(sigmatrue^2)/n
+ErrFs = Bias2s + Vars + sigmatrue^2
+```
+
+---
+
+
+```r
+*hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
+lines(ps, hatErrFs, type="b", col=2)
+lines(ps, ErrFs, type="b", col=4)
+legend("topright",c("ErrF","MSE.tr","MSE.tr + Opt"), col=c(4,1,2), pch=19)
+```
+
+![](3_Optim_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+```r
+ps[which.min(hatErrFs)]
+```
+
+```
+[1] 6
+```
+
+---
+
+# Mallows Cp
+
+* `\(\displaystyle \mathrm{OptF}=\frac{2\sigma^2p}{n}\)` requires that `\(\sigma^2\)` is known, which is not realistic
+
+* We can plug-in its estimate 
+
+`$$\hat{\sigma}^2= \frac{\mathrm{RSS}}{n-p}= \frac{\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2}{n-p}$$`
+where `\(\mathrm{RSS} = n \mathrm{MSE}_{\mathrm{Tr}}\)` is the __residual sum of squares__
+
+* Then we can estimate the prediction error as
+
+`\begin{aligned}
+\widehat{\mathrm{ErrF}} &amp;= \mathrm{MSE}_{\mathrm{Tr}} + \widehat{\mathrm{OptF}}\\
+\end{aligned}`
+
+* This estimator it is known as __Mallows' Cp__ : 
+
+`$$\mathrm{Cp} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}$$`
+
+---
+
+
+
+```r
+*hatsigma2 = (n*MSEs.tr)/(n-ps)
+Cps = MSEs.tr + (2*hatsigma2*ps)/n 
+plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
+lines(ps, Cps, type="b", col=2)
+lines(ps, ErrFs, type="b", col=4)
+legend("topright",c("ErrF","MSE.tr","MSE.tr + hatOpt"), col=c(4,1,2), pch=19)
+```
+
+![](3_Optim_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+```r
+ps[which.min(Cps)]
+```
+
+```
+[1] 14
+```
+
+---
+
+
+```r
+plot(ps, hatsigma2, type="b", xlab="p", ylab="Sigma2")
+abline(h=sigmatrue^2, col=4)
+```
+
+![](3_Optim_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Information criteria
+
+---
+
+# AIC and BIC
+
+* __AIC__ is given by
+`$$\mathrm{AIC} =  -2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) + 2p$$`
+where for the linear model `\(-2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) = n \log(\mathrm{MSE}_{\mathrm{Tr}})\)`
+
+* For linear models, Cp and AIC are proportional to each other, and the lowest Cp corresponds to the lowest AIC. 
+
+* __BIC__ is given by
+`$$\mathrm{BIC} =  -2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) + \log(n)p$$`
+
+* Since `\(\log(n) &gt; 2\)` for any `\(n &gt; 7\)`,
+the BIC statistic generally results in the selection of smaller models than AIC
+
+---
+
+
+```r
+AICs &lt;- unlist( lapply(fits, AIC) )
+BICs &lt;- unlist( lapply(fits, BIC) )
+plot(ps, AICs, type="b", col=5, ylab="Information Criteria", xlab="p")
+lines(ps, BICs, type="b", col=6)
+legend("topright",c("AIC","BIC"), col=c(5,6), lty=1)
+```
+
+![](3_Optim_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+layout: false
+class: inverse, middle, center
+
+# Random-X prediction error
+
+---
+
+# Random-X view
+
+* Earlier we have assumed Fixed-X view, where predictor values are assumed to be nonrandom
+
+* In most modern predictive modeling applications, it is more reasonable to take a Random-X view, where the predictor values (both those used in training and for future predictions) are random
+
+---
+
+# Random-X setting
+
+We assume 
+
+* Random response `\(Y\)` and random predictors `\(X=(X_1,\ldots,X_p)^\mathsf{T}\)`
+* `\((X,Y)\)` have some unknown joint distribution
+* Conditional to `\(X=x\)`, we have
+`$$(Y|X=x) = f(x) + \varepsilon$$`
+where 
+    - the conditional expectation `\(f(x)=\mathbb{E}(Y|X=x)\)` is called the __regression function__ 
+    - `\(\varepsilon\)` is the error term independent from `\(X\)` with `\(\mathbb{E}(\varepsilon)=0\)` and `\(\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2\)`
+* Note that the conditional variance 
+`\(\mathbb{V}\mathrm{ar}(Y|X=x) = \sigma^2\)` is constant (__homoscedasticity__ assumption)
+
+* Training set: `\(n\)` observations `\((x_1,y_1),\ldots,(x_n,y_n)\)` i.i.d. from `\((X,Y)\)`
+* Test set: `\(m\)` observations `\((x^*_1,y^*_1),\ldots,(x^*_m,y^*_m)\)` i.i.d. from `\((X,Y)\)`
+
+---
+
+# Gaussian example
+
+For example, suppose that 
+`$$\left(\begin{array}{c} 
+Y \\
+X \\
+\end{array}\right) \sim N\left(\left(\begin{array}{c} 
+\mu_y \\
+\mu_x \\
+\end{array}\right), \left(\begin{array}{cc} 
+\sigma^2_y &amp; \rho \sigma_x \sigma_y \\
+\rho \sigma_x \sigma_y  &amp; \sigma^2_x \\
+\end{array}\right)\right)$$`
+so that the conditional distribution of `\(Y\)` given `\(X=x\)` is
+
+`$$(Y|X=x) \sim N\Big(\mu_y + \rho \frac{\sigma_y}{\sigma_x}(x-\mu_x), \sigma^2_y (1-\rho^2)\Big)$$`
+
+where `\(f(x)= \mathbb{E}(Y|X=x) = \left(\mu_y - \rho\frac{\sigma_y}{\sigma_x}\mu_x\right) + \left(\rho\frac{\sigma_y}{\sigma_x}\right)x = \alpha + \beta x\)`.
+
+---
+
+# Random-X simulation
+
+In the Random-X setting, we generate the training data as follows. 
+
+
+For `\(i=1,\ldots,n\)`:
+
+1. `\(x_i\)` is the realization of `\(X_i \sim N(\mu_x,\sigma^2_x)\)`, the marginal distribution of `\(X\)`
+
+2. `\(y_i\)` is the realization of `\((Y_i|X_i=x_i) = f(x_i) + \varepsilon_i\)`, the conditional distribution of `\(Y\)` given `\(X=x\)`, where 
+    - `\(f(x_i)=\alpha + \beta x_i\)` with `\(\alpha=\left(\mu_y - \rho\frac{\sigma_y}{\sigma_x}\mu_x\right)\)` and `\(\beta= \left(\rho\frac{\sigma_y}{\sigma_x}\right)\)`
+    - `\(\varepsilon_i \sim N(0,\sigma^2)\)` with `\(\sigma^2=\sigma^2_y (1-\rho^2)\)`
+
+and analogously for the test data
+
+---
+
+# Random-X prediction error
+
+* The __Random-X prediction error__ is given by
+`$$\mathrm{ErrR}= \mathbb{E}(\mathrm{MSE_{\mathrm{Te}}}) = \mathbb{E}\left[\frac{1}{m}\sum_{i=1}^{m}(Y^*_i - \hat{f}(X^*_i))^2\right] = \mathbb{E}[(Y^*_1 - \hat{f}(X^*_1))^2]$$`
+where the last equality follows by exchangeability and the expectation of the last term is with respect to the training set `\((X_1,Y_1),\ldots,(X_n,Y_n)\)` and to the new test point `\((X^*_1,Y^*_1)\)`
+
+
+---
+
+# Random-X optimism for linear models
+
+* Assume that `\(X = (X_1,\ldots,X_p)^\mathsf{T} \sim N(0,\Sigma)\)` where `\(\Sigma\)` is invertible and `\(p&lt;n-1\)`
+
+* Assume also that `\(f(x)= x^\mathsf{T}\beta\)`, a linear function of `\(x\)` 
+
+* Note that the assumptions above hold if we assume that `\((X,Y)\)` is jointly Gaussian
+
+* Then, for linear models
+
+`$$\mathrm{OptR}= \mathrm{OptF} + \frac{\sigma^2p}{n}\left( \frac{p+1}{n-p-1}\right)$$`
+
+---
+
+# Random-X Mallows Cp 
+
+* We have `$$\mathrm{ErrR} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) +  \mathrm{OptR}$$`
+
+*  We can estimate ErrR by
+`$$\widehat{\mathrm{ErrR}} = \mathrm{MSE}_{\mathrm{Tr}} + \frac{\sigma^2p}{n}\left(2 + \frac{p+1}{n-p-1}\right)$$`
+
+* If we use  `\(\hat{\sigma}^2 = \mathrm{RSS}/(n-p)\)` in place of `\(\sigma^2\)`, we obtain a Random-X version of Mallows' Cp 
+`$$\mathrm{RCp} = \mathrm{Cp} + \frac{\hat{\sigma}^2p}{n}\left( \frac{p+1}{n-p-1}\right) = \frac{\mathrm{RSS}(n-1)}{(n-p)(n-p-1)}$$`
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
