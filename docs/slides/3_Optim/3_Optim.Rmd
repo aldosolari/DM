@@ -226,7 +226,7 @@ We assume
 * Conditional to $X=x$, we have
 $$(Y|X=x) = f(x) + \varepsilon$$
 where 
-    - the conditional expectation $f(x)=\mathbb{E}(Y|X=x)$ is called the __regression function__ 
+    - $f(x) = \mathbb{E}(Y|X=x)$ is called the __regression function__ 
     - $\varepsilon$ is the error term independent from $X$ with $\mathbb{E}(\varepsilon)=0$ and $\mathbb{V}\mathrm{ar}(\varepsilon)=\sigma^2$
 * Note that the conditional variance 
 $\mathbb{V}\mathrm{ar}(Y|X=x) = \sigma^2$ is constant (__homoscedasticity__ assumption)
@@ -279,6 +279,47 @@ and analogously for the test data
 * The __Random-X prediction error__ is given by
 $$\mathrm{ErrR}= \mathbb{E}(\mathrm{MSE_{\mathrm{Te}}}) = \mathbb{E}\left[\frac{1}{m}\sum_{i=1}^{m}(Y^*_i - \hat{f}(X^*_i))^2\right] = \mathbb{E}[(Y^*_1 - \hat{f}(X^*_1))^2]$$
 where the last equality follows by exchangeability and the expectation of the last term is with respect to the training set $(X_1,Y_1),\ldots,(X_n,Y_n)$ and to the new test point $(X^*_1,Y^*_1)$
+
+
+---
+
+# Statistical decision theory
+
+
+$(X,Y)$ have some unknown joint distribution
+
+We seek the best function $f(X)$ for predicting $Y$ under squared error loss $(Y-f(X))^2$
+
+The minimization problem
+
+$$f =  \underset{g}{\arg\min} \,\, \mathbb{E}_{X,Y}[(Y - g(X))^2]$$
+
+has solution
+
+$$f(X) =  \mathbb{E}(Y|X)$$
+
+
+
+---
+
+# Proof
+
+By conditioning on $X=x$, we can write by the law of iterated expectation
+ $$\mathbb{E}_{X,Y}\{[Y - g(X)]^2\} = \mathbb{E}_X \mathbb{E}_{Y|X=x} \{[Y - g(x)]^2 | X=x\}$$
+
+and we see that it suffices to minimize  pointwise:
+
+$$f(x) =\underset{c}{\arg\min} \,\, \mathbb{E}_{Y|X=x} \{[Y - c ]^2 | X=x\}$$
+
+Note that
+
+$$\mathbb{E}_{Y|X=x} \{[Y - \mathbb{E}(Y|X=x) + \mathbb{E}(Y|X=x) - c ]^2 | X=x\} = \mathbb{Var}(Y|X=x) + [\mathbb{E}(Y|X=x) - c]^2$$
+
+The solution is 
+
+$$f(x) =  \mathbb{E}(Y|X=x)$$
+
+Thus the best prediction of $Y$ at any point $X = x$ is the conditional mean $\mathbb{E}(Y|X=x)$
 
 
 ---
