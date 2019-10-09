@@ -39,9 +39,9 @@ Most of the course material can be found in the notes linked to below. The notes
 | 3 | 7.10.19 | 717 | 13:30 - 14:30 (1h) | Optimism  | [Slides](docs/slides/3_Optim/3_Optim.html) |
 | 4 | 8.10.19 | 717 | 13:30 - 16:30 (3h) | Cross-validation | [Slides](docs/slides/4_CV/4_CV.html) |
 | 5 | 10.10.19 | 717 | 9:30 - 12:30 (3h) | Non-parametric regression | [Slides](docs/slides/5_NPR/5_NPR.html) |
-| 6 | 14.10.19 | 717 | 13:30 - 14:30 (1h)  | TBD | TBD |
-| 7 | 15.10.19 | 717 | 13:30 -  14:30 (1h) | TBD | TBD |
-| 8 | 17.10.19 | 717 | 9:30 - 12:30 (3h) | The modelling process | TBD |
+| 6 | 14.10.19 | 717 | 13:30 - 14:30 (1h)  | Exploratory data analysis | [Slides](docs/slides/6_EDA/6_EDA.html) |
+| 7 | 15.10.19 | 717 | 13:30 -  14:30 (1h) | The modelling process | [Slides](docs/slides/6_EDA/6_EDA.html) |
+| 8 | 17.10.19 | 717 | 9:30 - 12:30 (3h) | Titanic data | TBD |
 | 9 | 21.10.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
 | 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
 | 11 | 24.10.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
@@ -117,17 +117,19 @@ For improving R programming and predictive modeling skills, there are three refe
 
 **October 10** Non-parametric regression
 
+- ISLR 3.5
 - the [caret](http://topepo.github.io/caret/index.html) package
 
-**October 14** 
+**October 14** Exploratory data analysis
+
+- AS 2
+- r4ds 1, 2, 3
+
+**October 15** The modelling process
 
 - TBD
 
-**October 15** 
-
-- TBD
-
-**October 17** 
+**October 17** Titanic data
 
 - TBD
 
