@@ -1,5 +1,6 @@
 ---
-title: "Non-parametric regression"
+title: "Data Mining"
+subtitle: "Non-parametric regression"
 author: Aldo Solari
 output:
   xaringan::moon_reader:
