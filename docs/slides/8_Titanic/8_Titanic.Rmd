@@ -12,17 +12,126 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F)
 ```
 
 
 # Outline
 
 * Classification
-* Missing values
-* EDA
-* Feature engineering
-* Evaluation
+* Titanic data
+    - Missing values
+    - EDA and model building
+    - Feature engineering
+    - Evaluation
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Classification 
+
+---
+
+# Classification
+
+* Response $Y \in \{0,1\}$
+
+* Predictors $X=(X_1,\ldots,X_p)^\mathsf{T}$
+
+* $(X,Y)$ have some unknown joint distribution
+
+* Note that in this setting the regression function is the conditional probability of $Y=1$ given $x$
+$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$
+
+* The __Bayes' classification rule__ is
+$$C(x) = \left\{\begin{array}{ll}
+1 & \mathrm{if\,\,} f(x)>1/2 \\
+0 & \mathrm{otherwise}\\
+\end{array}\right.$$
+
+---
+
+# Bayes error rate
+
+* A __classification rule__ is any function $\hat{C}: x \mapsto \{0,1\}$
+
+* For example, the __plug-in rule__
+$$\hat{C}(x) = \left\{\begin{array}{ll}
+1 & \mathrm{if\,\,} \hat{f}(x)>1/2 \\
+0 & \mathrm{otherwise}\\
+\end{array}\right.$$
+where $\hat{f}$ is an estimate of $f$ based on training data
+
+* The Bayes classification rule is __optimal__ because it has the smallest error rate:
+$$\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{C}(x))\right] \quad \forall \, \hat{C}$$
+where the expectation averages the probability over all possible values of
+$X$
+
+* The Bayes error rate $\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]$ is analogous to the irreducible error
+
+---
+
+# Classification with more than 2 classes
+
+
+* Response with $K$ classes:  $Y \in \{1,\ldots, K\}$ 
+
+* Conditional class probabilities at $x$:
+
+$$p_k(x)=\mathrm{Pr}(Y=k|X=x), \quad k = 1,\ldots,K$$
+
+*  Then the Bayes optimal classifier at $x$ is
+
+$$C(x)=j \quad \mathrm{if} \quad p_j(x)=\max\{p_1(x),\ldots,p_K(x)\}$$
+* The Bayes classifier has the smallest error 
+$$1-\mathbb{E}\big(\max_j \Pr(Y=j|X)\big)$$
+
+---
+
+
+# Methods for classification
+
+* **Discriminative** Seek a model for $\Pr(Y=k|X=x)$
+    - Linear regression
+    - Logistic regression
+    - K-nearest neighbors
+    - Support vector classifier 
+    - Etc.
+
+* **Generative** Model $\Pr(Y=k|X=x)$ by using the Bayes Theorem
+$$\Pr(Y=k|X=x) \propto \Pr(X=x|Y=k) \Pr(Y=k)$$
+    - Linear Discriminant Analysis (LDA)
+    - Quadratic Discriminant Analysis (QDA)
+    - Naive Bayes
+    - Etc.
+
+---
+
+# Missclassification rate and accuracy
+
+* Training set: $(x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)$
+* Test set: $(x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)$
+
+
+* __Missclassification rate (training set)__
+
+$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$
+
+* __Missclassification rate (test set)__
+$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$
+
+* __Accuracy (test set)__
+$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Titanic data
+
 
 ---
 
@@ -61,73 +170,6 @@ See the Kaggle competition
 * [Titanic using Name only](https://www.kaggle.com/cdeotte/titanic-using-name-only-0-81818) gives a nice example of feature engineering
 
 ---
-
-layout: false
-class: inverse, middle, center
-
-# Classification 
-
----
-
-# Classification
-
-* Response $Y \in \{0,1\}$
-
-* Predictors $X=(X_1,\ldots,X_p)^\mathsf{T}$
-
-* $(X,Y)$ have some unknown joint distribution
-
-* The __regression function__ is
-$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$
-
-* The __Bayes' classification rule__ is
-$$C(x) = \left\{\begin{array}{ll}
-1 & \mathrm{if\,\,} f(x)>1/2 \\
-0 & \mathrm{otherwise}\\
-\end{array}\right.$$
-
----
-
-# Bayes error rate
-
-* A __classification rule__ is any function $\hat{C}: x \mapsto \{0,1\}$
-
-* For example, the __plug-in rule__
-$$\hat{C}(x) = \left\{\begin{array}{ll}
-1 & \mathrm{if\,\,} \hat{f}(x)>1/2 \\
-0 & \mathrm{otherwise}\\
-\end{array}\right.$$
-where $\hat{f}$ is an estimate of $f$ based on training data
-
-* The Bayes classification rule is __optimal__ because it has the smallest error rate:
-$$\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{C}(x))\right] \quad \forall \, \hat{C}$$
-where the expectation averages the probability over all possible values of
-$X$
-
-* The Bayes error rate $\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]$ is analogous to the irreducible error
-
----
-
-# Missclassification rate and accuracy
-
-* Training set: $(x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)$
-* Test set: $(x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)$
-
-
-* __Missclassification rate (training set)__
-
-$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$
-
-* __Missclassification rate (test set)__
-$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$
-
-* __Accuracy (test set)__
-$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$
-
-
----
-
-
 ```{r}
 # import data
 PATH <- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
@@ -307,7 +349,7 @@ test <- combi[(n+1):(n+m),]
 layout: false
 class: inverse, middle, center
 
-# EDA
+# EDA and model building
 
 ---
 
@@ -327,7 +369,32 @@ mean(yhat == testsurvived)
 
 ---
 
-* What is the relationship between age and survival?
+# Gender
+
+Women first?
+
+```{r}
+plot(survived ~ sex, train)
+```
+
+---
+
+```{r}
+# gender-only logistic model
+fit <- glm(survived ~ sex, train, family="binomial")
+phat <- predict(fit, newdata=test, type = "response")
+yhat <- ifelse(phat > 0.5, "Alive","Death")
+# confusion matrix 
+table(Predicted=yhat, True=testsurvived)
+# accuracy 
+mean(yhat == testsurvived)
+```
+
+---
+
+# Age
+
+Children first? What is the relationship between age and survival?
 
 ```{r}
 summary(glm(survived ~ age, train, family="binomial"))$ coefficients 
@@ -335,7 +402,7 @@ summary(glm(survived ~ age, train, family="binomial"))$ coefficients
 
 ---
 
-* What about this plot?
+What about this plot?
 
 ```{r, echo=FALSE}
 ageclass = cut(train$age, breaks = c(0,10,20,30,40,50,60,70,80))
@@ -344,7 +411,7 @@ barplot(prop.table(table(train$survived,ageclass),2), xlab="Age class")
 
 ---
 
-* A better visualization
+A better visualization
 
 ```{r}
 plot(survived ~ age, train)
@@ -352,10 +419,11 @@ plot(survived ~ age, train)
 
 ---
 
-* Rich people survived at a higher rate?
+# Passenger class
+
+Rich people survived at a higher rate?
 
 ```{r}
-# survived ~ pclass
 plot(survived~pclass, train)
 ```
 
@@ -364,17 +432,19 @@ plot(survived~pclass, train)
 ```{r}
 # pclass-only logistic model
 fit <- glm(survived ~ pclass, train, family="binomial")
-phat <- predict(fit,newdata=test, type = "response")
+phat <- predict(fit, newdata=test, type = "response")
 yhat <- ifelse(phat > 0.5, "Alive","Death")
-# confusion matrix
+# confusion matrix 
 table(Predicted=yhat, True=testsurvived)
-# accuracy
+# accuracy 
 mean(yhat == testsurvived)
 ```
 
 ---
 
-* What about pclass and age combined?
+# Age and pclass
+
+What about age and pclass combined?
 
 ```{r, echo=F}
 class.jitter <- as.numeric(train$pclass)+.7*runif(n)
@@ -385,7 +455,7 @@ points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
 
 ---
 
-* Classification tree partition
+A classification tree recursively partitions the sample space into smaller and smaller rectangles
 
 ```{r, echo=F}
 class.jitter <- as.numeric(train$pclass)+.7*runif(n)
@@ -400,6 +470,8 @@ rect(2.85,-5,4.0,89,col=rgb(0.5,0.5,0.5,1/4))
 
 ---
 
+Classification tree decision rule
+
 ```{r}
 library(rpart)
 library(rpart.plot)
@@ -407,8 +479,17 @@ fit <- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =  3
 rpart.plot(fit, type=0, extra=2)
 ```
 
----
 
+
+| Status | Pr(Death) | Prediction |
+|-----------|-----------|------|
+| Class 3 |  76\% | Death |
+| Class 1-2, younger than 18 |  9\% | Alive |
+| Class 2, older than 18 |  56\% & Death |
+| Class 1, older than 18 |  39\% & Alive | 
+
+
+---
 
 ```{r}
 yhat <- predict(fit, newdata=test, type="class")
@@ -418,81 +499,12 @@ table(Predicted=yhat, True=testsurvived)
 mean(yhat == testsurvived)
 ```
 
----
-
-* Women first?
-
-```{r}
-plot(survived ~ sex, train)
-```
 
 ---
 
-```{r}
-# gender-only logistic model
-fit <- glm(survived ~ sex, train, family="binomial")
-phat <- predict(fit,newdata=test, type = "response")
-yhat <- ifelse(phat > 0.5, "Alive","Death")
-# confusion matrix
-table(Predicted=yhat, True=testsurvived)
-# accuracy
-mean(yhat == testsurvived)
-```
+# Performance
 
-
----
-
-* Women and children first?
-
-```{r ggplot, include = FALSE}
-library(ggplot2)
-thm <- theme_bw() + 
-  theme(
-    panel.background = element_rect(fill = "transparent", colour = NA), 
-    plot.background = element_rect(fill = "transparent", colour = NA),
-    legend.position = "top",
-    legend.background = element_rect(fill = "transparent", colour = NA),
-    legend.key = element_rect(fill = "transparent", colour = NA)
-  )
-theme_set(thm)
-```
-
-```{r}
-ggplot(train, aes(x=age, y=survived01, col=sex)) +
-  geom_jitter(height = 0.05) + 
-  geom_smooth() + 
-  facet_wrap( ~ sex)
-```
-
----
-
-# Conditional inference trees
-
-* One problem with trees is that they tend to overfit the data
-* The most common solution to this problem is to prune the
-tree by imposing a cost for complexity (e.g. number of
-terminal nodes)
-* Conditional inference trees choose the structure of
-the tree using a sequence of hypothesis tests
-* The resulting trees tend to need very little pruning
-
----
-
-```{r, fig.width = 15}
-library(party)
-fit <- ctree(survived ~ pclass + sex + age + sibsp, data = train)
-plot(fit)
-```
-
----
-
-```{r}
-yhat <- predict(fit, newdata=test, type="response")
-# confusion matrix
-table(Predicted=yhat, True=testsurvived)
-# accuracy
-mean(yhat == testsurvived)
-```
+abc
 
 ---
 
@@ -592,6 +604,7 @@ combi$yhat[combi$wbm=='woman' & combi$surnamesurvival == 0] <- "Death"
 ---
 
 ```{r}
+library(ggplot2)
 ggplot(combi[(n+1):(n+m),]) +
     geom_jitter(aes(x=wbm,y=yhat)) +
     labs(title="17 predictions change from gender model on test set") +

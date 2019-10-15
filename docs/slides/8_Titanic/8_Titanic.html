@@ -24,10 +24,119 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Classification
-* Missing values
-* EDA
-* Feature engineering
-* Evaluation
+* Titanic data
+    - Missing values
+    - EDA and model building
+    - Feature engineering
+    - Evaluation
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Classification 
+
+---
+
+# Classification
+
+* Response `\(Y \in \{0,1\}\)`
+
+* Predictors `\(X=(X_1,\ldots,X_p)^\mathsf{T}\)`
+
+* `\((X,Y)\)` have some unknown joint distribution
+
+* Note that in this setting the regression function is the conditional probability of `\(Y=1\)` given `\(x\)`
+`$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$`
+
+* The __Bayes' classification rule__ is
+`$$C(x) = \left\{\begin{array}{ll}
+1 &amp; \mathrm{if\,\,} f(x)&gt;1/2 \\
+0 &amp; \mathrm{otherwise}\\
+\end{array}\right.$$`
+
+---
+
+# Bayes error rate
+
+* A __classification rule__ is any function `\(\hat{C}: x \mapsto \{0,1\}\)`
+
+* For example, the __plug-in rule__
+`$$\hat{C}(x) = \left\{\begin{array}{ll}
+1 &amp; \mathrm{if\,\,} \hat{f}(x)&gt;1/2 \\
+0 &amp; \mathrm{otherwise}\\
+\end{array}\right.$$`
+where `\(\hat{f}\)` is an estimate of `\(f\)` based on training data
+
+* The Bayes classification rule is __optimal__ because it has the smallest error rate:
+`$$\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{C}(x))\right] \quad \forall \, \hat{C}$$`
+where the expectation averages the probability over all possible values of
+`\(X\)`
+
+* The Bayes error rate `\(\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\)` is analogous to the irreducible error
+
+---
+
+# Classification with more than 2 classes
+
+
+* Response with `\(K\)` classes:  `\(Y \in \{1,\ldots, K\}\)` 
+
+* Conditional class probabilities at `\(x\)`:
+
+`$$p_k(x)=\mathrm{Pr}(Y=k|X=x), \quad k = 1,\ldots,K$$`
+
+*  Then the Bayes optimal classifier at `\(x\)` is
+
+`$$C(x)=j \quad \mathrm{if} \quad p_j(x)=\max\{p_1(x),\ldots,p_K(x)\}$$`
+* The Bayes classifier has the smallest error 
+`$$1-\mathbb{E}\big(\max_j \Pr(Y=j|X)\big)$$`
+
+---
+
+
+# Methods for classification
+
+* **Discriminative** Seek a model for `\(\Pr(Y=k|X=x)\)`
+    - Linear regression
+    - Logistic regression
+    - K-nearest neighbors
+    - Support vector classifier 
+    - Etc.
+
+* **Generative** Model `\(\Pr(Y=k|X=x)\)` by using the Bayes Theorem
+`$$\Pr(Y=k|X=x) \propto \Pr(X=x|Y=k) \Pr(Y=k)$$`
+    - Linear Discriminant Analysis (LDA)
+    - Quadratic Discriminant Analysis (QDA)
+    - Naive Bayes
+    - Etc.
+
+---
+
+# Missclassification rate and accuracy
+
+* Training set: `\((x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)\)`
+* Test set: `\((x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)\)`
+
+
+* __Missclassification rate (training set)__
+
+`$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$`
+
+* __Missclassification rate (test set)__
+`$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$`
+
+* __Accuracy (test set)__
+`$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$`
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Titanic data
+
 
 ---
 
@@ -66,73 +175,6 @@ See the Kaggle competition
 * [Titanic using Name only](https://www.kaggle.com/cdeotte/titanic-using-name-only-0-81818) gives a nice example of feature engineering
 
 ---
-
-layout: false
-class: inverse, middle, center
-
-# Classification 
-
----
-
-# Classification
-
-* Response `\(Y \in \{0,1\}\)`
-
-* Predictors `\(X=(X_1,\ldots,X_p)^\mathsf{T}\)`
-
-* `\((X,Y)\)` have some unknown joint distribution
-
-* The __regression function__ is
-`$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$`
-
-* The __Bayes' classification rule__ is
-`$$C(x) = \left\{\begin{array}{ll}
-1 &amp; \mathrm{if\,\,} f(x)&gt;1/2 \\
-0 &amp; \mathrm{otherwise}\\
-\end{array}\right.$$`
-
----
-
-# Bayes error rate
-
-* A __classification rule__ is any function `\(\hat{C}: x \mapsto \{0,1\}\)`
-
-* For example, the __plug-in rule__
-`$$\hat{C}(x) = \left\{\begin{array}{ll}
-1 &amp; \mathrm{if\,\,} \hat{f}(x)&gt;1/2 \\
-0 &amp; \mathrm{otherwise}\\
-\end{array}\right.$$`
-where `\(\hat{f}\)` is an estimate of `\(f\)` based on training data
-
-* The Bayes classification rule is __optimal__ because it has the smallest error rate:
-`$$\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{C}(x))\right] \quad \forall \, \hat{C}$$`
-where the expectation averages the probability over all possible values of
-`\(X\)`
-
-* The Bayes error rate `\(\mathbb{E}\left[\mathrm{Pr}(Y \neq C(x) ) \right]\)` is analogous to the irreducible error
-
----
-
-# Missclassification rate and accuracy
-
-* Training set: `\((x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)\)`
-* Test set: `\((x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)\)`
-
-
-* __Missclassification rate (training set)__
-
-`$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$`
-
-* __Missclassification rate (test set)__
-`$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$`
-
-* __Accuracy (test set)__
-`$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$`
-
-
----
-
-
 
 ```r
 # import data
@@ -222,14 +264,30 @@ summary(combi)
 ```
 
 ```
- pclass   survived       name               sex           age            sibsp            parch          ticket               fare            cabin           embarked     survived01    
- 1:323   Death:549   Length:1309        female:466   Min.   : 0.17   Min.   :0.0000   Min.   :0.000   Length:1309        Min.   :  0.000   Length:1309        C   :270   Min.   :0.0000  
- 2:277   Alive:342   Class :character   male  :843   1st Qu.:21.00   1st Qu.:0.0000   1st Qu.:0.000   Class :character   1st Qu.:  7.896   Class :character   Q   :123   1st Qu.:0.0000  
- 3:709   NA's :418   Mode  :character                Median :28.00   Median :0.0000   Median :0.000   Mode  :character   Median : 14.454   Mode  :character   S   :914   Median :0.0000  
-                                                     Mean   :29.88   Mean   :0.4989   Mean   :0.385                      Mean   : 33.295                      NA's:  2   Mean   :0.3838  
-                                                     3rd Qu.:39.00   3rd Qu.:1.0000   3rd Qu.:0.000                      3rd Qu.: 31.275                                 3rd Qu.:1.0000  
-                                                     Max.   :80.00   Max.   :8.0000   Max.   :9.000                      Max.   :512.329                                 Max.   :1.0000  
-                                                     NA's   :263                                                         NA's   :1                                       NA's   :418     
+ pclass   survived       name               sex           age       
+ 1:323   Death:549   Length:1309        female:466   Min.   : 0.17  
+ 2:277   Alive:342   Class :character   male  :843   1st Qu.:21.00  
+ 3:709   NA's :418   Mode  :character                Median :28.00  
+                                                     Mean   :29.88  
+                                                     3rd Qu.:39.00  
+                                                     Max.   :80.00  
+                                                     NA's   :263    
+     sibsp            parch          ticket               fare        
+ Min.   :0.0000   Min.   :0.000   Length:1309        Min.   :  0.000  
+ 1st Qu.:0.0000   1st Qu.:0.000   Class :character   1st Qu.:  7.896  
+ Median :0.0000   Median :0.000   Mode  :character   Median : 14.454  
+ Mean   :0.4989   Mean   :0.385                      Mean   : 33.295  
+ 3rd Qu.:1.0000   3rd Qu.:0.000                      3rd Qu.: 31.275  
+ Max.   :8.0000   Max.   :9.000                      Max.   :512.329  
+                                                     NA's   :1        
+    cabin           embarked     survived01    
+ Length:1309        C   :270   Min.   :0.0000  
+ Class :character   Q   :123   1st Qu.:0.0000  
+ Mode  :character   S   :914   Median :0.0000  
+                    NA's:  2   Mean   :0.3838  
+                               3rd Qu.:1.0000  
+                               Max.   :1.0000  
+                               NA's   :418     
 ```
 
 ---
@@ -281,8 +339,10 @@ combi[which(is.na(combi$fare)), ]
 ```
 
 ```
-     pclass survived               name  sex  age sibsp parch ticket fare cabin embarked survived01
-1282      3     &lt;NA&gt; Storey, Mr. Thomas male 60.5     0     0   3701   NA  &lt;NA&gt;        S         NA
+     pclass survived               name  sex  age sibsp parch ticket fare
+1282      3     &lt;NA&gt; Storey, Mr. Thomas male 60.5     0     0   3701   NA
+     cabin embarked survived01
+1282  &lt;NA&gt;        S         NA
 ```
 
 ---
@@ -321,9 +381,12 @@ combi[which(is.na(combi$embarked)), ]
 ```
 
 ```
-    pclass survived                                      name    sex age sibsp parch ticket fare cabin embarked survived01
-62       1    Alive                       Icard, Miss. Amelie female  38     0     0 113572   80   B28     &lt;NA&gt;          1
-830      1    Alive Stone, Mrs. George Nelson (Martha Evelyn) female  62     0     0 113572   80   B28     &lt;NA&gt;          1
+    pclass survived                                      name    sex age
+62       1    Alive                       Icard, Miss. Amelie female  38
+830      1    Alive Stone, Mrs. George Nelson (Martha Evelyn) female  62
+    sibsp parch ticket fare cabin embarked survived01
+62      0     0 113572   80   B28     &lt;NA&gt;          1
+830     0     0 113572   80   B28     &lt;NA&gt;          1
 ```
 
 ---
@@ -435,7 +498,7 @@ test &lt;- combi[(n+1):(n+m),]
 layout: false
 class: inverse, middle, center
 
-# EDA
+# EDA and model building
 
 ---
 
@@ -474,11 +537,52 @@ mean(yhat == testsurvived)
 [1] 0.6220096
 ```
 
+---
 
+# Gender
+
+Women first?
+
+
+```r
+plot(survived ~ sex, train)
+```
+
+![](8_Titanic_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 
 ---
 
-* What is the relationship between age and survival?
+
+```r
+# gender-only logistic model
+fit &lt;- glm(survived ~ sex, train, family="binomial")
+phat &lt;- predict(fit, newdata=test, type = "response")
+yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
+# confusion matrix 
+table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Alive    46   106
+    Death   214    52
+```
+
+```r
+# accuracy 
+mean(yhat == testsurvived)
+```
+
+```
+[1] 0.7655502
+```
+
+---
+
+# Age
+
+Children first? What is the relationship between age and survival?
 
 
 ```r
@@ -493,32 +597,33 @@ age         -0.009590806 0.005264725 -1.821711 0.06849887
 
 ---
 
-* What about this plot?
+What about this plot?
 
-![](8_Titanic_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 
 ---
 
-* A better visualization
+A better visualization
 
 
 ```r
 plot(survived ~ age, train)
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 
 ---
 
-* Rich people survived at a higher rate?
+# Passenger class
+
+Rich people survived at a higher rate?
 
 
 ```r
-# survived ~ pclass
 plot(survived~pclass, train)
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -526,9 +631,9 @@ plot(survived~pclass, train)
 ```r
 # pclass-only logistic model
 fit &lt;- glm(survived ~ pclass, train, family="binomial")
-phat &lt;- predict(fit,newdata=test, type = "response")
+phat &lt;- predict(fit, newdata=test, type = "response")
 yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
-# confusion matrix
+# confusion matrix 
 table(Predicted=yhat, True=testsurvived)
 ```
 
@@ -540,7 +645,7 @@ Predicted Death Alive
 ```
 
 ```r
-# accuracy
+# accuracy 
 mean(yhat == testsurvived)
 ```
 
@@ -550,18 +655,22 @@ mean(yhat == testsurvived)
 
 ---
 
-* What about pclass and age combined?
+# Age and pclass
 
-![](8_Titanic_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+What about age and pclass combined?
+
+![](8_Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+---
+
+A classification tree recursively partitions the sample space into smaller and smaller rectangles
+
+![](8_Titanic_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+
 
 ---
 
-* Classification tree partition
-
-![](8_Titanic_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
-
-
----
+Classification tree decision rule
 
 
 ```r
@@ -571,10 +680,19 @@ fit &lt;- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =
 rpart.plot(fit, type=0, extra=2)
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+
+
+| Status | Pr(Death) | Prediction |
+|-----------|-----------|------|
+| Class 3 |  76\% | Death |
+| Class 1-2, younger than 18 |  9\% | Alive |
+| Class 2, older than 18 |  56\% &amp; Death |
+| Class 1, older than 18 |  39\% &amp; Alive | 
+
 
 ---
-
 
 
 ```r
@@ -599,109 +717,12 @@ mean(yhat == testsurvived)
 [1] 0.6866029
 ```
 
----
-
-* Women first?
-
-
-```r
-plot(survived ~ sex, train)
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
 
 ---
 
+# Performance
 
-```r
-# gender-only logistic model
-fit &lt;- glm(survived ~ sex, train, family="binomial")
-phat &lt;- predict(fit,newdata=test, type = "response")
-yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
-# confusion matrix
-table(Predicted=yhat, True=testsurvived)
-```
-
-```
-         True
-Predicted Death Alive
-    Alive    46   106
-    Death   214    52
-```
-
-```r
-# accuracy
-mean(yhat == testsurvived)
-```
-
-```
-[1] 0.7655502
-```
-
-
----
-
-* Women and children first?
-
-
-
-
-```r
-ggplot(train, aes(x=age, y=survived01, col=sex)) +
-  geom_jitter(height = 0.05) + 
-  geom_smooth() + 
-  facet_wrap( ~ sex)
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
-
----
-
-# Conditional inference trees
-
-* One problem with trees is that they tend to overfit the data
-* The most common solution to this problem is to prune the
-tree by imposing a cost for complexity (e.g. number of
-terminal nodes)
-* Conditional inference trees choose the structure of
-the tree using a sequence of hypothesis tests
-* The resulting trees tend to need very little pruning
-
----
-
-
-```r
-library(party)
-fit &lt;- ctree(survived ~ pclass + sex + age + sibsp, data = train)
-plot(fit)
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
-
----
-
-
-```r
-yhat &lt;- predict(fit, newdata=test, type="response")
-# confusion matrix
-table(Predicted=yhat, True=testsurvived)
-```
-
-```
-         True
-Predicted Death Alive
-    Death   209    48
-    Alive    51   110
-```
-
-```r
-# accuracy
-mean(yhat == testsurvived)
-```
-
-```
-[1] 0.7631579
-```
+abc
 
 ---
 
@@ -733,8 +754,12 @@ table(combi$title)
 
 ```
 
-    Capt.      Col. Countess.      Don.     Dona.       Dr. Jonkheer.     Lady.    Major.   Master.     Miss.     Mlle.      Mme.       Mr.      Mrs.       Ms.      Rev.      Sir. 
-        1         4         1         1         1         8         1         1         2        61       260         2         1       757       197         2         8         1 
+    Capt.      Col. Countess.      Don.     Dona.       Dr. Jonkheer. 
+        1         4         1         1         1         8         1 
+    Lady.    Major.   Master.     Miss.     Mlle.      Mme.       Mr. 
+        1         2        61       260         2         1       757 
+     Mrs.       Ms.      Rev.      Sir. 
+      197         2         8         1 
 ```
 
 ```r
@@ -748,7 +773,7 @@ combi$title &lt;- factor(combi$title)
 plot(survived ~ title, combi[1:n,])
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -769,7 +794,7 @@ combi$wbm &lt;- factor(combi$wbm)
 plot(survived ~ wbm, combi[1:n,])
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -788,7 +813,7 @@ combi$familysize &lt;- combi$sibsp + combi$parch + 1
 plot(survived ~ familysize, combi[1:n,])
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -832,6 +857,7 @@ combi$yhat[combi$wbm=='woman' &amp; combi$surnamesurvival == 0] &lt;- "Death"
 
 
 ```r
+library(ggplot2)
 ggplot(combi[(n+1):(n+m),]) +
     geom_jitter(aes(x=wbm,y=yhat)) +
     labs(title="17 predictions change from gender model on test set") +
@@ -839,7 +865,7 @@ ggplot(combi[(n+1):(n+m),]) +
     geom_rect(alpha=0,color="black",aes(xmin=2.5,xmax=3.5,ymin=1.55,ymax=2.45))
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-38-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
 
 
 ---
