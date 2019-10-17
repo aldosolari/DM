@@ -1,0 +1,118 @@
+---
+title: "OkCupid"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F)
+```
+
+# Outline
+
+* Description
+* Data
+* Evaluation
+* Benchmark
+* Timeline
+
+
+---
+
+# OkCupid
+
+* The original dataset was created with the use of a python script that pulled the data from public profiles on [www.okcupid.com](www.okcupid.com). on 06/30/2012.  Permission to use this data was obtained from OkCupid president and co-founder Christian Rudder under the condition that the dataset remains public
+
+* It has 59946 observations, which includes people within a 25 mile radius of San Francisco, who were online in the last year (06/30/2011), with at least one profile picture
+
+* The goal will be to predict whether a person’s profession is in the __STEM__ fields (science, technology, engineering, and math) using a random sample of the overall dataset
+
+
+---
+
+# Original data
+
+In their original form, the data set contains several types of variables:
+* open text essays related to an individual’s interests and personal descriptions,
+* single choice type fields such as profession, diet, gender, body type, and education, and
+* multiple choice fields such as languages spoken and fluency in programming languages
+
+See [okcupid_codebook.txt](https://github.com/rudeboybert/JSE_OkCupid/blob/master/okcupid_codebook.txt) and [Kim and Escobedo-Land (2015)](https://github.com/rudeboybert/JSE_OkCupid/blob/master/JSE.pdf) for a description of the original data
+
+
+
+---
+
+# Data
+
+* Almost all of raw data fields are discrete in nature; only age was numeric. The categorical predictors and the open text data were converted to dummy variables
+
+* The data set available for the competition is a random sample of the overall dataset
+
+* It contains 90 predictors and 1 response variable (Class, with 2 levels: "other" and "stem")
+
+* The training set has $n=4000$ observations, the test set has $m=1000$ observations
+
+---
+
+# Evaluation
+
+* Submissions are evaluated by the Area Under the Curve (AUC).
+
+* During the competition, the leaderboard displays your partial score, which is the AUC for 500 (random) observations of the test set.
+At the end of the contest, the leaderboard will display the final score, which is the AUC for the remaining 500 observations of the test set. The final score will determine the final winner. This method prevents users from overfitting to the leaderboard
+
+---
+
+# Points
+
+The % of __points__ will be calculated as
+$$\frac{x-m}{M-m}$$
+ where
+* $x$ is your final score
+* $M$ is the best score (among participants)
+* $m$ is the benchmark score
+
+However, I reserve the right to regrade differently (meaning your % of points may be calculated differently)
+
+---
+
+# Benchmark
+
+```{r, eval=FALSE}
+train <- read.csv("101.csv", stringsAsFactors=T)
+test <- read.csv("102.csv", , stringsAsFactors=F)
+test$Class = NA
+n = nrow(train)
+m = nrow(test)
+combi = rbind(train,test)
+train = combi[1:n,]
+test = combi[(n+1):(n+m),]
+
+library(rpart)
+fit = rpart(Class ~ ., data=train)
+phat = predict(fit, newdata=test)[,"stem",drop=F]
+
+write.table(file="myokcupid.txt", phat, row.names = FALSE, col.names = FALSE)
+```
+
+
+---
+
+# Timeline
+
+Entry: October 16
+
+Final submission: November 16
+
+The R code used to get the predictions __must be published online__ by November 17. 
+Keep only the necessary code (no plots, numeric summaries etc. )
+
+
+

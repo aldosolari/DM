@@ -177,10 +177,14 @@ Time window for joining the competitions:
 
 | Competition | Problem | Period |  
 |----|----|----|
-| TBD | Regression | 21.10.19 - 15.11.19 |
-| TBD | Classification |  21.10.19 - 15.11.19 |
+| [Netflix data](docs/competitions/Missc/Missc.html) | Regression | 21.10.19 - 15.11.19 |
+| OkCupid data | Classification |  21.10.19 - 15.11.19 |
 
-If a student does not take part in the competitions in the above time window, he/she must send via e-mail his/her predictions and publish on github the (reproducible) R code at least one week before the exam.
+If a student does not take part in the competitions in the above time window, he/she must
+
+* contact the teacher via e-mail before the exam and get new training/test data
+* send via e-mail the predictions in the required format  
+* publish on github the (reproducible) R code at least one week before the exam
 
 The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off). I would like to thank BeeViva and in particular [Livio Finos](http://www.liviofinos.net/), [Dario Solari](https://www.linkedin.com/in/dariosolari/?originalSubdomain=it) and [Tomaso "Minni" Minelli](https://github.com/minni). The competitions offered in this course would not have been possible without their constant and precious support.
 
