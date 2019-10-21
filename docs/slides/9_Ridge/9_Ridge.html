@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Ridge regression
+### Aldo Solari
+
+---
+
+
+
+
+
+# Outline
+
+* Alternatives to least squares
+* Ridge regression
+* Boston housing data
+
+---
+
+# Matrix notation
+
+* Vector of response: 
+`$$\underset{n\times 1}{\mathbf{y}} = 
+\left[
+\begin{array}{c}
+y_1   \\
+\cdots\\
+y_i  \\
+\cdots\\
+y_n \\
+\end{array}\right]$$`
+
+* Design matrix:
+`$$\underset{n\times p}{\mathbf{X}} = [\mathbf{x}_1 \cdots \mathbf{x}_p] =  \left[
+\begin{array}{cccccc}
+x_{1}^\mathsf{T}   \\
+x_{2}^\mathsf{T}  \\
+\cdots   \\
+x_{i}^\mathsf{T}    \\
+\cdots\\
+x_{n}^\mathsf{T}\\
+\end{array}\right] = \left[
+\begin{array}{cccccc}
+x_{11}  &amp; x_{12}  &amp; \cdots   &amp;  x_{1j}  &amp; \cdots   &amp;   x_{1p}  \\
+x_{21}  &amp; x_{22} &amp; \cdots   &amp;  x_{2j}  &amp; \cdots   &amp;   x_{2p}  \\
+\cdots   &amp; \cdots   &amp;  \cdots &amp; \cdots   &amp;  \cdots  \\
+x_{i1}  &amp; x_{i2} &amp; \cdots   &amp;  x_{ij}&amp; \cdots   &amp; x_{ip}    \\
+\cdots   &amp; \cdots   &amp;  \cdots  &amp;  \cdots   &amp;  \cdots\\
+x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{np}\\
+\end{array}\right]$$`
+
+---
+
+# Linear regression
+
+* Assume `\(\mathrm{rank}(\mathbf{X}) = p\)`
+
+* Least squares problem: 
+`$$\hat{\boldsymbol{\beta}} = \underset{\boldsymbol{\beta} \in \mathbb{R}^p}{\arg\min} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 = \underset{\boldsymbol{\beta} \in \mathbb{R}^p}{\arg\min} \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2$$`
+where  `\(\| \underset{p \times 1}{ \mathbf{v}} \|_{2} = (\mathbf{v}^\mathsf{T}\mathbf{v})^{1/2} = \sqrt{\sum_{j=1}^{p} v_j^2}\)` denotes the `\(L_2\)` norm
+
+* OLS estimator: `$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+
+* Fitted values: `\(\underset{n\times 1}{\hat{\mathbf{y}} } = \mathbf{X}\hat{\boldsymbol{\beta}}\)`
+
+* Test data: `\(\underset{m\times 1}{\mathbf{y}^*}\)`, `\(\underset{m\times p}{\mathbf{X}^*}\)`, prediction on test data: `\(\underset{m\times 1}{\hat{\mathbf{y}}^*} = \mathbf{X}^*\hat{\boldsymbol{\beta}}\)`
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Alternatives to least squares
+
+---
+
+# Why consider alternatives to least squares?
+
+* In the Fixed-X setting, the variance of the OLS estimator is
+`$$\frac{\sigma^2 p}{n}$$`
+
+1. If `\(n \gg p\)` then the least squares estimates tend to have low variance 
+
+2. If `\(n \approx p\)`, then there can be a lot of variability in the least squares fit, resulting in overfitting and poor predictions
+
+3. If `\(n&gt;p\)`, then there is no longer a unique least squares coefficient estimate: the variance is infinite so the method cannot be used at all
+
+* We need to keep the variance in check
+
+---
+
+# Three classes of methods
+
+1. **Subset Selection** &lt;br&gt; We identify a subset of the `\(p\)` predictors
+that we believe to be related to the response. We then fit a
+model using least squares on the reduced set of variables.
+
+2. **Dimension Reduction** &lt;br&gt; We project the `\(p\)` predictors into a `\(q\)`-dimensional subspace, where `\(q &lt; p\)`. Then these `\(q\)` projections are used as predictors to fit a linear regression model by least squares
+
+3. **Regularization** &lt;br&gt; We fit a model involving all `\(p\)` predictors, but the estimated coefficients are shrunken towards zero relative to the least squares estimates.  By *constraining* or *shrinking* the estimated coefficients, we can substantially reduce the variance at the cost of a neglige increase in bias
+
+
+---
+
+# Constrained estimation
+
+&lt;img src="images/l2.jpg" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
+From ISLR, Figure 6.7
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Ridge regression
+
+---
+
+# Constrained estimation
+
+* Solve the constrained minimization problem
+
+`\begin{aligned}
+&amp; \min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2\\ &amp; \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|^2_2 \leq t
+\end{aligned}`
+
+* The constrained problem can be solved by means of the Karuch-Kuhn-Tucker (KTT) multiplier method, which minimizes a function subject to inequality constraint
+
+---
+
+# Penalized estimation
+
+* Penalized least squares
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2 + \lambda\sum_{j=1}^{p}\beta_j^2 = \min_{\boldsymbol{\beta} \in \mathbb{R}^p} \underbrace{ \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 }_{\mathrm{RSS} }+ \underbrace{\lambda\| \boldsymbol{\beta}\|^2_2}_{\mathrm{penalty}}$$`
+
+* Here `\(\lambda \in [0,\infty)\)` is the __tuning parameter__ which controls the strenght of the penalty term
+
+* The minimum of the RSS is attained at `\(\boldsymbol{\beta}=\hat{\boldsymbol{\beta}}\)` while the minimum of the ridge penalty is attained at `\(\boldsymbol{\beta}=\mathbf{0}_p\)`. The effect of the penalty in this balancing act is to __shrink__ the
+coefficient estimates towards zero
+
+---
+
+# Ridge estimator
+
+
+* The solution of the minimization problem is the __ridge estimator__ :
+`$$\hat{\boldsymbol{\beta}}(\lambda) = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+where `\(\mathbf{I}_p\)` is the `\(p\times p\)` identity matrix
+
+* For any design matrix `\(\mathbf{X}\)`, the quantity
+`\((\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\)` is always invertible provided that `\(\lambda &gt; 0\)`; thus,
+there is always a unique solution `\(\hat{\boldsymbol{\beta}}(\lambda)\)`
+
+---
+
+# Solution path
+
+* As `\(\lambda \rightarrow 0\)`, `\(\hat{\boldsymbol{\beta}}(\lambda) \rightarrow \hat{\boldsymbol{\beta}}\)`
+
+* As `\(\lambda \rightarrow \infty\)`, `\(\hat{\boldsymbol{\beta}}(\lambda) \rightarrow \mathbf{0}_p\)`
+
+* __Solution path__ of the ridge estimator:
+`$$\{\hat{\boldsymbol{\beta}}(\lambda): \lambda \in [0,\infty) \}$$`
+
+* All regression coefficients are shrunken towards zero as the tuning parameter `\(\lambda\)` increases
+
+* This behaviour is not strictly monotone in `\(\lambda\)`: `\(\lambda_a &gt; \lambda_b\)` does not necessarily imply `\(|\hat{\beta}_j(\lambda_a)| &lt; |\hat{\beta}_j(\lambda_b)|\)`
+
+---
+
+# Intercept term
+
+* Usually the *intercept term* is not included in the penalty
+
+* If we center the columns of `\(\mathbf{X}\)` to have mean 0 before ridge regression is performed, 
+then the intercept estimate ends up just being `\(\hat{\beta}_0=\bar{y}\)`
+
+---
+
+# Standardization
+
+* The linear model is *equivariant* under scale changes of the predictors. What it means is that the space of fits using linear combinations of the predictors is the same as the space of linear combinations using scaled versions 
+
+* Some care is needed in the application of ridge regression
+
+* The penalty term `\(\| \boldsymbol{\beta}\|^2_2 = \sum_{j=1}^{p}\beta^2_j\)` treats all the coefficients as equals. This penalty is most natural if all predictors are measured on the same scale
+
+* Therefore, it is best to apply ridge regression after standardizing the predictors  to have mean 0 and standard deviation 1
+
+* This can be accomplished without any loss of generality because the coefficients can be returned on the original scale
+
+* Usually the response is also standardized to have mean zero and standard deviation 1
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Boston housing data
+
+---
+
+# Boston housing data
+
+* The Boston Housing data is a standard benchmark data set for regression models. It contains data for 506 census tracts of Boston from the 1970 census
+
+* The main objective of the Boston Housing data is to investigate variables associated with predicting the median value of homes (continuous `medv` response) within 506 suburban areas of Boston
+
+* We will use the data contained in the `MASS` package
+
+---
+
+| Variable | Description | type |
+|---|---|---|
+| crim | Crime rate by town | numeric |
+| zn |  Proportion of residential land zoned for lots over 25,000 sq.ft | numeric |
+| indus | Proportion of non-retail business acres per town | numeric |
+| chas | Charles River (tract bounds river) | logical |
+| nox | Nitrogen oxides concentration (10 ppm) | numeric |
+| rm | Number of rooms per dwelling | numeric |
+| age | Proportion of units built prior to 1940 | numeric |
+| dis | Distances to Boston employment center | numeric |
+| rad | Accessibility to highways | integer |
+| tax | Property-tax rate per $10,000 | numeric |
+| ptratio | Pupil-teacher ratio by town | numeric |
+| black | Proportion of blacks by town | numeric |
+| lstat | Lower status of the population (percent) | numeric |
+| medv | Median value of homes ($1000s) | numeric |
+
+---
+
+
+```r
+rm(list=ls())
+library(MASS)
+data(Boston)
+
+# least squares
+fit.lm = lm(medv ~ ., Boston)
+# lm.ridge (MASS)
+fit.ridge = lm.ridge(medv ~ ., Boston, lambda=1) 
+# coefficients
+round(cbind(coef(fit.ridge), coef(fit.lm)),4)
+```
+
+```
+            [,1]     [,2]
+         36.0843  36.4595
+crim     -0.1070  -0.1080
+zn        0.0458   0.0464
+indus     0.0171   0.0206
+chas      2.7001   2.6867
+nox     -17.5273 -17.7666
+rm        3.8220   3.8099
+age       0.0005   0.0007
+dis      -1.4629  -1.4756
+rad       0.2979   0.3060
+tax      -0.0119  -0.0123
+ptratio  -0.9489  -0.9527
+black     0.0093   0.0093
+lstat    -0.5229  -0.5248
+```
+
+
+
+---
+
+
+
+```r
+# design matrix and response
+X = model.matrix(fit.lm)
+y = Boston$medv
+n = nrow(X)
+
+# standardization
+Xstd = scale(X[,-1])[,]*sqrt((n-1)/n)
+ystd = scale(y)[,]*sqrt((n-1)/n)
+
+# ridge solution path
+lambdas = c(0,exp(seq(-4,12,length.out = 100)))
+hatbetas =sapply(lambdas, function(lambda)
+  solve(t(Xstd)%*%Xstd + lambda*diag(ncol(Xstd))) %*% t(Xstd) %*% ystd
+)
+```
+
+---
+
+
+```r
+matplot(log(lambdas), t(hatbetas), type="l", lty=1, ylab="standardized coefficients")
+```
+
+![](9_Ridge_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+
+# glmnet()
+
+
+```r
+glmnet(X, y,
+family="gaussian",
+alpha = 0, # default = 1 (LASSO), 0 = ridgde
+nlambda = 100, # default
+standardize = TRUE, # default
+intercept=TRUE # default
+)
+```
+
+* See the [glmnet vignette](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html)
+
+---
+
+
+```r
+library(glmnet)
+fit = glmnet(Xstd, ystd, alpha = 0, family="gaussian", lambda=lambdas/n)
+# solution path
+plot(fit, xvar="lambda")
+```
+
+![](9_Ridge_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+# Original scale
+fit = glmnet(X, y, alpha = 0, family="gaussian")
+plot(fit, xvar="lambda")
+```
+
+![](9_Ridge_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+# Choice of the penalty parameter
+
+* Throughout the introduction of ridge regression and the
+subsequent discussion of its properties the penalty parameter is considered known or given
+
+* In practice, it is unknown and the user needs to make an informed decision on its value
+
+* Usually by cross-validation or generalized cross-validation
+
+---
+
+
+```r
+# K-fold cross validation
+K &lt;- 5
+fit.cv &lt;-cv.glmnet(X[,-1],y, alpha=0, nfolds = K, grouped=FALSE)
+plot(fit.cv)
+```
+
+![](9_Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+# lambda selected by K fold cross validation
+hatlambda &lt;-fit.cv$lambda.min
+hatlambda
+```
+
+```
+[1] 0.6777654
+```
+
+```r
+predict(fit.cv, s=hatlambda, type ="coefficients")
+```
+
+```
+14 x 1 sparse Matrix of class "dgCMatrix"
+                        1
+(Intercept)  28.001475781
+crim         -0.087572712
+zn            0.032681030
+indus        -0.038003639
+chas          2.899781646
+nox         -11.913360447
+rm            4.011308386
+age          -0.003731470
+dis          -1.118874605
+rad           0.153730052
+tax          -0.005751054
+ptratio      -0.854984614
+black         0.009073740
+lstat        -0.472423800
+```
+
+---
+
+
+```r
+rm(list=ls())
+data(Boston)
+m = 156
+n = nrow(Boston)-m
+set.seed(123)
+test.id = sample(nrow(Boston),m)
+test = Boston[test.id,]
+train = Boston[-test.id,]
+```
+
+
+---
+
+![](9_Ridge_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Bias-variance trade-off
+
+---
+
+
+# Ridge regression bias-variance trade-off
+
+* Consider the Fixed-X setting. Assume that the true model is linear 
+`$$\mathbf{y} =  \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}$$`
+where the the distribution of the errors is Gaussian, i.e. `\(\boldsymbol{\varepsilon} \sim N(\mathbf{0}_n,\sigma^2 \mathbf{I}_{n})\)`
+
+* The linear operator 
+`$$\mathbf{W}^{\lambda} = [\mathbf{I}_{p\times p} + \lambda(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$$`
+transforms the OLS estimator into the ridge estimator 
+`$$\mathbf{W}^{\lambda} \hat{\boldsymbol{\beta}} = \hat{\boldsymbol{\beta}}^{\lambda}$$`
+
+* Bias `$$\mathbb{E}(\hat{\boldsymbol{\beta}}^{\lambda}) =  \mathbf{X}^\mathsf{T}\mathbf{X}(\lambda\mathbf{I}_{p}  + \mathbf{X}^\mathsf{T}\mathbf{X})^{-1} \boldsymbol{\beta}$$`
+
+
+* Variance
+`$$\mathbb{V}\mathrm{ar}(\hat{\boldsymbol{\beta}}^{\lambda}) = \sigma^2 \mathbf{W}^{\lambda} (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}(\mathbf{W}^{\lambda})^\mathsf{T}$$`
+
+
+---
+
+# Shrinkage
+
+* Estimates are shrunk towards zero
+
+* Consequence
+    - Introduces bias
+    - Reduces variance
+
+---
+
+# Theorem 2 of Theobald, 1974
+
+* There exists `\(\lambda &gt; 0\)` such that `\((\mathbb{B}\mathrm{ias} )^2 +   \mathbb{V}\mathrm{ar}\)` of the ridge regression estimator is lower than the OLS estimator 
+
+* For a certain value of `\(\lambda\)`, the decrease in variance of the ridge
+regression estimator exceeds the increase in its bias
+
+* The optimal choice of `\(\lambda\)` depends on the quantities `\(\boldsymbol{\beta}\)` and `\(\sigma^2\)`. These are unknown in practice
+
+---
+
+![](9_Ridge_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+
+# Predicting a Gaussian random variable
+
+* `\(Y = \mu + \varepsilon\)` with `\(\varepsilon \sim N(0,\sigma^2)\)`
+
+* Training data: `\(Y_1,\ldots,Y_n\)`
+
+* Sample mean: `\(\bar{Y} = \frac{1}{n}\sum_{i=1}^{n} Y_i\)`
+
+* Bias-Variance decomposition 
+$$
+`\begin{aligned}
+\mathbb{E}\{[Y - \bar{Y} ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \bar{Y} ) ]^2 + \mathbb{V}\mathrm{ar}( \bar{Y} )\\
+&amp; = \sigma^2 + 0 + \sigma^2/n
+\end{aligned}`
+$$
+
+* Rao-Blackwell theorem says that `\(\bar{Y}\)` has lower variance than any other unbiased estimator
+
+* Is `\(\bar{Y}\)` the optimal prediction for `\(Y\)` ?
+
+---
+
+# Shrunken sample mean
+
+* Shrunken sample mean: `\(\hat{Y} = \lambda \bar{Y}\)` with `\(\lambda \in [0,1]\)` 
+
+* Bias-Variance decomposition 
+$$
+`\begin{aligned}
+\mathbb{E}\{[Y - \hat{Y} ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \hat{Y} ) ]^2 + \mathbb{V}\mathrm{ar}( \hat{Y} )\\
+&amp; = \sigma^2 + [\mu - \lambda \mu]^2 + \lambda^2(\sigma^2/n)
+\end{aligned}`
+$$
+
+* Solving `\(\displaystyle \frac{\partial}{\partial \lambda} \mathbb{E}\{[Y - \hat{Y} ]^2 \}  = 0\)` gives the value
+`$$\lambda=\frac{\mu^2}{\mu^2 + \sigma^2/n}$$` 
+that minimizes `\(\mathbb{E}\{[Y - \hat{Y} ]^2 \}\)`
+
+* However, the optimal `\(\lambda\)` depends on unknown parameters
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
