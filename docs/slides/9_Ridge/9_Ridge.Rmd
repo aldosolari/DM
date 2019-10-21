@@ -86,12 +86,13 @@ class: inverse, middle, center
 
 * In the Fixed-X setting, the variance of the OLS estimator is
 $$\frac{\sigma^2 p}{n}$$
+    - If $n \gg p$, then the least squares estimates tend to have low variance 
 
-1. If $n \gg p$ then the least squares estimates tend to have low variance 
+    - If $n>p$ but $n \approx p$, then there can be a lot of variability in the least squares fit, resulting in overfitting and poor predictions
 
-2. If $n \approx p$, then there can be a lot of variability in the least squares fit, resulting in overfitting and poor predictions
+    - If $n=p$, then the least squares estimates fit the data exactly, i.e. $\hat{y}_i = y_i$, resulting in complete overfitting and horrible predictions
 
-3. If $n>p$, then there is no longer a unique least squares coefficient estimate: the variance is infinite so the method cannot be used at all
+    - If $n<p$, then there is no longer a unique least squares coefficient estimate: the variance is infinite so the method cannot be used at all
 
 * We need to keep the variance in check
 
@@ -356,18 +357,11 @@ test = Boston[test.id,]
 train = Boston[-test.id,]
 ```
 
-
 ---
 
+
+
 ```{r, echo=F}
-rm(list=ls())
-data(Boston)
-m = 156
-n = nrow(Boston)-m
-set.seed(123)
-test.id = sample(nrow(Boston),m)
-test = Boston[test.id,]
-train = Boston[-test.id,]
 lambda.vals = exp(seq(-15,10,by=0.1))
 op <- par(mfrow=c(2,3))
 colnow=1
@@ -385,7 +379,6 @@ for (nuse in c(50,100,350)){
   points(apply(fits$coef^2, 2, sum)[which.min(RSSs)], sqrt(min(RSSs)/m))
   colnow=colnow+1
 }
-
 par(op)
 ```
 

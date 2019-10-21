@@ -91,12 +91,13 @@ class: inverse, middle, center
 
 * In the Fixed-X setting, the variance of the OLS estimator is
 `$$\frac{\sigma^2 p}{n}$$`
+    - If `\(n \gg p\)`, then the least squares estimates tend to have low variance 
 
-1. If `\(n \gg p\)` then the least squares estimates tend to have low variance 
+    - If `\(n&gt;p\)` but `\(n \approx p\)`, then there can be a lot of variability in the least squares fit, resulting in overfitting and poor predictions
 
-2. If `\(n \approx p\)`, then there can be a lot of variability in the least squares fit, resulting in overfitting and poor predictions
+    - If `\(n=p\)`, then the least squares estimates fit the data exactly, i.e. `\(\hat{y}_i = y_i\)`, resulting in complete overfitting and horrible predictions
 
-3. If `\(n&gt;p\)`, then there is no longer a unique least squares coefficient estimate: the variance is infinite so the method cannot be used at all
+    - If `\(n&lt;p\)`, then there is no longer a unique least squares coefficient estimate: the variance is infinite so the method cannot be used at all
 
 * We need to keep the variance in check
 
@@ -420,8 +421,9 @@ test = Boston[test.id,]
 train = Boston[-test.id,]
 ```
 
-
 ---
+
+
 
 ![](9_Ridge_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
