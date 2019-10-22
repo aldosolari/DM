@@ -495,7 +495,7 @@ aggregate(age ~ pclass + sex, combi, FUN=mean)
 
 ```r
 # Model age as a function of pclass and sex
-fit.age &lt;- lm(age ~ sex + pclass, 
+fit.age &lt;- lm(age ~ sex*pclass, 
           data = combi[!is.na(combi$age),])
 # Imputation of age missing values
 combi$age[is.na(combi$age)] &lt;- predict(fit.age, 
@@ -609,9 +609,9 @@ summary(glm(survived ~ age, train, family="binomial"))$ coefficients
 ```
 
 ```
-                Estimate  Std. Error   z value   Pr(&gt;|z|)
-(Intercept) -0.194344575 0.166959581 -1.164022 0.24441522
-age         -0.009590806 0.005264725 -1.821711 0.06849887
+                Estimate Std. Error   z value  Pr(&gt;|z|)
+(Intercept) -0.193249397 0.16694357 -1.157573 0.2470383
+age         -0.009628612 0.00526435 -1.829022 0.0673963
 ```
 
 ---
@@ -684,7 +684,7 @@ What about age and pclass combined?
 
 # Classification tree 
 
-Binary recursive partitioning of the sample space into smaller and smaller rectangles
+Binary recursive partitioning of the sample space into smaller rectangles
 
 ![](8_Titanic_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 
@@ -801,10 +801,10 @@ Logistic model
 | age | 61.6% | 62.2% |
 | pclass | 67.9% | 67.2% |
 | sex | 78.7% | 76.6% |
-| age + pclass | 70.9% | 67.2% |
+| age + pclass | 69.1% | 65.3% |
 | age + sex | 78.7% | 76.6% |
 | pclass + sex | 78.7% | 76.5% |
-| age + pclass + sex | 80.2% | 76.6% |
+| age + pclass + sex | 79.5% | 75.6% |
 
 ---
 
@@ -913,7 +913,7 @@ plot(survived ~ familysize, combi[1:n,])
 
 ---
 
-# Surname
+# SurnameFreq
 
 
 ```r
@@ -927,11 +927,12 @@ plot(survived ~ surnameFreq, combi[1:n,])
 
 ---
 
-# Same surname
+# Surname survival
 
 
 ```r
-plot(survived ~ as.factor(surname), combi[1:n &amp; combi$surnameFreq==5,])
+train = combi[1:n,]
+plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 ```
 
 ![](8_Titanic_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;

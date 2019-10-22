@@ -26,6 +26,8 @@ class: center, middle, inverse, title-slide
 * Alternatives to least squares
 * Ridge regression
 * Boston housing data
+* Bias-variance trade-off
+* Principal components regression
 
 ---
 
@@ -73,10 +75,25 @@ where  `\(\| \underset{p \times 1}{ \mathbf{v}} \|_{2} = (\mathbf{v}^\mathsf{T}\
 
 * OLS estimator: `$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
 
-* Fitted values: `\(\underset{n\times 1}{\hat{\mathbf{y}} } = \mathbf{X}\hat{\boldsymbol{\beta}}\)`
+* Fitted values: `\(\underset{n\times 1}{\hat{\mathbf{y}} } =  \mathbf{X}\hat{\boldsymbol{\beta}}\)`
 
 * Test data: `\(\underset{m\times 1}{\mathbf{y}^*}\)`, `\(\underset{m\times p}{\mathbf{X}^*}\)`, prediction on test data: `\(\underset{m\times 1}{\hat{\mathbf{y}}^*} = \mathbf{X}^*\hat{\boldsymbol{\beta}}\)`
 
+---
+
+# The Geometry of Least Squares
+
+![](images/projection.png)
+
+From AS, Figure A.2
+
+* `\(\mathcal{C}(\mathbf{X})\)` : column space of `\(\mathbf{X}\)`
+
+* `\(\hat{\boldsymbol{\mu}}  = \hat{\mathbf{y}} =  \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{H} \mathbf{y}\)` : projection of `\(\mathbf{y}\)` on `\(\mathcal{C}(\mathbf{X})\)`
+
+* `\(\mathbf{H} = \mathbf{X} (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\)` : projection (hat) matrix on `\(\mathcal{C}(\mathbf{X})\)`
+
+* `\(\mathbf{y} - \hat{\boldsymbol{\mu}} = (\mathbf{I}_n - \mathbf{H})\mathbf{y}\)` : residuals
 
 ---
 
@@ -100,6 +117,58 @@ class: inverse, middle, center
     - If `\(n&lt;p\)`, then there is no longer a unique least squares coefficient estimate: the variance is infinite so the method cannot be used at all
 
 * We need to keep the variance in check
+
+---
+
+# `\(n \approx p\)`
+
+* `\(n=10\)` and `\(p=9\)`
+* `\(Y = \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_9X_9 +  \varepsilon\)`
+* True `\(\boldsymbol{\beta} = (1,0,0,\ldots,0)^\mathsf{T}\)`
+
+
+```r
+n = 10
+p = 9
+set.seed(1793)
+X = matrix(rnorm(n*p), nrow=n, ncol=p)
+y = X[,1] + rnorm(n,0,0.5)
+fit = lm(y~ 0 + X)
+coef(fit)
+```
+
+```
+        X1         X2         X3         X4         X5         X6         X7         X8         X9 
+ 13.527953  -5.466373 -24.512290  -6.610876   2.732160 -10.670639  15.472750  16.831498 -11.331475 
+```
+
+* Large estimates of regression coefficients (in absolute value) are often an indication of overfitting
+
+---
+
+
+
+```r
+yhat = predict(fit)
+plot(X[,1],y, xlab="x1")
+ix = sort(X[,1], index.return=T)$ix
+lines(X[ix,1], yhat[ix])
+abline(a=0,b=1, col=4)
+```
+
+![](9_Ridge_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+
+# The failure of least squares in high dimensions
+
+* When `\(\mathrm{rank}(\mathbf{X}) &lt; p\)`, there are infinitely many solutions in the least square problem
+
+* Suppose `\(p &gt; n = \mathrm{rank}(\mathbf{X})\)`. Let `\(\mathcal{C}(\mathbf{X})\)` be the `\(n\)`-dimensional space spanned by the columns of `\(\mathbf{X}\)` and `\(\mathcal{V}=\mathcal{C}(\mathbf{X})^\bot\)` the `\(p-n\)` dimensional space orthogonal complement of `\(\mathcal{C}(\mathbf{X})\)`, i.e.  the non-trivial null space of `\(\mathbf{X}\)`
+
+* Then `\(\mathbf{X}\mathbf{v} = \mathbf{0}_p\)` for all `\(\mathbf{v} \in \mathcal{V}\)`, and `\(\mathbf{X}^\mathsf{T}\mathbf{X}\mathbf{v} = \mathbf{X}^\mathsf{T}\mathbf{0}_p = \mathbf{0}_n\)`, the solution of the normal equations `\(\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T}\mathbf{y}\)` is
+`$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-}\mathbf{X}^\mathsf{T} \mathbf{y} + \mathbf{v} \quad \forall\,\, \mathbf{v} \in \mathcal{V}$$`
+where `\(\mathbf{A}^-\)` denotes the Moore-Penrose inverse of the matrix `\(\mathbf{A}\)`
 
 ---
 
@@ -141,12 +210,13 @@ class: inverse, middle, center
 
 * The constrained problem can be solved by means of the Karuch-Kuhn-Tucker (KTT) multiplier method, which minimizes a function subject to inequality constraint
 
+
 ---
 
 # Penalized estimation
 
 * Penalized least squares
-`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2 + \lambda\sum_{j=1}^{p}\beta_j^2 = \min_{\boldsymbol{\beta} \in \mathbb{R}^p} \underbrace{ \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 }_{\mathrm{RSS} }+ \underbrace{\lambda\| \boldsymbol{\beta}\|^2_2}_{\mathrm{penalty}}$$`
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \left\{ \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2 + \lambda\sum_{j=1}^{p}\beta_j^2 \right\} = \min_{\boldsymbol{\beta} \in \mathbb{R}^p} \left\{ \underbrace{ \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 }_{\mathrm{RSS} }+ \underbrace{\lambda\| \boldsymbol{\beta}\|^2_2}_{\mathrm{penalty}} \right\}$$`
 
 * Here `\(\lambda \in [0,\infty)\)` is the __tuning parameter__ which controls the strenght of the penalty term
 
@@ -155,15 +225,20 @@ coefficient estimates towards zero
 
 ---
 
-# Ridge estimator
+# Ridge estimate
 
 
-* The solution of the minimization problem is the __ridge estimator__ :
-`$$\hat{\boldsymbol{\beta}}(\lambda) = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+`\begin{aligned}
+&amp; \frac{\partial}{\partial \boldsymbol{\beta}} \left( \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 + \lambda\| \boldsymbol{\beta}\|^2_2 \right)\\
+&amp; -2 \mathbf{X}^\mathsf{T} (\mathbf{y} - \mathbf{X}\boldsymbol{\beta}) + 2\lambda \boldsymbol{\beta} = \mathbf{0}_p
+\end{aligned}`
+
+* The solution of the minimization problem is the __ridge estimate__ :
+`$$\hat{\boldsymbol{\beta}}(\lambda) = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y} = \mathbf{H}(\lambda)\mathbf{y}$$`
 where `\(\mathbf{I}_p\)` is the `\(p\times p\)` identity matrix
 
 * For any design matrix `\(\mathbf{X}\)`, the quantity
-`\((\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\)` is always invertible provided that `\(\lambda &gt; 0\)`; thus,
+`\((\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )\)` is always invertible provided that `\(\lambda &gt; 0\)`; thus,
 there is always a unique solution `\(\hat{\boldsymbol{\beta}}(\lambda)\)`
 
 ---
@@ -187,8 +262,11 @@ there is always a unique solution `\(\hat{\boldsymbol{\beta}}(\lambda)\)`
 
 * Usually the *intercept term* is not included in the penalty
 
-* If we center the columns of `\(\mathbf{X}\)` to have mean 0 before ridge regression is performed, 
-then the intercept estimate ends up just being `\(\hat{\beta}_0=\bar{y}\)`
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \left\{ \sum_{i=1}^{n}\Big(y_i - \beta_0 -  \sum_{j=1}^{p}x_{ij}\beta_j \Big)^2 + \lambda\sum_{j=1}^{p}\beta_j^2 \right\}$$`
+
+* If we center the columns of `\(\mathbf{X}\)` to have mean 0 before ridge regression is performed, i.e.
+`$$\tilde{\mathbf{x}}_{j} = \mathbf{x}_{j} - \mathbf{1}_n \bar{x}_j$$` where
+`\(\bar{x}_j = \frac{1}{n}\sum_{i=1}^{n}x_{ij}/n\)` and `\(\mathbf{1}_n\)` is the `\(n\)`-vector of 1s, then the intercept estimate ends up just being `\(\hat{\beta}_0=\bar{y}\)`
 
 ---
 
@@ -200,7 +278,8 @@ then the intercept estimate ends up just being `\(\hat{\beta}_0=\bar{y}\)`
 
 * The penalty term `\(\| \boldsymbol{\beta}\|^2_2 = \sum_{j=1}^{p}\beta^2_j\)` treats all the coefficients as equals. This penalty is most natural if all predictors are measured on the same scale
 
-* Therefore, it is best to apply ridge regression after standardizing the predictors  to have mean 0 and standard deviation 1
+* Therefore, it is best to apply ridge regression after standardizing the predictors to have mean 0 and standard deviation 1, i.e.
+`\(\mathbf{z}_{j} = (\mathbf{x}_{j} - \mathbf{1}_n \bar{x}_j )/s_j\)` where `\(s_j = \sqrt{\frac{1}{n}\sum_{i=1}^{n} (x_{ij}-\bar{x}_j)^2}\)`
 
 * This can be accomplished without any loss of generality because the coefficients can be returned on the original scale
 
@@ -255,31 +334,28 @@ fit.lm = lm(medv ~ ., Boston)
 # lm.ridge (MASS)
 fit.ridge = lm.ridge(medv ~ ., Boston, lambda=1) 
 # coefficients
-round(cbind(coef(fit.ridge), coef(fit.lm)),4)
+round(data.frame(lm=coef(fit.lm), ridge=coef(fit.ridge)),4)
 ```
 
 ```
-            [,1]     [,2]
-         36.0843  36.4595
-crim     -0.1070  -0.1080
-zn        0.0458   0.0464
-indus     0.0171   0.0206
-chas      2.7001   2.6867
-nox     -17.5273 -17.7666
-rm        3.8220   3.8099
-age       0.0005   0.0007
-dis      -1.4629  -1.4756
-rad       0.2979   0.3060
-tax      -0.0119  -0.0123
-ptratio  -0.9489  -0.9527
-black     0.0093   0.0093
-lstat    -0.5229  -0.5248
+                  lm    ridge
+(Intercept)  36.4595  36.0843
+crim         -0.1080  -0.1070
+zn            0.0464   0.0458
+indus         0.0206   0.0171
+chas          2.6867   2.7001
+nox         -17.7666 -17.5273
+rm            3.8099   3.8220
+age           0.0007   0.0005
+dis          -1.4756  -1.4629
+rad           0.3060   0.2979
+tax          -0.0123  -0.0119
+ptratio      -0.9527  -0.9489
+black         0.0093   0.0093
+lstat        -0.5248  -0.5229
 ```
-
-
 
 ---
-
 
 
 ```r
@@ -306,7 +382,7 @@ hatbetas =sapply(lambdas, function(lambda)
 matplot(log(lambdas), t(hatbetas), type="l", lty=1, ylab="standardized coefficients")
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -335,7 +411,7 @@ fit = glmnet(Xstd, ystd, alpha = 0, family="gaussian", lambda=lambdas/n)
 plot(fit, xvar="lambda")
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -346,7 +422,7 @@ fit = glmnet(X, y, alpha = 0, family="gaussian")
 plot(fit, xvar="lambda")
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -369,7 +445,7 @@ fit.cv &lt;-cv.glmnet(X[,-1],y, alpha=0, nfolds = K, grouped=FALSE)
 plot(fit.cv)
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -385,7 +461,7 @@ hatlambda
 ```
 
 ```r
-predict(fit.cv, s=hatlambda, type ="coefficients")
+predict(fit.cv, s="lambda.min", type ="coefficients")
 ```
 
 ```
@@ -409,6 +485,21 @@ lstat        -0.472423800
 
 ---
 
+# LOOCV trick
+
+It can be proven that
+`\begin{aligned}
+\hat{\lambda} &amp;= \underset{\lambda}{\arg\min}\frac{1}{n}\sum_{i=1}^{n}( y_i - x_i^\mathsf{T} \hat{\boldsymbol{\beta}}^{-i}(\lambda) )^2\\
+&amp;= \underset{\lambda}{\arg\min} \frac{1}{n} \| \mathbf{B}(\lambda)[\mathbf{I}_n -\mathbf{H}(\lambda)]\mathbf{y} \|^2_2
+\end{aligned}`
+where `\(\mathbf{B}(\lambda)\)` is diagonal with `\(\{\mathbf{B}(\lambda)\}_{ii} = \frac{1}{1-\{\mathbf{H}(\lambda)\}_{ii}}\)`
+
+Hence, the prediction performance for a given `\(\lambda\)`
+can be assessed directly from the ridge hat matrix `\(\mathbf{H}(\lambda)\)` and the response vector without the recalculation of
+the `\(n\)` leave-one-out ridge estimators.  Computationally, this is a considerable gain
+
+---
+
 
 ```r
 rm(list=ls())
@@ -417,15 +508,26 @@ m = 156
 n = nrow(Boston)-m
 set.seed(123)
 test.id = sample(nrow(Boston),m)
-test = Boston[test.id,]
+test = Boston[test.id,-14]
+ytest = Boston[test.id,14]
 train = Boston[-test.id,]
+
+lambda.vals = exp(seq(-15,4,by=0.1))
+fits = lm.ridge(medv~.,data=train, lambda=lambda.vals)
+preds = as.matrix(test) %*% t(coef(fits)[,-1]) +  rep(1,m) %o% coef(fits)[,1]
+resids = matrix(data=ytest, nrow=dim(preds)[1], ncol=dim(preds)[2], byrow=F)-preds
+RMSEs = sqrt( apply(resids^2, 2, sum)/m )
 ```
 
 ---
 
 
+```r
+plot(fits$lambda, RMSEs, type="l", xlab="lambda", ylab="RMSE")
+points(fits$lambda[which.min(RMSEs)],min(RMSEs))
+```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -439,46 +541,41 @@ class: inverse, middle, center
 
 # Ridge regression bias-variance trade-off
 
-* Consider the Fixed-X setting. Assume that the true model is linear 
-`$$\mathbf{y} =  \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}$$`
-where the the distribution of the errors is Gaussian, i.e. `\(\boldsymbol{\varepsilon} \sim N(\mathbf{0}_n,\sigma^2 \mathbf{I}_{n})\)`
+* Consider the Fixed-X setting
+
+* Assume that the true model is 
+`\(\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}\)`
+with  `\(\boldsymbol{\varepsilon} \sim N(\mathbf{0}_n,\sigma^2 \mathbf{I}_{n})\)`
 
 * The linear operator 
-`$$\mathbf{W}^{\lambda} = [\mathbf{I}_{p\times p} + \lambda(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$$`
+`$$\mathbf{W}(\lambda) = [\mathbf{I}_{p\times p} + \lambda(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}]^{-1}$$`
 transforms the OLS estimator into the ridge estimator 
-`$$\mathbf{W}^{\lambda} \hat{\boldsymbol{\beta}} = \hat{\boldsymbol{\beta}}^{\lambda}$$`
+`$$\mathbf{W}(\lambda) \hat{\boldsymbol{\beta}} = \hat{\boldsymbol{\beta}}(\lambda)$$`
 
-* Bias `$$\mathbb{E}(\hat{\boldsymbol{\beta}}^{\lambda}) =  \mathbf{X}^\mathsf{T}\mathbf{X}(\lambda\mathbf{I}_{p}  + \mathbf{X}^\mathsf{T}\mathbf{X})^{-1} \boldsymbol{\beta}$$`
+* Bias `$$\mathbb{E}[\hat{\boldsymbol{\beta}}(\lambda)] =  \mathbf{X}^\mathsf{T}\mathbf{X}(\lambda\mathbf{I}_{p}  + \mathbf{X}^\mathsf{T}\mathbf{X})^{-1} \boldsymbol{\beta}$$`
 
 
 * Variance
-`$$\mathbb{V}\mathrm{ar}(\hat{\boldsymbol{\beta}}^{\lambda}) = \sigma^2 \mathbf{W}^{\lambda} (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}(\mathbf{W}^{\lambda})^\mathsf{T}$$`
-
-
----
-
-# Shrinkage
-
-* Estimates are shrunk towards zero
-
-* Consequence
-    - Introduces bias
-    - Reduces variance
+`$$\mathbb{V}\mathrm{ar}[\hat{\boldsymbol{\beta}}(\lambda)] = \sigma^2 \mathbf{W}(\lambda) (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}(\mathbf{W}(\lambda)^\mathsf{T}$$`
 
 ---
 
-# Theorem 2 of Theobald, 1974
+# Does ridge regression improve over least squares?
 
-* There exists `\(\lambda &gt; 0\)` such that `\((\mathbb{B}\mathrm{ias} )^2 +   \mathbb{V}\mathrm{ar}\)` of the ridge regression estimator is lower than the OLS estimator 
+**Theorem 2 of Theobald (1974)**
 
-* For a certain value of `\(\lambda\)`, the decrease in variance of the ridge
-regression estimator exceeds the increase in its bias
+&gt; Consider the Fixed-X setting. 
+Assume that the true model is 
+`\(\mathbf{y} =  \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\varepsilon}\)` with `\(\boldsymbol{\varepsilon} \sim N(\mathbf{0}_n,\sigma^2 \mathbf{I}_{n})\)`. 
+Then there exists `\(\lambda &gt; 0\)` such that `$$(\mathbb{B}\mathrm{ias} )^2 +   \mathbb{V}\mathrm{ar}$$` of the ridge regression estimator is lower than the OLS estimator 
+
+* For a certain value of `\(\lambda\)`, the decrease in variance of the ridge regression estimator exceeds the increase in its bias
 
 * The optimal choice of `\(\lambda\)` depends on the quantities `\(\boldsymbol{\beta}\)` and `\(\sigma^2\)`. These are unknown in practice
 
 ---
 
-![](9_Ridge_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -516,11 +613,81 @@ $$
 \end{aligned}`
 $$
 
-* Solving `\(\displaystyle \frac{\partial}{\partial \lambda} \mathbb{E}\{[Y - \hat{Y} ]^2 \}  = 0\)` gives the value
+* Solving `\(\displaystyle \frac{d}{d \lambda} \mathbb{E}\{[Y - \hat{Y} ]^2 \}  = 0\)` gives the value
 `$$\lambda=\frac{\mu^2}{\mu^2 + \sigma^2/n}$$` 
 that minimizes `\(\mathbb{E}\{[Y - \hat{Y} ]^2 \}\)`
 
 * However, the optimal `\(\lambda\)` depends on unknown parameters
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Principal components regression
+
+---
+
+# Singular value decomposition
+
+* Consider singular value decomposition (SVD) of the centered matrix `\(\mathbf{X}\)` with `\(\mathrm{rank}(\mathbf{X})=p\)`, i.e. 
+`$$\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}$$`
+
+* `\(\underset{n\times p}{\mathbf{U}}\)` with orthonormal columns, i.e. `\(\mathbf{V}^\mathsf{T}\mathbf{V}= \mathbf{I}_p\)` `\(\mathbf{U}^\mathsf{T}\mathbf{U}=\mathbf{U}\mathbf{U}^\mathsf{T} = \mathbf{I}\)`
+
+*  `\(\underset{p\times p}{\mathbf{V}}\)` orthogonal matrix, i.e. `\(\mathbf{V}^\mathsf{T}\mathbf{V}=\mathbf{V}\mathbf{V}^\mathsf{T} = \mathbf{I}_p\)`
+
+*  `\(\underset{p\times p}{\mathbf{D}}=\mathrm{diag}(d_1,\ldots,d_p)\)` where `\(d_1\geq \ldots d_p\geq 0\)` are the singular values 
+
+---
+
+# Principal components analysis
+
+* Principal components analysis (PCA) is a popular unsupervised learning approach for deriving a low-dimensional set of features from a large set of variables
+
+* From a centered matrix `\(\mathbf{X}\)`, construct the `\(p\)` principal components
+`\(\mathbf{z}_1, \ldots, \mathbf{z}_p\)`, i.e. the `\(p\)` columns of 
+`\(\mathbf{Z} = \mathbf{X}\mathbf{V}\)`
+and then use the first `\(q&lt;p\)` components
+as the predictors in a linear regression model
+
+* The first principal component is that (normalized) linear combination of the variables with the largest variance
+`$$\mathbf{z}_1 = \mathbf{X} \mathbf{v}_1 = \mathbf{u}_1 d_1, \qquad \mathbb{V}\mathrm{ar}(\mathbf{z}_1)=\frac{d_1^2}{n}$$`
+where `\(\mathbf{v}_1,\ldots,\mathbf{v}_p\)` are the columns of `\(\mathbf{V}\)`
+
+* The second principal component has largest variance, subject to being uncorrelated with the first
+
+`$$\mathbf{z}_2 = \mathbf{X} \mathbf{v}_2 = \mathbf{u}_2 d_2, \qquad \mathbb{V}\mathrm{ar}(\mathbf{z}_1)=\frac{d_2^2}{n}, \qquad \mathbf{v}_2 \bot \mathbf{v}_1$$`
+
+* And so on
+
+---
+
+# Comparing principal components regression to least squares and ridge
+
+
+* Least squares regression
+
+$$
+\hat{\boldsymbol{\beta}}  = \mathbf{V}\mathrm{\,\,diag}\Big(\frac{1}{d_1},\ldots,\frac{1}{d_p}\Big) \mathbf{U}^\mathsf{T}\mathbf{y}
+$$
+
+* Ridge regression
+
+$$
+\hat{\boldsymbol{\beta}}(\lambda)  = \mathbf{V}\mathrm{\,\,diag}\Big(\frac{d_1}{d^2_1 + \lambda},\ldots,\frac{d_p}{d^2_p + \lambda}\Big) \mathbf{U}^\mathsf{T}\mathbf{y}
+$$
+
+* Principal components regression
+
+$$
+\hat{\boldsymbol{\beta}}(q)  = \mathbf{V}\mathrm{\,\,diag}\Big(\frac{1}{d_1},\ldots,\frac{1}{d_q},0,\ldots,0\Big) \mathbf{U}^\mathsf{T}\mathbf{y}
+$$
+
+* Both ridge and principal components regression operate on the singular values of the (centered) design matrix `\(\mathbf{X}\)`
+
+* But where principal component regression
+thresholds the singular values of `\(\mathbf{X}\)`, ridge regression shrinks them (depending on their size). Note that since `\(\lambda\geq 0\)`, we have `\(\frac{d^2_j}{d^2_j + \lambda}\leq 1\)`
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -26,7 +26,7 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 * Competitions [sign-up]( https://docs.google.com/forms/d/e/1FAIpQLSfbcoi9YD-cb8x0HqsAmmhRZ42vQ6z4j6yPWpW_GgxU9y_KwA/viewform?usp=pp_url)
 
-* [Participants](docs/competitions/Participants.html)
+* Competitions [participants](docs/competitions/Participants.pdf)
 
 
 
@@ -45,7 +45,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 7 | 15.10.19 | 717 | 13:30 -  14:30 (1h) | The modelling process | [Slides](docs/slides/6_EDA/6_EDA.html) |
 | 8 | 17.10.19 | 713 | 9:30 - 12:30 (3h) | Titanic data | [Slides](docs/slides/8_Titanic/8_Titanic.html) |
 | 9 | 21.10.19 | 717 | 13:30 - 15:30 (2h) | Ridge regression | [Slides](docs/slides/9_Ridge/9_Ridge.html) |
-| 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
+| 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | Lasso and best subset selection | [Slides](docs/slides/10_Lasso/10_Lasso.html) |
 | 11 | 24.10.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
 | 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
 | 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
@@ -135,15 +135,13 @@ For improving R programming and predictive modeling skills, there are three refe
 
 - ISLR 2.2.3, 5.1.5
 
-
 **October 21** Ridge regression
 
-- ISLR 6, 6.2.1, 6.4
-- AS 3.6.3
+- ISLR 6, 6.2.1, 6.3.1, 6.4
 
-**October 22** 
+**October 22** Lasso and best subset selection
 
-- TBD
+- ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
 
 **October 24** 
 

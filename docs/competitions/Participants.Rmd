@@ -1,6 +1,9 @@
 ---
-title: "DM competitions A.A: 2019/20"
-output: html_document
+title: "DM competitions"
+subtitle: A.A. 2019/20
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 __List of participants__
@@ -20,7 +23,7 @@ names(who)[6]<-"Team"
 who2 = who %>%
   arrange(Team) 
 
-who3 = who2[,c(3,4,6)]
+who3 = who2[,c(3,4,5,6)]
 
 who3 %>% 
   mutate(n=1:nrow(who3)) %>%

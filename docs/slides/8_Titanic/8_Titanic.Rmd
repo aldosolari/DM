@@ -347,7 +347,7 @@ combi$embarked[which(is.na(combi$embarked))] <- c("C","C")
 # Age by pclass and sex
 aggregate(age ~ pclass + sex, combi, FUN=mean)
 # Model age as a function of pclass and sex
-fit.age <- lm(age ~ sex + pclass, 
+fit.age <- lm(age ~ sex*pclass, 
           data = combi[!is.na(combi$age),])
 # Imputation of age missing values
 combi$age[is.na(combi$age)] <- predict(fit.age, 
@@ -476,7 +476,7 @@ points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
 
 # Classification tree 
 
-Binary recursive partitioning of the sample space into smaller and smaller rectangles
+Binary recursive partitioning of the sample space into smaller rectangles
 
 ```{r, echo=F}
 class.jitter <- as.numeric(train$pclass)+.7*runif(n)
@@ -570,10 +570,10 @@ Logistic model
 | age | 61.6% | 62.2% |
 | pclass | 67.9% | 67.2% |
 | sex | 78.7% | 76.6% |
-| age + pclass | 70.9% | 67.2% |
+| age + pclass | 69.1% | 65.3% |
 | age + sex | 78.7% | 76.6% |
 | pclass + sex | 78.7% | 76.5% |
-| age + pclass + sex | 80.2% | 76.6% |
+| age + pclass + sex | 79.5% | 75.6% |
 
 ---
 
@@ -644,7 +644,7 @@ plot(survived ~ familysize, combi[1:n,])
 
 ---
 
-# Surname
+# SurnameFreq
 
 ```{r}
 combi$surname <- substring(combi$name,0,regexpr(",",combi$name)-1)
@@ -655,10 +655,11 @@ plot(survived ~ surnameFreq, combi[1:n,])
 
 ---
 
-# Same surname
+# Surname survival
 
 ```{r}
-plot(survived ~ as.factor(surname), combi[1:n & combi$surnameFreq==5,])
+train = combi[1:n,]
+plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 ```
 
 ---
