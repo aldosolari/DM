@@ -6,8 +6,6 @@ output:
   html_document: default
 ---
 
-__List of participants__
-
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, comment=NA, cache=F)
@@ -18,6 +16,8 @@ knitr::opts_chunk$set(echo = T, eval= T, message=F, warning=F, error=F, comment=
 library(dplyr)
 library(readr)
 who <- read_csv("/Users/aldosolari/Documents/mygithub/DM/docs/competitions/DM competitions1920.csv")
+who[which(who[,4]=="Pastore"),6]<-"Jinglerry"
+who[which(who[,6]=="Jingle"),6]<-"Jinglerry"
 
 names(who)[6]<-"Team"
 who2 = who %>%

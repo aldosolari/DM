@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Bagging and random forests
+### Aldo Solari
+
+---
+
+
+
+
+
+# Outline
+
+
+* Bagging
+
+* Spam data
+
+* Random forests
+
+---
+
+# Ensemble methods
+
+* Ensemble methods are techniques that create multiple
+models and then combine them to produce improved results
+
+* These models, when used as inputs of ensemble methods,
+are often called __weak learners__
+
+* Ensemble learning is appealing because that it is able to
+boost weak learners which are slightly better than random
+guess to strong learners which can make very accurate
+predictions
+
+* However, ensemble methods increases __computation time__ and
+reduces __interpretability__
+
+* For example, classification and regression trees are simple and useful for interpretation. However they  are typically not competitive with other approaches in terms of prediction accuracy
+
+* We will see that ensemble methods such as __bagging__ and __random forests__ grow multiple trees which are then combined to yield a single prediction. Combining a large number of trees can often result in
+dramatic improvements in prediction accuracy, at the
+expense of some interpretation loss
+
+---
+
+# Instability of trees
+
+* The primary disadvantage of trees is that they are rather
+unstable (high variance)
+
+* In other words, a small change in the data often results in a completely different tree
+
+* One major reason for this instability is that if a split changes, all the splits under it change as well, thereby propagating the variability
+
+* We will learn how to control the variance, or __stabilize__ the predictions made by trees
+
+* In  doing so, we can greatly improve prediction accuracy but we suffer in terms of interpretability
+
+---
+
+# The boostrap 
+
+* The __bootstrap__ is an useful resampling tool in statistics
+
+* A bootstrap sample of size `\(n\)` from the training data is
+`$$(\tilde{x}_1, \tilde{y}_1), (\tilde{x}_2, \tilde{y}_2), \ldots, (\tilde{x}_n, \tilde{y}_n)$$`
+where each `\((\tilde{x}_i, \tilde{y}_i)\)` are drawn from uniformly at random from `$$(x_1, y_1), (x_2, y_2), \ldots, (x_n, x_n)$$` with __replacement__
+
+* Not all of the training points are represented in a bootstrap sample, and some are represented more than once. The probability for one observation not to be drawn in one draw is `\(1 - \frac{1}{n}\)`
+
+* For large `\(n\)`, the probability for one observation not to be drawn in any of the `\(n\)` draws is
+`$$\lim_{n\rightarrow \infty} \left(1- \frac{1}{n}\right)^n = \frac{1}{e} \approx 0.368$$`
+
+* We can expect `\(\approx 1/3\)` of the `\(n\)` original observations to be __out-of-bag__ (OOB)
+
+---
+
+
+```r
+rm(list=ls())
+n = 1000
+original = 1:n
+set.seed(123)
+bagged = sample(original, size=n, replace=TRUE)
+# proportion of OOB observations
+length(setdiff(original,bagged))/n
+```
+
+```
+[1] 0.365
+```
+
+```r
+# frequency
+table(table(bagged))
+```
+
+```
+
+  1   2   3   4   5 
+358 205  58  12   2 
+```
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Bagging
+
+---
+
+# Bagging trees
+
+* Bootstrap AGGregation, or __bagging__, is a general procedure for reducing the variance of a model and it is particularly useful in the case of regression or classification trees
+
+1. Generate `\(B\)` different bootstrapped training sets
+`$$(\tilde{x}_1^b, \tilde{y}_1^b), (\tilde{x}_2^b, \tilde{y}_2^b), \ldots, (\tilde{x}_n^b, \tilde{y}_n^b), \qquad b=1,\ldots,B$$`
+
+2. Fit a regression tree `\(\hat{f}^{b}\)` or a classification tree `\(\hat{c}^{b}\)` for each bootstrapped training set 
+
+3. Average all the predictions:
+`$$\bar{f}(x) = \frac{1}{B} \sum_{b=1}^{B} \hat{f}^{b}(x)$$`
+for regression trees and
+`$$\bar{c}(x) = \mathrm{Mode}\{\hat{c}^{b}(x),b=1,\ldots,B\}$$`
+for classification trees (**consensus**)
+
+---
+
+.pull-left[
+![](images/bootstrap.jpg)
+]
+
+.pull-right[
+Hastie, Tibshirani and Friedman (2009) [The Elements of Statical Learning: Data Mining, Inference, and Prediction](https://web.stanford.edu/~hastie/ElemStatLearn/) (ESL) p. 284: `\(n = 30\)` training data points, `\(p = 5\)`
+predictors, and `\(K = 2\)` classes. No pruning used in growing trees
+]
+
+---
+
+ESL p. 285: Bagging helps decrease the misclassification rate of the classifier (evaluated on a large independent test set)
+
+![](images/improved.jpg)
+
+
+
+---
+
+# Bagging estimates of class probabilities
+
+* For a classification problem with `\(K\)` classes, we may want to estimate the class probabilities out of our bagging procedure
+
+* What about using the proportion of votes that were for each class? This is generally not a good estimate
+
+* Classification trees already gives us a set of
+predicted class probabilities at `\(x\)`: `\(\hat{p}_k^b(x), k=1,\ldots,K\)`. These are simply the proportion of points in the appropriate region that are in each class
+
+* The bagging estimates of class probabilities are given by
+`$$\bar{p}_k(x) = \frac{1}{B} \sum_{b=1}^{B} \hat{p}_k^{b}(x), \quad k=1,\ldots,K$$`
+
+* The final bagged classifier just chooses the class with the highest probability
+
+* This form of bagging is preferred if it is desired to get estimates of the class probabilities. Also, it can sometimes help the overall prediction accuracy
+
+---
+
+# Breiman (1996) Bagging predictors
+
+Example from the original Breiman paper on bagging: comparing
+the misclassification error of the CART tree (pruning performed by cross-validation) and of the bagging classifier (with `\(B = 50\)`):
+
+| Data set | CART | Bagging |
+|---|---|----|---|
+| waveform | 29.1 | 19.3 |
+| heart | 4.9 | 2.8 |
+| breast cancer | 5.9 | 3.7 |
+| ionosphere | 11.2 | 7.9 |
+| diabetes | 25.3 | 23.9 |
+| glass | 30.4 | 23.6 |
+| soybean | 8.6 | 6.8 |
+
+---
+
+# Out-of-bag error
+
+* Each bagged tree makes use of `\(\approx 2/3\)` of the original observations
+
+* We can predict the response for the `\(i\)`th observation using
+each of the bagged trees in which that observation was OOB
+
+* This yields `\(\approx B/3\)` predictions for the `\(i\)`th observation, which we average (probability or consensus)
+
+* This estimate is essentially the LOOCV error for bagging, if `\(B\)` is large
+
+---
+
+ESL p. 592:
+
+![](images/OOB.jpg)
+
+---
+layout: false
+class: inverse, middle, center
+
+# Spam data
+
+---
+
+Dear Google User,
+
+You have been selected as a winner for using our free services !!!
+
+Find attached email with more details. 
+
+Its totally free and you won't be sorry !!!
+
+Congratulations !!!
+
+Matt Brittin. CEO Google UK
+
+---
+
+# Spam data
+
+
+* 4601 email messages sent to `George` at HP-Labs
+
+* He labeled 1813 of these as `spam`, with the remainder being `good` email 
+
+* The goal is to build a customized spam filter for George: predict whether an e-mail message is `spam` or `good`
+
+* Recorded for each email message is the relative frequency of certain key words (e.g. `business` , `address` , `free` ,  `George`) and certain characters: ( , [ , ! , $ , \#. Included as well are three different recordings of capitalized letters
+
+* Publicly available dataset, available from the [UC Irvine data repository](archive.ics.uci.edu/ml/datasets/Spambase).  More details about the data can be found [here](https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names)
+
+* For this problem not all errors are equal; we want to avoid filtering
+out good e-mail, while letting spam get through is not desirable but
+less serious in its consequences
+
+* We will evaluate predictions in terms of accuracy and __specificity__, i.e.
+`$$\frac{\# \mathrm{\,\,correctly\,\,predicted\,\,emails}}{\# \mathrm{\,\,true\,\,emails}}$$`
+
+---
+
+
+| | george | you | your | hp | free | hpl | ! | our | re | edu | remove |
+|--|--|--|--|--|--|--|--|--|--|--|--|
+| spam | 0.00 | 2.26 | 1.38 | 0.02 | 0.52 | 0.01 | 0.51 | 0.51 | 0.13 | 0.01 | 0.28 |
+| email | 1.27 | 1.27 | 0.44 | 0.90 | 0.07 | 0.43 | 0.11 | 0.18 | 0.42 | 0.29 | 0.01 |
+
+ESL, Table 1.1: Average percentage of words or characters in an email message equal to the indicated word or character. We have chosen the words and characters showing the largest difference between spam and email.
+
+---
+
+
+```r
+#Load the data and split into training and test sets.
+rm(list=ls())
+spam &lt;- read.csv("https://web.stanford.edu/~hastie/CASI_files/DATA/SPAM.csv",header=T)
+spam$spam = as.factor(ifelse(spam$spam==T,"spam","email"))
+train = spam[!spam$testid, -2]
+test = spam[spam$testid, -2]
+n = nrow(train)
+m = nrow(test)
+```
+
+---
+
+
+
+```r
+# A function to calculate prediction accuracy and specificity 
+score &lt;- function(phat, truth, name="model") {
+  ctable &lt;- table(truth=truth,
+                  yhat=(phat&gt;0.5))
+  accuracy &lt;- sum(diag(ctable))/sum(ctable)
+  specificity &lt;- ctable[1,1]/sum(ctable[1,])
+  data.frame(model=name, accuracy=accuracy, specificity=specificity)
+}
+```
+
+---
+
+# Null model
+
+
+```r
+phat.null = rep(mean(train$spam=="spam"),m)
+yhat.null = ifelse(phat.null&gt;.5,"spam","email")
+# confusion matrix
+table(Predicted=yhat.null, True=test$spam)
+```
+
+```
+         True
+Predicted email spam
+    email   941  595
+```
+
+```r
+# score
+score(phat.null, test$spam, name="null")
+```
+
+```
+  model  accuracy specificity
+1  null 0.6126302           1
+```
+
+---
+
+# Classification tree
+
+
+```r
+library(rpart)
+fit.tree= rpart(spam ~ .,train)
+phat.tree = predict(fit.tree, newdata=test)[,"spam"]
+yhat.tree = ifelse(phat.tree&gt;.5,"spam","email")
+score(phat.tree, test$spam, name="classification tree")
+```
+
+```
+                model  accuracy specificity
+1 classification tree 0.8977865   0.9330499
+```
+
+---
+
+
+```r
+library(rpart.plot)
+rpart.plot(fit.tree, type=0, extra=1)
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+phat = numeric(nrow(test))
+acc = NULL
+spec = NULL
+B = 50
+for (b in 1:B){
+use = sample(n,size=n,rep=T)
+fit.tree = rpart(spam ~.,data=train[use,], cp=0.0001)
+phat = phat + predict(fit.tree, newdata=test, type="prob")[,"spam"]
+yhat = ifelse(phat/b &gt;.5,"spam","email")
+acc = c(acc,mean(yhat == test$spam))
+spec = c(spec, score(phat/b, test$spam, name="bagging")[3])
+}
+```
+
+
+---
+
+
+```r
+plot(1:B, acc, xlab="Bagging iterations", ylab="Accuracy", type="l")
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+plot(1:B, spec, xlab="Bagging iterations", ylab="Specificity", type="l")
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Random forests
+
+* Create even more variation in individual trees
+
+* Bagging varies the __rows__ of the training set (randomly draw observations)
+
+* Random forests varies also the __columns__ of the training set (randomly draw predictors)
+
+---
+
+# Tuning parameter
+
+* Before each split, select `\(m \leq p\)` of the predictors at random as candidates for splitting
+
+* `\(m\)` is a __tuning parameter__
+
+* Typically `\(m = \sqrt{p}\)` for classification and `\(m=p/3\)` for regression
+
+* `\(m=p\)` gives Bagging as a special case
+
+
+---
+
+# Why is random forests working?
+
+* Random sampling of the predictors __decorrelates__ the trees. This reduces the variance when we 
+average the trees
+
+* Recall that given a set of identical distributed (but not necessarily independent) variables `\(Z_1,\ldots,Z_B\)` with pairwise correlation `\(\mathbb{C}\mathrm{orr}(Z_j, Z_l) = \rho\)`, mean `\(\mathbb{E}(Z_j) = \mu\)` and variance `\(\mathbb{V}\mathrm{ar}(Z_j) = \sigma^2\)`, then (see the next slide)
+
+$$
+\displaystyle \mathbb{V}\mathrm{ar}(\bar{Z}) = \rho \sigma^2 + \frac{(1-\rho)}{B} \sigma^2
+$$
+ 
+* The idea in random forests is to improve the variance
+reduction of bagging by reducing the correlation `\(\rho\)` between the
+trees, without increasing the variance `\(\sigma^2\)` too much
+
+---
+
+*  `\(\displaystyle \rho = \frac{1}{\sigma^2}[ \mathbb{E}(Z_i Z_j) - \mathbb{E}(Z_i) \mathbb{E}(Z_j)]\)`
+
+* `\(\mathbb{E}(Z_i Z_j) = \rho \sigma^2 + \mu^2\)` if `\(i\neq j\)` 
+
+* `\(\mathbb{E}(Z_i^2) = \sigma^2 + \mu^2\)`
+
+* `\(\displaystyle \mathbb{E}[(\sum_{j=1}^{B}Z_j)^2] = \sum_{i=1}^{B}\sum_{j=1}^B \mathbb{E}(Z_i Z_j)  =  B \mathbb{E}(Z_i^2) + (B^2-B)\mathbb{E}(Z_i Z_j)\)`
+
+* `\(\displaystyle \mathbb{E}(\sum_{j=1}^{B}Z_j) = \sum_{j=1}^{B} \mathbb{E}(Z_j)=  B \mu\)`
+
+`\begin{eqnarray*}
+\mathbb{V}\mathrm{ar}(\bar{Z}) &amp;=&amp; \frac{1}{B^2} \mathbb{V}\mathrm{ar}(\sum_{j=1}^{B}Z_j) \\
+&amp;=&amp;  \frac{1}{B^2} \{ \mathbb{E}[(\sum_{j=1}^{B}Z_j)^2] - [ \mathbb{E}(\sum_{j=1}^{B}Z_j) ]^2  \} 
+\end{eqnarray*}`
+
+---
+
+ESL p. 589 Bagging and random forest applied to the
+spam data
+
+&lt;img src="images/randomforest.jpg" width="70%" height="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# randomForest()
+
+
+```r
+randomForest(formula, 
+  data = ,
+  ntree = , # default 500
+  mtry = , # default sqrt(p) or p/3
+  nodesize = , # default 1 or 5
+  importance = ) # default: FALSE
+```
+
+* In bagging and random forests trees are grown large without pruning, only the minimum number of observations per node - `nodesize` -  is fixed `\(=1\)` for classification and `\(=5\)` for regression
+
+* Number of randomly selected predictors `mtry` `\(=\sqrt{p}\)` for classification and `\(=p/3\)` for regression. Note that `mtry` `\(=p\)` is bagging
+
+---
+
+
+```r
+library(randomForest)
+fit.rf &lt;- randomForest(spam ~ ., data = train, ntree = B, importance=T)
+phat.rf &lt;- predict(fit.rf, newdata=test, type="prob")[,"spam"]
+yhat.rf &lt;- predict(fit.rf, newdata=test)
+table(pred=yhat.rf, truth=test$spam)
+```
+
+```
+       truth
+pred    email spam
+  email   908   40
+  spam     33  555
+```
+
+```r
+score(phat.rf, test$spam, name="random forest")
+```
+
+```
+          model accuracy specificity
+1 random forest 0.953125   0.9659936
+```
+
+---
+
+
+```r
+# out-of-bag estimate of error
+plot(fit.rf)
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Variable importance
+
+* How might we get such a measure of variable importance from a random forest?
+
+* The function `randomForests()` provides two different ways (argument `importance=TRUE`):
+
+1. The first measure (`type=1`) is computed from permuting OOB (out-of-bag) data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable (adding noise). The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences
+
+2. The second measure (`type=2`) is the total decrease in node impurities from splitting on the variable, averaged over all trees. For classification, the node impurity is measured by the Gini index. For regression, it is measured by RSS
+
+* So, the first compares the prediction of a variable with a random version of itself, while the second considers the error rates induced by splitting on a variable
+
+---
+
+[Efron and Hastie (2016) Computer Age Statistical Inference](https://web.stanford.edu/~hastie/CASI/) (CASI) p. 332
+
+&lt;img src="images/varimp.jpg" width="70%" height="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+varImpPlot(fit.rf, type=1)
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Random forest takeaways
+
+* Bagging stabilizes decision trees and improves accuracy by reducing variance. Random forests further improve decision tree performance by de-correlating the individual trees in the bagging ensemble
+
+*  Random forests' variable importance measures can help you determine which variables are contributing the most strongly to your model
+
+* Random forests are one of the better off-the-shelf methods. Strengths:
+    - Easily incorporates features of different types (categorical and numeric)
+    - Tolerance to irrelevant features
+    - Some tolerance to correlated inputs
+    - Good with big data
+    - Handling of missing values
+
+---
+
+
+```r
+library("caret")
+cv &lt;- trainControl(
+  method = "cv",
+  number = 10,
+  ## Estimate class probabilities
+  classProbs = TRUE,
+  ## Classification metrics
+  summaryFunction = twoClassSummary
+)
+```
+
+---
+
+
+```r
+mtryGrid = data.frame(mtry=c(2,29,57))
+rf &lt;- train(
+  spam~., train,
+  ntree = 50,
+  method = "rf",
+  tuneGrid = mtryGrid,
+  localImp = TRUE,
+  trControl=cv)
+```
+
+---
+
+
+```r
+rf
+```
+
+```
+Random Forest 
+
+3065 samples
+  57 predictor
+   2 classes: 'email', 'spam' 
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 2759, 2759, 2758, 2759, 2759, 2759, ... 
+Resampling results across tuning parameters:
+
+  mtry  ROC        Sens       Spec     
+   2    0.9809480  0.9686046  0.9006300
+  29    0.9811124  0.9604877  0.9170370
+  57    0.9772007  0.9615629  0.9014632
+
+ROC was used to select the optimal model using the largest value.
+The final value used for the model was mtry = 29.
+```
+
+---
+
+
+```r
+plot(varImp(rf))
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+bagging &lt;- train(
+  spam~., train,
+  ntree = 50,
+  method = "rf",
+  tuneGrid = data.frame(mtry=57),
+  localImp = TRUE,
+  trControl=cv)
+
+models = list(
+  bagging=bagging,
+  rf=rf)
+resamps = resamples(models)
+```
+
+---
+
+
+```r
+bwplot(resamps)
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+phats.all &lt;- extractProb(models, testX = test, testY = test$spam)
+phats &lt;- subset(phats.all, dataType == "Test")
+phats$model &lt;- phats$object
+plotClassProbs(phats)
+```
+
+![](11_RF_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

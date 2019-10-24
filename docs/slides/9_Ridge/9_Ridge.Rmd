@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true   
@@ -19,9 +20,11 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 # Outline
 
 * Alternatives to least squares
+
 * Ridge regression
-* Boston housing data
-* Bias-variance trade-off
+
+* Ridge bias-variance trade-off
+
 * Principal components regression
 
 ---
@@ -614,7 +617,7 @@ $$\mathbf{z}_2 = \mathbf{X} \mathbf{v}_2 = \mathbf{u}_2 d_2, \qquad \mathbb{V}\m
 
 ---
 
-# Comparing principal components regression to least squares and ridge
+# Comparing pc regression to least squares and ridge
 
 
 * Least squares regression

@@ -24,9 +24,11 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Alternatives to least squares
+
 * Ridge regression
-* Boston housing data
-* Bias-variance trade-off
+
+* Ridge bias-variance trade-off
+
 * Principal components regression
 
 ---
@@ -663,7 +665,7 @@ where `\(\mathbf{v}_1,\ldots,\mathbf{v}_p\)` are the columns of `\(\mathbf{V}\)`
 
 ---
 
-# Comparing principal components regression to least squares and ridge
+# Comparing pc regression to least squares and ridge
 
 
 * Least squares regression
@@ -692,6 +694,7 @@ thresholds the singular values of `\(\mathbf{X}\)`, ridge regression shrinks the
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"ratio": "16:9",
 "highlightLanguage": "R",
 "countIncrementalSlides": false,
 "highlightLines": true

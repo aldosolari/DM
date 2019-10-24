@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true     
@@ -336,8 +337,6 @@ Reds = Bias2s+Vars
 barplot(Reds, ylab="Prediction error", names.arg=ds)
 barplot(Vars, add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
-# best degree
-ds[which.min(Reds)]
 ```
 
 ---
@@ -353,6 +352,7 @@ Reds = Bias2s+Vars
 barplot(Reds, ylab="Reducible error", names.arg=ds)
 barplot(Vars, add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+cat("Best degree d = ",ds[which.min(Reds)])
 ```
 
 ---
@@ -360,7 +360,7 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```{r}
 Irr = rep(sigmatrue^2,length(ps))
 ErrFs = Reds + Irr
-barplot(ErrFs, ylab="Reducible error", names.arg=ps)
+barplot(ErrFs, ylab="Reducible error", names.arg=ds)
 barplot(Irr, add=T, col=1, names.arg=" ")
 legend("topright", c("Reducible","Irreducible"), col=c("gray",1), pch=c(19,19))
 ```

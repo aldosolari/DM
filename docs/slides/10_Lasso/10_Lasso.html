@@ -23,9 +23,19 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Three norms
+
 * Lasso
+
 * Best subset selection
+
 * Variable selection and cross-validation
+
+---
+
+# Regularization
+
+![](images/biasvar.jpg)
+
 
 ---
 
@@ -344,35 +354,6 @@ plot(fit.lasso, xvar="lambda", label=T)
 set.seed(123)
 cv.lasso &lt;-cv.glmnet(X, y, alpha=1, nfolds = K)
 hatlambda&lt;-cv.lasso$lambda.1se
-predict(fit.lasso, s=hatlambda, type ="coefficients")
-```
-
-```
-20 x 1 sparse Matrix of class "dgCMatrix"
-                      1
-(Intercept) 374.3714221
-AtBat         .        
-Hits          .        
-HmRun         .        
-Runs          .        
-RBI           .        
-Walks         2.9784634
-Years         .        
-CAtBat        .        
-CHits         .        
-CHmRun        .        
-CRuns         0.1600173
-CRBI          .        
-CWalks        .        
-League        .        
-Division      .        
-PutOuts       .        
-Assists       .        
-Errors        .        
-NewLeague     .        
-```
-
-```r
 yhat.lasso = predict(fit.lasso, s=hatlambda, newx=X.star, exact=T)
 RMSE.lasso = sqrt(mean( (yhat.lasso - y.star)^2 ))
 RMSE.lasso
@@ -449,13 +430,13 @@ predict.regsubsets =function(object ,newdata ,id ,...){
  mat[,xvars]%*%coefi
 }
 
-yhat.bestBIC = predict.regsubsets(fit.bests, newdata=test, id=2)
+yhat.bestBIC = predict.regsubsets(fit.bests, newdata=test, id=which.min(summary.bests$bic))
 RMSE.BIC = sqrt(mean( (yhat.bestBIC - y.star)^2 ))
 RMSE.BIC
 ```
 
 ```
-[1] 336.0338
+[1] 322.7827
 ```
 
 ---
@@ -497,38 +478,40 @@ class: inverse, middle, center
 
 ---
 
-# Variable selection outside cross-validation
+# Variable selection and cross-validation
 
-* Consider the following approach: best subset selection __outside__ cross-validation
-
-1. Perform best subset selection and obtain `\(B_k, k=0,1,\ldots,p\)`
-
-2. Use cross-validation to select `\(k\)` and
-to estimate the prediction error of the final model
-
-* Here the training set is being used for three purposes:
-
-1. predictor selection
-2. model fitting 
-3. performance evaluation
-
-* Unless the number of observations is large, especially in relation to the number of predictors, one training set may not be able to fulfill these needs
-
-* To obtain accurate estimates of the test
-error, we must use only the training observations to perform all aspects of
-model-fitting, including variable selection.
-
----
-
-# Variable selection inside cross-validation
+* See ISLR, 6.5.3
 
 * Since variable selection is part of the model building process,  cross-validation should account for the __variability of the selection__ when calculating estimates of the test error
 
-* In order to incorporate the variation due to variable selection, it is wiser to perform best subset selection __inside__ cross-validation
+* If the full data set is used to perform the best subset selection step, the cross-validation errors that we obtain will not be accurate estimates of the test error
+
+* To choose among the models of different sizes using cross-validation, we perform best
+subset selection within each iteration of the cross-validation
 
 * Note that possibly different subsets of the "best" predictors are generated at each iteration of the cross-validation
 
-* When conducting a search for a subset of variables, it is important to realize that there may not be a unique set of predictors that will produce the best performance
+---
+
+
+```r
+# Validation set
+set.seed(1)
+is.va = sample(c(T,F), n, replace = TRUE)
+err.va = vector()
+fit = regsubsets(y ~.,data=train[!is.va,],nvmax=p)
+for (j in 1:p){
+  yhat=predict(fit, train[is.va,], id=j)
+  err.va[j] = mean( (train$y[is.va]-yhat)^2 )
+}
+yhat.bestVa = predict.regsubsets(fit.bests, newdata=test, id=which.min(err.va))
+RMSE.bestVa = sqrt(mean( (yhat.bestVa - y.star)^2 ))
+RMSE.bestVa
+```
+
+```
+[1] 328.3177
+```
 
 ---
 
@@ -551,79 +534,53 @@ for (k in 1:K){
 
 
 ```r
-plot(1:p,apply(KCV,2,mean), type="b")
+plot(1:p,apply(KCV,2,mean), type="b", ylab="CV error", xlab="k")
 ```
 
-![](10_Lasso_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](10_Lasso_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 
 ---
 
 
 ```r
-library(caret)
-set.seed(123)
-ctrl &lt;- rfeControl(functions = lmFuncs,
-                   number = K,
-                   method = "repeatedcv",
-                   repeats = 2,
-                   verbose = FALSE)
-subsets &lt;- 1:p
-lmProfile &lt;- rfe(X, y,
-                 sizes = subsets,
-                 rfeControl = ctrl)
-predictors(lmProfile)
+yhat.bestCV = predict.regsubsets(fit.bests, newdata=test, id=4)
+RMSE.bestCV = sqrt(mean( (yhat.bestCV - y.star)^2 ))
+RMSE.bestCV
 ```
 
 ```
- [1] "Division"  "League"    "NewLeague" "Years"     "HmRun"     "Walks"     "Runs"      "Hits"      "CRuns"     "RBI"       "AtBat"     "Errors"    "CHmRun"    "CWalks"    "CHits"     "CRBI"      "Assists"   "PutOuts"  
-[19] "CAtBat"   
+[1] 322.7827
 ```
 
 ---
 
 
 ```r
-plot(lmProfile, type = c("g", "o"))
-```
-
-![](10_Lasso_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
-
-```r
-yhat.CV = predict(lmProfile$fit, newdata=test)
-RMSE.CV = sqrt(mean( (yhat.CV - y.star)^2 ))
-RMSE.CV
+data.frame(
+  fit = c("full","ridge","lasso","best bic", "best fwd aic", "best va", "best cv"),
+  RMSE = c(RMSE.full,RMSE.ridge,RMSE.lasso, RMSE.BIC, RMSE.fwdAIC, RMSE.bestVa, RMSE.bestCV)
+)
 ```
 
 ```
-[1] 338.7929
+           fit     RMSE
+1         full 338.7929
+2        ridge 311.0645
+3        lasso 386.0951
+4     best bic 322.7827
+5 best fwd aic 321.6181
+6      best va 328.3177
+7      best cv 322.7827
 ```
+
+
 
 ---
 
 # ESL Chapter 7.10.2
 
-* Consider a classification problem with a large number of predictors 
-
-* A typical strategy for analysis might be as follows:
-
-1. Screen the predictors: find a subset of "good" predictors that show
-fairly strong (univariate) correlation with the class labels
-
-2. Using just this subset of predictors, build a multivariate classifier.
-
-3. Use cross-validation to estimate the unknown tuning parameters and
-to estimate the prediction error of the final model
-
-* Is this a correct application of cross-validation? 
-
----
-
-# Simulation
-
-* Consider a scenario with `\(n = 50\)` samples in two equal-sized classes, and `\(p = 5000\)` quantitative
-predictors (standard Gaussian) that are independent of the class labels
-
-* The true (test) error rate of any classifier is 50%. 
+Consider a scenario with `\(n = 50\)` samples in two equal-sized classes, and `\(p = 5000\)` quantitative
+predictors (standard Gaussian) that are independent of the class labels. The true (test) error rate of any classifier is 50%. Try the following approach:
 
 1. choose the 100 predictors having highest correlation
 with the class labels
@@ -632,9 +589,6 @@ with the class labels
 
 3. Use `\(K\)`-fold CV to estimate the test error of the final model
 
-* Over 50 simulations from this
-setting, the average CV error rate was 3%. This is far lower than the true
-error rate of 50%. What has happened?
 
 
 ---
@@ -674,15 +628,10 @@ mean(Err.CV)
 
 ---
 
-* The problem is that the predictors have an unfair
-advantage, as they were chosen in step 1. on the basis of all of the observations
+Leaving observations out after the variables have been selected does not correctly mimic the application of the classifier to a completely independent
+test set, since these predictors have already seen the left out observations. Here is the correct way to carry out cross-validation in this example:
 
-* Leaving observations out after the variables have been selected does not correctly mimic the application of the classifier to a completely independent
-test set, since these predictors have already seen the left out observations
-
-* Here is the correct way to carry out cross-validation in this example:
-
-1. Divide the observations into `\(K\)` cross-validation folds at random.
+1. Divide the observations into `\(K\)` cross-validation folds at random
 2. For each fold `\(k = 1,\ldots,K\)`
 
     a. Find the best 100 predictors that have the largest (in absolute value) correlation with the class labels, using all of the observations except those in fold `\(k\)`
@@ -691,8 +640,6 @@ test set, since these predictors have already seen the left out observations
     
     c. Use the classifier to predict the class labels for the observations in fold `\(k\)`
     
-* The error estimates from step 2.c are then accumulated over all `\(K\)` folds, to produce the cross-validation estimate of prediction error
-
 ---
 
 
@@ -728,6 +675,7 @@ mean(Err.CV)
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightLanguage": "R",
+"ratio": "16:9",
 "countIncrementalSlides": false,
 "highlightLines": true
 });

@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true    
@@ -127,8 +128,7 @@ Aldo Solari
 
 # SUS5
 
-
-```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
+```{r, echo=FALSE, fig.align = 'center', out.width = '50%', out.height = '50%'}
 knitr::include_graphics("images/sus5winners.jpg")
 ```
 .center[Team **GoldFisher** (from the left): Beatrice Somaschini, Federico Melograna, Alice Giampino, Nicholas Missineo  - **Best Predictive Performance**]
@@ -374,7 +374,7 @@ class: inverse, middle, center
 
 # What is data science?
 
-```{r, echo=FALSE, fig.align = 'center', out.width = '60%', out.height = '60%'}
+```{r, echo=FALSE, fig.align = 'center', out.width = '50%', out.height = '50%'}
 knitr::include_graphics("images/datascience.png")
 ```
 
@@ -429,7 +429,7 @@ scientific question
 
 # The future of data analysis 
 
-```{r, echo=FALSE, fig.align = 'center', out.width = '60%', out.height = '60%'}
+```{r, echo=FALSE, fig.align = 'center', out.width = '50%', out.height = '25%'}
 knitr::include_graphics("images/tukey.jpg")
 ```
 .center[John Tukey (1915-2000)]
@@ -444,7 +444,7 @@ Reading:
 # Is Gauss a data scientist?
 
 
-```{r, echo=FALSE, fig.align = 'center', out.width = '30%', out.height = '30%'}
+```{r, echo=FALSE, fig.align = 'center', out.width = '25%', out.height = '30%'}
 knitr::include_graphics("images/gauss.jpg")
 ```
 .center[Carl Friedrich Gauss (1777 - 1855)]
@@ -522,10 +522,9 @@ where $\varepsilon_1,\ldots,\varepsilon_n$ and $\varepsilon^*_1,\ldots,\varepsil
 ```{r}
 # import data
 library(readr)
-{{df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]}}
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
 train <- data.frame(x=df$x, y=df$y.yesterday)
 test <- data.frame(x=df$x, y=df$y.tomorrow)
-
 # scatterplot
 plot( y ~ x , train)
 ```
@@ -562,15 +561,11 @@ $$\hat{y}_i^*=\hat{f}(x_i), \quad i=1,\ldots,n$$
 
 ```{r}
 # 3rd degree polynomial regression fit
-{{fit <- lm( y ~ poly(x, degree=3), train)}}
-{{yhat <- predict(fit, newdata=test)}}
-
-# plot
+fit <- lm( y ~ poly(x, degree=3), train)
+yhat <- predict(fit, newdata=test)
 plot( y ~ x , train)
 lines( yhat ~ x, train)
-
-# MSE.tr
-( MSE.tr <- mean( (train$y - yhat)^2 ) )
+MSE.tr <- mean( (train$y - yhat)^2 )
 ```
 
 
@@ -581,14 +576,12 @@ lines( yhat ~ x, train)
 n <- nrow(train)
 ds = 0:(n-1)
 ps = ds + 1
-
 # function to fit polynomial model of degree d
-{{fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)}}
-{{fits <- sapply(ds, fun)}}
-
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+fits <- sapply(ds, fun)
 # compute MSE.tr for all degrees
 MSEs.tr <- unlist( lapply(fits, deviance) )/n
-plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="MSE.tr")
 ```
 
 
@@ -596,15 +589,14 @@ plot(ps, MSEs.tr, type="b", xlab="p", ylab="MSE.tr")
 
 
 ```{r}
-# compute predictions for all degrees
 yhats <- lapply(fits, predict)
-# compute MSE.te for all degrees
 MSEs.te <- unlist(lapply(yhats, 
            function(yhat) mean((test$y - yhat)^2)
            ))
-# plot
-plot(ps, MSEs.te, type="b", col=4, xlab="p", ylab="MSE.te")
-# best?
-ps[which.min(MSEs.te)]
+plot(ds, MSEs.te, type="b", col=4, xlab="d", ylab="MSE.te")
+```
+
+```{r, echo=F}
+cat("best degree d = ", ds[which.min(MSEs.te)])
 ```
 
