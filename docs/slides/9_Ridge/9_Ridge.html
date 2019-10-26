@@ -73,7 +73,7 @@ x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{
 
 * Least squares problem: 
 `$$\hat{\boldsymbol{\beta}} = \underset{\boldsymbol{\beta} \in \mathbb{R}^p}{\arg\min} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 = \underset{\boldsymbol{\beta} \in \mathbb{R}^p}{\arg\min} \sum_{i=1}^{n}(y_i - x_i^\mathsf{T}\boldsymbol{\beta} )^2$$`
-where  `\(\| \underset{p \times 1}{ \mathbf{v}} \|_{2} = (\mathbf{v}^\mathsf{T}\mathbf{v})^{1/2} = \sqrt{\sum_{j=1}^{p} v_j^2}\)` denotes the `\(L_2\)` norm
+where  `\(\| \underset{p \times 1}{ \mathbf{v}} \|_{2} = (\mathbf{v}^\mathsf{T}\mathbf{v})^{1/2} = \sqrt{\sum_{j=1}^{p} v_j^2}\)` denotes the `\(\ell_2\)` norm
 
 * OLS estimator: `$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
 
@@ -89,9 +89,7 @@ where  `\(\| \underset{p \times 1}{ \mathbf{v}} \|_{2} = (\mathbf{v}^\mathsf{T}\
 
 From AS, Figure A.2
 
-* `\(\mathcal{C}(\mathbf{X})\)` : column space of `\(\mathbf{X}\)`
-
-* `\(\hat{\boldsymbol{\mu}}  = \hat{\mathbf{y}} =  \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{H} \mathbf{y}\)` : projection of `\(\mathbf{y}\)` on `\(\mathcal{C}(\mathbf{X})\)`
+* `\(\hat{\boldsymbol{\mu}}  = \hat{\mathbf{y}} =  \mathbf{X}\hat{\boldsymbol{\beta}} = \mathbf{H} \mathbf{y}\)` : projection of `\(\mathbf{y}\)` on column space of `\(\mathbf{X}\)`, i.e. `\(\mathcal{C}(\mathbf{X})\)`
 
 * `\(\mathbf{H} = \mathbf{X} (\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\)` : projection (hat) matrix on `\(\mathcal{C}(\mathbf{X})\)`
 
@@ -125,7 +123,9 @@ class: inverse, middle, center
 # `\(n \approx p\)`
 
 * `\(n=10\)` and `\(p=9\)`
+
 * `\(Y = \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_9X_9 +  \varepsilon\)`
+
 * True `\(\boldsymbol{\beta} = (1,0,0,\ldots,0)^\mathsf{T}\)`
 
 
@@ -144,7 +144,7 @@ coef(fit)
  13.527953  -5.466373 -24.512290  -6.610876   2.732160 -10.670639  15.472750  16.831498 -11.331475 
 ```
 
-* Large estimates of regression coefficients (in absolute value) are often an indication of overfitting
+Large estimates of regression coefficients (in absolute value) are often an indication of overfitting
 
 ---
 
@@ -189,9 +189,11 @@ model using least squares on the reduced set of variables.
 
 # Constrained estimation
 
-&lt;img src="images/l2.jpg" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+ISLR, Figure 6.7
 
-From ISLR, Figure 6.7
+&lt;img src="images/l2.jpg" width="40%" height="40%" style="display: block; margin: auto;" /&gt;
+
+
 
 ---
 
@@ -236,7 +238,7 @@ coefficient estimates towards zero
 \end{aligned}`
 
 * The solution of the minimization problem is the __ridge estimate__ :
-`$$\hat{\boldsymbol{\beta}}(\lambda) = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y} = \mathbf{H}(\lambda)\mathbf{y}$$`
+`$$\hat{\boldsymbol{\beta}}(\lambda) = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
 where `\(\mathbf{I}_p\)` is the `\(p\times p\)` identity matrix
 
 * For any design matrix `\(\mathbf{X}\)`, the quantity
@@ -289,72 +291,121 @@ there is always a unique solution `\(\hat{\boldsymbol{\beta}}(\lambda)\)`
 
 ---
 
-layout: false
-class: inverse, middle, center
 
-# Boston housing data
+# Hitters data
 
----
+A data frame with 322 observations of major league players on the following 20 variables
 
-# Boston housing data
+.pull-left[
+AtBat
+Number of times at bat in 1986
 
-* The Boston Housing data is a standard benchmark data set for regression models. It contains data for 506 census tracts of Boston from the 1970 census
+Hits
+Number of hits in 1986
 
-* The main objective of the Boston Housing data is to investigate variables associated with predicting the median value of homes (continuous `medv` response) within 506 suburban areas of Boston
+HmRun
+Number of home runs in 1986
 
-* We will use the data contained in the `MASS` package
+Runs
+Number of runs in 1986
 
----
+RBI
+Number of runs batted in in 1986
 
-| Variable | Description | type |
-|---|---|---|
-| crim | Crime rate by town | numeric |
-| zn |  Proportion of residential land zoned for lots over 25,000 sq.ft | numeric |
-| indus | Proportion of non-retail business acres per town | numeric |
-| chas | Charles River (tract bounds river) | logical |
-| nox | Nitrogen oxides concentration (10 ppm) | numeric |
-| rm | Number of rooms per dwelling | numeric |
-| age | Proportion of units built prior to 1940 | numeric |
-| dis | Distances to Boston employment center | numeric |
-| rad | Accessibility to highways | integer |
-| tax | Property-tax rate per $10,000 | numeric |
-| ptratio | Pupil-teacher ratio by town | numeric |
-| black | Proportion of blacks by town | numeric |
-| lstat | Lower status of the population (percent) | numeric |
-| medv | Median value of homes ($1000s) | numeric |
+Walks
+Number of walks in 1986
+
+Years
+Number of years in the major leagues
+
+CAtBat
+Number of times at bat during his career
+
+CHits
+Number of hits during his career
+
+CHmRun
+Number of home runs during his career
+
+CRuns
+Number of runs during his career
+]
+
+.pull-right[
+CRBI
+Number of runs batted in during his career
+
+CWalks
+Number of walks during his career
+
+League
+A factor with levels A and N indicating player's league at the end of 1986
+
+Division
+A factor with levels E and W indicating player's division at the end of 1986
+
+PutOuts
+Number of put outs in 1986
+
+Assists
+Number of assists in 1986
+
+Errors
+Number of errors in 1986
+
+**Salary**
+1987 annual salary on opening day in thousands of dollars
+
+NewLeague
+A factor with levels A and N indicating player's league at the beginning of 1987
+]
 
 ---
 
 
 ```r
 rm(list=ls())
-library(MASS)
-data(Boston)
-
+library(ISLR)
+data(Hitters)
+# remove rows with missing values
+Hitters =na.omit(Hitters )
 # least squares
-fit.lm = lm(medv ~ ., Boston)
+fit.lm = lm(Salary ~ ., Hitters)
 # lm.ridge (MASS)
-fit.ridge = lm.ridge(medv ~ ., Boston, lambda=1) 
+library(MASS)
+fit.ridge = lm.ridge(Salary ~ ., Hitters, lambda=1) 
+```
+
+---
+
+
+```r
 # coefficients
 round(data.frame(lm=coef(fit.lm), ridge=coef(fit.ridge)),4)
 ```
 
 ```
-                  lm    ridge
-(Intercept)  36.4595  36.0843
-crim         -0.1080  -0.1070
-zn            0.0464   0.0458
-indus         0.0206   0.0171
-chas          2.6867   2.7001
-nox         -17.7666 -17.5273
-rm            3.8099   3.8220
-age           0.0007   0.0005
-dis          -1.4756  -1.4629
-rad           0.3060   0.2979
-tax          -0.0123  -0.0119
-ptratio      -0.9527  -0.9489
-black         0.0093   0.0093
-lstat        -0.5248  -0.5229
+                   lm     ridge
+(Intercept)  163.1036  159.9382
+AtBat         -1.9799   -1.8396
+Hits           7.5008    6.5845
+HmRun          4.3309    2.0781
+Runs          -2.3762   -1.1535
+RBI           -1.0450   -0.3568
+Walks          6.2313    5.7407
+Years         -3.4891   -8.0870
+CAtBat        -0.1713   -0.0987
+CHits          0.1340    0.1961
+CHmRun        -0.1729    0.4764
+CRuns          1.4543    0.9687
+CRBI           0.8077    0.4969
+CWalks        -0.8116   -0.7000
+LeagueN       62.5994   62.1389
+DivisionW   -116.8492 -120.5144
+PutOuts        0.2819    0.2813
+Assists        0.3711    0.3277
+Errors        -3.3608   -3.6038
+NewLeagueN   -24.7623  -27.4197
 ```
 
 ---
@@ -363,7 +414,7 @@ lstat        -0.5248  -0.5229
 ```r
 # design matrix and response
 X = model.matrix(fit.lm)
-y = Boston$medv
+y = Hitters$Salary
 n = nrow(X)
 
 # standardization
@@ -384,7 +435,7 @@ hatbetas =sapply(lambdas, function(lambda)
 matplot(log(lambdas), t(hatbetas), type="l", lty=1, ylab="standardized coefficients")
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -401,7 +452,7 @@ intercept=TRUE # default
 )
 ```
 
-* See the [glmnet vignette](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html)
+See the [glmnet vignette](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html)
 
 ---
 
@@ -413,7 +464,7 @@ fit = glmnet(Xstd, ystd, alpha = 0, family="gaussian", lambda=lambdas/n)
 plot(fit, xvar="lambda")
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -424,7 +475,7 @@ fit = glmnet(X, y, alpha = 0, family="gaussian")
 plot(fit, xvar="lambda")
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -447,7 +498,7 @@ fit.cv &lt;-cv.glmnet(X[,-1],y, alpha=0, nfolds = K, grouped=FALSE)
 plot(fit.cv)
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -459,63 +510,45 @@ hatlambda
 ```
 
 ```
-[1] 0.6777654
-```
-
-```r
-predict(fit.cv, s="lambda.min", type ="coefficients")
-```
-
-```
-14 x 1 sparse Matrix of class "dgCMatrix"
-                        1
-(Intercept)  28.001475781
-crim         -0.087572712
-zn            0.032681030
-indus        -0.038003639
-chas          2.899781646
-nox         -11.913360447
-rm            4.011308386
-age          -0.003731470
-dis          -1.118874605
-rad           0.153730052
-tax          -0.005751054
-ptratio      -0.854984614
-black         0.009073740
-lstat        -0.472423800
+[1] 25.52821
 ```
 
 ---
 
-# LOOCV trick
+# LOOCV shortcut
+
+The ridge hat matrix is defined as
+`$$\mathbf{H}(\lambda) = \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T}$$`
 
 It can be proven that
-`\begin{aligned}
-\hat{\lambda} &amp;= \underset{\lambda}{\arg\min}\frac{1}{n}\sum_{i=1}^{n}( y_i - x_i^\mathsf{T} \hat{\boldsymbol{\beta}}^{-i}(\lambda) )^2\\
-&amp;= \underset{\lambda}{\arg\min} \frac{1}{n} \| \mathbf{B}(\lambda)[\mathbf{I}_n -\mathbf{H}(\lambda)]\mathbf{y} \|^2_2
-\end{aligned}`
-where `\(\mathbf{B}(\lambda)\)` is diagonal with `\(\{\mathbf{B}(\lambda)\}_{ii} = \frac{1}{1-\{\mathbf{H}(\lambda)\}_{ii}}\)`
+`$$\frac{1}{n}\sum_{i=1}^{n}\Big[ y_i - x_i^\mathsf{T} \hat{\boldsymbol{\beta}}^{-i}(\lambda) \Big]^2 = \frac{1}{n}\sum_{i=1}^{n} \left[ \frac{y_i - x_i^\mathsf{T} \hat{\boldsymbol{\beta}}(\lambda)}{1-\{\mathbf{H}(\lambda)\}_{ii}} \right]^2$$`
+where `\(\hat{\boldsymbol{\beta}}^{-i}(\lambda)\)` is the ridge estimate obtained by excluding the `\(i\)`th observation and `\(\{\mathbf{H}(\lambda)\}_{ii}\)` is the `\(i\)`th diagonal element of `\(\mathbf{H}(\lambda)\)`
+
 
 Hence, the prediction performance for a given `\(\lambda\)`
 can be assessed directly from the ridge hat matrix `\(\mathbf{H}(\lambda)\)` and the response vector without the recalculation of
-the `\(n\)` leave-one-out ridge estimators.  Computationally, this is a considerable gain
+the `\(n\)` leave-one-out ridge estimators
+
+Computationally, this is a considerable gain
 
 ---
 
 
 ```r
 rm(list=ls())
-data(Boston)
-m = 156
-n = nrow(Boston)-m
+data(Hitters)
+Hitters = na.omit(Hitters)
+Hitters = data.frame(model.matrix(lm(Salary ~ ., Hitters))[,-1], Salary=Hitters$Salary)
+m = 100
+n = nrow(Hitters)-m
 set.seed(123)
-test.id = sample(nrow(Boston),m)
-test = Boston[test.id,-14]
-ytest = Boston[test.id,14]
-train = Boston[-test.id,]
+test.id = sample(nrow(Hitters),m)
+test = Hitters[test.id,-20]
+ytest = Hitters[test.id,20]
+train = Hitters[-test.id,]
 
-lambda.vals = exp(seq(-15,4,by=0.1))
-fits = lm.ridge(medv~.,data=train, lambda=lambda.vals)
+lambda.vals = exp(seq(-10,10,by=0.1))
+fits = lm.ridge(Salary~.,data=train, lambda=lambda.vals)
 preds = as.matrix(test) %*% t(coef(fits)[,-1]) +  rep(1,m) %o% coef(fits)[,1]
 resids = matrix(data=ytest, nrow=dim(preds)[1], ncol=dim(preds)[2], byrow=F)-preds
 RMSEs = sqrt( apply(resids^2, 2, sum)/m )
@@ -525,11 +558,11 @@ RMSEs = sqrt( apply(resids^2, 2, sum)/m )
 
 
 ```r
-plot(fits$lambda, RMSEs, type="l", xlab="lambda", ylab="RMSE")
+plot(fits$lambda, RMSEs, type="l", xlab="lambda", ylab="RMSE", log="x")
 points(fits$lambda[which.min(RMSEs)],min(RMSEs))
 ```
 
-![](9_Ridge_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -558,7 +591,7 @@ transforms the OLS estimator into the ridge estimator
 
 
 * Variance
-`$$\mathbb{V}\mathrm{ar}[\hat{\boldsymbol{\beta}}(\lambda)] = \sigma^2 \mathbf{W}(\lambda) (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}(\mathbf{W}(\lambda)^\mathsf{T}$$`
+`$$\mathbb{V}\mathrm{ar}[\hat{\boldsymbol{\beta}}(\lambda)] = \sigma^2 \mathbf{W}(\lambda) (\mathbf{X}^\mathsf{T}\mathbf{X} )^{-1}\mathbf{W}(\lambda)^\mathsf{T}$$`
 
 ---
 
@@ -577,13 +610,13 @@ Then there exists `\(\lambda &gt; 0\)` such that `$$(\mathbb{B}\mathrm{ias} )^2 
 
 ---
 
-![](9_Ridge_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](9_Ridge_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 ---
 
 # Predicting a Gaussian random variable
 
-* `\(Y = \mu + \varepsilon\)` with `\(\varepsilon \sim N(0,\sigma^2)\)`
+* `\(Y = \beta + \varepsilon\)` with `\(\varepsilon \sim N(0,\sigma^2)\)`
 
 * Training data: `\(Y_1,\ldots,Y_n\)`
 
@@ -611,12 +644,12 @@ $$
 $$
 `\begin{aligned}
 \mathbb{E}\{[Y - \hat{Y} ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \hat{Y} ) ]^2 + \mathbb{V}\mathrm{ar}( \hat{Y} )\\
-&amp; = \sigma^2 + [\mu - \lambda \mu]^2 + \lambda^2(\sigma^2/n)
+&amp; = \sigma^2 + [\beta - \lambda \beta]^2 + \lambda^2\frac{\sigma^2}{n)}
 \end{aligned}`
 $$
 
 * Solving `\(\displaystyle \frac{d}{d \lambda} \mathbb{E}\{[Y - \hat{Y} ]^2 \}  = 0\)` gives the value
-`$$\lambda=\frac{\mu^2}{\mu^2 + \sigma^2/n}$$` 
+`$$\lambda=\frac{\beta^2}{\beta^2 + \sigma^2/n}$$` 
 that minimizes `\(\mathbb{E}\{[Y - \hat{Y} ]^2 \}\)`
 
 * However, the optimal `\(\lambda\)` depends on unknown parameters
@@ -635,7 +668,7 @@ class: inverse, middle, center
 * Consider singular value decomposition (SVD) of the centered matrix `\(\mathbf{X}\)` with `\(\mathrm{rank}(\mathbf{X})=p\)`, i.e. 
 `$$\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}$$`
 
-* `\(\underset{n\times p}{\mathbf{U}}\)` with orthonormal columns, i.e. `\(\mathbf{V}^\mathsf{T}\mathbf{V}= \mathbf{I}_p\)` `\(\mathbf{U}^\mathsf{T}\mathbf{U}=\mathbf{U}\mathbf{U}^\mathsf{T} = \mathbf{I}\)`
+* `\(\underset{n\times p}{\mathbf{U}}\)` with orthonormal columns, i.e. `\(\mathbf{U}^\mathsf{T}\mathbf{U}= \mathbf{I}_p\)`
 
 *  `\(\underset{p\times p}{\mathbf{V}}\)` orthogonal matrix, i.e. `\(\mathbf{V}^\mathsf{T}\mathbf{V}=\mathbf{V}\mathbf{V}^\mathsf{T} = \mathbf{I}_p\)`
 
@@ -654,12 +687,12 @@ and then use the first `\(q&lt;p\)` components
 as the predictors in a linear regression model
 
 * The first principal component is that (normalized) linear combination of the variables with the largest variance
-`$$\mathbf{z}_1 = \mathbf{X} \mathbf{v}_1 = \mathbf{u}_1 d_1, \qquad \mathbb{V}\mathrm{ar}(\mathbf{z}_1)=\frac{d_1^2}{n}$$`
+`$$\mathbf{z}_1 = \mathbf{X} \mathbf{v}_1 = \mathbf{u}_1 d_1, \qquad \mathbb{V}\mathrm{ar}(\mathbf{z}_1)=\frac{(d_1)^2}{n}$$`
 where `\(\mathbf{v}_1,\ldots,\mathbf{v}_p\)` are the columns of `\(\mathbf{V}\)`
 
 * The second principal component has largest variance, subject to being uncorrelated with the first
 
-`$$\mathbf{z}_2 = \mathbf{X} \mathbf{v}_2 = \mathbf{u}_2 d_2, \qquad \mathbb{V}\mathrm{ar}(\mathbf{z}_1)=\frac{d_2^2}{n}, \qquad \mathbf{v}_2 \bot \mathbf{v}_1$$`
+`$$\mathbf{z}_2 = \mathbf{X} \mathbf{v}_2 = \mathbf{u}_2 d_2, \qquad \mathbb{V}\mathrm{ar}(\mathbf{z}_1)=\frac{(d_2)^2}{n}, \qquad \mathbf{z}_2 \bot \mathbf{z}_1$$`
 
 * And so on
 
@@ -690,6 +723,33 @@ $$
 
 * But where principal component regression
 thresholds the singular values of `\(\mathbf{X}\)`, ridge regression shrinks them (depending on their size). Note that since `\(\lambda\geq 0\)`, we have `\(\frac{d^2_j}{d^2_j + \lambda}\leq 1\)`
+
+---
+
+
+```r
+rm(list=ls())
+data(Hitters)
+Hitters = na.omit(Hitters)
+X = model.matrix(lm(Salary ~ ., Hitters))
+n = nrow(X)
+Z = scale(X[,-1])[,]*sqrt((n-1)/n)
+# SVD
+U = svd(Z)$u
+D = diag(svd(Z)$d)
+V = svd(Z)$v
+```
+
+---
+
+
+```r
+library(pls)
+fit.pcr=pcr(Salary ~ ., data=Hitters, scale=TRUE, validation ="CV")
+validationplot(fit.pcr, val.type="MSEP")
+```
+
+![](9_Ridge_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
