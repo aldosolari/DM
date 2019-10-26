@@ -23,7 +23,9 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Optimism
+
 * Information criteria
+
 * Random-X view
 
 ---
@@ -59,7 +61,7 @@ So the higher the correlation between `\(y_i\)` and its fitted value `\(\hat{f}(
 
 ---
 
-&lt;img src="3_Optim_files/figure-html/unnamed-chunk-1-1.png" width="80%" height="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="3_Optim_files/figure-html/unnamed-chunk-1-1.png" width="60%" height="40%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -108,10 +110,10 @@ ErrFs = Bias2s + Vars + sigmatrue^2
 
 
 ```r
-*hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n
-plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
-lines(ps, hatErrFs, type="b", col=2)
-lines(ps, ErrFs, type="b", col=4)
+hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="ErrF")
+lines(ds, hatErrFs, type="b", col=2)
+lines(ds, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + Opt"), col=c(4,1,2), pch=19)
 ```
 
@@ -151,11 +153,11 @@ where `\(\mathrm{RSS} = n \mathrm{MSE}_{\mathrm{Tr}}\)` is the __residual sum of
 
 
 ```r
-*hatsigma2 = (n*MSEs.tr)/(n-ps)
+hatsigma2 = (n*MSEs.tr)/(n-ps)
 Cps = MSEs.tr + (2*hatsigma2*ps)/n 
-plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
-lines(ps, Cps, type="b", col=2)
-lines(ps, ErrFs, type="b", col=4)
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="ErrF")
+lines(ds, Cps, type="b", col=2)
+lines(ds, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + hatOpt"), col=c(4,1,2), pch=19)
 ```
 
@@ -173,7 +175,7 @@ ps[which.min(Cps)]
 
 
 ```r
-plot(ps, hatsigma2, type="b", xlab="p", ylab="Sigma2")
+plot(ds, hatsigma2, type="b", xlab="d", ylab="Sigma2")
 abline(h=sigmatrue^2, col=4)
 ```
 
@@ -208,8 +210,8 @@ the BIC statistic generally results in the selection of smaller models than AIC
 ```r
 AICs &lt;- unlist( lapply(fits, AIC) )
 BICs &lt;- unlist( lapply(fits, BIC) )
-plot(ps, AICs, type="b", col=5, ylab="Information Criteria", xlab="p")
-lines(ps, BICs, type="b", col=6)
+plot(ds, AICs, type="b", col=5, ylab="Information Criteria", xlab="d")
+lines(ds, BICs, type="b", col=6)
 legend("topright",c("AIC","BIC"), col=c(5,6), lty=1)
 ```
 
@@ -365,6 +367,7 @@ Thus the best prediction of `\(Y\)` at any point `\(X = x\)` is the conditional 
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"ratio": "16:9",
 "highlightLanguage": "R",
 "countIncrementalSlides": false,
 "highlightLines": true

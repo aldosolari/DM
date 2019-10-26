@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true   
@@ -18,7 +19,9 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 # Outline
 
 * Optimism
+
 * Information criteria
+
 * Random-X view
 
 ---
@@ -54,7 +57,7 @@ So the higher the correlation between $y_i$ and its fitted value $\hat{f}(x_i)$,
 
 ---
 
-```{r, echo=FALSE, fig.align = 'center', out.width = '80%', out.height = '80%'}
+```{r, echo=FALSE, fig.align = 'center', out.width = '60%', out.height = '40%'}
 rm(list=ls())
 sigmatrue = 0.01
 ftrue <- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
@@ -69,8 +72,8 @@ Vars = ps*(sigmatrue^2)/n
 EMSE.te = Bias2s + Vars + sigmatrue^2
 OptF = 2*(sigmatrue^2)*ps/n
 EMSE.tr = EMSE.te - OptF
-plot(ps, EMSE.tr, type="b", xlab="p", ylab="E(MSE)", lwd=2)
-lines(ps, EMSE.te, type="b", col=2, lwd=2)
+plot(ds, EMSE.tr, type="b", xlab="degree d", ylab="E(MSE)", lwd=2)
+lines(ds, EMSE.te, type="b", col=2, lwd=2)
 legend("topright",c("E(MSE.te)","E(MSE.tr)"), col=c(1,2), pch=19)
 ```
 
@@ -119,10 +122,10 @@ ErrFs = Bias2s + Vars + sigmatrue^2
 ---
 
 ```{r}
-{{hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n}}
-plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
-lines(ps, hatErrFs, type="b", col=2)
-lines(ps, ErrFs, type="b", col=4)
+hatErrFs = MSEs.tr + (2*sigmatrue^2*ps)/n
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="ErrF")
+lines(ds, hatErrFs, type="b", col=2)
+lines(ds, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + Opt"), col=c(4,1,2), pch=19)
 ps[which.min(hatErrFs)]
 ```
@@ -152,11 +155,11 @@ $$\mathrm{Cp} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}$$
 
 
 ```{r}
-{{hatsigma2 = (n*MSEs.tr)/(n-ps)}}
+hatsigma2 = (n*MSEs.tr)/(n-ps)
 Cps = MSEs.tr + (2*hatsigma2*ps)/n 
-plot(ps, MSEs.tr, type="b", xlab="p", ylab="ErrF")
-lines(ps, Cps, type="b", col=2)
-lines(ps, ErrFs, type="b", col=4)
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="ErrF")
+lines(ds, Cps, type="b", col=2)
+lines(ds, ErrFs, type="b", col=4)
 legend("topright",c("ErrF","MSE.tr","MSE.tr + hatOpt"), col=c(4,1,2), pch=19)
 ps[which.min(Cps)]
 ```
@@ -164,7 +167,7 @@ ps[which.min(Cps)]
 ---
 
 ```{r}
-plot(ps, hatsigma2, type="b", xlab="p", ylab="Sigma2")
+plot(ds, hatsigma2, type="b", xlab="d", ylab="Sigma2")
 abline(h=sigmatrue^2, col=4)
 ```
 
@@ -196,8 +199,8 @@ the BIC statistic generally results in the selection of smaller models than AIC
 ```{r}
 AICs <- unlist( lapply(fits, AIC) )
 BICs <- unlist( lapply(fits, BIC) )
-plot(ps, AICs, type="b", col=5, ylab="Information Criteria", xlab="p")
-lines(ps, BICs, type="b", col=6)
+plot(ds, AICs, type="b", col=5, ylab="Information Criteria", xlab="d")
+lines(ds, BICs, type="b", col=6)
 legend("topright",c("AIC","BIC"), col=c(5,6), lty=1)
 ```
 

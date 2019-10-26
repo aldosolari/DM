@@ -24,6 +24,7 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Classification
+
 * Titanic data
     - Missing values
     - EDA and model building
@@ -309,6 +310,7 @@ summary(combi)
                                NA's   :418     
 ```
 
+
 ---
 
 
@@ -334,6 +336,7 @@ aggr(combi[,-c(2,12)], prop = FALSE, combined = TRUE, numbers = TRUE, sortVars =
     parch     0
    ticket     0
 ```
+
 
 ---
 
@@ -453,12 +456,16 @@ combi$ticketFreq &lt;- ave(1:nrow(combi),combi$ticket,FUN=length)
 
 # Ticket price
 
+.pull-left[
 
 ```r
 combi$price &lt;- combi$fare/combi$ticketFreq
 ```
+]
 
+.pull-right[
 ![](8_Titanic_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+]
 
 ---
 
@@ -560,14 +567,20 @@ mean(yhat == testsurvived)
 
 # Gender
 
+.pull-left[
+
 Women first?
 
 
 ```r
 plot(survived ~ sex, train)
 ```
+]
 
-![](8_Titanic_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+.pull-right[
+
+![](8_Titanic_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
 
 ---
 
@@ -616,24 +629,22 @@ age         -0.009628612 0.00526435 -1.829022 0.0673963
 
 ---
 
-What about this plot?
 
-![](8_Titanic_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
-
----
-
-A better visualization
-
-
-```r
-plot(survived ~ age, train)
-```
-
+.pull-left[
 ![](8_Titanic_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+]
+
+
+
+.pull-right[
+![](8_Titanic_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
 
 ---
 
 # Passenger class
+
+.pull-left[
 
 Rich people survived at a higher rate?
 
@@ -641,8 +652,11 @@ Rich people survived at a higher rate?
 ```r
 plot(survived~pclass, train)
 ```
+]
 
-![](8_Titanic_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+.pull-right[
+![](8_Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+]
 
 ---
 
@@ -676,37 +690,29 @@ mean(yhat == testsurvived)
 
 # Age and pclass
 
-What about age and pclass combined?
-
-![](8_Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
 
 ---
 
 # Classification tree 
 
-Binary recursive partitioning of the sample space into smaller rectangles
-
-![](8_Titanic_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
 
 
 ---
 
 # Decision rule
 
+.pull-left[
 
 ```r
 library(rpart)
 library(rpart.plot)
 fit &lt;- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =  3))
-```
-
-.pull-left[
-
-```r
 rpart.plot(fit, type=0, extra=2)
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -749,21 +755,11 @@ mean(yhat == testsurvived)
 # Gender and pclass
 
 .pull-left[
-
-```r
-plot(survived~pclass, train, subset=sex=="male", main="male")
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
-
-```r
-plot(survived~pclass, train, subset=sex=="female", main="female")
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -771,21 +767,11 @@ plot(survived~pclass, train, subset=sex=="female", main="female")
 # Gender and age
 
 .pull-left[
-
-```r
-plot(survived~age, train, subset=sex=="male", main="male")
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
-
-```r
-plot(survived~age, train, subset=sex=="female", main="female")
-```
-
-![](8_Titanic_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -855,34 +841,33 @@ combi$title &lt;- factor(combi$title)
 plot(survived ~ title, combi[1:n,])
 ```
 
-![](8_Titanic_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+![](8_Titanic_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
 
 ---
 
 # Man, boy or woman?
 
+.pull-left[
 
 ```r
 combi$wbm &lt;- "man"
 combi$wbm[grep('Master',combi$name)] &lt;- "boy"
 combi$wbm[combi$sex=="female"] &lt;- "woman"
 combi$wbm &lt;- factor(combi$wbm)
-```
-
----
-
-
-```r
 plot(survived ~ wbm, combi[1:n,])
 ```
+]
 
-![](8_Titanic_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
+.pull-right[
+![](8_Titanic_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
+]
 
 
 ---
 
 # Cabin
 
+.pull-left[
 
 ```r
 # the first character of cabin is the deck
@@ -894,48 +879,64 @@ table(substr(combi$cabin, 1, 1))
  A  B  C  D  E  F  G  T 
 22 65 94 46 41 21  5  1 
 ```
+]
 
----
-
+.pull-right[
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Titanic_cutaway_diagram.png/322px-Titanic_cutaway_diagram.png)
+]
 
 ---
 
 # Family size
 
+.pull-left[
 
 ```r
 combi$familysize &lt;- combi$sibsp + combi$parch + 1
 plot(survived ~ familysize, combi[1:n,])
 ```
+]
 
-![](8_Titanic_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
+.pull-right[
+![](8_Titanic_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
+]
 
 ---
 
 # SurnameFreq
 
+.pull-left[
 
 ```r
 combi$surname &lt;- substring(combi$name,0,regexpr(",",combi$name)-1)
 combi$surnameFreq &lt;- ave(1:nrow(combi),combi$surname,FUN=length)
 plot(survived ~ surnameFreq, combi[1:n,])
 ```
+]
 
-![](8_Titanic_files/figure-html/unnamed-chunk-38-1.png)&lt;!-- --&gt;
+.pull-right[
+![](8_Titanic_files/figure-html/unnamed-chunk-41-1.png)&lt;!-- --&gt;
+]
+
 
 
 ---
 
 # Surname survival
 
+.pull-left[
 
 ```r
 train = combi[1:n,]
 plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 ```
+]
 
-![](8_Titanic_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
+.pull-right[
+![](8_Titanic_files/figure-html/unnamed-chunk-43-1.png)&lt;!-- --&gt;
+]
+
+
 
 ---
 
@@ -961,52 +962,11 @@ plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 
 
 How I'm doing with my score? See Oscar Takeshita's [post](https://www.kaggle.com/pliptor/how-am-i-doing-with-my-score)
-
----
-
-# Public scores
-
-* 0.62679 All-dead submission:  The simplest strategy of guessing that all died since the majority died.
-* [0.65550](https://www.kaggle.com/pliptor/optimal-titanic-for-pclass-only-0-65550) Passenger-class only.
-* [0.675](https://www.kaggle.com/ccastleberry/titanic-cabin-features/notebook) Cabin-only:  This is a remarkable notebook by [CalebCastleberry](https://www.kaggle.com/ccastleberry).
-* [0.71291](https://www.kaggle.com/pliptor/titanic-ticket-only-study) Ticket-only using KNN.
-* [0.76555](https://www.kaggle.com/pliptor/optimal-titanic-for-gender-only-0-7655) Gender-only.
-* 0.76555 Gender + Passenger-class (Identical as Gender-only).
-* [0.77990](https://www.kaggle.com/pliptor/minimalistic-xgb) Gender + Class + Embarked  XGBoost in R.
-* [0.77990](https://www.kaggle.com/pliptor/minimalistic-titanic-in-python-lightgbm) Gender + Class + Embarked  LightGBM in Python.
-* [0.77990](https://www.kaggle.com/wayne999/a-simple-genetic-programming/code) Using genetic programming by [Yan Wang](https://www.kaggle.com/wayne999) Short and neat complete genetic programming code (it is suboptimal since the Name feature is not used).
-* [0.78468](https://www.kaggle.com/pliptor/name-only-study-with-interactive-3d-plot) Name-only text vectorization and PCA with a 3D interactive plot.
-* [0.78947](https://www.kaggle.com/pliptor/titanic-in-python-svm) Gender + Class + Embarked + Age using SVM
-* [0.78947](https://www.kaggle.com/yildirimarda/decision-tree-visualization-submission) Gender + Class + FamilySize + Age using Decision Tree by [Arda Yildirim](https://www.kaggle.com/yildirimarda)
-* [0.79904](https://www.kaggle.com/rafaelvleite/titanic-artificial-neural-network-80-score) Neural network (keras)  by [Rafael Vicente Leite](https://www.kaggle.com/rafaelvleite).
-* [0.79904](https://www.kaggle.com/frederikh/12-500-feet-under-the-sea) Using ethnicity feature by [Frederik Hasecke](https://www.kaggle.com/frederikh).
-* [0.80382](https://www.kaggle.com/bwboerman/a-quick-dive-into-h2o-with-python) Using H2O by [Bart Boerman](https://www.kaggle.com/bwboerman)
-* [0.80861](https://www.kaggle.com/arthurtok/0-808-with-simple-stacking/output) Simple stacking by [Anisotropic](https://www.kaggle.com/arthurtok) stacking is ubiquitous in competitions.
-
----
-
-# Public scores (cont'd)
-
-* [0.80861](https://www.kaggle.com/nicapotato/titanic-voting-pipeline-stack-and-guide) Voting/ensembling  by [Nick Brooks](https://www.kaggle.com/nicapotato) An impressive number of models is packed in almost one hour of running time!
-* [0.80861](https://www.kaggle.com/chucktalbert/titanic-a-tidy-caret-approach-0-8086) Tidy + Caret, KNN impute and Random Forests optimizer by [Chuck Talbert](https://www.kaggle.com/chucktalbert)
-* [0.80861](https://www.kaggle.com/reisel/iterative-prediction-of-survival) Iterative Prediction of Survival by [Reinhard](https://www.kaggle.com/reisel)
-* [0.80861](https://www.kaggle.com/njmei42/kaggle-titanic-with-tensorflow/notebook) Kaggle Titanic with Tensorflow by [nme-42](https://www.kaggle.com/njmei42) It is quite an interesting kernel.
-* [0.81339](https://www.kaggle.com/jack89roberts/titanic-using-ticket-groupings) Titanic Using Ticket Grouping by [Jack Roberts](https://www.kaggle.com/jack89roberts). 
-* [0.81339](https://www.kaggle.com/c/titanic/discussion/6821) Random Forests: A great tutorial by [Trevor Stephens](https://www.kaggle.com/trevorstephens)
-* [0.82296](https://www.kaggle.com/pliptor/divide-and-conquer-0-82296) Divide and Conquer. 
-* [0.82296](https://www.kaggle.com/bisaria/titanic-lasso-ridge-implementation) Lasso Ridge by [Bisaria](https://www.kaggle.com/bisaria) 
-* [0.82296](https://www.kaggle.com/cdeotte/titanic-using-name-only-0-81818) Titanic using Name only [Chris Deotte](https://www.kaggle.com/cdeotte) achieves this great score using nothing but the Name feature! (Note from his kernel: 0.81818 with Name only and 0.82296 by adding Ticket). 
-* [0.82296](https://www.kaggle.com/cdeotte/titanic-deep-net-0-82296) Titanic Deep Net by [Chris Deotte](https://www.kaggle.com/cdeotte)] 
-* [0.82775](https://www.kaggle.com/francksylla/titanic-machine-learning-from-disaster) [Frank Sylla](https://www.kaggle.com/francksylla) engineers
-several features.
-* [0.83253](https://www.kaggle.com/konstantinmasich/titanic-0-82-0-83/notebook) [Konstantin](https://www.kaggle.com/konstantinmasich) brings
-attention to feature scaling, which is essential when working with the kNN algorithm.
-* [0.84210](https://www.kaggle.com/cdeotte/titantic-mega-model-0-84210) Titanic Mega Model [Chris Deotte](https://www.kaggle.com/cdeotte) ensembles Kaggle's top 6 models. It starts with a neat ensembling diagram.
-* [0.84688](https://www.kaggle.com/cdeotte/titanic-wcg-xgboost-0-84688) Titanic WCG+XGBoost [Chris Deotte](https://www.kaggle.com/cdeotte) Is this the ultimate Titanic model?
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"ratio": "16:9",
 "highlightLanguage": "R",
 "countIncrementalSlides": false,
 "highlightLines": true

@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true   
@@ -18,6 +19,7 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 # Outline
 
 * Non-parametric regression
+
 * the caret package
 
 ---

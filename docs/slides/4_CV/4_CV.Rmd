@@ -6,6 +6,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     nature:
+      ratio: '16:9'
       highlightLanguage: R
       countIncrementalSlides: false
       highlightLines: true   
@@ -37,7 +38,7 @@ heuristics. Therefore, CV is a __non-parametric method__ which can be applied to
 * A simple approach is to randomly divide the $n$ observations
 into two parts: a training set and a __validation__ or hold-out set
 
-* [ISLR Fig. 5.1](http://www-bcf.usc.edu/~gareth/ISL/Chapter5/5.1.pdf)
+* See ISLR Figure 5.1
 
 * The model is fitted on the training set $T \subset \{1,\ldots,n\}$, and the fitted model $\hat{f}^{-V}$ is used to predict the responses for the
 observations in the validation set $V = \{1,\ldots,n\} \setminus T$
@@ -58,7 +59,7 @@ test error can be highly variable
 * One way of partially overcoming this arbitrariness is to split
 the data into equal parts $V_1,\ldots,V_K$.
 
-* [ISLR Fig. 5.5](http://www-bcf.usc.edu/~gareth/ISL/Chapter5/5.5.pdf)
+* See ISLR Figure 5.5
 
 * In __K-fold cross-validation__ we use observations $i\notin V_k$ for training the model and $i \in V_k$ for evaluating it:
 $$\frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2$$
@@ -101,8 +102,7 @@ library(boot)
 set.seed(123)
 KCV = sapply(ds, function(d) 
      cv.glm(train, glm(y~poly(x,degree=d), train, family = gaussian), K=K )$delta[1] )
-plot(ps, KCV, type="b", log="y")
-ps[which.min(KCV)]
+plot(ds, KCV, type="b", log="y")
 ```
 
 ---
@@ -111,8 +111,7 @@ ps[which.min(KCV)]
 
 * In __leave-one-out cross validation__ (LOOCV), each data point is successively left out from the sample and used for validation
 
-* [ISLR Fig. 5.3](http://www-bcf.usc.edu/~gareth/ISL/Chapter5/5.3.pdf)
-
+* See ISLR Figure 5.3
 
 * For $i=1,\ldots,n$:
 
@@ -128,13 +127,11 @@ $$\widehat{\mathrm{Err}} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}^{-i}(x_i))^
 ```{r}
 # LOOCV
 oneout <- vector()
-# loop
 for (i in 1:n){
 fit_i <- lm( y~poly(x,degree=d), data=train[-i,])
 yhat_i <- predict(fit_i, newdata=data.frame(x=train$x[i]) )
 oneout[i] <- ( train$y[i] -  yhat_i )^2
 }
-# LOOCV estimate
 mean(oneout)
 ```
 
@@ -170,8 +167,7 @@ mean(
 LOOCV = sapply(ds, function(d) 
      cv.glm(train, glm(y~poly(x,degree=d), 
      train, family = gaussian) )$delta[1] )
-plot(ps, LOOCV, type="b")
-ps[which.min(LOOCV)]
+plot(ds, LOOCV, type="b", xlab="d")
 ```
 
 ---
@@ -190,8 +186,7 @@ fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d), train)
 fits <- lapply(ds, fun)
 MSEs.tr <- unlist( lapply(fits, deviance) )/n
 GCV = MSEs.tr/(1-(ps)/n )^2
-plot(ps, GCV, type="b")
-ps[which.min(GCV)]
+plot(ds, GCV, type="b", xlab="d")
 ```
 
 ---
