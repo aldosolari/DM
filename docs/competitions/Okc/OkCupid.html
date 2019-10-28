@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>OkCupid</title>
+    <title>Data Mining Competitions</title>
     <meta charset="utf-8" />
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -11,7 +11,8 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# OkCupid
+# Data Mining Competitions
+## Ok Cupid data - online dating
 ### Aldo Solari
 
 ---
@@ -21,108 +22,99 @@ class: center, middle, inverse, title-slide
 
 # Outline
 
-* Description
-* Data
+* Ok Cupid data
+
+* The problem
+
+* Features
+
 * Evaluation
-* Benchmark
+
+* Grading
+
 * Timeline
 
 
 ---
 
-# OkCupid
+# Ok Cupid data
 
-* The original dataset was created with the use of a python script that pulled the data from public profiles on [www.okcupid.com](www.okcupid.com). on 06/30/2012.  Permission to use this data was obtained from OkCupid president and co-founder Christian Rudder under the condition that the dataset remains public
+* The original OkCupid dataset was created with the use of a python script that pulled the data from public profiles on www.okcupid.com. on 06/30/2012. Permission to use this data was obtained from OkCupid president and co-founder Christian Rudder under the condition that the dataset remains public.
 
-* It has 59946 observations, which includes people within a 25 mile radius of San Francisco, who were online in the last year (06/30/2011), with at least one profile picture
 
-* The goal will be to predict whether a person’s profession is in the __STEM__ fields (science, technology, engineering, and math) using a random sample of the overall dataset
-
+* See [okcupid_codebook.txt](https://github.com/rudeboybert/JSE_OkCupid/blob/master/okcupid_codebook.txt) and  [Kim and Escobedo-Land (2015)](https://github.com/rudeboybert/JSE_OkCupid/blob/master/JSE.pdf) for a description of the original data
 
 ---
 
-# Original data
+# The problem
 
-In their original form, the data set contains several types of variables:
-* open text essays related to an individual’s interests and personal descriptions,
-* single choice type fields such as profession, diet, gender, body type, and education, and
-* multiple choice fields such as languages spoken and fluency in programming languages
+* The dataset has 10000 observations divided in `\(n=6000\)` observations for the training set and `\(m=4000\)` observations for the test set. It contains `\(p=108\)` predictors and the response variable (Class, with 2 levels: "other" and "stem")
 
-See [okcupid_codebook.txt](https://github.com/rudeboybert/JSE_OkCupid/blob/master/okcupid_codebook.txt) and [Kim and Escobedo-Land (2015)](https://github.com/rudeboybert/JSE_OkCupid/blob/master/JSE.pdf) for a description of the original data
-
-
+* The goal is to predict whether a person's profession is in the STEM fields (science, technology, engineering, and math)
 
 ---
 
-# Data
+# Features
 
-* Almost all of raw data fields are discrete in nature; only age was numeric. The categorical predictors and the open text data were converted to dummy variables
+* *Basic features*:
+age body_type diet drinks drugs education height income last_online offspring orientation pets religion sign smokes status where_state where_town religion_modifer (describe how serious they are about their choice) sign_modifer (describe how serious they are about their choice)
+cpp cpp_fluently cpp_okay cpp_poorly (cpp is a programming language) lisp lisp_fluently lisp_okay lisp_poorly (lisp is a programming language) asian black hispanic_latin indian middle_eastern native_american other pacific_islander white (ethicity) essay_length (length of open text)
 
-* The data set available for the competition is a random sample of the overall dataset
+* *Features from open text data*:
+The original OKCupid data contains open text essays related to an individual’s interests and personal descriptions. The dataset includes 70 selected words (binary variables coded 1 = word present in the open text, 0=non present) given below: &lt;br&gt;
+art being biotech care climbing code coding company computer computers dancing data developer ender engineer engineering eyes family feynman firefly fixing friend geek geeky girl hair heart honest im internet lab laugh law listening lol love math matrix mechanical name nerd old problems programmer programming relationship robots school science scientist silicon smile software solve solving startup stephenson student systems teacher tech techie technical technology therapist true web websites wine writing
 
-* It contains 90 predictors and 1 response variable (Class, with 2 levels: "other" and "stem")
+---
 
-* The training set has `\(n=4000\)` observations, the test set has `\(m=1000\)` observations
+# Rules
+
+1. If you attended the classes, you may work in groups of up to three. Each student may be on one team only
+
+2. You may not include information outside the data provided
+
+3. The competition will be run through an automated system, *BeeViva*
+
+4. The R code used to get the predictions __must be published online__ on GitHub by November 15, 2019
 
 ---
 
 # Evaluation
 
-* Submissions are evaluated by the Area Under the Curve (AUC).
+* Submissions are evaluated by the Area Under the Curve (AUC)
 
-* During the competition, the leaderboard displays your partial score, which is the AUC for 500 (random) observations of the test set.
-At the end of the contest, the leaderboard will display the final score, which is the AUC for the remaining 500 observations of the test set. The final score will determine the final winner. This method prevents users from overfitting to the leaderboard
+* During the competition, the leaderboard displays your partial score, which is the AUC for 2000 (random) observations of the test set
+
+* At the end of the contest, the leaderboard will display the final score, which is the AUC for the remaining 2000 observations of the test set. The final score will determine the final winner. This method prevents users from overfitting to the leaderboard
 
 ---
 
-# Points
+# Grading
 
 The % of __points__ will be calculated as
-`$$\frac{x-m}{M-m}$$`
+`$$\max\left(\frac{x-m}{M-m}\cdot 100, 0\right)$$`
  where
 * `\(x\)` is your final score
 * `\(M\)` is the best score (among participants)
 * `\(m\)` is the benchmark score
 
-However, I reserve the right to regrade differently (meaning your % of points may be calculated differently)
+The team(s) with the best performance will give a brief ( ~ 10 mins ) description of their methods in class on November 18, 2019 (before the exam)
 
----
-
-# Benchmark
-
-
-```r
-train &lt;- read.csv("101.csv", stringsAsFactors=T)
-test &lt;- read.csv("102.csv", , stringsAsFactors=F)
-test$Class = NA
-n = nrow(train)
-m = nrow(test)
-combi = rbind(train,test)
-train = combi[1:n,]
-test = combi[(n+1):(n+m),]
-
-library(rpart)
-fit = rpart(Class ~ ., data=train)
-phat = predict(fit, newdata=test)[,"stem",drop=F]
-
-write.table(file="myokcupid.txt", phat, row.names = FALSE, col.names = FALSE)
-```
-
+I reserve the right to regrade differently (meaning your % of points may be calculated differently)
 
 ---
 
 # Timeline
 
-Entry: October 16
+Entry: October 21, 2019
 
-Final submission: November 16
+Final submission: November 15, 2019
 
-The R code used to get the predictions __must be published online__ by November 17. 
-Keep only the necessary code (no plots, numeric summaries etc. )
+The R code used to get the predictions __must be published online__ by November 17
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"ratio": "16:9",
 "highlightLanguage": "R",
 "countIncrementalSlides": false,
 "highlightLines": true

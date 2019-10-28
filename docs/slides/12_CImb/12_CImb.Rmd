@@ -1,0 +1,438 @@
+---
+title: "Data Mining"
+subtitle: "Class Imbalance"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Default data
+
+* Class imbalance
+
+* Down-sampling and up-sampling
+
+---
+
+# Default data
+
+* A (simulated) data set containing information on 10000 customers
+
+* We are interested in predicting whether an individual will `default` on his or her credit card payment, on the basis of annual income and monthly credit card balance
+
+* `default` A factor with levels `No` and `Yes` indicating whether the customer defaulted on their debt
+
+* `student` A factor with levels `No` and `Yes` indicating whether the customer is a student
+
+* `balance` The average balance that the customer has remaining on their credit card after making their monthly payment
+
+* `income` Annual income of customer
+
+---
+
+```{r}
+rm(list=ls())
+library(ISLR)
+n = nrow(Default)/2
+m = n
+set.seed(30)
+istrain = sample(c(rep(T,n),rep(F,length=m)))
+train = Default[istrain,]
+test = Default[!istrain,]
+```
+
+---
+
+```{r}
+library(ggpubr)
+ggscatterhist(train, x="balance", y="income", col="default", alpha = 0.5, margin.plot = "boxplot")
+```
+
+---
+
+```{r}
+# event of interest = 1
+contrasts(train$default)
+
+# null model
+fit0 = glm(default ~ 1, train, family="binomial")
+phat0 = predict(fit0, newdata=test, type="response")
+yhat0 = ifelse(phat0 > 0.5, "Yes", "No")
+
+# logistic model
+fit = glm(default ~ . , train, family="binomial")
+phat = predict(fit, newdata=test, type="response")
+yhat = ifelse(phat > 0.5, "Yes", "No")
+```
+
+
+---
+
+```{r}
+# null model
+table(predicted=yhat0, true=test$default)
+mean(yhat0==test$default)
+
+# logistic model
+table(predicted=yhat, true=test$default)
+mean(yhat==test$default)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Class imbalance
+
+---
+
+# Class imbalance
+
+* With class predictions, a common summary method is to produce a confusion matrix which is a simple cross-tabulation between the observed and predicted classes
+
+* Accuracy is the most obvious metric for characterizing the performance of models
+
+* However, it suffers when there is a __class imbalance__; for the defaul data,  96.6% of the subjects have `No` default. Then we can expect 96.6% accuracy by predicting samples to be `No` default
+
+---
+
+# Sensitivity and specificity
+
+* One of these classes can be considered the event of interest or the __positive class__ (e.g. `Yes` default)
+
+* the **sensitivity** is the true positive rate
+$$\mathrm{sensitivity}=\frac{\#\,\mathrm{Truly\,\,Yes\,\,predicted\,\,correctly}}{\#\,\mathrm{Truly\,\,Yes}}$$
+
+* the **specificity** is the rate of correctly predicted negatives, or 1 - false positive rate.
+$$\mathrm{specificity}=\frac{\#\,\mathrm{Truly\,\,No\,\,predicted\,\,correctly}}{\#\,\mathrm{Truly\,\,No}}$$
+
+* Null model: sensitivity = 0/166=0%, specificity = 4834/4834 = 100%
+
+* Logistic model: sensitivity = 59/166=35.5%, specificity = 4812/4834 = 99.5%
+
+
+---
+
+* Sensitivity and specificity are conditional statistics, e.g. if the custumer is truly Default, what is the probability that it is correctly predicted?
+$$\Pr(P=\mathrm{Yes}|Y=\mathrm{Yes})$$
+where $Y$ denotes the true class and $P$ denotes the prediction
+
+* The question that one really wants to know is "if the custumer was predicted as Default, what is the probability that it is Default?", i.e. 
+$$\Pr(Y=\mathrm{Yes}|P=\mathrm{Yes})$$
+
+* Bayes rule states that
+$$\Pr(Y|P)=\frac{\Pr(Y)\Pr(P|Y)}{\Pr(P)}$$
+
+* For sensitivity, its unconditional analog is called the **positive predictive value**
+$$\mathrm{PPV}=\frac{\mathrm{sensitivity} \times \mathrm{prevalance}}{(\mathrm{sensitivity} \times \mathrm{prevalance}) + [(1-\mathrm{specificity}) \times (1-\mathrm{prevalance})]}$$
+
+* However, it may be difficult to provide a value for the prevalence
+
+---
+
+# Changing the probability threshold
+
+* For two classes, the 50% cutoff is customary; if the probability of default is >= 50%, they would be labelled as `Yes` default
+
+* What happens when you change the cutoff?
+
+* Increasing it makes it harder to be called `Yes` default. Then fewer predicted default events, higher specificity, lower sensitivity
+
+* Decreasing the cutoff makes it easier to be called `Yes` default. Then more predicted events, lower specificity, higher sensitivity
+
+* With two classes, the __Receiver Operating Characteristic__ (ROC) curve can be used to estimate performance using a combination of sensitivity and specificity
+
+---
+
+```{r, echo=FALSE}
+library(pROC)
+roc_obj <- roc(
+	response = test$default,
+	predictor = phat,
+	levels = c("Yes","No")
+	)
+
+auc(roc_obj)
+
+plot(
+	roc_obj,
+	legacy.axes = TRUE,
+	print.thres = c(.05, .1, .2, .5), 
+	print.thres.pattern = "cut = %.2f (Spec = %.2f, Sens = %.2f)",
+	print.thres.cex = .8
+)
+```
+
+---
+
+# The Receiver Operating Characteristic (ROC) Curve
+
+* The ROC curve has some major advantages:
+
+      - It can allow models to be optimized for performance before a definitive cutoff is determined
+
+      - It is __robust__ to class imbalances; no matter the event rate, it does a good job at characterizing model performance
+
+* The ROC curve can be used to pick an optimal cutoff based on the trade-offs between the types of errors that can occur
+
+* When there are two classes, it is advisable to focus on the __Area Under the Curve__ (AUC) instead of sensitivity and specificity
+
+---
+
+# Dealing with Class Imbalances
+
+* In our data, only 3.3% of the subjects have default `Yes`
+
+* This complicates the analysis since many models will overfit to the majority class
+
+* There are two main strategies to deal with this:
+
+    - __Cost-sensitive learning__ where a higher cost is attached to the minority classes. In this way, the fitting process puts more emphasis on those samples
+
+    - __Sampling procedures__ that modify the rows of the data to re-balance the training set
+
+* We will focus on sampling procedures
+
+---
+
+# Class Imbalance Sampling
+
+* There are a variety of methods for subsampling the data. Some exclude or replicate rows in the training set (__down-sampling__ and __up-sampling__) while others try to synthesize new data points to balance the classes (__SMOTE__ and __ROSE__)
+
+* The simplest method for dealing with the problem is to down-sample the data to make the number of `Yes` and `No` the same
+
+* While it seems like throwing away most of the data is a bad idea, it tends top produce less pathological distributions of the class probabilities and might improve the ROC curve
+
+* It is critical that:
+
+      - the sampling should be done __inside__ of cross-validation. Otherwise, the performance estimates can be optimistic
+      - these sampling methods take place on the training set and not the test set
+      
+* `caret` allows the user to specify down-sampling when using train so that it is conducted inside of cross-validation
+
+
+---
+
+```{r}
+library(caret)
+ctrl <- trainControl(method = "repeatedcv",
+                     number = 10,
+                     repeats = 2,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary
+                     )
+
+# bagging 
+set.seed(123)
+fit <- train(default ~ ., data = train, 
+             method = "glm",
+             metric = "ROC",
+             trControl = ctrl)
+
+# bagging with downsampling
+ctrl$sampling <- "down"
+set.seed(123)
+fit.down <- train(default ~ ., data = train, 
+              method = "glm",
+              metric = "ROC",
+              trControl = ctrl)
+```
+
+---
+
+```{r}
+phat = predict(fit, test, type = "prob")[,"Yes"]
+phat.down = predict(fit.down, test,  type = "prob")[,"Yes"]
+yhat = ifelse(phat > .5, "Yes","No")
+yhat.down = ifelse(phat.down > .5, "Yes","No")
+phats = data.frame(No=c(1-phat,1-phat.down),
+                  Yes=c(phat,phat.down),
+                  obs=rep(test$default,2),
+                  pred = c(yhat,yhat.down),
+                  model = c(rep("glm",m), rep("glm.down",m)),
+                  dataType = rep("Test",2*m),
+                  object = c(rep("none",m), rep("down",m))
+)
+```
+
+---
+
+```{r}
+plotClassProbs(phats)
+```
+
+---
+
+```{r}
+library(pROC)
+# logistic regression
+roc <- roc(
+	response = test$default,
+	predictor = phat,
+	levels = c("Yes","No")
+	)
+auc(roc)
+
+# logistic regression with downsampling
+roc.down <- roc(
+	response = test$default,
+	predictor = phat.down,
+	levels = c("Yes","No")
+	)
+auc(roc.down)
+```
+
+---
+
+```{r}
+plot(roc, legacy.axes = TRUE, print.thres = .5)
+plot(roc.down, print.thres = .5, add=TRUE, col=2)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Down-sampling and up-sampling
+
+---
+
+* Now we try down/up-sampling the training set before fitting
+
+* We will see that cross-validation suggests up-sampling to be nearly perfect 
+
+* The reason that up-sampling appears to perform so well is that the observations in the `Yes` class are replicated and have a large potential to be in both the model building and hold-out sets
+
+* This is related to the concept of __information leakage__ which is where the hold-out set data are used (directly or indirectly) during the training process
+
+
+---
+
+```{r}
+library(caret)
+# down-sampling
+set.seed(123)
+train_down = downSample(x = train[,-1], y=train$default, yname="default")
+table(train_down$default)
+# up-sampling
+set.seed(123)
+train_up = upSample(x = train[,-1], y=train$default, yname="default")
+table(train_up$default)
+```
+
+---
+
+```{r}
+ctrl <- trainControl(method = "cv",
+                     number = 10,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary)
+set.seed(123)
+fit <- train(default ~ ., data = train, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+set.seed(123)
+fit_down <- train(default ~ ., data = train_down, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+set.seed(123)
+fit_up <- train(default ~ ., data = train_up, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+```
+
+---
+
+```{r}
+models <- list(original = fit,
+               down = fit_down,
+               up = fit_up)
+
+res <- resamples(models)
+bwplot(res, metric = "ROC")
+```
+
+---
+
+```{r}
+phat = predict(fit, test, type = "prob")[,"Yes"]
+phat_down = predict(fit_down, test,  type = "prob")[,"Yes"]
+phat_up = predict(fit_up, test,  type = "prob")[,"Yes"]
+
+library(pROC)
+roc(response = test$default,predictor = phat,levels = c("Yes","No"))$auc
+roc(response = test$default,predictor = phat_down,levels = c("Yes","No"))$auc
+roc(response = test$default,predictor = phat_up,levels = c("Yes","No"))$auc
+```
+
+---
+
+```{r}
+ctrl <- trainControl(method = "cv",
+                     number = 10,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary,
+                     sampling = "down"
+                     )
+set.seed(123)
+fit_down <- train(default ~ ., data = train, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+ctrl$sampling = "up"
+set.seed(123)
+fit_up <- train(default ~ ., data = train, 
+              method = "treebag",
+              nbagg = 50,
+              metric = "ROC",
+              trControl = ctrl)
+```
+
+---
+
+```{r}
+models <- list(original = fit,
+               down = fit_down,
+                   up = fit_up)
+res <- resamples(models)
+bwplot(res, metric = "ROC")
+```
+
+---
+
+```{r}
+phat = predict(fit, test, type = "prob")[,"Yes"]
+phat_down = predict(fit_down, test,  type = "prob")[,"Yes"]
+phat_up = predict(fit_up, test,  type = "prob")[,"Yes"]
+
+library(pROC)
+roc(response = test$default,predictor = phat,levels = c("Yes","No"))$auc
+roc(response = test$default,predictor = phat_down,levels = c("Yes","No"))$auc
+roc(response = test$default,predictor = phat_up,levels = c("Yes","No"))$auc
+```
+
+
+
+

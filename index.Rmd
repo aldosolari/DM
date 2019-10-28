@@ -47,7 +47,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 9 | 21.10.19 | 717 | 13:30 - 15:30 (2h) | Ridge regression | [Slides](docs/slides/9_Ridge/9_Ridge.html) |
 | 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | Lasso and best subset selection | [Slides](docs/slides/10_Lasso/10_Lasso.html) |
 | 11 | 24.10.19 | 713 | 9:30 - 12:30 (3h) | Bagging and random forests | [Slides](docs/slides/11_RF/11_RF.html) |
-| 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
+| 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | Class imbalance | [Slides](docs/slides/12_CImb/12_CImb.html) |
 | 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
 | 14 | 31.10.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
 | 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
@@ -148,9 +148,7 @@ For improving R programming and predictive modeling skills, there are three refe
 - ISLR 8.2.1, 8.2.2
 - AS 5.8.1, 5.8.3
 
-**October 28** 
-
-- TBD
+**October 28** Class imbalance
 
 **October 29** 
 
@@ -181,7 +179,7 @@ Time window for joining the competitions:
 | Competition | Problem | Period |  
 |----|----|----|
 | [Netflix data](docs/competitions/Missc/Missc.html) | Regression | 21.10.19 - 15.11.19 |
-| OkCupid data | Classification |  21.10.19 - 15.11.19 |
+| [OkCupid data](docs/competitions/Okc/OkCupid.html) | Classification |  21.10.19 - 15.11.19 |
 
 If a student does not take part in the competitions in the above time window, he/she must
 

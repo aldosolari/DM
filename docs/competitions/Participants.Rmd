@@ -18,6 +18,7 @@ library(readr)
 who <- read_csv("/Users/aldosolari/Documents/mygithub/DM/docs/competitions/DM competitions1920.csv")
 who[which(who[,4]=="Pastore"),6]<-"Jinglerry"
 who[which(who[,6]=="Jingle"),6]<-"Jinglerry"
+who[which(who[,4]=="Silva"),6]<-"Double_Name"
 
 names(who)[6]<-"Team"
 who2 = who %>%
