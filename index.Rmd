@@ -173,7 +173,7 @@ For improving R programming and predictive modeling skills, there are three refe
 
 # Competitions
 
-Please read carefully the [competition instructions](https://aldosolari.github.io/DM/).
+Please read carefully the [competition instructions](docs/competitions/Crules.html).
 Time window for joining the competitions:
 
 | Competition | Problem | Period |  
