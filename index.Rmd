@@ -48,7 +48,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | Lasso and best subset selection | [Slides](docs/slides/10_Lasso/10_Lasso.html) |
 | 11 | 24.10.19 | 713 | 9:30 - 12:30 (3h) | Bagging and random forests | [Slides](docs/slides/11_RF/11_RF.html) |
 | 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | Class imbalance | [Slides](docs/slides/12_CImb/12_CImb.html) |
-| 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
+| 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | Boosting | [Slides](docs/slides/13_Boost/13_Boost.html) |
 | 14 | 31.10.19 | 717 | 9:30 - 12:30 (3h) | TBD | TBD |
 | 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
 | 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
