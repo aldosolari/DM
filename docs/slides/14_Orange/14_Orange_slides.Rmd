@@ -1,0 +1,606 @@
+---
+title: "Orange data"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Orange data
+* Missing values
+* Zero- and near zero-variance predictors
+* Supervised Encoding Methods
+* Binning numerical predictors
+* Variable selection
+
+---
+
+# KDD cup
+
+*  The Conference on Knowledge Discovery and Data Mining
+(KDD) is the premier conference on machine learning methods
+
+* Every year KDD hosts a data mining cup, where teams analyze a dataset
+
+* The KDD Cup is a huge deal and the inspiration for the famous **Netflix Prize** and even **Kaggle** competitions
+
+* The KDD Cup 2009 provided the **Orange data**, a dataset about customers of the French Telecom company Orange
+
+---
+
+# Orange data
+
+* The goal is to predict the propensity of customers to cancel their account, an event called **churn**
+
+* Other goals were to predict the customers tendency to use
+new products and services (called **appetency**), and willingness to respond favorably to marketing pitches (called **upselling**)
+
+* The contest supplied $p=230$ predictors about $n=50000$ credit card accounts
+
+* For privacy reasons, predictors are anonymized: you don’t know the meaning of any of the predictors
+
+* Churn problem: class 7.3% positive class (3672/50000)
+
+* This dataset is an opportunity to deal with a very large dataset, including 
+    - heterogeneous noisy data (numerical and categorical predictors with missing values)
+    - Class imbalance
+
+---
+
+# Existing analyses
+
+*  Guyon, Lemaire, Boullé, Dror, Vogel (2009)[ Analysis of the KDD Cup 2009: Fast Scoring on a Large Orange Customer Database](http://proceedings.mlr.press/v7/guyon09/guyon09.pdf)
+
+* Chapter 6 of Zumel and Mount (2014) [Practical Data Science with R](https://www.manning.com/books/practical-data-science-with-r) ,  Manning Publications 
+
+* The support site of Zumel and Mount (code and data) on [GitHub](https://github.com/WinVector/zmPDSwR) 
+
+
+---
+
+# Data
+
+* Training set with $n = 22253$ observations 
+
+* Test set with $m = 27747$ observations
+
+* Response variable : `churn` = -1 (no churn), +1 (churn)
+
+* Class imbalance: 7% positive class in the train set (1633/22253)
+
+* $p=230$ predictors: `Var1`, `Var2`, .. , `Var230`
+
+* We don't know the meaning of any variable 
+
+* The contest metric is the Area Under the Curve (AUC)
+
+* The winning team achieved an AUC of 0.76
+
+---
+
+```{r}
+# import data
+load("/Users/aldosolari/Documents/mygithub/DM/dataset/Orange.Rdata")
+#train <- read.csv("train.csv")
+#test <- read.csv("test.csv")
+#test$churn = NA
+n = nrow(train)
+m = nrow(test)
+combi = rbind(train,test)
+train = combi[1:n,]
+test = combi[(n+1):(n+m),]
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Missing values
+
+---
+
+# Handling missing data
+
+* Missing data are not rare in real data sets
+
+* The first and most important question when encountering missing data is *why are these values missing?*
+
+* Missing values are generally caused by three mechanisms:
+    - A structural deficiency in the data
+    - A random occurrence, or
+    - A specific cause
+    
+* See [Chapter 8](http://www.feat.engineering/handling-missing-data.html) of FES
+    
+* When the number of observations or predictors exceeds the bounds of effective visualization, then numeric summaries will be better equipped to diagnose the nature and degree of missingness
+
+---
+
+```{r}
+pMiss <- function(x){sum(is.na(x))/length(x)*100}
+# predictors by % of missingness
+pMiss2 = apply(train,2,pMiss)
+plot(sort(pMiss2), type="h", ylim=c(0,100), xlab="variables", ylab="% of missing (observations)r")
+```
+
+
+---
+
+```{r}
+# observations by % of missingness
+pMiss1 = apply(train,1,pMiss)
+plot(sort(pMiss1), type="h", ylim=c(0,100), xlab="obervations", ylab="% of missing (variables)")
+```
+
+---
+
+```{r}
+# Zero-variance predictors due to complete missingness
+vars_miss = which(pMiss2==100)
+names(vars_miss)
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Zero- and Near Zero-Variance Predictors
+
+---
+
+## Zero- and near zero-variance predictors
+
+* In some situations, the data generating mechanism can create predictors that only have a single unique value (i.e. **zero-variance predictor**)
+
+* For many models (excluding e.g. tree-based models), this may cause the model to crash or the fit to be unstable
+
+* To identify these types of predictors, the following two metrics can be calculated: 
+
+    - the **frequency ratio**: the frequency of the most prevalent value over the second most frequent value, which would be near one for well-behaved predictors and very large for highly-unbalanced data 
+
+    - the **percent of unique values** is the number of unique values divided by the total number of samples (times 100) that approaches zero as the granularity of the data increases
+
+* If the frequency ratio is greater than a pre-specified threshold `freqCut` = 95/5 and the unique value percentage is less than a threshold `uniqueCut` = 10, we might consider a predictor to be __near zero-variance__
+
+---
+
+```{r}
+V2 = train[,"Var2"]
+class(V2)
+table(V2, useNA = "ifany")
+# frequency ratio
+freqV2 = sort(table(V2), decreasing = TRUE)
+freqV2[1]/freqV2[2]
+# percent unique values
+length(table(V2))/n
+```
+
+
+---
+
+```{r}
+V16 = train[,"Var16"]
+class(V16)
+# frequency ratio
+freqV16 = sort(table(V16), decreasing = TRUE)
+freqV16[1]/freqV16[2]
+# percent unique values
+length(table(V16))/n
+```
+
+---
+
+```{r}
+V210 = train[,"Var210"]
+class(V210)
+table(V210)
+# frequency ratio
+freqV210 = sort(table(V210), decreasing = TRUE)
+freqV210[1]/freqV210[2]
+# percent unique values
+length(table(V210))/n
+```
+
+---
+
+```{r}
+library(caret)
+nearZeroVar(train[,1:10], 
+            freqCut = 95/5, 
+            uniqueCut = 10, 
+            saveMetrics = TRUE)
+```
+
+---
+
+```{r}
+vars_zv = nearZeroVar(train, freqCut = 95/5, uniqueCut = 10)
+setdiff(vars_zv, vars_miss)
+```
+
+---
+
+## Type of predictors
+
+```{r}
+#Identify which predictors are categorical and numeric.
+vars <- setdiff(names(train),c('churn', 
+                               names(train)[vars_zv]
+                               ))
+table(sapply(train[,vars],class))
+```
+
+---
+
+```{r}
+# categorical predictors
+vars_cat <- vars[sapply(train[,vars],class) %in% c('factor','logical')]
+vars_cat
+```
+
+---
+
+```{r}
+# Var203 
+unique(train[,"Var203"])
+# number of unique values 
+sapply(train[,vars_cat], function(x) length(unique(x)) )
+# number of levels
+sapply(train[,vars_cat], nlevels )
+
+```
+
+
+
+---
+
+```{r}
+# numerical predictors
+vars_num<- vars[sapply(train[,vars],class) %in% c('numeric','integer')]
+vars_num
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Supervised Encoding Methods
+
+---
+
+# Supervised Encoding Methods
+
+* There are several methods of encoding categorical predictors to numeric columns using the outcome data as a guide (so that they are __supervised__ methods)
+
+* These techniques are well suited to cases where the predictor has many possible values or when new levels appear after model training
+
+* A simple method is called __effect__ or __likelihood encoding__: the effect of the factor level on the outcome is measured and this effect is used as the numeric encoding
+
+* For regression problems, we might calculate the mean or median response value for each level of the categorical predictor from the training data and use this value to represent the factor level in the model
+
+* For binary classification problems, we might calculare the odds or log-odds of the event and use this as the encoding
+
+* However, one issue with effect encoding is that it increases the possibility of overfitting
+
+---
+
+## Calibration set
+
+* Three sets: training, calibration, and test
+
+* The calibration set is used to simulate the unseen test set during modeling 
+
+* We will look at performance on the calibration set to detect if we are overfitting 
+
+---
+
+```{r}
+set.seed(123)
+train.all = train
+is.calib <- rbinom(n=nrow(train.all),size=1,prob=0.25)>0
+# split full training data into training and calibration
+train = train.all[!is.calib,]
+calib = train.all[is.calib,]
+```
+
+---
+
+## Var218
+
+* `Var218` is a categorical predictor
+
+* Let's see how `churn` varies with the levels of `Var218`
+
+```{r}
+# Tabulate levels of Var218.
+table218 <- table(
+   Var218=train[,'Var218'],  
+   churn=train[,'churn'], 
+# Include NA values in tabulation
+   useNA='ifany') 	
+table218
+# Churn rates grouped by Var218 levels
+table218[,2]/(table218[,1]+table218[,2])
+```
+
+---
+
+# Var218
+
+* Levels frequencies: cJvF = 11314 (51%), UYBR = 10612 (48%), <NA> = 327 (1%)
+
+* When variable 218 takes on 
+    - cJvF, then 6% of the customers churn
+    - UYBR, then 8% of the customers churn
+    - not available (NA), then 27% of the customers churn
+
+* We will build a function that 
+    - converts NA to a level
+    - treats novel levels (if any) as uninformative
+
+---
+
+```{r}
+y = train$churn
+x = train[ ,"Var218"]
+xstar = calib[,'Var218']
+
+# how often (%) y is positive for the training data
+pPos <- sum(y==1)/length(y)
+pPos
+
+# how often (%) y is positive for NA values for the training data
+pPosNA <- prop.table(table(as.factor(y[is.na(x)])))["1"]
+pPosNA
+```
+
+---
+
+```{r}
+# how often (%) y is positive for the levels of the categorical predictor for the training data
+tab <- table(as.factor(y),x)
+tab
+
+pPosLev <- (tab["1",]+1.0e-3*pPos)/(colSums(tab)+1.0e-3)
+pPosLev
+```
+
+
+---
+
+```{r}
+# compute effect scores
+score <- pPosLev[xstar]
+score[1:10]
+
+# compute effect scores for NA levels of xstar
+score[is.na(xstar)] <- pPosNA
+
+# compute effect scores for levels of xstar that weren't seen during training
+score[is.na(score)] <- pPos
+score[1:10]
+```
+
+---
+
+```{r}
+# Given a vector of training response (y), a categorical training predictor (x), and a calibration categorical training predictor (xstar), use y and x to compute the effect scoring and then apply the scoring to xstar
+score_cat <- function(y,x,xstar){
+  pPos <- sum(y==1)/length(y)
+  pPosNA <- prop.table(table(as.factor(y[is.na(x)])))["1"]
+  tab <- table(as.factor(y),x)
+  pPosLev <- (tab["1",]+1.0e-3*pPos)/(colSums(tab)+1.0e-3)
+  pred <- pPosLev[xstar]
+  pred[is.na(xstar)] <- pPosNA
+  pred[is.na(pred)] <- pPos
+  pred
+}
+```
+
+
+---
+
+```{r}
+library('ROCR')
+calcAUC <- function(phat,truth) {
+  perf <- performance(prediction(phat,truth=="1"),'auc')
+  as.numeric(perf@y.values)
+}
+```
+
+
+---
+
+```{r}
+# Once we have the scoring, we can find the categorical variables that have a good AUC both on the training data and on the calibration data
+for(v in vars_cat) {
+  pi <- paste('score', v, sep='')
+  train[,pi] <- score_cat(train$churn,train[,v],train[,v])
+  calib[,pi] <- score_cat(train$churn,train[,v],calib[,v])
+  test[,pi] <- score_cat(train$churn,train[,v],test[,v])
+  train.auc <- calcAUC(train[,pi],train$churn)
+  nlvls <- length(unique(train[,pi]))
+  if(train.auc >= 0.8) {
+    calib.auc <- calcAUC(calib[,pi],calib$churn)
+    print(sprintf("%s, trainAUC: %4.3f calibrationAUC: %4.3f",
+                  paste(pi,"(",nlvls,")"), train.auc,calib.auc))
+  }
+}
+```
+
+---
+
+
+layout: false
+class: inverse, middle, center
+
+# Binning numerical predictors
+
+---
+
+# Binning numerical predictors
+
+* __Binning__, also known as categorization or discretization, is the process of translating a quantitative variable into a set of two or more categories
+
+* For example, a variable might be translated into quantiles
+
+* Binning may avoid the problem of having to specify the relationship between the predictor and outcome
+
+* However, there are a number of problematic issues with turning continuous data categorical. Categorizing predictors should be a method of last resort
+
+---
+
+```{r}
+score_num <- function(y,x,xtilde){
+  cuts <- unique(as.numeric(quantile(x,probs=seq(0, 1, 0.1),na.rm=T)))
+  x.cut <- cut(x,cuts)
+  xtilde.cut <- cut(xtilde,cuts)
+  score_cat(y,x.cut,xtilde.cut)
+}
+```
+
+---
+
+```{r}
+for(v in vars_num) {
+  pi <- paste('score',v,sep='')
+  train[,pi] <- score_num(train$churn,train[,v],train[,v])
+  calib[,pi] <- score_num(train$churn,train[,v],calib[,v])
+  test[,pi] <- score_num(train$churn,train[,v],test[,v])
+  train.auc <- calcAUC(train[,pi],train$churn)
+  if(train.auc >= 0.55) {
+    calib.auc <- calcAUC(calib[,pi],calib$churn)
+    print(sprintf("%s, trainAUC: %4.3f calibrationAUC: %4.3f",
+                  pi,train.auc,calib.auc))
+   }
+}
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Variable selection
+
+---
+
+* If effect encodings are not consistent with future data, this will result in overfitting 
+
+* We will select effect encodings that perform well in the calibration data
+
+* To measure the goodness of fit in the calibration data, we will use the log-likelihood 
+
+* For an observation with churn = 1 and an estimated probability of 0.9 of being churn, the log likelihood is log(0.9); for an observation with churn=-1, the same score of 0.9 is a log likelihood of log(1-0.9)
+
+$$\log \ell = \sum_{i=1}^{m}(I\{y^*_i=1\}\log(x_i^*) + I\{y^*_i=-1\}\log(1-x_i^*))$$
+where $y^*_i$ is the $i$th response in the calibration set and $x^{*}_i$ is the $i$th effect scoring of the predictor of interest
+
+* The null model has probability of churn = (number of churn clients)/(the total number of clients) and log-likelihood $\log \ell_0$
+
+* We will select predictors with a deviance improvement 
+$$2( \log \ell - \log \ell_0 )$$
+greater than some cutoff 
+
+---
+
+```{r}
+# Define a convenience function to compute log likelihood.
+loglik <- function(y,x) {
+    sum(ifelse(y==1,log(x),log(1-x)))
+}
+
+# null model log-likelihood
+loglik0 <- loglik(y=calib$churn,
+                  x=sum(calib$churn==1)/length(calib$churn)
+                  )
+```
+
+
+---
+
+```{r}
+#vars_score <- paste('score',c(vars_cat,vars_num),sep='')
+vars_sel <- c()
+cutoff <- 5
+
+# Run through categorical predictors and pick based on a deviance improvement (related to difference in log likelihoods)
+for(v in vars_cat) {
+  pi <- paste('score',v,sep='')
+  deviance <- 2*( (loglik(calib$churn, calib[,pi]) - loglik0))
+  if(deviance>cutoff) {
+    print(sprintf("%s, calibrationScore: %g",
+                  pi,deviance))
+    vars_sel <- c(vars_sel,pi)
+  }
+}
+```
+
+
+---
+
+```{r}
+# Run through numerical predictor and pick based on a deviance improvement (related to difference in log likelihoods)
+for(v in vars_num) {
+  pi <- paste('score',v,sep='')
+  deviance <- 2*( (loglik(calib$churn,calib[,pi]) - loglik0))
+  if(deviance>cutoff) {
+    print(sprintf("%s, calibrationScore: %g",
+                  pi,deviance))
+    vars_sel <- c(vars_sel,pi)
+  }
+}
+```
+
+
+---
+
+# Null model
+
+```{r}
+# positive class %
+mean(train$churn=="1")
+# null model
+phat.null = rep(mean(train$churn=="1"),m)
+library(pROC)
+roc.null <- roc(
+    response = as.factor(test$churn),
+    predictor = phat.null,
+    levels = c("1","-1")
+    )
+auc(roc.null)
+```
+
+---
+
+# Logistic model
+
+```{r}
+fml <- paste('churn == 1 ~ ',paste(vars_sel,collapse=' + '),sep='')
+fml
+fit = glm(fml, data=train)
+phat = predict(fit, newdata=test)
+roc.glm <- roc(
+    response = as.factor(test$churn),
+    predictor = phat,
+    levels = c("1","-1")
+    )
+auc(roc.glm)
+```

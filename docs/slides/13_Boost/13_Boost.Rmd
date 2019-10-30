@@ -338,7 +338,7 @@ involve at most $d$ variables
 # Number of trees $B$
 
 ```{r, echo=FALSE, fig.align = 'center', out.width = '50%', out.height = '50%'}
-knitr::include_graphics("images/Fig17_6.png")
+knitr::include_graphics("images/Fig17_6.jpg")
 ```
 
 .center[Efron and Hastie (2016), Figure 17.6: we see that as the number of trees $B$ gets large, the test
@@ -349,7 +349,7 @@ error for boosting starts to increase (overfitting)]
 # Shrinkage parameter $\lambda$
 
 ```{r, echo=FALSE, fig.align = 'center', out.width = '60%', out.height = '60%'}
-knitr::include_graphics("images/Fig17_10.png")
+knitr::include_graphics("images/Fig17_10.jpg")
 ```
 
 .center[Efron and Hastie (2016), Figure 17.10: Boostedmodels with different shrinkage parameters. The solid curves are
@@ -360,7 +360,7 @@ validation errors, the dashed curves training errors]
 # Number of splits $d$
 
 ```{r, echo=FALSE, fig.align = 'center', out.width = '60%', out.height = '60%'}
-knitr::include_graphics("images/Fig17_8.png")
+knitr::include_graphics("images/Fig17_8.jpg")
 ```
 
 .center[Efron and Hastie (2016), Figure 17.8: it appears that $d=1$ is inferior to the rest, with $d=4$ about the best. With $d=7$, overfitting begins around 200 trees,
@@ -416,29 +416,41 @@ $$w_i \leftarrow w_i \cdot  \exp(\alpha^{b} \cdot I\{y_i \neq \hat{C}^{b}(x_i) \
 
 # A toy example from Schapire’s tutorial
 
-![](images/toy1.jpg)
+
+```{r, echo=FALSE, fig.align = 'center', out.width = '30%', out.height = '30%'}
+knitr::include_graphics("images/toy1.jpg")
+```
+
 
 ---
 
 # b = 1
 
-![](images/toy2.jpg)
+```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
+knitr::include_graphics("images/toy2.jpg")
+```
 
 ---
 
 # b = 2
 
-![](images/toy3.jpg)
+```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
+knitr::include_graphics("images/toy3.jpg")
+```
 
 ---
 
 # b = 3
 
-![](images/toy4.jpg)
+```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
+knitr::include_graphics("images/toy4.jpg")
+```
 
 ---
 
-![](images/toy5.jpg)
+```{r, echo=FALSE, fig.align = 'center', out.width = '70%', out.height = '70%'}
+knitr::include_graphics("images/toy5.jpg")
+```
 
 ---
 
