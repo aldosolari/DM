@@ -23,10 +23,15 @@ class: center, middle, inverse, title-slide
 # Outline
 
 * Orange data
+
 * Missing values
+
 * Zero- and near zero-variance predictors
+
 * Supervised Encoding Methods
+
 * Binning numerical predictors
+
 * Variable selection
 
 ---
@@ -140,10 +145,10 @@ class: inverse, middle, center
 pMiss &lt;- function(x){sum(is.na(x))/length(x)*100}
 # predictors by % of missingness
 pMiss2 = apply(train,2,pMiss)
-hist(pMiss2, xlim=c(0,100))
+plot(sort(pMiss2), type="h", ylim=c(0,100), xlab="variables", ylab="% of missing (observations)r")
 ```
 
-![](14_Orange_slides_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](14_Orange_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -152,10 +157,10 @@ hist(pMiss2, xlim=c(0,100))
 ```r
 # observations by % of missingness
 pMiss1 = apply(train,1,pMiss)
-hist(pMiss1, xlim=c(0,100))
+plot(sort(pMiss1), type="h", ylim=c(0,100), xlab="obervations", ylab="% of missing (variables)")
 ```
 
-![](14_Orange_slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](14_Orange_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -484,9 +489,7 @@ calib = train.all[is.calib,]
 
 ## Var218
 
-* `Var218` is a categorical predictor
-
-* Let's see how `churn` varies with the levels of `Var218`
+* `Var218` is a categorical predictor. Let's see how `churn` varies with the levels of `Var218`
 
 
 ```r

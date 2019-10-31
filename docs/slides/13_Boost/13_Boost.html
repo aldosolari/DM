@@ -295,6 +295,25 @@ class: inverse, middle, center
 
 ---
 
+#  Gradient descent update rule
+
+* Find `\(\hat{\mathbf{f}}^{b+1}\)` such that `\(L(\hat{\mathbf{f}}^{b+1}) \leq L(\hat{\mathbf{f}}^b)\)` where `\(L(\cdot)\)` is the loss function, e.g. quadratic loss `\(L(\hat{\mathbf{f}}) = \frac{1}{n}\sum_{i=1}^{n}L(y_i,\hat{f}(x_i))= \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2\)` and
+`\(\hat{\mathbf{f}}=(\hat{f}(x_1), \ldots,\hat{f}(x_n))^\mathsf{T}\)`
+
+* The second-order Taylor expansion of `\(L\)` gives
+`$$L(\mathbf{g})  \approx L(\mathbf{f}) + \nabla L(\mathbf{f})^\mathsf{T} (\mathbf{g} - \mathbf{f}) + \frac{1}{2}(\mathbf{g} - \mathbf{f})^\mathsf{T} \nabla^2 L(\mathbf{f}) (\mathbf{g} - \mathbf{f})$$`
+
+* Consider the Quadratic approximation of `\(L\)`, replacing `\(\nabla^2 L(\mathbf{f})\)` by `\(\frac{1}{\lambda}\mathbf{I}\)` (replacing the curvature given by the
+Hessian with a much simpler notion of curvature – something spherical), we have
+`$$L(\mathbf{g})  \approx L(\mathbf{f}) + \nabla L(\mathbf{f})^\mathsf{T} (\mathbf{g} - \mathbf{f}) + \frac{1}{2 \lambda}(\mathbf{g} - \mathbf{f})^\mathsf{T}(\mathbf{g} - \mathbf{f})$$`
+* This is a convex quadratic, so we know we can minimize it just by setting its gradient to 0. Minimizing this w.r.t. `\(\mathbf{g}\)`, we get
+`\begin{aligned}
+&amp; \frac{\partial L(\mathbf{g})}{\partial \mathbf{g}} \approx \nabla L(\mathbf{f}) + \frac{1}{2}(\mathbf{g} - \mathbf{f})\\
+&amp; \Rightarrow \mathbf{g} = \mathbf{f} + \lambda (-\nabla L(\mathbf{f}))
+\end{aligned}`
+
+
+---
 
 # Gradient boosting algorithm
 
