@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>Orange data</title>
+    <title>Data Mining</title>
     <meta charset="utf-8" />
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
@@ -11,7 +11,8 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Orange data
+# Data Mining
+## Orange data
 ### Aldo Solari
 
 ---
@@ -58,7 +59,7 @@ new products and services (called **appetency**), and willingness to respond fav
 
 * The contest supplied `\(p=230\)` predictors about `\(n=50000\)` credit card accounts
 
-* For privacy reasons, predictors are anonymized: you don’t know the meaning of any of the predictors
+* For privacy reasons, predictors are anonymized: you don't know the meaning of any of the predictors
 
 * Churn problem: class 7.3% positive class (3672/50000)
 
@@ -103,9 +104,6 @@ new products and services (called **appetency**), and willingness to respond fav
 ```r
 # import data
 load("/Users/aldosolari/Documents/mygithub/DM/dataset/Orange.Rdata")
-#train &lt;- read.csv("train.csv")
-#test &lt;- read.csv("test.csv")
-#test$churn = NA
 n = nrow(train)
 m = nrow(test)
 combi = rbind(train,test)
@@ -145,7 +143,7 @@ class: inverse, middle, center
 pMiss &lt;- function(x){sum(is.na(x))/length(x)*100}
 # predictors by % of missingness
 pMiss2 = apply(train,2,pMiss)
-plot(sort(pMiss2), type="h", ylim=c(0,100), xlab="variables", ylab="% of missing (observations)r")
+plot(sort(pMiss2), type="h", ylim=c(0,100), xlab="variables", ylab="% of missing (observations)")
 ```
 
 ![](14_Orange_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
@@ -321,24 +319,25 @@ length(table(V210))/n
 
 ```r
 library(caret)
-nearZeroVar(train[,1:10], 
+nearZeroVar(train[,c(2,16,210,1,3:9)], 
             freqCut = 95/5, 
             uniqueCut = 10, 
             saveMetrics = TRUE)
 ```
 
 ```
-       freqRatio percentUnique zeroVar   nzv
-Var1    2.683333   0.053925313   FALSE FALSE
-Var2  536.000000   0.008987552   FALSE  TRUE
-Var3  108.750000   0.328045657   FALSE  TRUE
-Var4   77.666667   0.013481328   FALSE  TRUE
-Var5   64.666667   1.190850672   FALSE  TRUE
-Var6    2.365169   5.028535478   FALSE FALSE
-Var7    1.783157   0.031456433   FALSE FALSE
-Var8    0.000000   0.000000000    TRUE  TRUE
-Var9    3.600000   0.305576776   FALSE FALSE
-Var10  57.000000   1.096481373   FALSE  TRUE
+        freqRatio percentUnique zeroVar   nzv
+Var2   536.000000   0.008987552   FALSE  TRUE
+Var16    1.062500   1.599784299   FALSE FALSE
+Var210  29.800000   0.026962657   FALSE  TRUE
+Var1     2.683333   0.053925313   FALSE FALSE
+Var3   108.750000   0.328045657   FALSE  TRUE
+Var4    77.666667   0.013481328   FALSE  TRUE
+Var5    64.666667   1.190850672   FALSE  TRUE
+Var6     2.365169   5.028535478   FALSE FALSE
+Var7     1.783157   0.031456433   FALSE FALSE
+Var8     0.000000   0.000000000    TRUE  TRUE
+Var9     3.600000   0.305576776   FALSE FALSE
 ```
 
 ---
@@ -523,8 +522,6 @@ table218[,2]/(table218[,1]+table218[,2])
 ---
 
 # Var218
-
-* Levels frequencies: cJvF = 11314 (51%), UYBR = 10612 (48%), &lt;NA&gt; = 327 (1%)
 
 * When variable 218 takes on 
     - cJvF, then 6% of the customers churn

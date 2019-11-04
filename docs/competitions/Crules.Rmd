@@ -75,18 +75,22 @@ If you do not take part in the competitions in the period from 21.10.19 to 15.11
 
 # What to publish on github
 
-1. Brief description of the analysis. It must include
-    - Key ideas/insights 
+1. Brief description of the analysis. It should include
+    - Short description including key ideas/insights 
+    - Preprocessing (discarded variables, variable transformations, etc.)
     - How you handled missing values
     - Feature engineering operations
+    - Feature selection 
     - Model(s) used for the final prediction
+    - Model tuning and evaluation (cross-validation, etc.)
     - R packages used (specify if non-standard) 
     - References (if needed)
 
 2. R code to reproduce the last submission (no comments, plots, etc. only the necessary code)
 
----
+See an example [here](docs/competitions/publish_example.html)
 
+---
 
 # Competition platform
 

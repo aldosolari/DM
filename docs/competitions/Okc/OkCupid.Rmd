@@ -62,18 +62,6 @@ art being biotech care climbing code coding company computer computers dancing d
 
 ---
 
-# Rules
-
-1. If you attended the classes, you may work in groups of up to three. Each student may be on one team only
-
-2. You may not include information outside the data provided
-
-3. The competition will be run through an automated system, *BeeViva*
-
-4. The R code used to get the predictions __must be published online__ on GitHub by November 15, 2019
-
----
-
 # Evaluation
 
 * Submissions are evaluated by the Area Under the Curve (AUC)
@@ -93,6 +81,8 @@ $$\max\left(\frac{x-m}{M-m}\cdot 100, 0\right)$$
 * $M$ is the best score (among participants)
 * $m$ is the benchmark score
 
+The benchmark score is produced by the model described [here](docs/competitions/publish_example.html)
+
 The team(s) with the best performance will give a brief ( ~ 10 mins ) description of their methods in class on November 18, 2019 (before the exam)
 
 I reserve the right to regrade differently (meaning your % of points may be calculated differently)
@@ -105,7 +95,7 @@ Entry: October 21, 2019
 
 Final submission: November 15, 2019
 
-The R code used to get the predictions __must be published online__ by November 17
+The R code used to get the predictions __must be published online__ by November 17. Read carefully the competitions [instructions](docs/competitions/Crules.html)
 
 
 

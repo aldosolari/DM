@@ -23,12 +23,9 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 # Latest announcements
 
-
-* Competitions [sign-up]( https://docs.google.com/forms/d/e/1FAIpQLSfbcoi9YD-cb8x0HqsAmmhRZ42vQ6z4j6yPWpW_GgxU9y_KwA/viewform?usp=pp_url)
-
 * Competitions [list of participants](docs/competitions/Participants.pdf)
 
-
+* [example](docs/competitions/publish_example.html) of what to publish on github
 
 # Course material
 
@@ -49,8 +46,8 @@ Most of the course material can be found in the notes linked to below. The notes
 | 11 | 24.10.19 | 713 | 9:30 - 12:30 (3h) | Bagging and random forests | [Slides](docs/slides/11_RF/11_RF.html) |
 | 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | Class imbalance | [Slides](docs/slides/12_CImb/12_CImb.html) |
 | 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | Boosting | [Slides](docs/slides/13_Boost/13_Boost.html) |
-| 14 | 31.10.19 | 713 | 9:30 - 12:30 (3h) | Orange data | TBD |
-| 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | TBD | TBD |
+| 14 | 31.10.19 | 713 | 9:30 - 12:30 (3h) | Orange data | [Slides](docs/slides/14_Orange/14_Orange.html) |
+| 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | Github | [Slides](docs/slides/15_Github/15_Github.html) |
 | 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
 | 17 | 7.11.19 | 713 | 9:30 - 12:30 (3h) | TBD | TBD |
 
@@ -156,9 +153,7 @@ For improving R programming and predictive modeling skills, there are three refe
 
 **October 31** Orange data
 
-**October 4** 
-
-- TBD
+**October 4** Github
 
 **October 5** 
 
@@ -172,7 +167,7 @@ For improving R programming and predictive modeling skills, there are three refe
 # Competitions
 
 Please read carefully the [competition instructions](docs/competitions/Crules.html).
-Time window for joining the competitions:
+Here is an [example](docs/competitions/publish_example.html) of what to publish on github. Time window for joining the competitions:
 
 | Competition | Problem | Period |  
 |----|----|----|
@@ -182,6 +177,7 @@ Time window for joining the competitions:
 If a student does not take part in the competitions in the above time window, he/she must
 
 * contact the teacher via e-mail before the exam and get new training/test data
+
 * send via e-mail the predictions in the required format  
 * publish on github the (reproducible) R code at least one week before the exam
 

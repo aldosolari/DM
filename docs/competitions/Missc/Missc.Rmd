@@ -24,8 +24,6 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 
 * Data
 
-* Rules
-
 * Evaluation
 
 * Grading
@@ -98,19 +96,6 @@ The data for the competition are available as tab-delimited text files. Go to [b
 
 ---
 
-# Rules
-
-1. If you attended the classes, you may work in groups of up to three. Each student may be on one team only
-
-2. You may not include information outside the data provided on the class web-site (no reverse engineering of Netflix data please)
-
-3. The competition will be run through an automated system, *BeeViva*
-
-4. The R code used to get the predictions __must be published online__ on GitHub by November 15, 2019
-
-
----
-
 # Evaluation
 
 * Submissions are evaluated by RMSE
@@ -155,5 +140,6 @@ Entry: October 21, 2019
 
 Final submission:  November 15, 2019
 
-The R code used to get the predictions __must be published online__ by November 15, 2019
+The R code used to get the predictions __must be published online__ by November 17. Read carefully the competitions [instructions](docs/competitions/Crules.html)
+
 

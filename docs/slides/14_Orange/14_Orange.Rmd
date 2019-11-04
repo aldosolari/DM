@@ -1,5 +1,6 @@
 ---
-title: "Orange data"
+title: "Data Mining"
+subtitle: "Orange data"
 author: Aldo Solari
 output:
   xaringan::moon_reader:
@@ -54,7 +55,7 @@ new products and services (called **appetency**), and willingness to respond fav
 
 * The contest supplied $p=230$ predictors about $n=50000$ credit card accounts
 
-* For privacy reasons, predictors are anonymized: you don’t know the meaning of any of the predictors
+* For privacy reasons, predictors are anonymized: you don't know the meaning of any of the predictors
 
 * Churn problem: class 7.3% positive class (3672/50000)
 
@@ -98,9 +99,6 @@ new products and services (called **appetency**), and willingness to respond fav
 ```{r}
 # import data
 load("/Users/aldosolari/Documents/mygithub/DM/dataset/Orange.Rdata")
-#train <- read.csv("train.csv")
-#test <- read.csv("test.csv")
-#test$churn = NA
 n = nrow(train)
 m = nrow(test)
 combi = rbind(train,test)
@@ -346,8 +344,6 @@ table218[,2]/(table218[,1]+table218[,2])
 ---
 
 # Var218
-
-* Levels frequencies: cJvF = 11314 (51%), UYBR = 10612 (48%), <NA> = 327 (1%)
 
 * When variable 218 takes on 
     - cJvF, then 6% of the customers churn

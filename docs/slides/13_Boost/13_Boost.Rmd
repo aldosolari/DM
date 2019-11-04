@@ -399,13 +399,12 @@ class: inverse, middle, center
 # Adaboost algorithm for classification trees
 
 1. Set $Y \in \{-1,1\}$. Initialize the observation weights $w_i=1/n, i=1,\ldots,n$
-
 2. For $b=1,\ldots,B$ repeat the following steps
     - Fit a classification tree $\hat{C}^{b}$ to the training data, using observation weights $w_i$
     - Compute the weighted misclassification error for $\hat{C}^{b}$
 $$\mathrm{Err}^{b} = \frac{\sum_{i=1}^{n}w_i  I\{ y_i \neq \hat{C}^{b}(x_i) \}}{\sum_{i=1}^{n}w_i}$$
     - Compute 
-    $$\alpha^{b} = \log\left[ \frac{1- \mathrm{Err}^{b}}{\mathrm{Err}^{b}}\right]$$
+    $\alpha^{b} = \log\left[ \frac{1- \mathrm{Err}^{b}}{\mathrm{Err}^{b}}\right]$
     -  Update the weights as
 $$w_i \leftarrow w_i \cdot  \exp(\alpha^{b} \cdot I\{y_i \neq \hat{C}^{b}(x_i) \} ), \quad i=1,\ldots,n$$
 3. Output  $\hat{C}^{B}(x) = \mathrm{sign}( \sum_{b=1}^B \alpha^{b} \hat{C}^{b}(x) )$
