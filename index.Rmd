@@ -48,7 +48,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | Boosting | [Slides](docs/slides/13_Boost/13_Boost.html) |
 | 14 | 31.10.19 | 713 | 9:30 - 12:30 (3h) | Orange data | [Slides](docs/slides/14_Orange/14_Orange.html) |
 | 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | Github | [Slides](docs/slides/15_Github/15_Github.html) |
-| 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | TBD | TBD |
+| 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | Beyond linearity | [Slides](docs/slides/16_MBL/16_MBL.html) |
 | 17 | 7.11.19 | 713 | 9:30 - 12:30 (3h) | TBD | TBD |
 
 
@@ -155,9 +155,9 @@ For improving R programming and predictive modeling skills, there are three refe
 
 **October 4** Github
 
-**October 5** 
+**October 5** Moving beyond linearity
 
-- TBD
+- ISL 7.1, 7.2, 7.3, 7.4, 7.5, 7.7
 
 **October 7** 
 
