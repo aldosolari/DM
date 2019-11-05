@@ -47,9 +47,7 @@ Common approaches in regression to deal with nonlinear relationships are
 
 * Smoothing splines
 
-* Generalized additive models
-
-* Local regression 
+* Local regression, e.g. LOWESS (locally weighted scatterplot smoothing)
 
 ---
 
@@ -150,12 +148,29 @@ where `\(b_j(\cdot)\)` are known functions called __basis functions__. For examp
 
 ---
 
+layout: false
+class: inverse, middle, center
+
 # Regression splines
 
-* A __spline__ of __degree__ `\(d\)` with knots `\(\xi_1,\ldots,\xi_K\)` is a
-piecewise-polynomial function of degree `\(d\)`, and it has continuous derivatives up to order `\(d-1\)` at each knot
+---
 
-* It is defined by the __truncated power basis__:
+# Regression splines
+
+A __spline__ of __degree__ `\(d\)` with knots `\(\xi_1,\ldots,\xi_K\)` is a
+piecewise-polynomial function `\(f\)` of degree `\(d\)`  that is continuous and has
+continuous derivatives of orders `\(1\)`, . . . `\(d-1\)`, at its knot points, i.e. 
+
+* `\(f\)` is a polynomial of degree `\(d\)` on each of the intervals `$$(-\infty,\xi_1],[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}], [\xi_{K}, \infty)$$`
+
+* `\(f\)` is continuous and has continuous derivatives of orders `\(1\)`, . . . `\(d-1\)` at each knot, i.e.  `$$f(\xi_k^-)=f(\xi_k^+), \quad f'(\xi_k^-)=f'(\xi_k^+), \quad \ldots, \quad f^{(d-1)}(\xi_k^-)=f^{(d-1)}(\xi_k^+), \quad k=1,\ldots,K$$` where `\(\xi_k^+\)` and `\(\xi_k^-\)` indicate indicate the left and right limits of the function at `\(\xi_k\)`
+
+
+---
+
+# Truncated power basis
+
+* A __spline__ of __degree__ `\(d\)` with knots `\(\xi_1,\ldots,\xi_K\)` can be defined by the __truncated power basis__:
 `$$b_j(x) = x^{j-1}, \quad j=1,\ldots,d+1$$`
 `$$b_{d+k+1}(x) = (x - \xi_k)_+^{d}, \quad k=1,\ldots, K$$`
 where `\((\cdot)_+\)` defines the positive portion of its argument, i.e. 
@@ -256,6 +271,13 @@ lines(x,fitted, lwd=2)
 
 ---
 
+layout: false
+class: inverse, middle, center
+
+# Natural cubic splines
+
+---
+
 # Natural cubic splines
 
 * One problem with regression splines is that the estimates
@@ -269,7 +291,7 @@ leftmost knot, and to the right of the rightmost knot
     - `\(f\)` is a cubic polynomial on each `$$[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}]$$`
 
     - `\(f\)` is linear on `\((-\infty, \xi_1]\)` and `\([\xi_K,\infty)\)`
-    -  `\(f\)` is continuous and has continuous derivatives `\(f'\)` and `\(f''\)` at each knot `\(\xi_1,\ldots,\xi_K\)`: `\(f(\xi_k^-)=f(\xi_k^+)\)`, `\(f'(\xi_k^-)=f'(\xi_k^+)\)` and `\(f''(\xi_k^-)=f''(\xi_k^+)\)`, `\(k=1,\ldots,K\)`, where `\(\xi_k^+\)` and `\(\xi_k^-\)` indicate indicate the left and right limits of the function `\(f(\cdot)\)` at `\(\xi_k\)`
+    -  `\(f\)` is continuous and has continuous derivatives `\(f'\)` and `\(f''\)` at each knot `\(\xi_1,\ldots,\xi_K\)`: `$$f(\xi_k^-)=f(\xi_k^+),\quad  f'(\xi_k^-)=f'(\xi_k^+), \quad f''(\xi_k^-)=f''(\xi_k^+), \qquad k=1,\ldots,K$$`
 
 
 ---
@@ -319,6 +341,7 @@ intervals (i.e., outside the two boundary knots) are wasted since they do not af
 ```r
 library(splines)
 plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
 lines(x, fx, col=2, lwd=2)
 lines(x, fitted( lm(y ~ 0 + B ) ), lwd=2 )
 ```
@@ -331,10 +354,17 @@ lines(x, fitted( lm(y ~ 0 + B ) ), lwd=2 )
 
 # The number of knots and where to put them
 
-Natural cubic splines are very useful tools, but they do have one shortcoming: deciding the number and the placement of the knots
+Natural cubic splines have one shortcoming: deciding the number and the placement of the knots
 
 ![](16_MBL_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Smoothing splines
 
 ---
 
@@ -459,6 +489,13 @@ lines(x, predict(fit)$y, lwd=2)
 
 ---
 
+layout: false
+class: inverse, middle, center
+
+# Generalized additive models
+
+---
+
 # Additive models
 
 * The additive model for regression is that the conditional expectation function is a sum of partial response functions, one for each predictor variable
@@ -474,7 +511,274 @@ and these just add up (hence "partial response function"), but these contributio
 
 * We do need to add a
 restriction to make it identifiable; without loss of generality, say that
-`$$\mathbb{E}(Y) = \beta_0, \qquad \mathbb{E}(f_j(X_j)) =0 \beta_0$$`
+`$$\mathbb{E}(Y) = \beta_0, \qquad \mathbb{E}(f_j(X_j)) =0$$`
+
+* How can we fit addittive models?
+
+---
+
+* Linear models assume
+`$$\mathbb{E}(Y|X=x) = \sum_{j=0}^{p} \beta_j x_j$$`
+where `\(x_0\)` is always the constant 1
+
+* Suppose we don't condition on all `\(X=(X_0,\ldots,X_p)'\)` but just one component of it, say `\(X_k\)`. Then 
+`$$\mathbb{E}(Y|X_k=x_k) =  \beta_k x_k + \mathbb{E}(\sum_{j\neq k} \beta_j X_j|X_k=x_k)$$`
+
+* Then
+`$$\mathbb{E}(Y^{(k)}|X_k=x_k) =  \beta_k x_k$$`
+where `\(Y^{(k)} = Y - \sum_{j\neq k} \beta_j X_j\)` the `\(k\)`th __partial residual__: the difference between `\(Y\)` and what we expect it to be __ignoring__ the contribution from `\(X_k\)`
+
+* This suggests the following estimation scheme for linear models, known as the
+__Gauss-Seidel algorithm__, or more commonly as __back-fitting__
+
+---
+
+* Given: 
+    - `\(n\times p\)` matrix `\(\mathbf{X}\)` of `\(p\)` predictors
+    - `\(n\times 1\)` response vector `\(\mathbf{y}\)`
+    - small tolerance `\(\delta &gt; 0\)`
+
+* Center `\(\mathbf{y}\)` and each column of `\(\mathbf{X}\)`
+
+* Initialize `\(\hat{\beta}_{j} \leftarrow 0\)` for `\(j=1,\ldots,p\)`
+
+* Until (all `\(|\hat{\beta}_j - \gamma_j| \leq \delta\)` ){
+
+    for `\(k=1,\ldots, p\)` {
+    
+      `\(y_i^{(k)} = y_i - \sum_{j\neq k} \hat{\beta}_jx_{ij}\)`
+    
+      `\(\gamma_k \leftarrow\)` regression coefficient of `\(y^{(k)}\)` on `\(x_k\)`
+    
+      `\(\hat{\beta}_j \leftarrow  \gamma_k\)`
+      
+      }}
+
+* `\(\hat{\beta}_{0} \leftarrow \bar{y} - \sum_{j=1}^{p} \hat{\beta}_j \bar{x}_{j}\)` with original data
+
+* Return `\(\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p\)`
+
+
+---
+
+Generate a response `\(Y\)` and predictors `\(X_1\)`, `\(X_2\)` and `\(X_3\)` with `\(n = 100\)` as follows:
+
+
+```r
+n = 100
+set.seed(123)
+x1 = rnorm(n)
+x2 = rnorm(n)
+x3 = rnorm(n)
+y = 30 - 10*x1 + 20*x2 + 30*x3 + rnorm(n)
+fit = lm(y ~ x1+x2+x3)
+X = model.matrix(fit)
+```
+
+---
+
+
+```r
+# center y and X
+yc = y - mean(y)
+Xc = apply(X[,-1],2,function(x) x-mean(x))
+# initialize 
+p = ncol(Xc)
+hatbeta = rep(0,p)
+# 1st loop
+for (k in 1:p){
+  yk = yc - Xc[,-k,drop=F] %*% hatbeta[-k, drop=F]
+  gammak = coef(lm(yk ~ 0+ Xc[,k]))
+  hatbeta[k] &lt;- gammak
+}
+#2nd loop
+for (k in 1:p){
+  yk = yc - Xc[,-k, drop=F] %*% hatbeta[-k, drop=F]
+  gammak = coef(lm(yk ~ 0+ Xc[,k]))
+  hatbeta[k] &lt;- gammak
+}
+hatbeta0&lt;- mean(y) - sum(hatbeta*apply(X[,-1],2,mean))
+c(hatbeta0,hatbeta)
+```
+
+```
+[1]  29.98813 -10.10820  20.06330  29.93553
+```
+
+---
+
+# Backfitting Additive Models
+
+* Define the partial residuals by analogy with the linear case, as
+`$$Y^{(k)} = Y - \left(\beta_0 - \sum_{j\neq k} f_j(x_j) \right)$$`
+
+* Then 
+`$$\mathbb{E}(Y^{(k)}|X_k=x_k) =  f_k(x_k)$$`
+
+* We could use nearest neighbors, or splines, or kernels, or local-linear regression, or anything else
+
+---
+
+* Given: 
+    - `\(n\times p\)` matrix of `\(p\)` predictors 
+    - `\(n\times 1\)` response vector 
+    - small tolerance `\(\delta &gt; 0\)`
+    - one-dimensional smoother `\(s\)` 
+
+* Initialize `\(\hat{\beta}_0 \leftarrow \bar{y}\)` and `\(\hat{f}_{j} \leftarrow 0\)` for `\(j=1,\ldots,p\)`
+
+* until (all `\(|\hat{f}_j - g_j| \leq \delta\)` ){
+
+    for `\(k=1,\ldots, p\)` {
+    
+      `\(y_i^{(k)} = y_i - \sum_{j\neq k} \hat{f}_j(x_{ij})\)`
+    
+      `\(g_k \leftarrow s( y^{(k)} \sim x_k)\)`
+    
+      `\(g_k \leftarrow g_k - n^{-1} \sum_{i=1}^{n}g_k(x_{ik})\)`
+    
+      `\(\hat{f}_{k} \leftarrow g_k\)`
+      
+      }
+      
+    }
+
+* Return `\(\hat{\beta}_0, \hat{f}_{1}, \ldots, \hat{f}_{p}\)`
+
+---
+
+# mgcv
+
+* The `mgcv` R package  is based not on
+backfitting, but rather on something called the *Lanczos
+algorithm*, a way of efficiently calculating truncated matrix
+decompositions that is beyond the scope of this course
+
+* The basic syntax is
+
+
+```r
+fit &lt;- gam(y ~ s(x1) + s(x2), data=train)
+```
+
+* One can add arguments to the `s()` function, but the default is to use a __natural cubic spline basis__ and to automatically choose the smoothing parameter `\(\lambda\)` via optimization of the __GCV__
+
+---
+
+# Interaction terms
+
+* One way to think about additive models, and about (possibly) including interaction terms, is to imagine doing a sort of __Taylor series expansion__ of the true regression function
+
+* The zero-th order expansion would be a constant:
+`$$f(x)\approx \beta_0$$`
+
+* A purely additive model would correspond to a first-order expansion:
+`$$f(x)\approx \beta_0 + \sum_{j=1}^{p}f_j(x_j)$$`
+
+* Two-way interactions come in when we go to a second-order expansion:
+`$$f(x)\approx \beta_0 + \sum_{j=1}^{p}f_j(x_j) + \sum_{j=1}^{p}\sum_{k=j+1}^{p}f_{jk}(x_j,x_k)$$`
+
+* For identifiability, we need `\(\mathbb{E}(f_{jk}(X_j,X_k) ) = 0\)`
+
+---
+
+# Thin-plate spline
+
+* Suppose we have two input variables, `\(x\)` and `\(z\)`, and a single response `\(y\)`. How could we do a spline fit?
+
+* One approach is to generalize the spline optimization problem so that we penalize the curvature of the spline surface (no longer a curve)
+
+* The appropriate penalized least-squares objective function to minimize is
+`$$\sum_{i=1}^{n}(y_i - f(x_i,z_i))^2 + \lambda \int \left[  \left(\frac{\partial^2 f}{\partial x^2} \right)^2 + 2\left(\frac{\partial^2 f}{\partial x \partial z} \right)^2 + \left(\frac{\partial^2 f}{\partial z^2} \right)^2 \right]$$`
+
+* The solution is called a __thin-plate spline__  ( `s(x,z)` in `mgcv` )
+
+* This is appropriate when the two predictors `\(x\)` and `\(z\)` are measured on similar scales
+
+---
+
+# Tensor product spline
+
+* An alternative is use the spline basis functions 
+`$$f(x,z) = \sum_{j=1}^{k_x}\sum_{k=1}^{k_z} \beta_{jk} b_{j}(x) b_{k}(z)$$`
+
+* Doing all possible multiplications of one set of numbers or functions with another is said to give their outer product or tensor product, so this is known as a __tensor product spline__   ( `te(x,z)` in `mgcv` )
+
+* This is appropriate when the measurement scales of `\(x\)` and `\(z\)` are very different
+
+* We have to chose the number of terms to include for each variable ( `\(k_x\)` and `\(k_z\)`)
+
+---
+
+# Generalized additive models
+
+* A natural step beyond generalized linear models is generalized additive models (GAMs), where instead of making the transformed mean response a linear function of the predictors, we make it an additive function of the predictors 
+
+* For example
+`$$\mathrm{logit}\{ \mathbb{E}(Y|X=x) \} = \beta_0 + f_1(x_1) + f_2(x_2) + \ldots + f_p(x_p)$$`
+
+---
+
+# California house prices
+
+* The Census Bureau divides the U.S. into geographic regions called __tracts__ of a few thousand people each
+
+*  Data from the 2011 American Community Survey, containing information on the housing stock and economic circumstances of every tract in California
+
+    -  __Median_house_value__ : The median value of the housing units in the tract (response)
+    - __POPULATION__, __LATITUDE__, __LONGITUDE__ : The population, latitude and longitude of the tract
+    - __Median_household_income__, __Mean_household_income__ : The median and mean income of households (in dollars, from all sources)
+    - __Total_units__, __Vacant_units__ : The total number of units and the number of vacant units
+    - __Owners__ : The percentage of households which own their home
+    - __Median_rooms__ : The median number of rooms per unit
+    - __Mean_household_size_owners__, __ Mean_household_size_renters__ The mean number of people per household which owns its home, the mean
+number of people per renting household
+
+---
+
+
+```r
+library(RCurl)
+calif &lt;- read.csv("https://raw.githubusercontent.com/aldosolari/DM/master/dataset/calif.csv")
+library(mgcv)
+fit &lt;- gam(log(Median_house_value) ~ s(Median_household_income) +
+                   s(Mean_household_income) + 
+                   s(POPULATION) + 
+                   s(Total_units) + 
+                   s(Vacant_units) +
+                   s(Owners) + 
+                   s(Median_rooms) + 
+                   s(Mean_household_size_owners)  + 
+                   s(Mean_household_size_renters) + 
+                  s(LATITUDE,LONGITUDE), data=calif)
+```
+
+---
+
+
+```r
+plot(fit, se = 2, shade = TRUE, resid = TRUE, select=1)
+```
+
+![](16_MBL_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+plot(fit, select = 10, se = FALSE)
+```
+
+![](16_MBL_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+plot(fit, select = 10, phi = 60, scheme = TRUE, ticktype = "detailed", cex.axis = 0.5)
+```
+
+![](16_MBL_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -44,9 +44,7 @@ Common approaches in regression to deal with nonlinear relationships are
 
 * Smoothing splines
 
-* Generalized additive models
-
-* Local regression 
+* Local regression, e.g. LOWESS (locally weighted scatterplot smoothing)
 
 ---
 
@@ -157,12 +155,29 @@ $$b_1(X) = I\{x < \xi_1\}, b_2(x) = I\{\xi_1 \leq x < \xi_2\} ,\ldots, b_{K}(x) 
 
 ---
 
+layout: false
+class: inverse, middle, center
+
 # Regression splines
 
-* A __spline__ of __degree__ $d$ with knots $\xi_1,\ldots,\xi_K$ is a
-piecewise-polynomial function of degree $d$, and it has continuous derivatives up to order $d-1$ at each knot
+---
 
-* It is defined by the __truncated power basis__:
+# Regression splines
+
+A __spline__ of __degree__ $d$ with knots $\xi_1,\ldots,\xi_K$ is a
+piecewise-polynomial function $f$ of degree $d$  that is continuous and has
+continuous derivatives of orders $1$, . . . $d-1$, at its knot points, i.e. 
+
+* $f$ is a polynomial of degree $d$ on each of the intervals $$(-\infty,\xi_1],[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}], [\xi_{K}, \infty)$$
+
+* $f$ is continuous and has continuous derivatives of orders $1$, . . . $d-1$ at each knot, i.e.  $$f(\xi_k^-)=f(\xi_k^+), \quad f'(\xi_k^-)=f'(\xi_k^+), \quad \ldots, \quad f^{(d-1)}(\xi_k^-)=f^{(d-1)}(\xi_k^+), \quad k=1,\ldots,K$$ where $\xi_k^+$ and $\xi_k^-$ indicate indicate the left and right limits of the function at $\xi_k$
+
+
+---
+
+# Truncated power basis
+
+* A __spline__ of __degree__ $d$ with knots $\xi_1,\ldots,\xi_K$ can be defined by the __truncated power basis__:
 $$b_j(x) = x^{j-1}, \quad j=1,\ldots,d+1$$
 $$b_{d+k+1}(x) = (x - \xi_k)_+^{d}, \quad k=1,\ldots, K$$
 where $(\cdot)_+$ defines the positive portion of its argument, i.e. 
@@ -257,6 +272,7 @@ for (i in 1:ncol(bsScaled)) lines(x,bsScaled[,i], col=i)
 ```{r, echo=F}
 library(splines)
 plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
 lines(x, fx, col=2, lwd=2)
 B = bs(x, intercept=TRUE,
        knots=knots[-c(1,K)], 
@@ -264,6 +280,13 @@ B = bs(x, intercept=TRUE,
        )
 lines(x, fitted( lm(y ~ 0 + B) ), lwd=2 )
 ```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Natural cubic splines
 
 ---
 
@@ -280,7 +303,7 @@ leftmost knot, and to the right of the rightmost knot
     - $f$ is a cubic polynomial on each $$[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}]$$
 
     - $f$ is linear on $(-\infty, \xi_1]$ and $[\xi_K,\infty)$
-    -  $f$ is continuous and has continuous derivatives $f'$ and $f''$ at each knot $\xi_1,\ldots,\xi_K$: $f(\xi_k^-)=f(\xi_k^+)$, $f'(\xi_k^-)=f'(\xi_k^+)$ and $f''(\xi_k^-)=f''(\xi_k^+)$, $k=1,\ldots,K$, where $\xi_k^+$ and $\xi_k^-$ indicate indicate the left and right limits of the function $f(\cdot)$ at $\xi_k$
+    -  $f$ is continuous and has continuous derivatives $f'$ and $f''$ at each knot $\xi_1,\ldots,\xi_K$: $$f(\xi_k^-)=f(\xi_k^+),\quad  f'(\xi_k^-)=f'(\xi_k^+), \quad f''(\xi_k^-)=f''(\xi_k^+), \qquad k=1,\ldots,K$$
 
 
 ---
@@ -318,6 +341,7 @@ intervals (i.e., outside the two boundary knots) are wasted since they do not af
 ```{r}
 library(splines)
 plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
 lines(x, fx, col=2, lwd=2)
 lines(x, fitted( lm(y ~ 0 + B ) ), lwd=2 )
 ```
@@ -328,7 +352,7 @@ lines(x, fitted( lm(y ~ 0 + B ) ), lwd=2 )
 
 # The number of knots and where to put them
 
-Natural cubic splines are very useful tools, but they do have one shortcoming: deciding the number and the placement of the knots
+Natural cubic splines have one shortcoming: deciding the number and the placement of the knots
 
 ```{r, echo=FALSE}
 plot(x,y ,col="lightgray")
@@ -339,6 +363,13 @@ lines(x, fitted( lm(y ~ ns(x, knots=knots )) ) , col=i, lwd=2)
 }
 ```
 
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Smoothing splines
 
 ---
 
@@ -449,6 +480,13 @@ lines(x, predict(fit)$y, lwd=2)
 
 ---
 
+layout: false
+class: inverse, middle, center
+
+# Generalized additive models
+
+---
+
 # Additive models
 
 * The additive model for regression is that the conditional expectation function is a sum of partial response functions, one for each predictor variable
@@ -466,11 +504,7 @@ and these just add up (hence "partial response function"), but these contributio
 restriction to make it identifiable; without loss of generality, say that
 $$\mathbb{E}(Y) = \beta_0, \qquad \mathbb{E}(f_j(X_j)) =0$$
 
-* To see why we need to do this, consider the simple case with $p = 2$. If we add constants $c_1$ to $f_1$ and $c_2$ to $f_2$, but subtract $c_1+c_2$ from $\beta_0$, then nothing observable has changed about the model
-
 * How can we fit addittive models?
-
----
 
 ---
 
@@ -518,7 +552,7 @@ __Gauss-Seidel algorithm__, or more commonly as __back-fitting__
 
 ---
 
-* Generate a response $Y$ and predictors $X_1$, $X_2$ and $X_3$ with $n = 100$ as follows:
+Generate a response $Y$ and predictors $X_1$, $X_2$ and $X_3$ with $n = 100$ as follows:
 
 ```{r}
 n = 100
@@ -688,7 +722,7 @@ number of people per renting household
 
 ```{r}
 library(RCurl)
-calif <- read.csv("https://raw.githubusercontent.com/aldosolari/DM/master/data/calif.csv")
+calif <- read.csv("https://raw.githubusercontent.com/aldosolari/DM/master/dataset/calif.csv")
 library(mgcv)
 fit <- gam(log(Median_house_value) ~ s(Median_household_income) +
                    s(Mean_household_income) + 
@@ -708,3 +742,14 @@ fit <- gam(log(Median_house_value) ~ s(Median_household_income) +
 plot(fit, se = 2, shade = TRUE, resid = TRUE, select=1)
 ```
 
+---
+
+```{r}
+plot(fit, select = 10, se = FALSE)
+```
+
+---
+
+```{r}
+plot(fit, select = 10, phi = 60, scheme = TRUE, ticktype = "detailed", cex.axis = 0.5)
+```
