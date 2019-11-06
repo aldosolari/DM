@@ -49,7 +49,7 @@ Most of the course material can be found in the notes linked to below. The notes
 | 14 | 31.10.19 | 713 | 9:30 - 12:30 (3h) | Orange data | [Slides](docs/slides/14_Orange/14_Orange.html) |
 | 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | Github | [Slides](docs/slides/15_Github/15_Github.html) |
 | 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | Moving beyond linearity | [Slides](docs/slides/16_MBL/16_MBL.html) |
-| 17 | 7.11.19 | 713 | 9:30 - 12:30 (3h) | TBD | TBD |
+| 17 | 7.11.19 | 713 | 9:30 - 12:30 (3h) | Model stacking  | [Slides](docs/slides/17_Stacking/17_Stacking.html) |
 
 
 The lecture notes and course webpage were created with [R Markdown](https://rmarkdown.rstudio.com/).
@@ -159,9 +159,7 @@ For improving R programming and predictive modeling skills, there are three refe
 
 - ISL 7.1, 7.2, 7.3, 7.4, 7.5, 7.7
 
-**October 7** 
-
-- TBD
+**October 7** Model stacking
 
 
 # Competitions

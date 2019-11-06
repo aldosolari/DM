@@ -556,7 +556,7 @@ Generate a response $Y$ and predictors $X_1$, $X_2$ and $X_3$ with $n = 100$ as 
 
 ```{r}
 n = 100
-set.seed(123)
+set.seed(1)
 x1 = rnorm(n)
 x2 = rnorm(n)
 x3 = rnorm(n)
@@ -574,25 +574,22 @@ Xc = apply(X[,-1],2,function(x) x-mean(x))
 # initialize 
 p = ncol(Xc)
 hatbeta = rep(0,p)
-# 1st loop
+delta = 0.1
+gamma = rep(2*delta,p)
+while ( !all( abs(gamma - hatbeta) <= delta) ){
 for (k in 1:p){
-  yk = yc - Xc[,-k,drop=F] %*% hatbeta[-k, drop=F]
-  gammak = coef(lm(yk ~ 0+ Xc[,k]))
-  hatbeta[k] <- gammak
-}
-#2nd loop
-for (k in 1:p){
+  gamma = hatbeta
   yk = yc - Xc[,-k, drop=F] %*% hatbeta[-k, drop=F]
   gammak = coef(lm(yk ~ 0+ Xc[,k]))
   hatbeta[k] <- gammak
-}
+}}
 hatbeta0<- mean(y) - sum(hatbeta*apply(X[,-1],2,mean))
-c(hatbeta0,hatbeta)
+data.frame( backfitting=c(hatbeta0,hatbeta), leastsquares=coef(fit))
 ```
 
 ---
 
-# Backfitting Additive Models
+# Backfitting additive models
 
 * Define the partial residuals by analogy with the linear case, as
 $$Y^{(k)} = Y - \left(\beta_0 - \sum_{j\neq k} f_j(x_j) \right)$$
@@ -684,13 +681,13 @@ $$\sum_{i=1}^{n}(y_i - f(x_i,z_i))^2 + \lambda \int \left[  \left(\frac{\partial
 # Tensor product spline
 
 * An alternative is use the spline basis functions 
-$$f(x,z) = \sum_{j=1}^{k_x}\sum_{k=1}^{k_z} \beta_{jk} b_{j}(x) b_{k}(z)$$
+$$f(x,z) = \sum_{j=1}^{K_x}\sum_{k=1}^{K_z} \beta_{jk} b_{j}(x) b_{k}(z)$$
 
 * Doing all possible multiplications of one set of numbers or functions with another is said to give their outer product or tensor product, so this is known as a __tensor product spline__   ( `te(x,z)` in `mgcv` )
 
 * This is appropriate when the measurement scales of $x$ and $z$ are very different
 
-* We have to chose the number of terms to include for each variable ( $k_x$ and $k_z$)
+* We have to chose the number of terms to include for each variable ( $K_x$ and $K_z$)
 
 ---
 
