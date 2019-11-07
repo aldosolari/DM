@@ -25,7 +25,9 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 * Competitions [list of participants](docs/competitions/Participants.pdf)
 
-* [example](docs/competitions/publish_example.html) of what to publish on github
+* [Example](docs/competitions/publish_example.html) of what to publish on github
+
+* Rules for the exam. The first part (questions about theory) is "closed book", while the second part (data analysis) is "open book". See below
 
 # Course material
 
@@ -203,11 +205,20 @@ The **Test** consists of
 * **questions** about the theory (open and/or multiple-choice)
 * **data analysis** with R 
 
-For the data analysis, the following R code will be available in the "TESTO" folder:
+The first part (questions about theory) is "closed book", while the second part (data analysis) is "open book". 
+
+For the open book examination, you are allowed to bring notes, textbooks, and other resource materials, but only as **printed materials**. 
+For example, you can bring a printed copy of the following R code:
 
 * [Code from ISLR](https://aldosolari.github.io/DM/exams/codeISLR.pdf)
 
-For the data analysis, you have to write the R code in a .Rmd file and then use the **Knit** button to generate an HTML file, which will be uploaded to the "CONSEGNA" folder. Other formats will not be accepted. 
+For the data analysis, you have to 
+
+1. upload your final prediction (.txt file) 
+
+2. upload the R code used to get the final prediction (.html file generated from a .Rmd file via the Knit button)
+
+to the "CONSEGNA" folder. Other formats will not be accepted. 
 
 
 
