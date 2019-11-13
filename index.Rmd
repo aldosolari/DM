@@ -27,7 +27,6 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 * [Example](docs/competitions/publish_example.html) of what to publish on github
 
-* Rules for the exam. The first part (questions about theory) is "closed book", while the second part (data analysis) is "open book". See below
 
 # Course material
 
@@ -211,6 +210,10 @@ For the open book examination, you are allowed to bring notes, textbooks, and ot
 For example, you can bring a printed copy of the following R code:
 
 * [Code from ISLR](https://aldosolari.github.io/DM/exams/codeISLR.pdf)
+
+The R libraries available during the exam are the following:
+
+* [R libraries](https://aldosolari.github.io/DM/exams/Librerie_R.txt)
 
 For the data analysis, you have to 
 

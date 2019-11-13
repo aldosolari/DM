@@ -75,6 +75,7 @@ set.seed(123)
 fit <- bagging(Class ~ ., training, nbagg=25, control=rpart.control(minsplit=2, cp=0, xval=0))
 phat = predict(fit, newdata=test, type="prob")[,"stem",drop=F]
 head(phat)
+sessionInfo()
 ```
 
 ## Miss Congeniality
