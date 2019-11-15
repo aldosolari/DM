@@ -29,7 +29,7 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 * [Link](https://docs.google.com/forms/d/e/1FAIpQLScc7cbet4OB8Z7xPOgHChINQMlJVX6Rm47LS-vgWexSTJt0Kw/viewform?usp=sf_link) to the description of the analysis and reproducible R code (to submit before November 17)
 
-* [Peer rating](https://docs.google.com/forms/d/e/1FAIpQLSd5gGOS-woygOx6INrC7DcFkW4yP04SSE8PJ7FAlGbR54iHSA/viewform?usp=sf_link) of team members (to submit before November 17)
+* [Peer rating](https://docs.google.com/forms/d/e/1FAIpQLSd5gGOS-woygOx6INrC7DcFkW4yP04SSE8PJ7FAlGbR54iHSA/viewform?usp=sf_link) of team members (to submit before November 17, teams only)
 
 * List of [R libraries](https://aldosolari.github.io/DM/exams/Librerie_R.txt)
 available during the exam

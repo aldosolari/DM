@@ -78,6 +78,4 @@ head(phat)
 sessionInfo()
 ```
 
-## Miss Congeniality
 
-Etc.
