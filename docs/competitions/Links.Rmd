@@ -1,0 +1,123 @@
+---
+title: "Competitions: final models"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### v.cala 
+
+* Valerio Calà
+* https://vfcala.github.io/DM-Competitions/competitions
+* https://vfcala.github.io/DM-Competitions/competitions2
+
+
+#### R_E_Ds 
+
+* Marco Mazzei (m.mazzei3), Samuele Cassinari (s.cassinari1)
+* https://samuelecassinari.github.io/DMcompetitions/MissCongeniality.html
+* https://samuelecassinari.github.io/DMcompetitions/OnlineDating.html
+
+
+#### clan_optimism
+
+*  Samantha Rabuffetti (s.rabuffetti), Matteo Locci (m.locci)
+* https://samirabu.github.io/DMcompetitions/misscongeniality.html
+* https://samirabu.github.io/DMcompetitions/okcupid.html
+
+    
+#### f.meluso1
+
+* Floriana Meluso
+* https://florianameluso.github.io/DMcompetitions/Netflix-competition.html
+* https://florianameluso.github.io/DMcompetitions/Online-Dating-competition.html
+    
+#### TwoTree
+
+* Generoso Manuel (m.generoso2), Ferrario Alberto (a.ferrario)
+* https://albertoferrario95.github.io/DMcompetitions/MissCong_mark.html
+* https://albertoferrario95.github.io/DMcompetitions/OkCupid_mark.html
+
+    
+#### coccinelle
+
+* Carlotta Zatti (carlotta zatti), Federica Zattini (FZattini)
+* https://carlottazatti1.github.io/DMcompetitions/Misscongeniality_teamcoccinelle.html
+* https://carlottazatti1.github.io/DMcompetitions/Onlinedating_teamcoccinelle.html
+* **no prediction output (Miss Congeniality, Online Dating)**
+
+#### LFC 
+
+* Francesca Cucchi (f.cucchi4), Laura Belloni (l.belloni8), Chiara Gaia Magnani (c.magnani9) 
+* https://github.com/chiaragaiamagnani/DMcompetitions 
+* https://github.com/chiaragaiamagnani/DMcompetitions
+* **Links not working**
+
+#### Auratus 
+
+* Giulia Irene Maino (g.maino), 
+Luca Danese (danese.luca), 
+Simone Borgonovo (s.borgonovo3)
+* https://github.com/simoneborgonovo/DMcompetitions/blob/master/auratus_NETFLIX.html
+* https://github.com/simoneborgonovo/DMcompetitions/blob/master/auratus_OKCUPID.html
+* **Links not working**
+    
+#### ALA
+    
+* Ferrari Agostina (agostina.ferrari), Malchiodi Linda (l.malchiodi1), Schina Andrea (a.schina1)
+* https://schina.github.io/DMcompetitions/Miss_congeniality.html
+* https://schina.github.io/DMcompetitions/OkCupid.html
+    
+#### Double_Name
+
+* Farace Vincenzo Emanuele (v.farace), Viganò Lorenzo (l.viganò), Silva alessandro (a.silva)
+* https://lorenzo-daniele-vigano.github.io/ldv.github.it/MISS-C.html
+* https://lorenzo-daniele-vigano.github.io/ldv.github.it/okcupid.html
+    
+#### #saygini 
+
+* Massimiliano Rubino (max.rubino), 
+Alessandro Cavicchi (ikki), Marco Musto (m.musto5)
+* https://github.com/Max-Rubino/DMcompetitions/blob/master/NETFLIX.html 
+* https://github.com/Max-Rubino/DMcompetitions/blob/master/ok_cupid.html
+* **Links not working**
+    
+#### fast_and_curious 
+
+* Giulia Maggi (g.maggi), 
+Edoardo Ghezzi (e.ghezzi)
+* https://github.com/edoardoghezzi/DMcompetitions/blob/master/Report_miss_cong.html
+* https://github.com/edoardoghezzi/DMcompetitions/blob/master/Report_okCupid.html
+* **Links not working**
+
+#### Yetis
+
+* Diego Bellazzi (d.bellazzi), Martina Peron (martina.peron)
+* https://github.com/Diegoo-b/Diegoo-b.github.io/blob/master/Netflix.html
+* https://github.com/Diegoo-b/Diegoo-b.github.io/blob/master/OkCupid.html
+* **Links not working** 
+    
+#### s.pisaniello2 
+
+* Sara Pisaniello
+* https://github.com/Saragithub19/DMrepository/blob/master/NETLIXPRIZEFINALE.html
+* https://github.com/Saragithub19/DMrepository/blob/master/OKCUPIDFINALE.html
+* **Links not working**    
+    
+#### Jinglerry 
+
+* Mirjam Rroji (m.rroji), Marco Pastore (marco.pastore), Veronica Bacino (v.bacino1)
+* https://github.com/Mirjam1993/DMcompetitions/blob/master/Netflix_finale_17nov.html
+* https://github.com/Mirjam1993/DMcompetitions/blob/master/cupid_finale_17nov.html
+* **Links not working**
+
+#### il_Tridente 
+
+* Davide Croce (d.croce1), Simone Moreschi (s.moreschi), Simone Trombettoni (s.trombettoni)
+* https://strombettoni.github.io/DMcompetitions/Cupid_Tridente.html
+* https://strombettoni.github.io/DMcompetitions/Netflix_Tridente.html
+* **Incomplete description of the analysis (Miss Congeniality, Online Dating)**
+* **Unnecessary output in the R code (Online Dating)**
+

@@ -1,6 +1,6 @@
 ---
-title: "Miss Congeniality"
-subtitle: "Partial score"
+title: "Online dating"
+subtitle: "Final score"
 output: html_document
 ---
 
@@ -13,10 +13,11 @@ Sys.time()
 ```
 
 
+
 ```{r, echo=FALSE}
 library(rvest)
 library(dplyr)
-url <- 'http://www.bee-viva.com/competitions/miss_c'
+url <- 'http://www.bee-viva.com/competitions/online_dating'
 webpage <- read_html(url)
 
 tab = webpage %>%
@@ -24,23 +25,24 @@ tab = webpage %>%
   .[3] %>%
   html_table(fill = TRUE)
 
-tab[[1]] = tab[[1]][-which(tab[[1]]$Nome == "minniz"),]
+tab[[1]] = tab[[1]][-which(tab[[1]]$Nome == "ilaria terzago"),]
+tab[[1]] = tab[[1]][-which(tab[[1]]$Nome == "benchmark"),]
+
 
 score_text = tab[[1]]$Punteggio
 twodig = regmatches(score_text, gregexpr("[[:digit:]]+", score_text))
 score = as.numeric(unlist(lapply(twodig, function(x) paste(x,collapse="."))))
 
-min = 80.5
-max = 74.5
-Percent = pmin( (score-min)/(max-min)*100, 100) 
+min = 74.5
+max = max(score)
+Percent = ((score-min)/(max -min))*100
 tab[[1]]$Percent = round(Percent,1)
 #tab[[1]]$Points = round(7.5*Percent/100,1)
 
 knitr::kable(tab)
 ```
 
+
 The Percent of points is calculated as
-$$\min\left(\frac{80.5\%-x}{80.5\% - 74.5\%}, 100\%\right)$$
-where $x$ is your final RMSE\% score
-
-
+$$\min\left(\frac{x-74.5\%}{\max(x) - 74.5\%}, 100\%\right)$$
+where $x$ is your final AUC\% score and $\max(x)$ is the best AUC\% score in the leaderboard
