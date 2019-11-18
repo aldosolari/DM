@@ -32,7 +32,7 @@ available during the exam
 
 * Partial scores: [Miss Congeniality](docs/competitions/Missc/Missc_partial.html), [Online Dating](docs/competitions/Okc/OkCupid_partial.html)
 
-* Final scores: TBA
+* Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html), [Online Dating](docs/competitions/Okc/OkCupid_final.html)
 
 # Course material
 

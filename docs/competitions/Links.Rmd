@@ -88,9 +88,9 @@ Alessandro Cavicchi (ikki), Marco Musto (m.musto5)
 
 * Giulia Maggi (g.maggi), 
 Edoardo Ghezzi (e.ghezzi)
-* https://github.com/edoardoghezzi/DMcompetitions/blob/master/Report_miss_cong.html
-* https://github.com/edoardoghezzi/DMcompetitions/blob/master/Report_okCupid.html
-* **Links not working**
+* https://edoardoghezzi.github.io/DMcompetitions/Report_miss_cong.html 
+* https://edoardoghezzi.github.io/DMcompetitions/Report_okCupid.html
+
 
 #### Yetis
 
