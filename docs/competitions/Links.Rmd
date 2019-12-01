@@ -94,9 +94,8 @@ Edoardo Ghezzi (e.ghezzi)
 #### Yetis
 
 * Diego Bellazzi (d.bellazzi), Martina Peron (martina.peron)
-* https://github.com/Diegoo-b/Diegoo-b.github.io/blob/master/Netflix.html
-* https://github.com/Diegoo-b/Diegoo-b.github.io/blob/master/OkCupid.html
-* **Links not working** 
+* https://diegoo-b.github.io/DMcompetitions/OkCupid.html
+* https://diegoo-b.github.io/DMcompetitions/Netflix.html
     
 #### s.pisaniello2 
 
@@ -107,15 +106,13 @@ Edoardo Ghezzi (e.ghezzi)
 #### Jinglerry 
 
 * Mirjam Rroji (m.rroji), Marco Pastore (marco.pastore), Veronica Bacino (v.bacino1)
-* https://github.com/Mirjam1993/DMcompetitions/blob/master/Netflix_finale_17nov.html
-* https://github.com/Mirjam1993/DMcompetitions/blob/master/cupid_finale_17nov.html
-* **Links not working**
+* https://veronicabacino.github.io/DMcompetitions/Netflix_finale_17nov.html
+* https://veronicabacino.github.io/DMcompetitions/cupid_finale_17nov.html
 
 #### il_Tridente 
 
 * Davide Croce (d.croce1), Simone Moreschi (s.moreschi), Simone Trombettoni (s.trombettoni)
-* https://strombettoni.github.io/DMcompetitions/Cupid_Tridente.html
 * https://strombettoni.github.io/DMcompetitions/Netflix_Tridente.html
-* **Incomplete description of the analysis (Miss Congeniality, Online Dating)**
-* **Unnecessary output in the R code (Online Dating)**
+* https://strombettoni.github.io/DMcompetitions/il_Tridente_OKCUPID.html
+
 
