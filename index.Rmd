@@ -23,16 +23,11 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 # Latest announcements
 
-* [Example](docs/competitions/publish_example.html) of what to publish on github
+* Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html) - [Online Dating](docs/competitions/Okc/OkCupid_final.html)
 
-* List of [R libraries](https://aldosolari.github.io/DM/exams/Librerie_R.txt)
-available during the exam
+* 18.11.19 [text](https://aldosolari.github.io/DM/exams/DM181119/DM181119_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM181119/DM181119_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM181119/DM181119_esiti.pdf)
 
-* Competitions: [final models](docs/competitions/Links.html)
 
-* Partial scores: [Miss Congeniality](docs/competitions/Missc/Missc_partial.html), [Online Dating](docs/competitions/Okc/OkCupid_partial.html)
-
-* Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html), [Online Dating](docs/competitions/Okc/OkCupid_final.html)
 
 # Course material
 
@@ -188,6 +183,14 @@ If a student does not take part in the competitions in the above time window, he
 
 The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off). I would like to thank BeeViva and in particular [Livio Finos](http://www.liviofinos.net/), [Dario Solari](https://www.linkedin.com/in/dariosolari/?originalSubdomain=it) and [Tomaso "Minni" Minelli](https://github.com/minni). The competitions offered in this course would not have been possible without their constant and precious support.
 
+### Competitions results
+
+* Models used: [final models](docs/competitions/Links.html)
+
+* Partial scores: [Miss Congeniality](docs/competitions/Missc/Missc_partial.html), [Online Dating](docs/competitions/Okc/OkCupid_partial.html)
+
+* Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html), [Online Dating](docs/competitions/Okc/OkCupid_final.html)
+
 
 # Exams
 
@@ -229,6 +232,9 @@ For the data analysis, you have to
 
 to the "CONSEGNA" folder. Other formats will not be accepted. 
 
+### Sessions
+
+* 18.11.19 [text](https://aldosolari.github.io/DM/exams/DM181119/DM181119_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM181119/DM181119_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM181119/DM181119_esiti.pdf)
 
 
 ## Acknowledgments {.appendix}

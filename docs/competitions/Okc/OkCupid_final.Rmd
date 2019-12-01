@@ -37,7 +37,7 @@ min = 74.5
 max = max(score)
 Percent = ((score-min)/(max -min))*100
 tab[[1]]$Percent = round(Percent,1)
-#tab[[1]]$Points = round(7.5*Percent/100,1)
+tab[[1]]$Points = round(7.5*Percent/100,1)
 
 knitr::kable(tab)
 ```

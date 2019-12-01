@@ -31,14 +31,14 @@ twodig = regmatches(score_text, gregexpr("[[:digit:]]+", score_text))
 score = as.numeric(unlist(lapply(twodig, function(x) paste(x,collapse="."))))
 
 min = 80.5
-max = 74.5
+max = 74.71
 Percent = pmin( (score-min)/(max-min)*100, 100)
 tab[[1]]$Percent = round(Percent,1)
-#tab[[1]]$Points = round(7.5*Percent/100,1)
+tab[[1]]$Points = round(7.5*Percent/100,1)
 
 knitr::kable(tab)
 ```
 
-The Percent of points is calculated as
-$$\min\left(\frac{80.5\%-x}{80.5\% - 74.5\%}, 100\%\right)$$
+The Percent of Points is calculated as
+$$\min\left(\frac{80.5\%-x}{80.5\% - 74.71\%}, 100\%\right)$$
 where $x$ is your final RMSE\% score

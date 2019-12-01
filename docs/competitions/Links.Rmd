@@ -44,9 +44,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #### coccinelle
 
 * Carlotta Zatti (carlotta zatti), Federica Zattini (FZattini)
-* https://carlottazatti1.github.io/DMcompetitions/Misscongeniality_teamcoccinelle.html
-* https://carlottazatti1.github.io/DMcompetitions/Onlinedating_teamcoccinelle.html
-* **no prediction output (Miss Congeniality, Online Dating)**
+* https://carlottazatti1.github.io/DMcompetitions/Misscongeniality_teamcoccinelle2.html
+* https://carlottazatti1.github.io/DMcompetitions/Onlinedating_teamcoccinelle2.html
 
 #### LFC 
 
@@ -80,9 +79,9 @@ Simone Borgonovo (s.borgonovo3)
 
 * Massimiliano Rubino (max.rubino), 
 Alessandro Cavicchi (ikki), Marco Musto (m.musto5)
-* https://github.com/Max-Rubino/DMcompetitions/blob/master/NETFLIX.html 
-* https://github.com/Max-Rubino/DMcompetitions/blob/master/ok_cupid.html
-* **Links not working**
+* https://max-rubino.github.io/DMcompetitions/NETFLIX.html   
+* https://max-rubino.github.io/DMcompetitions/ok_cupid.html 
+
     
 #### fast_and_curious 
 
@@ -102,10 +101,9 @@ Edoardo Ghezzi (e.ghezzi)
 #### s.pisaniello2 
 
 * Sara Pisaniello
-* https://github.com/Saragithub19/DMrepository/blob/master/NETLIXPRIZEFINALE.html
-* https://github.com/Saragithub19/DMrepository/blob/master/OKCUPIDFINALE.html
-* **Links not working**    
-    
+* https://saragithub19.github.io/DMrepository/OKCUPIDFINALE.html
+* https://saragithub19.github.io/DMrepository/NETLIXPRIZEFINALE.html
+
 #### Jinglerry 
 
 * Mirjam Rroji (m.rroji), Marco Pastore (marco.pastore), Veronica Bacino (v.bacino1)
