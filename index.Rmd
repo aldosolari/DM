@@ -23,7 +23,7 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 # Latest announcements
 
-* Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html) - [Online Dating](docs/competitions/Okc/OkCupid_final.html)
+* Competitions [final points](docs/competitions/Missc/Cfinal.pdf)
 
 * 18.11.19 [text](https://aldosolari.github.io/DM/exams/DM181119/DM181119_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM181119/DM181119_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM181119/DM181119_esiti.pdf)
 
@@ -190,6 +190,8 @@ The [competition platform](http://www.bee-viva.com/competitions) is provided by 
 * Partial scores: [Miss Congeniality](docs/competitions/Missc/Missc_partial.html), [Online Dating](docs/competitions/Okc/OkCupid_partial.html)
 
 * Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html), [Online Dating](docs/competitions/Okc/OkCupid_final.html)
+
+* Competitions [final points](docs/competitions/Missc/Cfinal.pdf)
 
 
 # Exams
