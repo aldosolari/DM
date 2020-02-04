@@ -23,7 +23,7 @@ Participating in predictive modelling *competitions* can help you gain practical
 
 # Latest announcements
 
-* 30.1.20 [text](https://aldosolari.github.io/DM/exams/DM300120/DM300120_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DMDM300120/DMDM300120_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM300120/DMDM300120_esiti.pdf)
+* 30.1.20 [text](https://aldosolari.github.io/DM/exams/DM300120/DM300120_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM300120/DM300120_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM300120/DM300120_esiti.pdf)
 
 
 
