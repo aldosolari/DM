@@ -81,5 +81,5 @@ knitr::kable(res[-37,])
 
 ### Aggiustamenti dovuti al _peer rating_
 
-836897: fattore moltiplicativo 0.6, punteggio finale 7.56 
+836897: fattore moltiplicativo 0.82, punteggio finale 10.33 
 
