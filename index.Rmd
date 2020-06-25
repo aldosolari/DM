@@ -240,6 +240,8 @@ to the "CONSEGNA" folder. Other formats will not be accepted.
 
 * 13.2.20 [text](https://aldosolari.github.io/DM/exams/DM130220/DM130220_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM130220/DM130220_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM130220/DM130220_esiti.pdf)
 
+* 25.6.20 [text](https://aldosolari.github.io/DM/exams/DM250620/DM250620_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM250620/DM250620_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM250620/DM250620_esiti.pdf)
+
 ## Acknowledgments {.appendix}
 
 Much of the course content was inspired by the following courses:
