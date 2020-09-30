@@ -14,7 +14,6 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 * L01 (1 Ottobre 9:30 - 11:30) 
   * [Organizzazione del corso](docs/lezioni/L01/Organizzazione.html)
   * [Statistica vs Machine Learning](docs/lezioni/L01/Introduzione.html)
-  * Un semplice problema-tipo
   
 * L02 (5 Ottobre 14:30 - 16:30)
   
@@ -75,7 +74,7 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 || Testo || Data di consegna || Scadenza ||
 |-|-|-|-|-|-|-|-|
 ||  || ||  ||  ||
-|| [Problema 0]() || 2 Ottobre 2020 || 7 Ottobre 2020 ||
+|| Problema 0 || 2 Ottobre 2020 || 7 Ottobre 2020 ||
 || Problema 1 ||  - || - ||
 || Problema 2 ||  - || - ||
 
