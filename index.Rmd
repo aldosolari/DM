@@ -11,39 +11,40 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 
 ## Calendario delle lezioni e materiale didattico
 
-* L01 (1 Ottobre, sincrona 9:30 - 12:30) 
-  * Introduzione al corso
-  * Modalità d'esame
+* L01 (1 Ottobre 9:30 - 11:30) 
+  * [Organizzazione del corso](docs/lezioni/L01/Organizzazione.html)
+  * [Statistica vs Machine Learning](docs/lezioni/L01/Introduzione.html)
+  * Un semplice problema-tipo
   
-* L02 (5 Ottobre, asincrona 2 ore)
+* L02 (5 Ottobre 14:30 - 16:30)
   
-* L03 (6 Ottobre, asincrona, 3 ore)
+* L03 (6 Ottobre 12:30 - 15:30)
   
-* L04 (8 Ottobre) 
+* L04 (8 Ottobre 9:30 - 12:30) 
 
-* L05 (12 Ottobre) 
+* L05 (12 Ottobre 14:30 - 16:30) 
 
-* L06 (13 Ottobre) 
+* L06 (13 Ottobre 12:30 - 15:30) 
 
-* L07 (15 Ottobre) 
+* L07 (15 Ottobre 9:30 - 12:30) 
 
-* L08 (19 Ottobre) 
+* L08 (19 Ottobre 14:30 - 16:30) 
 
-* L09 (20 Ottobre) 
+* L09 (20 Ottobre 12:30 - 15:30) 
 
-* L10 (22 Ottobre) 
+* L10 (22 Ottobre 9:30 - 12:30) 
 
-* L11 (26 Ottobre) 
+* L11 (26 Ottobre 14:30 - 16:30) 
 
-* L12 (27 Ottobre) 
+* L12 (27 Ottobre 12:30 - 15:30) 
 
-* L13 (29 Ottobre) 
+* L13 (29 Ottobre 9:30 - 12:30) 
 
-* L14 (2 Novembre) 
+* L14 (2 Novembre 14:30 - 16:30) 
 
-* L15 (3 Novembre) 
+* L15 (3 Novembre 12:30 - 15:30) 
 
-* L16 (5 Novembre) 
+* L16 (5 Novembre 9:30 - 12:30) 
 
 # Esame
 
@@ -55,7 +56,7 @@ L'esame è composto da due parti:
 
 Il voto finale è dato dalla media dei voti delle parti 1. e 2. Lo studente (oppure il docente) può richiedere la prova orale.
 
-Agli studenti che si iscrivono al seguente [form]() entro il 2 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi]() di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
+Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 2 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi]() di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
 
 **Calendario degli esami**
 
@@ -74,9 +75,9 @@ Agli studenti che si iscrivono al seguente [form]() entro il 2 Ottobre 2020 vien
 || Testo || Data di consegna || Scadenza ||
 |-|-|-|-|-|-|-|-|
 ||  || ||  ||  ||
-|| Problema 1 || 1 Ottobre 2020 || 5 Ottobre 2020 ||
+|| [Problema 0]() || 2 Ottobre 2020 || 7 Ottobre 2020 ||
+|| Problema 1 ||  - || - ||
 || Problema 2 ||  - || - ||
-|| Problema 3 ||  - || - ||
 
 La scadenza sopra indicata vale per gli studenti che lavorano in [gruppi](). 
 
@@ -85,17 +86,17 @@ Per tutti gli altri studenti, il lavoro (individuale) deve essere consegnato alm
 
 ## Libri di testo
 
-* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia
+* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia [AS]
 
-* Gareth, Witten, Hastie, Tibshirani (2013). Introduction to Statistical Learning with applications in R. Springer
+* Gareth, Witten, Hastie, Tibshirani (2013). Introduction to Statistical Learning with applications in R. Springer [ISL]
 
-* Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer
+* Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer [ESL]
 
-* Kuhn, Johnson (2019). Feature Engineering and Selection. Chapman and Hall/CRC
+* Kuhn, Johnson (2019). Feature Engineering and Selection. Chapman and Hall/CRC [KJ]
 
-* Lewis, Kane, Arnold (2019) A Computational Approach to Statistical Learning. Chapman And Hall/Crc
+* Lewis, Kane, Arnold (2019) A Computational Approach to Statistical Learning. Chapman And Hall/Crc [LKA]
 
-* Wickham, Grolemund (2015) R for Data Science. O'Reilly Cookbooks
+* Wickham, Grolemund (2015) R for Data Science. O'Reilly Cookbooks [WG]
 
 Tutti i libri di testo (tranne il primo) sono disponibili in formato elettronico presso la [biblioteca](https://www.biblio.unimib.it/it/risorse/accesso-alle-risorse-remoto).
 
