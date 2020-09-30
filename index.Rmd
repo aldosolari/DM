@@ -1,268 +1,101 @@
 ---
 title: "Data Mining"
-description: |
-  Master Degree in Statistics and Economics, University of Milano-Bicocca 
-author:
-  - name: Aldo Solari
-    url: https://aldosolari.github.io/
-    affiliation: DEMS
-    affiliation_url: https://www.unimib.it/ateneo/dipartimenti-e-scuole/alla-scoperta-%E2%80%A6/dipartimento-economia-metodi-quantitativi-e-strategie-impresa
-date: "`r Sys.Date()`"
-output:
-  radix::radix_article:
-    toc: true
-    toc_depth: 1
+output: markdowntemplates::minimal
 ---
 
-This course aims to provide statistical and computational tools for *data mining* and *supervised learning* by using the R software environment for statistical computing. Special emphasis is given to applied predictive modelling. 
-
-The goal of *predictive modeling* is to construct models that generate accurate predictions for future, yet-to-be-seen data. The process of developing an effective model is both iterative and heuristic. This framework includes exploratory data analysis, splitting the data into training and testing sets, building models, selecting an approach for identifying optimal tuning parameters, and estimating predictive performance.
-
-Participating in predictive modelling *competitions* can help you gain practical experience and  improve your data modelling skills in various domains such as credit, insurance, marketing, sales' forecasting etc.  At the same time you get to do it in a competitive context against dozens of participants where each one tries to build the most predictive algorithm. Since 2015, this course utilises [BeeViva](http://www.bee-viva.com/competitions), the __first__ Italian public data platform for hosting [#Competitions](#competitions). 
-
-
-# Latest announcements
-
-*  13.2.20 [grades](https://aldosolari.github.io/DM/exams/DM130220/DM130220_esiti.pdf)
-
-
-
-# Course material
-
-Most of the course material can be found in the notes linked to below. The notes are supplemented by readings which are listed in the [#Reading](#reading) section.
-
-| N | Date | Lab | Hours | Topics | Material |
-|--|--|--------|--------|--------|--------|
-| 1 | 1.10.19 | 717 | 13:30 - 16:30 (3h) | Introduction to the course | [Slides](docs/slides/1_Intro/1_Intro.html) |
-| 2 | 3.10.19 | 713 | 9:30 - 12:30 (3h) | Bias-variance decomposition |  [Slides](docs/slides/2_BiasVar/2_BiasVar.html) |
-| 3 | 7.10.19 | 717 | 13:30 - 14:30 (1h) | Optimism  | [Slides](docs/slides/3_Optim/3_Optim.html) |
-| 4 | 8.10.19 | 717 | 13:30 - 16:30 (3h) | Cross-validation | [Slides](docs/slides/4_CV/4_CV.html) |
-| 5 | 10.10.19 | 713 | 9:30 - 12:30 (3h) | Non-parametric regression | [Slides](docs/slides/5_NPR/5_NPR.html) |
-| 6 | 14.10.19 | 717 | 13:30 - 14:30 (1h)  | Exploratory data analysis | [Slides](docs/slides/6_EDA/6_EDA.html) |
-| 7 | 15.10.19 | 717 | 13:30 -  14:30 (1h) | The modelling process | [Slides](docs/slides/6_EDA/6_EDA.html) |
-| 8 | 17.10.19 | 713 | 9:30 - 12:30 (3h) | Titanic data | [Slides](docs/slides/8_Titanic/8_Titanic.html) |
-| 9 | 21.10.19 | 717 | 13:30 - 15:30 (2h) | Ridge regression | [Slides](docs/slides/9_Ridge/9_Ridge.html) |
-| 10 | 22.10.19 | 717 | 13:30 - 16:30 (3h) | Lasso and best subset selection | [Slides](docs/slides/10_Lasso/10_Lasso.html) |
-| 11 | 24.10.19 | 713 | 9:30 - 12:30 (3h) | Bagging and random forests | [Slides](docs/slides/11_RF/11_RF.html) |
-| 12 | 28.10.19 | 717 | 13:30 - 15:30 (2h) | Class imbalance | [Slides](docs/slides/12_CImb/12_CImb.html) |
-| 13 | 29.10.19 | 717 | 13:30 - 16:30 (3h) | Boosting | [Slides](docs/slides/13_Boost/13_Boost.html) |
-| 14 | 31.10.19 | 713 | 9:30 - 12:30 (3h) | Orange data | [Slides](docs/slides/14_Orange/14_Orange.html) |
-| 15 | 4.11.19 | 717 | 13:30 - 15:30 (2h) | Github | [Slides](docs/slides/15_Github/15_Github.html) |
-| 16 | 5.11.19 | 717 | 13:30 - 16:30 (3h) | Moving beyond linearity | [Slides](docs/slides/16_MBL/16_MBL.html) |
-| 17 | 7.11.19 | 713 | 9:30 - 12:30 (3h) | Model stacking  | [Slides](docs/slides/17_Stacking/17_Stacking.html) |
-
-
-The lecture notes and course webpage were created with [R Markdown](https://rmarkdown.rstudio.com/).
-All of the course material is on the [github repo](https://github.com/aldosolari/DM). 
-Download the .Rmd files, modify as you like and decide the output format (PDF, HTML or Word). To extract the R code from a .Rmd file use
-
-```{r, eval=F, echo=TRUE}
-knitr::purl("../filename.Rmd")
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università degli Studi di Milano-Bicocca
 
-We will use R Markdown quite a bit in the class, and its use is __required__ for the Test (in lab) where the data analysis must be solved with R Markdown by generating an HTML file, which will be uploaded to the "CONSEGNA" folder.
+## Calendario delle lezioni e materiale didattico
 
-You can read more about R Markdown in [Chapter 27 of r4ds](http://r4ds.had.co.nz/r-markdown.html#r-markdown-basics). This [document](https://m-clark.github.io/Introduction-to-Rmarkdown/) may be helpful to get started with R Markdown.
-R Markdown is an example of [literate programming](https://en.wikipedia.org/wiki/Literate_programming), a concept introduced by Donald Knuth saying _you should write code that communicates primarily to humans, not computers_.
-
-
-# Reading
-
-**Books**
-
-There are two primary references:
-
-- [Analisi dei dati e data mining](http://azzalini.stat.unipd.it/Book-DM/index.html) (AS)
-- [Introduction to Statistical Learning with Applications in R](http://www-bcf.usc.edu/~gareth/ISL/) (ISLR)
-
-As a supplement to the textbook ISLR, you may also want to watch the excellent course lecture  [videos](https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/). A more advanced reference is
-
-- [The Elements of Statistical Learning](https://web.stanford.edu/~hastie/ElemStatLearn/) (ESL)
-
-For improving R programming and predictive modeling skills, there are three references: 
-
-- [R for Data Science](http://r4ds.had.co.nz/) (r4ds)
-- [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) (APM)
-- [Feature Engineering and Selection](http://www.feat.engineering/) (FEV)
-
-**Lectures**
-
-**October 1** Introduction to the course
-
-- ISLR 1, 2.1, 2.2.1, 7.1 
-- AS 3.1, 3.2
-- Data Mining and Statistics: [Friedman (1998)](http://docs.salford-systems.com/dm-stat.pdf)
-- The Two Cultures: [Breiman (2001)](http://www2.math.uu.se/~thulin/mm/breiman.pdf)
-- 50 years of Data Science: [Donoho (2015)](https://courses.csail.mit.edu/18.337/2015/docs/50YearsDataScience.pdf)
-- Data Science vs Statistics: [Carmichael and Marron (2018)](https://arxiv.org/pdf/1801.00371.pdf) 
-
-
-**October 3** Bias-variance decomposition
-
-- ISLR  2.2.2, 6.1.3
-- AS 3.3, 3.5.3
-
-**October 7** Optimism and Information Criteria
-
-- ISLR 6.1.3
-- AS  3.5.3
-- FRom Fixed-X to Random-X regression: [Rosset and Tibshirani (2018)](https://arxiv.org/pdf/1704.08160.pdf)
+* L01 (1 Ottobre, sincrona 9:30 - 12:30) 
+  * Introduzione al corso
+  * Modalità d'esame
   
-**October 8** Cross-validation
-
-- ISLR 5.1.1-5.1.4
-- AS  3.5.1, 3.5.2
-
-**October 10** Non-parametric regression
-
-- ISLR 3.5
-- the [caret](http://topepo.github.io/caret/index.html) package
-
-**October 14** Exploratory data analysis
-
-- r4ds 1, 2, 3, 5, 7
-
-**October 15** The modelling process
-
-- AS 2
-- r4ds 22-25
-
-**October 17** Titanic data
-
-- ISLR 2.2.3, 5.1.5
-
-**October 21** Ridge regression
-
-- ISLR 6, 6.2.1, 6.3.1, 6.4
-
-**October 22** Lasso and best subset selection
-
-- ISLR 6.1, 6.2.2, 6.2.3, 6.5.3
-
-**October 24** Bagging and random forests
-
-- ISLR 8.2.1, 8.2.2
-- AS 5.8.1, 5.8.3
-
-**October 28** Class imbalance
-
-**October 29** Boosting
-
-- ISL 8.2.3
-
-**October 31** Orange data
-
-**October 4** Github
-
-**October 5** Moving beyond linearity
-
-- ISL 7.1, 7.2, 7.3, 7.4, 7.5, 7.7
-
-**October 7** Model stacking
-
-
-# Competitions
-
-Please read carefully the [competition instructions](docs/competitions/Crules.html).
-Here is an [example](docs/competitions/publish_example.html) of what to publish on github. Time window for joining the competitions:
-
-| Competition | Problem | Period |  
-|----|----|----|
-| [Netflix data](docs/competitions/Missc/Missc.html) | Regression | 21.10.19 - 15.11.19 |
-| [OkCupid data](docs/competitions/Okc/OkCupid.html) | Classification |  21.10.19 - 15.11.19 |
-
-If a student does not take part in the competitions in the above time window, he/she must
-
-* contact the teacher via e-mail before the exam and get new training/test data
-
-* send via e-mail the predictions in the required format  
-* publish on github the (reproducible) R code at least one week before the exam
-
-The [competition platform](http://www.bee-viva.com/competitions) is provided by BeeViva s.r.l. (University of Padua spin-off). I would like to thank BeeViva and in particular [Livio Finos](http://www.liviofinos.net/), [Dario Solari](https://www.linkedin.com/in/dariosolari/?originalSubdomain=it) and [Tomaso "Minni" Minelli](https://github.com/minni). The competitions offered in this course would not have been possible without their constant and precious support.
-
-### Competitions results
-
-* Models used: [final models](docs/competitions/Links.html)
-
-* Partial scores: [Miss Congeniality](docs/competitions/Missc/Missc_partial.html), [Online Dating](docs/competitions/Okc/OkCupid_partial.html)
-
-* Final scores: [Miss Congeniality](docs/competitions/Missc/Missc_final.html), [Online Dating](docs/competitions/Okc/OkCupid_final.html)
-
-* Competitions [final points](docs/competitions/Cfinal.pdf)
-
-
-# Exams
-
-The exam consists of two parts:
-
-  * **Test** (in Lab)
-  * **Competitions** (Homework)
+* L02 (5 Ottobre, asincrona 2 ore)
   
-Test calendar :
+* L03 (6 Ottobre, asincrona, 3 ore)
+  
+* L04 (8 Ottobre) 
 
-| N.ro | Date | Lab | Hours |
-|---|---|---|---|---|
-| 1 | 18.11.19 | Lab 907 | 14:00 | 
-| 2 | 30.1.20 | TBD | 14:00 | 
-| 3 | 13.2.20 | TBD | 14:00 | 
+* L05 (12 Ottobre) 
+
+* L06 (13 Ottobre) 
+
+* L07 (15 Ottobre) 
+
+* L08 (19 Ottobre) 
+
+* L09 (20 Ottobre) 
+
+* L10 (22 Ottobre) 
+
+* L11 (26 Ottobre) 
+
+* L12 (27 Ottobre) 
+
+* L13 (29 Ottobre) 
+
+* L14 (2 Novembre) 
+
+* L15 (3 Novembre) 
+
+* L16 (5 Novembre) 
+
+# Esame
+
+L'esame è composto da due parti:
+
+1. Prova scritta
+
+2. Compiti per casa
+
+Il voto finale è dato dalla media dei voti delle parti 1. e 2. Lo studente (oppure il docente) può richiedere la prova orale.
+
+Agli studenti che si iscrivono al seguente [form]() entro il 2 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi]() di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
+
+**Calendario degli esami**
+
+|| Sessione || Data || Luogo || Orario ||
+|-|-|-|-|-|-|-|-|-|-|
+||  || ||  ||  || ||
+|| Autunnale || 18 Novembre 2020 || Telematica ||  14:30||
+|| Invernale || 11 Febbraio 2020 || - || -  ||
+|| Invernale || 25 Febbraio 2020 || -  || - ||
+|| Estiva || Giugno/Luglio || - || -  ||
+|| Estiva || Giugno/Luglio  || -  || -  ||
+|| Estiva || Settembre  || -  || -  ||
+
+## Compiti per casa
+
+|| Testo || Data di consegna || Scadenza ||
+|-|-|-|-|-|-|-|-|
+||  || ||  ||  ||
+|| Problema 1 || 1 Ottobre 2020 || 5 Ottobre 2020 ||
+|| Problema 2 ||  - || - ||
+|| Problema 3 ||  - || - ||
+
+La scadenza sopra indicata vale per gli studenti che lavorano in [gruppi](). 
+
+Per tutti gli altri studenti, il lavoro (individuale) deve essere consegnato almeno una settimana prima della data di esame secondo le modalità previste. 
 
 
-The **Test** consists of
+## Libri di testo
 
-* **questions** about the theory (open and/or multiple-choice)
-* **data analysis** with R 
+* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia
 
-The first part (questions about theory) is "closed book", while the second part (data analysis) is "open book". 
+* Gareth, Witten, Hastie, Tibshirani (2013). Introduction to Statistical Learning with applications in R. Springer
 
-For the open book examination, you are allowed to bring notes, textbooks, and other resource materials, but only as **printed materials**. 
-For example, you can bring a printed copy of the following R code:
+* Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer
 
-* [Code from ISLR](https://aldosolari.github.io/DM/exams/codeISLR.pdf)
+* Kuhn, Johnson (2019). Feature Engineering and Selection. Chapman and Hall/CRC
 
-The R libraries available during the exam are the following:
+* Lewis, Kane, Arnold (2019) A Computational Approach to Statistical Learning. Chapman And Hall/Crc
 
-* [R libraries](https://aldosolari.github.io/DM/exams/Librerie_R.txt)
+* Wickham, Grolemund (2015) R for Data Science. O'Reilly Cookbooks
 
-For the data analysis, you have to 
-
-1. upload your final prediction (.txt file) 
-
-2. upload the R code used to get the final prediction (.html file generated from a .Rmd file via the Knit button)
-
-to the "CONSEGNA" folder. Other formats will not be accepted. 
-
-### Sessions
-
-* 18.11.19 [text](https://aldosolari.github.io/DM/exams/DM181119/DM181119_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM181119/DM181119_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM181119/DM181119_esiti.pdf)
-
-* 30.1.20 [text](https://aldosolari.github.io/DM/exams/DM300120/DM300120_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM300120/DM300120_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM300120/DM300120_esiti.pdf)
-
-* 13.2.20 [text](https://aldosolari.github.io/DM/exams/DM130220/DM130220_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM130220/DM130220_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM130220/DM130220_esiti.pdf)
-
-* 25.6.20 [text](https://aldosolari.github.io/DM/exams/DM250620/DM250620_lab.pdf) - [solution](https://aldosolari.github.io/DM/exams/DM250620/DM250620_sol.pdf) - [grades](https://aldosolari.github.io/DM/exams/DM250620/DM250620_esiti.pdf)
-
-## Acknowledgments {.appendix}
-
-Much of the course content was inspired by the following courses:
-
-* [Analisi dei dati (Data Mining)](https://www.didattica.unipd.it/off/2018/LM/SC/SS1736/000ZZ/SCP4062891/N0)
-* [Statistical/Machine Learning](https://www.tau.ac.il/~saharon/StatLearn.html)
-* [STOR 390: Introduction to Data Science](https://idc9.github.io/stor390/)
-* [36-708: Statistical Machine Learning](http://www.stat.cmu.edu/~larry/=sml/)
-* [36-402: Undergraduate Advanced Data Analysis](http://www.stat.cmu.edu/~cshalizi/uADA/17/)
-
-and on a number of other sources. 
-
-## Disclaimer {.appendix}
-
-The course material contains images obtained by routine Google Images searches. 
-Some of these images may perhaps be copyright. They are included here for
-educational noncommercial purposes and are considered
-to be covered by the doctrine of Fair Use. In any event
-they are easily available from Google Images.
-It’s not feasible to give full scholarly credit to the
-creators of these images. We hope they can be satisfied
-with the positive role they are playing in the educational
-process.
+Tutti i libri di testo (tranne il primo) sono disponibili in formato elettronico presso la [biblioteca](https://www.biblio.unimib.it/it/risorse/accesso-alle-risorse-remoto).
 
