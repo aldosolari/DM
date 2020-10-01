@@ -10,12 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 *Dal libro Azzalini e Scarpa (2001), Capitolo 3*
 
 
-Si consideri il seguente problema illustrativo che però ci servirà da propototipo per situazioni più complesse e realistiche. 
+Si consideri il seguente problema illustrativo che ci servirà da propototipo per situazioni più complesse e realistiche. 
 
 Supponiamo che ieri
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

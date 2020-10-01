@@ -1,0 +1,90 @@
+---
+title: "Data Mining"
+subtitle: "Un semplice problema-tipo"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      countIncrementalSlides: false
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, 
+                      comment=NA, cache=F, R.options=list(width=220),
+                      fig.align='center', out.width='75%', fig.asp=.5)
+```
+
+# Dati di addestramento e di verifica
+
+* Da AS, Capitolo 3 (dati di ieri e di domani)
+
+* Ieri abbiamo raccolto $n=30$ coppie di osservazioni, i dati di addestramento (__training set__)
+$$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)$$ 
+
+* Domani osserveremo nuove $n=30$ coppie di osservazioni, i dati di verifica (__test set__)
+$$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$
+
+```{r, echo=FALSE}
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+head(data.frame(x.train=df$x, y.train=df$y.yesterday, x.test=df$x, y.test=NA))
+```
+
+---
+
+
+```{r}
+# import data
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+test <- data.frame(x=df$x, y=df$y.tomorrow)
+# scatterplot
+plot( y ~ x , train)
+```
+
+---
+
+# Errore quadratico medio
+
+* Supponiamo di aver stimato $f$ con $\hat{f}$
+
+* Per i dati di ieri (training set), possiamo calcolare l'errore quadratico medio (__mean squared error__)
+$$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$ 
+
+* Tuttavia quello che veramente desideriamo sono buone previsioni sui dati di domani (test set)
+$$\mathrm{MSE}_{\mathrm{Te}} = \frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2$$ 
+
+
+---
+
+# Regressione polinomiale
+
+
+* Consideriamo la regressione polinomiale di grado $d$
+$$f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 + \ldots + \beta_d x^{d}$$
+
+* Usate il training set per stimare 
+$$\hat{f}(x)=\hat{\beta}_0 + \hat{\beta}_1 x + \hat{\beta}_2 x^2 + \ldots + \hat{\beta}_d x^{d}$$ e prevedere la risposta futura $y_i^*$ usando
+$$\hat{y}_i^*=\hat{f}(x_i), \quad i=1,\ldots,n$$
+
+* Quale grado del polinomio $d$ è preferibile?
+
+
+---
+
+```{r}
+# 3rd degree polynomial regression fit
+fit <- lm( y ~ poly(x, degree=3), train)
+yhat <- predict(fit, newdata=test)
+plot( y ~ x , train)
+lines( yhat ~ x, train)
+MSE.tr <- mean( (train$y - yhat)^2 )
+```
+
+
+
+
+

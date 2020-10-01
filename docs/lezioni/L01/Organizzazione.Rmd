@@ -44,6 +44,25 @@ Aldo Solari
 
 ---
 
+# Prerequisiti
+
+Si consiglia la conoscenza degli argomenti trattati nei corsi 
+
+* Probabilità e Statistica Computazionale M  
+* Statistica Avanzata M
+
+* (Machine Learning M)
+
+---
+
+# Obiettivi formativi
+
+* l'acquisizione delle principali tecniche per l'esplorazione dei dati (*data mining*) e di apprendimento supervisionato (*supervised learning*) e la loro implementazione nell'ambiente di programmazione R
+
+* Verrà data particolare enfasi al processo di modellazione dei dati per la previsione (*predictive modelling*)
+
+---
+
 # Pagine del corso 
 
 * Pagina MOODLE: https://elearning.unimib.it/ (accesso con credenziali di Ateneo)
@@ -143,9 +162,9 @@ Lo studente (oppure il docente) può richiedere la prova orale
 
 * Problema 1: Competizione Netflix (70%)
 
-* Problema 2: Intervalli di previsione (20%)
+* Problema 2: ? (20%)
 
-Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 2 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in gruppi di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale.  
+Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 1 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in gruppi di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale.  
 
 Per tutti gli altri studenti, il lavoro (individuale) deve essere consegnato almeno una settimana prima della data di esame secondo le modalità previste
 
