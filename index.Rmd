@@ -75,7 +75,7 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 || Testo || Data di consegna || Scadenza ||
 |-|-|-|-|-|-|-|-|
 ||  || ||  ||  ||
-|| Problema 0 || 2 Ottobre 2020 || 9 Ottobre 2020 ||
+|| [Problema 0](docs/hw/Problema0.pdf) || 3 Ottobre 2020 || 12 Ottobre 2020 ore 12 ||
 || Problema 1 ||  - || - ||
 || Problema 2 ||  - || - ||
 
