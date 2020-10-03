@@ -1,0 +1,22 @@
+---
+title: "Gruppi"
+subtitle: "Data Mining"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+gruppiDM <- read_csv("~/Documents/mygithub/DM/docs/hw/gruppiDM.csv")[-1,]
+nomi <- c("RANDOM", "FISHER", "TUKEY", "BREIMAN", "BAYES", "GAUSS", "NIGHTINGALE",
+"PEARSON", "STUDENT", "DEFINETTI", "NEYMAN", "GINI")
+set.seed(123)
+gruppiDM$Gruppo = sample(rep(nomi,length=37))
+gruppiDM  <- gruppiDM  %>% select("Matricola","Nome","Cognome","Gruppo") %>% arrange(Gruppo, Matricola)
+knitr::kable(gruppiDM, file="pdf", row.names = F)
+```
+
