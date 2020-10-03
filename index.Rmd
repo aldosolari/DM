@@ -56,7 +56,7 @@ L'esame è composto da due parti:
 
 Il voto finale è dato dalla media dei voti delle parti 1. e 2. Lo studente (oppure il docente) può richiedere la prova orale.
 
-Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 1 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi](docs/hw/gruppiDM.pdf) di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
+Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 1 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi](docs/hw/gruppiDM.pdf) di (al massimo) tre persone (tranne il gruppo RANDOM). Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
 
 **Calendario degli esami**
 
