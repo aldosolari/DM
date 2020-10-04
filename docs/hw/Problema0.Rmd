@@ -129,10 +129,7 @@ lm( y ~ poly(x, degree=24), train)
 ```
 > Error in poly(x, degree = 24) : 'degree' must be less than number of unique points
 
-**Spiegare** qual è il problema. 
-**Suggerire** possibili soluzioni (in termini di codice R) per ottenere le stime dei coefficienti del modello con $d=28$ (riportare le stime dei coefficienti senza arrotondare i valori). 
-
-**Cosa vi aspettate** di ottenere (in termini di valori previsti $\hat{y}^*_i$) se utilizzate il polinomio di grado $n-1$? Si giustifichi la risposta. 
+**Spiegare** qual è il problema e dove avviene l'errore (anche in termini di codice R). **Cosa vi aspettate** di ottenere (in termini di valori previsti $\hat{y}^*_i$) se utilizzate il polinomio di grado $n-1$? Si giustifichi la risposta. 
 
 Per rispondere a questa domanda, potete utilizzare **solo** il training set, ovvero i dati `x` e `y.ieri`.  
 
