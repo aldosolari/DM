@@ -18,13 +18,15 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F,
 
 # Dati di addestramento e di verifica
 
-* Da AS, Capitolo 3 (dati di ieri e di domani)
+* Si consideri il seguente problema illustrativo che ci servirà da propototipo per situazioni più complesse e realistiche
 
 * Ieri abbiamo raccolto $n=30$ coppie di osservazioni, i dati di addestramento (__training set__)
 $$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)$$ 
 
 * Domani osserveremo nuove $n=30$ coppie di osservazioni, i dati di verifica (__test set__)
 $$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$
+
+* I dati (prime 6 righe)
 
 ```{r, echo=FALSE}
 library(readr)
@@ -34,14 +36,11 @@ head(data.frame(x.train=df$x, y.train=df$y.yesterday, x.test=df$x, y.test=NA))
 
 ---
 
-
 ```{r}
-# import data
 library(readr)
 df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
 train <- data.frame(x=df$x, y=df$y.yesterday)
 test <- data.frame(x=df$x, y=df$y.tomorrow)
-# scatterplot
 plot( y ~ x , train)
 ```
 
@@ -49,39 +48,126 @@ plot( y ~ x , train)
 
 # Errore quadratico medio
 
-* Supponiamo di aver stimato $f$ con $\hat{f}$
+* Si vuole individuare una stima di $f(x)$ che ci consenta di predire i nuovi dati che ci arriveranno domani, i dati di verifica, prodotti dallo stesso meccanismo generatore
 
-* Per i dati di ieri (training set), possiamo calcolare l'errore quadratico medio (__mean squared error__)
+* Per i dati di ieri (training set), possiamo calcolare l'errore quadratico medio (Mean Squared Error)
 $$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$ 
 
-* Tuttavia quello che veramente desideriamo sono buone previsioni sui dati di domani (test set)
+* Tuttavia quello che desideriamo veramente sono buone previsioni sui dati di domani (test set)
 $$\mathrm{MSE}_{\mathrm{Te}} = \frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^2$$ 
-
 
 ---
 
 # Regressione polinomiale
 
-
-* Consideriamo la regressione polinomiale di grado $d$
+* Consideriamo il modello di regressione polinomiale di grado $d$
 $$f(x) = \beta_0 + \beta_1 x + \beta_2 x^2 + \ldots + \beta_d x^{d}$$
 
-* Usate il training set per stimare 
-$$\hat{f}(x)=\hat{\beta}_0 + \hat{\beta}_1 x + \hat{\beta}_2 x^2 + \ldots + \hat{\beta}_d x^{d}$$ e prevedere la risposta futura $y_i^*$ usando
+* E' quindi possibile utilizzare i dati di addestramento (training set) per ottenere le stime $\hat{\beta}_1,\hat{\beta}_2,\ldots$ e quindi
+$$\hat{f}(x)=\hat{\beta}_1 + \hat{\beta}_2 x + \hat{\beta}_3 x^2 + \ldots + \hat{\beta}_{d+1} x^{d}$$ per predire le nuove $y_i^*$ che osserveremo domani utilizzando
 $$\hat{y}_i^*=\hat{f}(x_i), \quad i=1,\ldots,n$$
 
 * Quale grado del polinomio $d$ è preferibile?
 
+---
+
+# Polinomio di terzo grado
+
+```{r}
+fit <- lm( y ~ poly(x, degree=3, raw=T), train)
+yhat <- fitted(fit)
+plot( y ~ x , train)
+lines( yhat ~ x, train)
+```
 
 ---
 
+# In notazione matriciale
+
+Vettore di risposta $\mathbf{y}$ e matrice del disegno $\mathbf{X}$
+
+$$\underset{n\times 1}{\mathbf{y}} = 
+\left[
+\begin{array}{c}
+y_1   \\
+\cdots\\
+y_i  \\
+\cdots\\
+y_n \\
+\end{array}\right] \qquad
+\underset{n\times p}{\mathbf{X}} = \left[
+\begin{array}{cccccc}
+x_{1}^\mathsf{T}   \\
+x_{2}^\mathsf{T}  \\
+\cdots   \\
+x_{i}^\mathsf{T}    \\
+\cdots\\
+x_{n}^\mathsf{T}\\
+\end{array}\right] = \left[
+\begin{array}{cccccc}
+x_{11}  & x_{12}  & \cdots   &  x_{1j}  & \cdots   &   x_{1p}  \\
+x_{21}  & x_{22} & \cdots   &  x_{2j}  & \cdots   &   x_{2p}  \\
+\cdots   & \cdots   &  \cdots & \cdots   &  \cdots  \\
+x_{i1}  & x_{i2} & \cdots   &  x_{ij}& \cdots   & x_{ip}    \\
+\cdots   & \cdots   &  \cdots  &  \cdots   &  \cdots\\
+x_{n1}   & x_{n2} & \cdots   & x_{nj}    &  \cdots   &   x_{np}\\
+\end{array}\right]$$
+
+---
+
+# La matrice del disegno
+
+```{r, echo=T}
+X = model.matrix(fit)
+colnames(X) = c("Intercept","x","x^2","x^3")
+head(X)
+```
+
+
+La matrice del disegno del modello di regressione polinomiale di terzo grado ha dimensione $p=4$ perchè include l'intercetta $1$ e i termini $x,x^2,x^3$
+
+---
+
+# MSE.tr
+
 ```{r}
-# 3rd degree polynomial regression fit
-fit <- lm( y ~ poly(x, degree=3), train)
-yhat <- predict(fit, newdata=test)
+n <- nrow(train); ds = 0:(n-1); ps = ds + 1
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d, raw=T), train)
+fits <- sapply(ds, fun)
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="MSE.tr")
+```
+
+---
+
+# Sovra-addattamento (overfitting)
+
+.pull-left[
+```{r, echo=F, fig.align='center', out.width='100%', fig.asp=1}
+fit12 <- lm( y ~ poly(x, degree=15, raw=T), train)
+yhat <- predict(fit12, newdata=test)
 plot( y ~ x , train)
-lines( yhat ~ x, train)
-MSE.tr <- mean( (train$y - yhat)^2 )
+lines( yhat ~ x, train, lwd=2)
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', out.width='100%', fig.asp=1}
+plot( y ~ x, test, col=4)
+lines( yhat ~ x, test, lwd=2)
+```
+]
+
+---
+
+# MSE.te
+
+```{r}
+yhats <- lapply(fits, predict)
+MSEs.te <- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+plot(ds, MSEs.te, type="b", col=4, xlab="d", ylab="MSE.te")
 ```
 
 

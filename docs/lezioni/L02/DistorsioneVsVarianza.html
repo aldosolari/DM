@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Distorsione vs Varianza
+### Aldo Solari
+
+---
+
+
+
+
+# Training and test set (Fixed-X setting)
+
+Training set 
+`$$(x_1,y_1),\ldots,(x_n,y_n)$$` 
+Test set 
+`$$(x_1,y^*_1),\ldots,(x_n,y^*_n)$$`
+Per semplicità di ragionamento, stiamo assumendo che
+
+1. i valori `\(x_1,\ldots,x_n\)` del training set sono fissati dallo sperimentatore
+
+2. i valori di `\(x\)` nel test set sono uguali ai valori di `\(x\)` nel training set
+
+Si consiglia la lettura [Rosset and Tibshirani (2018)](https://arxiv.org/pdf/1704.08160.pdf)
+
+---
+
+# Il segnale e il rumore
+
+Le risposte `\(y_1, \ldots, y_n\)` sono realizzazioni delle v.c.
+`$$Y_i = f(x_i)+ \varepsilon_i, \quad i=1,\ldots,n$$`
+dove
+
+* `\(f\)` è la **funzione di regressione** (il segnale)
+
+* `\(\varepsilon\)`  è il termine di **errore** (il rumore) 
+dove
+`\(\varepsilon_1,\ldots,\varepsilon_n\)` sono i.i.d. con `\(\mathbb{E}(\varepsilon_i)=0\)` e `\(\mathbb{V}\mathrm{ar}(\varepsilon_i)=\sigma^2\)`. 
+
+
+---
+
+# Il segnale
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+
+# Il rumore
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+
+# Sovra-adattamento (overfitting)
+
+Confondere il rumore per il segnale
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Errore di previsione
+
+* Funzione di perdita: errore quadratico medio (MSE)
+
+* Obiettivo: minimizzare l'errore di previsione atteso (nel setting Fixed-X)
+`$$\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right]= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$`
+dove il valore atteso è rispetto alle v.c. `\(Y_1,\ldots,Y_n\)` e `\(Y^*_1,\ldots,Y^*_n\)`
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# La scomposizione distorsione-varianza 
+
+---
+
+# Fonti di errore
+
+1. **Errore irriducibile** &lt;br&gt;
+Possiamo fare previsioni senza commettere errori?  &lt;br&gt;
+No, neppure se conoscessimo la vera `\(f\)`, per la presenza del termine di errore `\(\varepsilon\)`
+
+2. **Distorsione** &lt;br&gt;
+Quanto è lontano (in media) lo stimatore `\(\hat{f}\)` dalla vera `\(f\)`? &lt;br&gt;
+Ad esempio, se stimiamo una retta di regressione quando la vera relazione è quadratica
+
+3. **Varianza** &lt;br&gt;
+Quanto è variabile lo stimatore `\(\hat{f}\)`? &lt;br&gt;
+In altre parole, quanto variano sono le nostre stime se le calcoliamo su training set diversi?
+
+---
+
+# Errore riducibile ed irriducibile 
+
+* Supponiamo di prevedere `\(y^*_i\)` con `\(\hat{y}_i^* = \hat{f}(x_i)\)` dove `\(\hat{f}\)` è la stima di `\(f\)` ottenuta con il training set
+
+* L'accuratezza di `\(\hat{y}^*_i\)` dipende da due quantità, l'errore riducibile ed l'errore irriducibile 
+
+* Abbiamo
+$$
+`\begin{aligned}
+\mathbb{E}[(Y^*_{i} - \hat{Y}^*_i)^2] &amp; = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] \\
+&amp; = \mathbb{E}[  \{f(x_i) -  \hat{f}(x_i) \}^2 + \{\varepsilon^*_i\}^2 +2  \{\hat{f}(x_i)\varepsilon^*_i\} ] \\
+ &amp; = \underbrace{\mathbb{E}[\{f(x_i)  -  \hat{f}(x_i)\}^2]}_{\mathrm{RIDUCIBILE}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{IRRIDUCIBILE}}
+\end{aligned}`
+$$
+dove `\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)`
+
+
+---
+
+# L'errore riducibile
+
+* L'errore riducibile può essere ulteriormente scomposto in __distorsione__ (al quadrato) e __varianza__ dello stimatore `\(\hat{f}\)`
+
+`\begin{aligned}
+\mathbb{E}[\{f(x_i)  -  \hat{f}(x_i))^2] &amp; = \mathbb{E}[(f(x_i)  - \mathbb{E}\hat{f}(x_i) + \mathbb{E}\hat{f}(x_i) - \hat{f}(x_i)\}^2]\\
+&amp; =
+\underbrace{ [\mathbb{E}\hat{f}(x_i) - f(x_i) ]^2}_{[\mathrm{Distorsione}(\hat{f}(x_i))]^2} + \underbrace{\mathbb{V}\mathrm{ar}[\hat{f}(x_i)]}_{\mathrm{Varianza}(\hat{f}(x_i))}\\
+\end{aligned}`
+
+* Riassumendo, la scomposizione dell'errore di previsione è data da
+
+`$$\sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Distorsione}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Varianza}}$$`
+
+* Distorsione e varianza sono quantità in conflitto e non possiamo
+minimizzare entrambe contemporaneamente. Dobbiamo quindi scegliere un __compromesso__ (trade-off) tra distorsione e varianza.
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Se conoscessimo la vera `\(f\)` ... 
+
+---
+
+# La vera `\(f\)`
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+
+
+
+---
+
+# Polinomio di grado 3
+
+.pull-left[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Polinomio di grado 12
+
+.pull-left[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+
+
+
+
+
+
+
+---
+
+# Errore riducibile
+
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+
+# Errore di previsione
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Il miglior modello
+
+.pull-left[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Il compromesso distorsione-varianza
+
+* Errore riducibile = Distorsione `\(^2\)` + Varianza
+
+* Modelli con poca distorsione tendono ad avere elevatà variabilità
+
+* Modelli con poca variabilità tendono ad avere elevatà distorsione
+
+* Da un lato, anche se il nostro modello è non distorto( `\(\mathbb{E}\hat{f}(x_i)=f(x_i)\)` ), l'errore di previsione può essere elevato se il modello è molto variabile
+
+* Dall'altro lato, un modello che prevede una costante (e.g. `\(\hat{f}(x_i)=0\)`) ha varianza nulla ma elevata distorsione
+
+* Per prevedere bene, dobbiamo bilanciare la distorsione e la varianza
+
+---
+
+![](images/tiroasegno.png)
+
+---
+
+# Riepilogo
+
+* **Dati**: training set / test set
+
+* **Segnale/rumore**: funzione di regressione / errore
+
+* **Sovra-adattamento**: confondere il rumore per il segnale
+
+* **Errore di previsione**: riducibile + irriducibile
+
+* **Errore riducibile**: distorsione `\(^2\)` + varianza
+
+*  **Compromesso**: introdurre un pò di distorsione se in cambio riduco di molto la variabilità
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
