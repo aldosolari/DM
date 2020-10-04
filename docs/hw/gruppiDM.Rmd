@@ -11,7 +11,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(readr)
 library(dplyr)
-gruppiDM <- read_csv("~/Documents/mygithub/DM/docs/hw/gruppiDM.csv")[-1,]
+gruppiDM <- read_csv("~/Documents/mygithub/DM/docs/hw/gruppiDM.csv")
+gruppiDM[38,] <- gruppiDM[1,]
+gruppiDM <- gruppiDM[-1,]
 nomi <- c("RANDOM", "FISHER", "TUKEY", "BREIMAN", "BAYES", "GAUSS", "NIGHTINGALE",
 "PEARSON", "STUDENT", "DEFINETTI", "NEYMAN", "GINI")
 set.seed(123)

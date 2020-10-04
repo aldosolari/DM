@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Libro di testo vs computer
+### Aldo Solari
+
+---
+
+
+
+
+# Libro di testo vs computer
+
+* Nei libri di testo viene spesso presentata la soluzione ad un certo problema con una formula matematica. Ad esempio, si consideri la soluzione 
+`$$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$`
+
+* Tuttavia la traduzione diretta di questo tipo di formule in codice non è sempre consigliabile perché ci sono molti aspetti problematici dei computer che semplicemente non sono rilevanti quando si scrivono le cose su carta
+
+* I potenziali problemi computazionali che possono emergere sono
+
+1. **Overflow** Quando i numeri diventano troppo grandi, non possono essere rappresentati su un computer e quindi spesso vengono prodotte NA
+
+2. **Underflow** Simile all'overflow, i numeri possono diventare troppo piccoli per essere rappresentati dai computer, provocando errori o avvisi o calcoli imprecisi
+
+3. **Dipendenza quasi lineare**  la precisione del computer determina se una matrice ha (computazionalmente) colonne linearmente dipendenti
+
+---
+
+# La stima di `\(\beta\)`
+
+* Si consideri la soluzione 
+`$$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$`
+
+* Questa soluzione può essere tradotta in codice R come
+
+```r
+betahat &lt;- solve(t(X) %*% X) %*% t(X) %*% y
+```
+
+* Tuttavia non è consigliabile calcolare il valore di `\(\hat{\beta}\)` in questo modo
+
+* La ragione principale è che il calcolo dell'inversa di `\(X^\mathsf{T} X\)` è molto costoso dal punto di vista computazionale ed è un'operazione potenzialmente instabile su un computer quando c'è un'elevata collinearità tra i predittori
+
+* Inoltre, per calcolare `\(\hat{\beta}\)` non abbiamo bisogno dell'inversa di
+`\(X^\mathsf{T} X\)`, quindi perché calcolarla?
+
+---
+
+# Le equazioni normali
+
+* Basta infatti considerare le equazioni normali
+`$$X^\mathsf{T} X \beta = X^\mathsf{T} y$$`
+e risolverle direttamente:
+
+```r
+solve(crossprod(X), crossprod(X, y))
+```
+
+* Questo approccio ha il vantaggio di essere più stabile numericamente e di essere molto più veloce
+
+---
+
+
+
+```r
+# generiamo dei dati con n = 500 e p = 100
+set.seed(123)
+n &lt;- 500; p &lt;- 100
+X &lt;- matrix(rnorm(n*p), ncol=p)
+y &lt;- rnorm(n)
+
+# confrontiamo i due approcci:
+library(microbenchmark)
+microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y, 
+            solve(crossprod(X), crossprod(X, y)))
+```
+
+```
+Unit: milliseconds
+                                 expr       min        lq      mean    median
+     solve(t(X) %*% X) %*% t(X) %*% y 10.922618 11.853586 15.696053 12.892534
+ solve(crossprod(X), crossprod(X, y))  3.945518  4.096883  5.726159  4.300249
+        uq      max neval cld
+ 17.831886 36.17428   100   b
+  6.483197 15.45200   100  a 
+```
+
+---
+
+# Collinearità 
+
+
+* Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a `\(X\)` che è molto simile (ma non identica) alla prima colonna di `\(X\)`
+
+
+```r
+W &lt;- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
+```
+
+* L'approccio "diretto" fallisce quando c'è elevata multicollinearità
+
+
+```r
+solve(crossprod(W), crossprod(W, y))
+```
+&gt; Error in solve.default(crossprod(W), crossprod(W, y)) : system is computationally singular: reciprocal condition number = 7.94831e-17
+
+* Se `\(n\geq p\)`, il *reciprocal condition number* è sostanzialmente dato dal rapporto tra il minimo e il massimo autovalore di `\(X^\mathsf{T}X\)`
+
+
+```r
+eigvals = eigen(crossprod(W), only.values = T)$values
+min(eigvals)/max(eigvals)
+```
+
+```
+[1] 9.630215e-16
+```
+
+---
+
+# Solve 
+
+* Le equazioni normali 
+`$$X^\mathsf{T} X \beta = X^\mathsf{T} y$$`
+rappresentano un caso particolare di un generico sistema di equazioni
+`$$A x = b$$`
+
+* La funzione `solve(A, b, ...)` risolve questo sistema di equazioni, dove `\(A\)` è una matrice quadrata e `\(b\)` può essere un vettore o una matrice
+
+* Se `\(b\)` non viene specificato, allora diventa la matrice identità `\(I\)`, quindi il problema si traduce in `\(Ax = I\)`, ovvero trovare l'inversa di `\(A\)`
+
+---
+
+# La decomposizione di Cholesky
+
+* Poichè nel nostro caso la matrice `\(A= X^\mathsf{T} X\)` è simmetrica e (di solito) definita positiva, possiamo considerare la decomposizione di Cholesky
+`$$A = L L^\mathsf{T}$$`
+dove `\(L\)` è una matrice triangolare inferiore 
+
+* Con questa decomposizione possiamo scrivere 
+$$
+`\begin{aligned}
+L L^\mathsf{T} x= b\\
+L z = b
+\end{aligned}`
+$$
+dove `\(z = L^\mathsf{T} x\)` è la nuova incognita
+
+* Quando nel generico sistema di equazioni `\(Ax = b\)` la matrice `\(A\)` è triangolare inferiore (superiore), si può applicare l'algoritmo di *forwardsolve* (*backsolve*)
+
+---
+
+# Algoritmo di backsolve
+
+* Si consideri la seguente matrice triangolare superiore
+
+`$$\left[\begin{array}{ccc}
+l_{1,1}  &amp; l_{1,2}  &amp; l_{1,3} \\ 
+0  &amp; l_{2,2}  &amp; l_{2,3} \\ 
+0  &amp; 0  &amp; l_{3,3} \\ 
+\end{array}\right] 
+\left[\begin{array}{c}
+z_{1}   \\ 
+z_{2} \\ 
+z_{3} \\ 
+\end{array}\right] = \left[\begin{array}{c}
+b_{1}   \\ 
+b_{2} \\ 
+b_{3} \\ 
+\end{array}\right]$$`
+
+* Dall'ultima riga (equazione) risulta
+`$$z_{3} = \frac{b_3}{l_{3,3}}$$`
+
+* La seconda riga (equazione) coinvolge solamente `\(z_2\)` e `\(z_3\)`, quindi 
+`$$z_2 = \frac{b_2}{l_{2,2}} + \frac{l_{2,3} z_3}{l_{2,2}}$$`
+
+* Infine 
+`$$z_{1} = \frac{b_1}{l_{1,1}} + \frac{l_{1,2} z_2}{l_{1,1}} + \frac{l_{1,3} z_3}{l_{1,1}}$$`
+
+---
+
+* L'algoritmo di *forwardsolve* utilizza sostanzialmente la stessa tecnica per matrici triangolari inferiori
+
+* Possiamo quindi scrivere 
+$$
+`\begin{aligned}
+X X^\mathsf{T} x = X^\mathsf{T} y\\
+L L^\mathsf{T} x = b\\
+L z = b
+\end{aligned}`
+$$
+ 
+
+* Prima si risolve `\(L z = b\)` con
+
+```r
+forwardsolve(L, b)
+```
+
+* Poi si risolve `\(L^\mathsf{T}x  = z\)` con 
+
+```r
+backsolve(t(L), forwardsolve(L, b))
+```
+
+---
+
+
+```r
+# Calcolare la stima OSL con la decomposizione di Cholesky
+#
+# Argomenti:
+# X: la matrice del disegno
+# y: il vettore risposta
+#
+# Ritorna:
+# Il vettore hatbeta di lunghezza ncol(X).
+ols_chol &lt;-
+function(X, y)
+{
+XtX &lt;- crossprod(X)
+Xty &lt;- crossprod(X, y)
+L &lt;- t(chol(XtX))
+betahat &lt;- backsolve(t(L), forwardsolve(L, Xty))
+betahat
+}
+```
+
+
+---
+
+
+```r
+# generiamo dei dati con n = 1000 e p=4
+n &lt;- 1e4; p &lt;-4
+X &lt;- matrix(rnorm(n*p), ncol=p)
+beta = 1:4
+epsilon &lt;- rnorm(n)
+y &lt;- X %*% beta + epsilon 
+
+# stimiamo beta
+ols_chol(X,y)
+```
+
+```
+          [,1]
+[1,] 0.9891449
+[2,] 2.0115997
+[3,] 2.9941052
+[4,] 3.9997532
+```
+
+```r
+# verifichiamo con lm
+coef(lm(y ~ X - 1))
+```
+
+```
+       X1        X2        X3        X4 
+0.9891449 2.0115997 2.9941052 3.9997532 
+```
+
+---
+
+# La decomposizione QR
+
+* La funzione `lm` adotta un approccio diverso: utilizza la decomposizione QR, che non è così veloce, ma ha l'ulteriore vantaggio di essere in grado di rilevare e gestire automaticamente le colonne collineari
+
+* La decomposizione QR (ridotta) prevede
+`$$\underset{n \times p}{X} = \underset{n \times p}{Q}\underset{p \times p}{R}$$`
+dove `\(Q\)` è una matrice ortogonale tale che `\(Q^\mathsf{T} Q = I\)`, ed `\(R\)` è una matrice triangolare superiore, quindi
+$$
+`\begin{aligned}
+X^\mathsf{T}X \beta= X^\mathsf{T} y\\
+R^\mathsf{T} Q^\mathsf{T} Q R = R^\mathsf{T} Q^\mathsf{T} y\\
+R^\mathsf{T} R = R^\mathsf{T} Q^\mathsf{T} y\\
+ R =  Q^\mathsf{T} y\\
+\end{aligned}`
+$$
+
+* Possiamo quindi risolvere il sistema con l'algoritmo *backsolve* senza dover calcolare `\(X^\mathsf{T} X\)`, che potrebbe risultare numericamente instabile
+
+---
+
+
+```r
+# Calcolare le stime OLS con la decomposizione QR 
+#
+# Argomenti:
+# X: la matrice del disegno
+# y: il vettore risposta
+#
+# Ritorna:
+# Il vettore hatbeta di lunghezza ncol(X).
+ols_qr &lt;-
+function(X, y)
+{
+qr_obj &lt;- qr(X)
+Q &lt;- qr.Q(qr_obj)
+R &lt;- qr.R(qr_obj)
+Qty &lt;- crossprod(Q, y)
+betahat &lt;- backsolve(R, Qty)
+betahat
+}
+```
+
+---
+
+
+```r
+# stimiamo beta
+ols_qr(X,y)
+```
+
+```
+          [,1]
+[1,] 0.9891449
+[2,] 2.0115997
+[3,] 2.9941052
+[4,] 3.9997532
+```
+
+```r
+# verifichiamo con lm
+coef(lm(y ~ X - 1))
+```
+
+```
+       X1        X2        X3        X4 
+0.9891449 2.0115997 2.9941052 3.9997532 
+```
+
+---
+
+
+```r
+X &lt;- matrix(c(10^9, -1, -1, 10^(-5)), 2, 2)
+beta &lt;- c(1,1)
+y &lt;- X %*% beta
+# visto che in questo esempio X è una matrice quadrata, possiamo risolvere con
+solve(X, y)
+```
+
+```
+     [,1]
+[1,]    1
+[2,]    1
+```
+
+```r
+# il reciprocal condition number di X
+eigvals = eigen(X)$values
+min(eigvals)/max(eigvals)
+```
+
+```
+[1] 9.999e-15
+```
+
+Il valore è molto piccolo, ma non inferiore alla soglia di tolleranza del computer di `\(\approx 10^{-16}\)`
+
+```r
+.Machine$double.eps
+```
+
+```
+[1] 2.220446e-16
+```
+
+---
+
+
+```r
+# se proviamo con le equazioni normali
+solve( crossprod(X), crossprod(X, y) )
+```
+
+&gt; Error in solve.default(crossprod(X), crossprod(X, y)) : 
+  system is computationally singular: reciprocal condition number = 9.998e-29
+
+
+```r
+eigvals = eigen(crossprod(X))$values
+min(eigvals)/max(eigvals)
+```
+
+```
+[1] 9.998002e-29
+```
+
+Ora il valore è inferiore alla soglia di tolleranza `\(\approx 10^{-16}\)`, 
+
+
+```r
+solve(crossprod(X), crossprod(X, y), tol = 0)
+```
+
+```
+     [,1]
+[1,]    1
+[2,]    0
+```
+
+La soluzione purtroppo è sbagliata. Se evitiamo di calcolare `\(X^\mathsf{T}X\)`, la soluzione risulta corretta
+
+
+```r
+ols_qr(X, y)
+```
+
+```
+     [,1]
+[1,]    1
+[2,]    1
+```
+
+---
+
+
+```r
+# generiamo dei dati collineari con n = 500 e p = 100
+set.seed(123)
+n &lt;- 500; p &lt;- 100
+X &lt;- matrix(rnorm(n*p), ncol=p)
+y &lt;- rnorm(n)
+W &lt;- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
+eigvals = eigen(crossprod(W), only.values = T)$values
+min(eigvals)/max(eigvals)
+```
+
+```
+[1] 9.630005e-16
+```
+
+```r
+qr(W)$rank
+```
+
+```
+[1] 100
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
