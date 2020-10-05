@@ -115,7 +115,7 @@ In altre parole, quanto variano sono le nostre stime se le calcoliamo su trainin
 $$
 `\begin{aligned}
 \mathbb{E}[(Y^*_{i} - \hat{Y}^*_i)^2] &amp; = \mathbb{E}[(f(x_i) + \varepsilon^*_i -  \hat{f}(x_i))^2] \\
-&amp; = \mathbb{E}[  \{f(x_i) -  \hat{f}(x_i) \}^2 + \{\varepsilon^*_i\}^2 +2  \{\hat{f}(x_i)\varepsilon^*_i\} ] \\
+&amp; = \mathbb{E}[  \{f(x_i) -  \hat{f}(x_i) \}^2 + \{\varepsilon^*_i\}^2 +2  \{[f(x_i) -\hat{f}(x_i)]\varepsilon^*_i\} ] \\
  &amp; = \underbrace{\mathbb{E}[\{f(x_i)  -  \hat{f}(x_i)\}^2]}_{\mathrm{RIDUCIBILE}} + \underbrace{\mathbb{V}\mathrm{ar}(\varepsilon^*_i)}_{\mathrm{IRRIDUCIBILE}}
 \end{aligned}`
 $$
