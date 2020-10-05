@@ -77,7 +77,7 @@ Confondere il rumore per il segnale
 * Funzione di perdita: errore quadratico medio (MSE)
 
 * Obiettivo: minimizzare l'errore di previsione atteso (nel setting Fixed-X)
-`$$\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right]= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$`
+`$$\mathrm{ErrF} = \mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2\right]= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2\right]$$`
 dove il valore atteso è rispetto alle v.c. `\(Y_1,\ldots,Y_n\)` e `\(Y^*_1,\ldots,Y^*_n\)`
 
 
@@ -136,7 +136,7 @@ dove `\(\mathbb{V}\mathrm{ar}(\varepsilon^*_i) = \sigma^2\)`
 
 * Riassumendo, la scomposizione dell'errore di previsione è data da
 
-`$$\sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Distorsione}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Varianza}}$$`
+`$$\mathrm{ErrF} = \sigma^2 + \underbrace{\frac{1}{n}\sum_{i=1}^{n}(\mathbb{E}\hat{f}(x_i) - f(x_i) )^2}_{\mathrm{Distorsione}^2} + \underbrace{\frac{1}{n}\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))}_{\mathrm{Varianza}}$$`
 
 * Distorsione e varianza sono quantità in conflitto e non possiamo
 minimizzare entrambe contemporaneamente. Dobbiamo quindi scegliere un __compromesso__ (trade-off) tra distorsione e varianza.

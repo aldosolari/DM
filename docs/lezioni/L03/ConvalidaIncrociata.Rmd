@@ -1,0 +1,212 @@
+---
+title: "Data Mining"
+subtitle: "Metodo della convalida incrociata"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F)
+```
+
+
+# Metodo della convalida incrociata
+
+* Come notato in precedenza, addestrare un algoritmo e valutare
+la sua performance statistica sugli stessi dati produce un risultato troppo ottimistico
+
+* Il metodo della convalida incrociata (*Cross-Validation*, abbreviato CV) valuta le previsioni del modello su dati "nuovi" al fine di fornire una stima $\widehat{\mathrm{Err}}$ dell'errore di previsione $\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$ 
+
+* L'idea alla base del metodo è di dividere le osservazioni (*data-split*): una parte dei dati (training set) è utilizzata per addestrare il modello, e i dati rimanenti (test set) sono utilizzati per misurare la performance del modello
+
+* Una delle principali caratteristiche della CV è la sua universalità. CV è un metodo __non parametrico__ che può essere applicato a qualsiasi algoritmo/modello. Questa universalità non è condivisa ad es. da Cp, che è specifico della regressione lineare
+
+
+---
+
+# Una semplice soluzione
+
+* Una semplice soluzione consiste nel dividere casualmente le $n$ osservazioni in due parti: un insieme di addestramento e un insieme di verifica
+
+* Si veda la Figure 5.1 del libro ISL
+
+* Si stima il modello $\hat{f}^{-V}$ sull'insieme delle osservazioni di addestramento $T \subset \{1,\ldots,n\}$, e lo si utilizza per prevedere le osservazioni sull'insieme di verifica $V = \{1,\ldots,n\} \setminus T$
+
+* Questo approccio fornisce una stima dell'errore di previsione (atteso)
+$$\widehat{\mathrm{Err}} = \frac{1}{\# V} \sum_{i \in V} (y_i - \hat{f}^{-V}(x_i))^2$$
+
+* Tuttavia questo procedimento riduce la numerosità delle osservazioni (ma questo non è un problema se $n$ è veramente elevato)
+
+* Se $ n $ non è molto grande, tuttavia, questa stima può essere molto variabile
+
+---
+
+# Convalida incrociata
+
+* Un modo per superare parzialmente questa arbitrarietà è dividere
+i dati in parti uguali $V_1,\ldots,V_K$.
+
+* Si veda la figura Figure 5.5 del libro ISLR
+
+* Nel metodo della convalida incrociata con $K$ porzioni (*K-fold cross-validation*) utilizziamo le osservazioni $i\notin V_k$ per addestrare il modello e le osservazioni $i \in V_k$ per valutarlo:
+$$\frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2$$
+e alla fine calcoliamo la media delle stime per stimare l'errore di previsione atteso:
+$$\widehat{\mathrm{Err}} = \frac{1}{K} \sum_{k=1}^{K}\left[ \frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2 \right]$$
+
+---
+
+```{r}
+rm(list=ls())
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+n <- nrow(train)
+# K-fold CV
+d = 3
+K = 5
+set.seed(123)
+# create folds
+folds <- sample( rep(1:K,length=n) )
+# initialize vector
+KCV <- vector()
+# loop
+for (k in 1:K){
+  fit <- lm(y~poly(x,degree=d), train, subset=which(folds!=k))
+  x.out <- train$x[which(folds==k)]
+  yhat <- predict(fit, newdata=list(x=x.out))
+  y.out <- train$y[which(folds==k)]
+  KCV[k]<- mean( ( y.out - yhat )^2 )
+}
+# KCV estimate 
+mean(KCV)
+```
+
+---
+
+```{r}
+ds = 1:12; ps = ds+1
+library(boot)
+set.seed(123)
+KCV = sapply(ds, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), train, family = gaussian), K=K )$delta[1] )
+plot(ds, KCV, type="b", log="y")
+```
+
+---
+
+# Leave-one-out cross validation
+
+* Nella __leave-one-out cross validation__ (LOOCV), ciascuna osservazione viene esclusa a turno dall'insieme delle osservazioni per essere utilizzata per la verifica della previsione
+
+* Si veda la  Figure 5.3 el libro ISL
+
+* Per $i=1,\ldots,n$:
+
+    - Escludere l' $i$-sima osservazione $(x_i,y_i)$
+    - Utilizzare le rimandenti $n-1$ osservazioni per stimare il modello $\hat{f}^{-i}$ e valutarlo sull'osservazione esclusa $(x_i,y_i)$, calcolando $(y_i - \hat{f}^{-i}(x_i))^2$
+    - Infine, calcolare la media
+$$\widehat{\mathrm{Err}} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}^{-i}(x_i))^2$$
+
+* Si noti che LOOCV è un caso particolare di $K$-fold CV che corrisponde a $K = n$. 
+
+---
+
+```{r}
+# LOOCV
+oneout <- vector()
+for (i in 1:n){
+fit_i <- lm( y~poly(x,degree=d), data=train[-i,])
+yhat_i <- predict(fit_i, newdata=data.frame(x=train$x[i]) )
+oneout[i] <- ( train$y[i] -  yhat_i )^2
+}
+mean(oneout)
+```
+
+---
+
+# LOOCV per il modello lineare
+
+* Per il modello lineare, c'è una scorciatoia per calcolare LOOCV:
+$$\frac{1}{n}\sum_{i=1}^{n}\Big( y_i - \hat{f}^{-i}(x_i) \Big)^2 = \frac{1}{n} \sum_{i=1}^{n}\left( \frac{y_i - \hat{f}(x_i)}{1-h_{ii}} \right)^2$$
+
+* $\underset{n\times p}{\mathbf{X}}$ è la matrice del disegno
+
+* $h_{ii}$ è l' $i$-simo elemento diagonale della matrice di proiezione
+$$\underset{n\times n}{\mathbf{H}} = \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T}$$
+
+---
+
+```{r}
+fit <-  lm(y~poly(x,d), train)
+# design matrix
+X <- model.matrix(fit)
+# hat matrix
+H <- X %*% solve(t(X)%*% X) %*% t(X)
+# LOOCV estimate
+mean(
+   ( (train$y - predict(fit)) / (1-diag(H))  )^2 
+) 
+```
+
+---
+
+```{r}
+LOOCV = sapply(ds, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), 
+     train, family = gaussian) )$delta[1] )
+plot(ds, LOOCV, type="b", xlab="d")
+```
+
+---
+
+# Metodo della convalida incrociata generalizzata
+
+* Nella convalida incrociata generalizzata calcoliamo
+$$\widehat{\mathrm{Err}} =\frac{ \mathrm{MSE}_{\mathrm{Tr}}}{\left(1 - \frac{p}{n}\right)^2}$$
+dove stiamo approssimando $h_{ii}$ con la sua media
+$$\frac{1}{n}\sum_{i=1}^{n} h_{ii} = \frac{p}{n}$$
+
+---
+
+```{r}
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d), train)
+fits <- lapply(ds, fun)
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+GCV = MSEs.tr/(1-(ps)/n )^2
+plot(ds, GCV, type="b", xlab="d")
+```
+
+---
+
+# La scelta di K
+
+* Una scelta comune per $K$ oltre a $K = n$ è di scegliere $K = 5$ o $K = 10$
+
+* Tuttavia, trarre una conclusione generale sul CV è un compito quasi impossibile a causa della varietà delle situazioni che si possono incontrare
+
+---
+
+# Compromesso distorsione-varianza per CV
+
+__Distorsione__
+
+* $K$-fold CV con $K=5$ o 10 fornisce una stima distorta (verso l'alto) dell'errore di previsione $\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$ perchè utilizza meno osservazioni nella stima del modello (4/5 or $9/10$ delle osservazioni)
+
+* LOOCV ha distorsione molto bassa (utilizza $n-1$ osservazioni)
+
+
+__Varianza__
+
+* Solitamente LOOCV è fortemente variabile perchè è la media di $n$ quantità estremamente correlate (perchè le stime $\hat{f}^{-i}$ e $\hat{f}^{-l}$ si basano su $n-2$ osservazioni comuni), e $K$-fold CV con $K=5$ o 10 a meno variabilità perchè è la media di quantità meno correlate  
+
+*  Si ricordi che la varianza della somma di quantità fortemente correlate è maggiore di quella con quantità mediamente correlate:
+$$\mathbb{V}\mathrm{ar}(A+B) = \mathbb{V}\mathrm{ar}(A) + \mathbb{V}\mathrm{ar}(B) + 2\mathbb{C}\mathrm{ov}(A,B)$$
+
+* In generale, tuttavia, la variabilità dei diversi metodi CV spesso dipende dalla particolare applicazione
