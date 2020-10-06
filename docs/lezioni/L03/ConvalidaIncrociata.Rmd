@@ -19,8 +19,7 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 
 # Metodo della convalida incrociata
 
-* Come notato in precedenza, addestrare un algoritmo e valutare
-la sua performance statistica sugli stessi dati produce un risultato troppo ottimistico
+* Come notato in precedenza, stimare un modello e valutarne la performance sugli stessi dati produce un risultato troppo ottimistico
 
 * Il metodo della convalida incrociata (*Cross-Validation*, abbreviato CV) valuta le previsioni del modello su dati "nuovi" al fine di fornire una stima $\widehat{\mathrm{Err}}$ dell'errore di previsione $\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$ 
 
@@ -210,3 +209,4 @@ __Varianza__
 $$\mathbb{V}\mathrm{ar}(A+B) = \mathbb{V}\mathrm{ar}(A) + \mathbb{V}\mathrm{ar}(B) + 2\mathbb{C}\mathrm{ov}(A,B)$$
 
 * In generale, tuttavia, la variabilità dei diversi metodi CV spesso dipende dalla particolare applicazione
+
