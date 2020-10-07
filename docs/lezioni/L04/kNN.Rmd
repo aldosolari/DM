@@ -1,0 +1,300 @@
+---
+title: "Data Mining"
+subtitle: "Regressione nonparametrica"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F)
+```
+
+
+# Metodi nonparametrici
+
+* I metodi nonparametrici non fanno assunzioni specifiche a proposito della forma funzionale della $f$ (ad esempio, " $f$ è un polinomio "). Si lascia che i dati "parlino da soli"
+
+* Vantaggio: evitando assunzioni sulla forma di $f$, permettiamo qualsiasi forma funzionale per $f$ (anche le più strane e irregolari)
+
+* Svantaggio: poichè il problema della stima di $f$ non si riduce più al problema di stimare $p$ parametri (se $p \ll n$), risulta necessario avere tante osservazioni ( $n$ elevato )
+
+---
+
+# Il metodo dei $k$ vicini più vicini 
+
+* Il metodo dei $k$ vicini più vicini (*k-nearest neighbors*, abbreviato k-NN) è un metodo molto semplice ma efficace. Considereremo questo approccio nel caso di un problema di regressione
+
+* Supponiamo di voler prevedere la risposta $y^*_1$ in corrispondenza ad un certo punto $x^*_1$. Definiamo il "vicinato" (*neighbourhood*) di questo punto con $N_k(x^*_1)$: è l'insieme dei $k$ punti del training set  più "vicini" a $x^*_1$
+
+* Dobbiamo quindi definire una distanza: si può ad esempio considerare la distanza Euclidea tra $x_i$ e $x^*_1$ 
+$$\| x_i - x^*_1 \|_2=\sqrt{(x_i - x^*_1)^\mathsf{T}(x_i - x^*_1)} = \sqrt{\sum_{j=1}^{p}(x_{ij} - x^*_{1j})}$$ dove 
+$\|\cdot \|_2$ indica la norma Euclidea
+
+* La previsione è definita dalla media delle $k$ risposte $y_i$ del training set che appartengono al vicinato di $x^*_1$, i.e. le $x_i \in N_k(x^*_1)$
+$$\hat{f}(x^*_1) = \frac{1}{k}\sum_{i \in N_k(x^*_1)} y_i$$
+
+---
+
+# Parametro di regolazione
+
+* $k$ può assumere valori da $1$ a $n$, e rappresenta il **parametro di regolazione**  (*tuning parameter*) 
+
+* Un $k$ piccolo corrisponde ad una stima più flessibile, vicerversa un $k$ grande ad una stima meno flessibile
+
+* Il caso estremo $k=n$ corrisponde alla media delle risposte del training: $\hat{f}(x^*_1) = \bar{y} = \frac{1}{n}\sum_{i=1}^{n}y_i$, mentre $k=1$ corrisponde a $\hat{f}(x^*_1) = y_i$ per un certo indice $i$ tale che $x_i$ è il punto più vicino a $x^*_1$
+
+* Operativamente, poichè il metodo utilizza una distanza, spesso i valori dei predittori vengono standardizzati
+
+---
+
+```{r}
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+test <- data.frame(x=seq(min(train$x), max(train$x), length=100))
+library(kknn)
+my_k = 4
+fit = kknn(y ~ x, train, test, distance = 2, kernel = "rectangular", k = my_k)
+yhat = fit$fitted.values
+plot(y ~ x, train, main=paste("k = ", my_k))
+lines(test$x, yhat, col=4, type="s")
+```
+
+---
+
+# Esercizio
+
+Si consideri la versione con $n=250$ osservazioni dei dati di ieri e di oggi
+
+* La vera $f$, denominata `f.vera250`, è disponibile  [qui](http://azzalini.stat.unipd.it/Libro-DM/f_vera.R) insieme ai corrispondenti valori di $x$, denominati `x.250`
+
+* il vero valore di $\sigma$ è $0.01$
+
+Simulare i dati di training e di test (entrambi con $n$ osservazioni), impostando il seme generatore di numeri causali `set.seed(123)` prima di generare i dati 
+
+```{r, echo=F}
+rm(list=ls())
+n = 250
+sigmatrue = 0.01
+ftrue <- c(
+   0.4342,0.4402,0.4460,0.4515,0.4568,0.4618,0.4665,0.4712,0.4755,0.4797,
+   0.4837,0.4875,0.4911,0.4945,0.4978,0.5009,0.5039,0.5067,0.5094,0.5119,
+   0.5143,0.5166,0.5187,0.5208,0.5227,0.5245,0.5262,0.5278,0.5293,0.5307,
+   0.5321,0.5333,0.5345,0.5355,0.5365,0.5375,0.5383,0.5391,0.5399,0.5405,
+   0.5411,0.5417,0.5422,0.5426,0.5430,0.5434,0.5437,0.5440,0.5442,0.5444,
+   0.5445,0.5447,0.5447,0.5448,0.5448,0.5448,0.5448,0.5447,0.5446,0.5445,
+   0.5444,0.5442,0.5441,0.5439,0.5437,0.5434,0.5432,0.5429,0.5427,0.5424,
+   0.5421,0.5418,0.5415,0.5412,0.5408,0.5405,0.5401,0.5398,0.5394,0.5390,
+   0.5387,0.5383,0.5379,0.5375,0.5371,0.5367,0.5363,0.5359,0.5355,0.5351,
+   0.5347,0.5343,0.5339,0.5335,0.5330,0.5326,0.5322,0.5318,0.5314,0.5310,
+   0.5306,0.5302,0.5298,0.5294,0.5290,0.5286,0.5282,0.5278,0.5274,0.5270,
+   0.5267,0.5263,0.5259,0.5255,0.5251,0.5248,0.5244,0.5240,0.5237,0.5233,
+   0.5230,0.5226,0.5223,0.5219,0.5216,0.5213,0.5209,0.5206,0.5203,0.5200,
+   0.5197,0.5193,0.5190,0.5187,0.5184,0.5181,0.5178,0.5176,0.5173,0.5170,
+   0.5167,0.5164,0.5162,0.5159,0.5156,0.5154,0.5151,0.5149,0.5146,0.5144,
+   0.5141,0.5139,0.5136,0.5134,0.5132,0.5130,0.5127,0.5125,0.5123,0.5121,
+   0.5119,0.5117,0.5115,0.5113,0.5111,0.5109,0.5107,0.5105,0.5103,0.5101,
+   0.5100,0.5098,0.5096,0.5094,0.5093,0.5091,0.5090,0.5088,0.5086,0.5085,
+   0.5083,0.5082,0.5080,0.5079,0.5077,0.5076,0.5075,0.5073,0.5072,0.5071,
+   0.5069,0.5068,0.5067,0.5066,0.5065,0.5063,0.5062,0.5061,0.5060,0.5059,
+   0.5058,0.5057,0.5056,0.5055,0.5054,0.5053,0.5052,0.5051,0.5050,0.5049,
+   0.5048,0.5047,0.5046,0.5045,0.5044,0.5044,0.5043,0.5042,0.5041,0.5041,
+   0.5040,0.5039,0.5038,0.5038,0.5037,0.5036,0.5035,0.5035,0.5034,0.5034,
+   0.5033,0.5032,0.5032,0.5031,0.5030,0.5030,0.5029,0.5029,0.5028,0.5028,
+   0.5027,0.5027,0.5026,0.5026,0.5025,0.5025,0.5024,0.5024,0.5023,0.5023)
+x = seq(0.5,3,length=n)
+set.seed(123)
+y = ftrue + rnorm(n, 0, sigmatrue)
+ystar = ftrue + rnorm(n, 0, sigmatrue)
+train = data.frame(x=x, y=y)
+test = data.frame(x=x, y=ystar)
+```
+
+---
+
+Installare il pacchetto `kknn` e utilizzare il metodo k-NN con $k=21$ utilizzando la funzione
+`kknn(y ~ x, train, test, kernel = "rectangular", k = 21)`
+
+
+```{r, echo=F}
+library(kknn)
+k = 21
+fit = kknn(y ~ x, train, test, kernel = "rectangular", k = k)
+yhat = fit$fitted.values
+plot(y ~ x, train, main=paste("k = ", k))
+lines(x,yhat, col=4, type="s")
+```
+
+---
+
+Calcolare MSE.tr e MSE.te per $k=21$
+
+```{r, echo=F}
+MSE.tr = mean( (train$y - yhat)^2 )
+MSE.tr
+MSE.te = mean( (test$y - yhat)^2 )
+MSE.te
+```
+
+---
+
+Calcolare MSE.tr e MSE.te per $k=1,2,\ldots,40$ e individuare il valore $k$ corrispondente al MSE.te minimo
+
+```{r, echo=F}
+ks = 1:40
+MSEs.tr = sapply(ks, function(k)
+mean( 
+  (train$y - kknn(y ~ x, train, test, kernel = "rectangular", k = k)$fitted.values )^2
+))
+MSEs.te = sapply(ks, function(k)
+mean( 
+  (test$y - kknn(y ~ x, train, test, kernel = "rectangular", k = k)$fitted.values)^2
+))
+op <- par(mfrow = c(1, 2)) 
+plot(1/ks, MSEs.tr, type="b", ylab="MSE.tr", xlab="1/k")
+plot(1/ks,MSEs.te,type="b", ylab="MSE.te", col=4, xlab="1/k")
+par(op)
+ks[which.min(MSEs.te)]
+```
+
+---
+
+Nel setting Fixed-X, si può dimostrare che per k-NN
+$$\mathrm{OptF} = \frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(y_i,\hat{f}(x_i))= \frac{2\sigma^2}{k}$$
+Si individui il valore di $k$ corrispondente al minimo $$\widehat{\mathrm{Err}} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2\sigma^2}{k}$$
+
+```{r, echo=F}
+hatErr = MSEs.tr + (2*sigmatrue^2)/ks
+ks[which.min(hatErr)]
+```
+
+---
+
+# Compromesso distorsione-varianza per k-NN
+
+```{r, echo=F}
+Vars = sigmatrue^2/ks
+Bias2s = sapply(ks, function(k) 
+  mean( 
+    ( ftrue - kknn(ftrue ~ x, train, test, kernel = "rectangular", k = k)$fitted.values )^2 
+      )
+  )
+Reds = Bias2s+Vars 
+barplot(Reds, ylab="Errore riducibile", names.arg=ks)
+barplot(Vars, add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+ks[which.min(Reds)]
+```
+
+---
+layout: false
+class: inverse, middle, center
+
+# The caret package
+
+---
+
+# The caret package
+
+La libreria R [caret](http://topepo.github.io/caret/index.html) (_C_lassification _A_nd _RE_gression _T_raining) contiene una serie di 
+funzioni che possono tornare utili nel processo di modellizzazione predittiva. Contiene funzioni per
+
+* pre-processamento dei dati
+* scelta dei parametri di regolazione dei modelli 
+* etc
+
+---
+
+# Installazione
+
+* caret utilizza un gran numero di librerie R ma cerca di non caricarle tutte all'avvio della libreria
+
+* L'installazione completa richiede un po' di tempo
+```{r, eval=F}
+ install.packages("caret", dependencies = c("Depends", "Suggests"))
+```
+
+* Per l'help [https://topepo.github.io/caret/](https://topepo.github.io/caret/)
+
+* Il libro [Applied Predictive Modeling](http://appliedpredictivemodeling.com/) fa riferimento alla libreria `caret`
+
+---
+
+# Pseudocodice della funzione train
+
+![](https://i2.wp.com/www.quintuitive.com/wp-content/uploads/2016/09/TrainAlgo.png)
+
+
+---
+
+
+```{r}
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+test <- data.frame(x=df$x, y=df$y.tomorrow)
+library(caret)
+fit.knn = train(
+  y ~ ., train,
+  method = "knn")
+# result
+fit.knn
+```
+
+---
+
+.pull-left[
+```{r}
+cv <- trainControl(
+  method = "cv",
+  number = 10)
+
+fit.knn = train(
+  y ~ ., train,
+  method = "knn",
+  trControl=cv,
+  tuneGrid = data.frame(k=5:9))
+```
+]
+
+.pull-right[
+```{r}
+plot(fit.knn)
+fit.knn$bestTune
+```
+]
+
+---
+
+.pull-left[
+```{r}
+fit.poly = train(
+  y ~ poly(x,degree=4), train,
+  method = "lm",
+  trControl=cv)
+models = list(
+    knn=fit.knn,
+    poly=fit.poly
+  )
+resamps = resamples(models)
+```
+]
+
+.pull-right[
+```{r}
+bwplot(resamps, metric = "RMSE")
+yhats = predict(models, newdata=test)
+lapply(yhats, function(yhat) sqrt( mean( (yhat - test$y)^2) ) )
+```
+]
+
+
+
+

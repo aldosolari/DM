@@ -27,9 +27,9 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare AS 3.5.1 - 3.5.3, ISL 5.1.1 - 5.1.4, 6.1.3
   
 * L04 (8 Ottobre 9:30 - 12:30) 
-  * [Libro di testo vs Computer]()
-  * [Regressione nonparametrica]()
-  * Studiare AS 4.1, ISL 3.5
+  * [Libro di testo vs Computer](docs/lezioni/L04/LibroVsComputer.html)
+  * [Regressione nonparametrica](docs/lezioni/L04/kNN.html)
+  * Studiare AKL 2.3, 2.5, 2.6, ISL 3.5
 
 * L05 (12 Ottobre 14:30 - 16:30) SINCRONA
 

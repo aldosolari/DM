@@ -38,6 +38,7 @@ $$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$
 $$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$
 
 * Questa soluzione può essere tradotta in codice R come
+
 ```{r, eval=F}
 betahat <- solve(t(X) %*% X) %*% t(X) %*% y
 ```
@@ -53,14 +54,14 @@ $X^\mathsf{T} X$, quindi perché calcolarla?
 
 # Le equazioni normali
 
-* Basta infatti considerare le equazioni normali
+Basta infatti considerare le equazioni normali
 $$X^\mathsf{T} X \beta = X^\mathsf{T} y$$
 e risolverle direttamente:
 ```{r, eval=F}
 solve(crossprod(X), crossprod(X, y))
 ```
 
-* Questo approccio ha il vantaggio di essere più stabile numericamente e di essere molto più veloce
+Questo approccio ha il vantaggio di essere più stabile numericamente e di essere molto più veloce
 
 ---
 
@@ -74,34 +75,39 @@ y <- rnorm(n)
 
 # confrontiamo i due approcci:
 library(microbenchmark)
-microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y, 
+ms <- microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y, 
             solve(crossprod(X), crossprod(X, y)))
-
+ms
 ```
 
 ---
 
-# Collinearità 
+```{r}
+library(ggplot2)
+autoplot(ms)
+```
 
 
-* Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a $X$ che è molto simile (ma non identica) alla prima colonna di $X$
+---
+
+# Problemi di collinearità 
+
+Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a $X$ che è molto simile (ma non identica) alla prima colonna di $X$
 
 ```{r}
 W <- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
 ```
 
-* L'approccio "diretto" fallisce quando c'è elevata multicollinearità
+L'approccio "diretto" fallisce quando c'è elevata multicollinearità
 
-```{r, eval=F}
+```{r, error=TRUE}
 solve(crossprod(W), crossprod(W, y))
 ```
-> Error in solve.default(crossprod(W), crossprod(W, y)) : system is computationally singular: reciprocal condition number = 7.94831e-17
 
-* Se $n\geq p$, il *reciprocal condition number* è sostanzialmente dato dal rapporto tra il minimo e il massimo autovalore di $X^\mathsf{T}X$
+Il numero di condizionamento $\kappa$ (*condition number*) nel calcolo numerico rappresenta il grado di condizionamento di un problema. Se $\kappa$ è molto grande, siamo in presenza di un un problema mal condizionato (un problema dove le soluzioni sono molto sensibili a piccole perturbazioni dei dati iniziali)
 
 ```{r}
-eigvals = eigen(crossprod(W), only.values = T)$values
-min(eigvals)/max(eigvals)
+kappa(crossprod(W))
 ```
 
 ---
@@ -121,7 +127,7 @@ $$A x = b$$
 
 # La decomposizione di Cholesky
 
-* Poichè nel nostro caso la matrice $A= X^\mathsf{T} X$ è simmetrica e (di solito) definita positiva, possiamo considerare la decomposizione di Cholesky
+* Poichè nel nostro caso la matrice $A= X^\mathsf{T}X$ è simmetrica, e se $X$ è a rango pieno, è anche definita positiva, allora possiamo considerare la decomposizione di Cholesky
 $$A = L L^\mathsf{T}$$
 dove $L$ è una matrice triangolare inferiore 
 
@@ -161,10 +167,10 @@ b_{3} \\
 $$z_{3} = \frac{b_3}{l_{3,3}}$$
 
 * La seconda riga (equazione) coinvolge solamente $z_2$ e $z_3$, quindi 
-$$z_2 = \frac{b_2}{l_{2,2}} + \frac{l_{2,3} z_3}{l_{2,2}}$$
+$$z_2 = \frac{b_2}{l_{2,2}} - \frac{l_{2,3} z_3}{l_{2,2}}$$
 
 * Infine 
-$$z_{1} = \frac{b_1}{l_{1,1}} + \frac{l_{1,2} z_2}{l_{1,1}} + \frac{l_{1,3} z_3}{l_{1,1}}$$
+$$z_{1} = \frac{b_1}{l_{1,1}} - \frac{l_{1,2} z_2}{l_{1,1}} - \frac{l_{1,3} z_3}{l_{1,1}}$$
 
 ---
 
@@ -285,15 +291,39 @@ coef(lm(y ~ X - 1))
 
 ---
 
+# Esempio giocattolo
+
+Si consideri il seguente esempio giocattolo con $n=p=2$. Sia 
+$$X = \left[\begin{array}{cc}
+10^9 & -1 \\
+-1 & 10^{-5}\\
+\end{array}\right] \quad \beta = \left[\begin{array}{cc}
+1 \\
+1\\
+\end{array}\right]$$
+e se definiamo $y=X\beta$, otteniamo
+$$y = \left[\begin{array}{cc}
+10^9 & -1 \\
+-1 & 10^{-5}\\
+\end{array}\right] \left[\begin{array}{cc}
+1 \\
+1\\
+\end{array}\right] = \left[\begin{array}{cc}
+10^9-1 \\
+-0.99999\\
+\end{array}\right]$$
+Poichè $X$ è una matrice quadrata, possiamo risolvere $X\beta = y$ direttamente con il comando `solve`
+
+---
+
 ```{r}
 X <- matrix(c(10^9, -1, -1, 10^(-5)), 2, 2)
 beta <- c(1,1)
 y <- X %*% beta
 # visto che in questo esempio X è una matrice quadrata, possiamo risolvere con
 solve(X, y)
-# il reciprocal condition number di X
-eigvals = eigen(X)$values
-min(eigvals)/max(eigvals)
+# il reciproco del numero di condizionamento di X
+rcond(X)
 ```
 
 Il valore è molto piccolo, ma non inferiore alla soglia di tolleranza del computer di $\approx 10^{-16}$
@@ -303,17 +333,12 @@ Il valore è molto piccolo, ma non inferiore alla soglia di tolleranza del compu
 
 ---
 
-```{r, eval=FALSE}
+```{r, error=T}
 # se proviamo con le equazioni normali
 solve( crossprod(X), crossprod(X, y) )
 ```
-
-> Error in solve.default(crossprod(X), crossprod(X, y)) : 
-  system is computationally singular: reciprocal condition number = 9.998e-29
-
 ```{r}
-eigvals = eigen(crossprod(X))$values
-min(eigvals)/max(eigvals)
+rcond(crossprod(X))
 ```
 
 Ora il valore è inferiore alla soglia di tolleranza $\approx 10^{-16}$, 
@@ -322,7 +347,7 @@ Ora il valore è inferiore alla soglia di tolleranza $\approx 10^{-16}$,
 solve(crossprod(X), crossprod(X, y), tol = 0)
 ```
 
-La soluzione purtroppo è sbagliata. Se evitiamo di calcolare $X^\mathsf{T}X$, la soluzione risulta corretta
+La soluzione purtroppo è sbagliata. Se evitiamo di calcolare $X^\mathsf{T}X$, ad esempio con la decomposizione QR, la soluzione risulta corretta
 
 ```{r}
 ols_qr(X, y)
@@ -337,10 +362,42 @@ n <- 500; p <- 100
 X <- matrix(rnorm(n*p), ncol=p)
 y <- rnorm(n)
 W <- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
-eigvals = eigen(crossprod(W), only.values = T)$values
-min(eigvals)/max(eigvals)
+# confronto tra i tre approcci
+ms <- microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y,
+                    ols_chol(X, y),
+                    ols_qr(X, y))
+```
 
+---
+
+```{r}
+autoplot(ms)
+```
+
+
+---
+
+# lm
+
+* La funzione `lm` utilizza la decomposizione QR (programmata in C e richiamata dalla funzione)
+
+* Si noti che `lm` gestisce situazioni di colonne (computazionalmente) linearmente dipendenti
+```{r}
 qr(W)$rank
+fit <- lm(y ~ W)
+tail(coef(fit))
+```
+dove l'ultimo elemento di $\hat{\beta}$ è NA perché un coefficiente corrispondente all'ultima colonna di $W$ (la colonna linearmente dipendente). 
+
+* Sebbene la decomposizione QR gestisca senza messaggio di errore la matrice $X$ con colonne (computazionalmente o esattamente) linearmente dipendenti, paghiamo un prezzo in termini di velocità, che può essere ridotta utilizzando `lm.fit` e `.lm.fit` se siamo solo interessati alla stima di $\beta$. In alcune situazioni però potrebbe essere più efficente ricorrere ad un approccio alternativo
+
+---
+
+```{r}
+autoplot(microbenchmark( lm(y~W), 
+                         lm.fit(W,y), 
+                         .lm.fit(W,y) 
+                        ))
 ```
 
 

@@ -44,6 +44,7 @@ class: center, middle, inverse, title-slide
 
 * Questa soluzione può essere tradotta in codice R come
 
+
 ```r
 betahat &lt;- solve(t(X) %*% X) %*% t(X) %*% y
 ```
@@ -59,7 +60,7 @@ betahat &lt;- solve(t(X) %*% X) %*% t(X) %*% y
 
 # Le equazioni normali
 
-* Basta infatti considerare le equazioni normali
+Basta infatti considerare le equazioni normali
 `$$X^\mathsf{T} X \beta = X^\mathsf{T} y$$`
 e risolverle direttamente:
 
@@ -67,7 +68,7 @@ e risolverle direttamente:
 solve(crossprod(X), crossprod(X, y))
 ```
 
-* Questo approccio ha il vantaggio di essere più stabile numericamente e di essere molto più veloce
+Questo approccio ha il vantaggio di essere più stabile numericamente e di essere molto più veloce
 
 ---
 
@@ -82,50 +83,63 @@ y &lt;- rnorm(n)
 
 # confrontiamo i due approcci:
 library(microbenchmark)
-microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y, 
+ms &lt;- microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y, 
             solve(crossprod(X), crossprod(X, y)))
+ms
 ```
 
 ```
 Unit: milliseconds
                                  expr       min        lq      mean    median
-     solve(t(X) %*% X) %*% t(X) %*% y 10.922618 11.853586 15.696053 12.892534
- solve(crossprod(X), crossprod(X, y))  3.945518  4.096883  5.726159  4.300249
-        uq      max neval cld
- 17.831886 36.17428   100   b
-  6.483197 15.45200   100  a 
+     solve(t(X) %*% X) %*% t(X) %*% y 13.884018 16.695464 25.938544 20.474913
+ solve(crossprod(X), crossprod(X, y))  4.791025  5.250133  7.518604  5.883758
+       uq       max neval cld
+ 29.70170 126.29916   100   b
+  8.21887  41.40562   100  a 
 ```
 
 ---
 
-# Collinearità 
+
+```r
+library(ggplot2)
+autoplot(ms)
+```
+
+![](LibroVsComputer_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
 
-* Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a `\(X\)` che è molto simile (ma non identica) alla prima colonna di `\(X\)`
+---
+
+# Problemi di collinearità 
+
+Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a `\(X\)` che è molto simile (ma non identica) alla prima colonna di `\(X\)`
 
 
 ```r
 W &lt;- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
 ```
 
-* L'approccio "diretto" fallisce quando c'è elevata multicollinearità
+L'approccio "diretto" fallisce quando c'è elevata multicollinearità
 
 
 ```r
 solve(crossprod(W), crossprod(W, y))
 ```
-&gt; Error in solve.default(crossprod(W), crossprod(W, y)) : system is computationally singular: reciprocal condition number = 7.94831e-17
 
-* Se `\(n\geq p\)`, il *reciprocal condition number* è sostanzialmente dato dal rapporto tra il minimo e il massimo autovalore di `\(X^\mathsf{T}X\)`
+```
+Error in solve.default(crossprod(W), crossprod(W, y)): system is computationally singular: reciprocal condition number = 7.94831e-17
+```
+
+Il numero di condizionamento `\(\kappa\)` (*condition number*) nel calcolo numerico rappresenta il grado di condizionamento di un problema. Se `\(\kappa\)` è molto grande, siamo in presenza di un un problema mal condizionato (un problema dove le soluzioni sono molto sensibili a piccole perturbazioni dei dati iniziali)
 
 
 ```r
-eigvals = eigen(crossprod(W), only.values = T)$values
-min(eigvals)/max(eigvals)
+kappa(crossprod(W))
 ```
 
 ```
-[1] 9.630215e-16
+[1] 1.868475e+16
 ```
 
 ---
@@ -145,7 +159,7 @@ rappresentano un caso particolare di un generico sistema di equazioni
 
 # La decomposizione di Cholesky
 
-* Poichè nel nostro caso la matrice `\(A= X^\mathsf{T} X\)` è simmetrica e (di solito) definita positiva, possiamo considerare la decomposizione di Cholesky
+* Poichè nel nostro caso la matrice `\(A= X^\mathsf{T}X\)` è simmetrica, e se `\(X\)` è a rango pieno, è anche definita positiva, allora possiamo considerare la decomposizione di Cholesky
 `$$A = L L^\mathsf{T}$$`
 dove `\(L\)` è una matrice triangolare inferiore 
 
@@ -185,10 +199,10 @@ b_{3} \\
 `$$z_{3} = \frac{b_3}{l_{3,3}}$$`
 
 * La seconda riga (equazione) coinvolge solamente `\(z_2\)` e `\(z_3\)`, quindi 
-`$$z_2 = \frac{b_2}{l_{2,2}} + \frac{l_{2,3} z_3}{l_{2,2}}$$`
+`$$z_2 = \frac{b_2}{l_{2,2}} - \frac{l_{2,3} z_3}{l_{2,2}}$$`
 
 * Infine 
-`$$z_{1} = \frac{b_1}{l_{1,1}} + \frac{l_{1,2} z_2}{l_{1,1}} + \frac{l_{1,3} z_3}{l_{1,1}}$$`
+`$$z_{1} = \frac{b_1}{l_{1,1}} - \frac{l_{1,2} z_2}{l_{1,1}} - \frac{l_{1,3} z_3}{l_{1,1}}$$`
 
 ---
 
@@ -345,6 +359,31 @@ coef(lm(y ~ X - 1))
 
 ---
 
+# Esempio giocattolo
+
+Si consideri il seguente esempio giocattolo con `\(n=p=2\)`. Sia 
+`$$X = \left[\begin{array}{cc}
+10^9 &amp; -1 \\
+-1 &amp; 10^{-5}\\
+\end{array}\right] \quad \beta = \left[\begin{array}{cc}
+1 \\
+1\\
+\end{array}\right]$$`
+e se definiamo `\(y=X\beta\)`, otteniamo
+`$$y = \left[\begin{array}{cc}
+10^9 &amp; -1 \\
+-1 &amp; 10^{-5}\\
+\end{array}\right] \left[\begin{array}{cc}
+1 \\
+1\\
+\end{array}\right] = \left[\begin{array}{cc}
+10^9-1 \\
+-0.99999\\
+\end{array}\right]$$`
+Poichè `\(X\)` è una matrice quadrata, possiamo risolvere `\(X\beta = y\)` direttamente con il comando `solve`
+
+---
+
 
 ```r
 X &lt;- matrix(c(10^9, -1, -1, 10^(-5)), 2, 2)
@@ -361,9 +400,8 @@ solve(X, y)
 ```
 
 ```r
-# il reciprocal condition number di X
-eigvals = eigen(X)$values
-min(eigvals)/max(eigvals)
+# il reciproco del numero di condizionamento di X
+rcond(X)
 ```
 
 ```
@@ -388,13 +426,12 @@ Il valore è molto piccolo, ma non inferiore alla soglia di tolleranza del compu
 solve( crossprod(X), crossprod(X, y) )
 ```
 
-&gt; Error in solve.default(crossprod(X), crossprod(X, y)) : 
-  system is computationally singular: reciprocal condition number = 9.998e-29
-
+```
+Error in solve.default(crossprod(X), crossprod(X, y)): system is computationally singular: reciprocal condition number = 9.998e-29
+```
 
 ```r
-eigvals = eigen(crossprod(X))$values
-min(eigvals)/max(eigvals)
+rcond(crossprod(X))
 ```
 
 ```
@@ -414,7 +451,7 @@ solve(crossprod(X), crossprod(X, y), tol = 0)
 [2,]    0
 ```
 
-La soluzione purtroppo è sbagliata. Se evitiamo di calcolare `\(X^\mathsf{T}X\)`, la soluzione risulta corretta
+La soluzione purtroppo è sbagliata. Se evitiamo di calcolare `\(X^\mathsf{T}X\)`, ad esempio con la decomposizione QR, la soluzione risulta corretta
 
 
 ```r
@@ -437,13 +474,29 @@ n &lt;- 500; p &lt;- 100
 X &lt;- matrix(rnorm(n*p), ncol=p)
 y &lt;- rnorm(n)
 W &lt;- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
-eigvals = eigen(crossprod(W), only.values = T)$values
-min(eigvals)/max(eigvals)
+# confronto tra i tre approcci
+ms &lt;- microbenchmark(solve(t(X) %*% X) %*% t(X) %*% y,
+                    ols_chol(X, y),
+                    ols_qr(X, y))
 ```
 
+---
+
+
+```r
+autoplot(ms)
 ```
-[1] 9.630005e-16
-```
+
+![](LibroVsComputer_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+
+
+---
+
+# lm
+
+* La funzione `lm` utilizza la decomposizione QR (programmata in C e richiamata dalla funzione)
+
+* Si noti che `lm` gestisce situazioni di colonne (computazionalmente) linearmente dipendenti
 
 ```r
 qr(W)$rank
@@ -452,6 +505,31 @@ qr(W)$rank
 ```
 [1] 100
 ```
+
+```r
+fit &lt;- lm(y ~ W)
+tail(coef(fit))
+```
+
+```
+         W96          W97          W98          W99         W100         W101 
+-0.031914899  0.042591481 -0.061792874  0.053646183  0.005819322           NA 
+```
+dove l'ultimo elemento di `\(\hat{\beta}\)` è NA perché un coefficiente corrispondente all'ultima colonna di `\(W\)` (la colonna linearmente dipendente). 
+
+* Sebbene la decomposizione QR gestisca senza messaggio di errore la matrice `\(X\)` con colonne (computazionalmente o esattamente) linearmente dipendenti, paghiamo un prezzo in termini di velocità, che può essere ridotta utilizzando `lm.fit` e `.lm.fit` se siamo solo interessati alla stima di `\(\beta\)`. In alcune situazioni però potrebbe essere più efficente ricorrere ad un approccio alternativo
+
+---
+
+
+```r
+autoplot(microbenchmark( lm(y~W), 
+                         lm.fit(W,y), 
+                         .lm.fit(W,y) 
+                        ))
+```
+
+![](LibroVsComputer_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
