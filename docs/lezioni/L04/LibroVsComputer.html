@@ -33,7 +33,7 @@ class: center, middle, inverse, title-slide
 
 2. **Underflow** Simile all'overflow, i numeri possono diventare troppo piccoli per essere rappresentati dai computer, provocando errori o avvisi o calcoli imprecisi
 
-3. **Dipendenza quasi lineare**  la precisione del computer determina se una matrice ha (computazionalmente) colonne linearmente dipendenti
+3. **Dipendenza quasi lineare** Il computer (che ha una precisone finita) può confondere una dipendenza quasi lineare per una dipendenza lineare
 
 ---
 
@@ -91,11 +91,11 @@ ms
 ```
 Unit: milliseconds
                                  expr       min        lq      mean    median
-     solve(t(X) %*% X) %*% t(X) %*% y 13.884018 16.695464 25.938544 20.474913
- solve(crossprod(X), crossprod(X, y))  4.791025  5.250133  7.518604  5.883758
-       uq       max neval cld
- 29.70170 126.29916   100   b
-  8.21887  41.40562   100  a 
+     solve(t(X) %*% X) %*% t(X) %*% y 21.974572 124.98663 229.96662 195.27460
+ solve(crossprod(X), crossprod(X, y))  6.593146  26.73335  60.15342  51.25928
+        uq      max neval cld
+ 311.75524 674.7178   100   b
+  73.92241 343.1228   100  a 
 ```
 
 ---

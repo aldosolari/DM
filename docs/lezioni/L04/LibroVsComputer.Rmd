@@ -28,7 +28,7 @@ $$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$
 
 2. **Underflow** Simile all'overflow, i numeri possono diventare troppo piccoli per essere rappresentati dai computer, provocando errori o avvisi o calcoli imprecisi
 
-3. **Dipendenza quasi lineare**  la precisione del computer determina se una matrice ha (computazionalmente) colonne linearmente dipendenti
+3. **Dipendenza quasi lineare** Il computer (che ha una precisone finita) può confondere una dipendenza quasi lineare per una dipendenza lineare
 
 ---
 
