@@ -90,12 +90,12 @@ ms
 
 ```
 Unit: milliseconds
-                                 expr       min        lq      mean    median
-     solve(t(X) %*% X) %*% t(X) %*% y 21.974572 124.98663 229.96662 195.27460
- solve(crossprod(X), crossprod(X, y))  6.593146  26.73335  60.15342  51.25928
+                                 expr      min        lq      mean    median
+     solve(t(X) %*% X) %*% t(X) %*% y 11.40596 13.272891 18.449127 15.980200
+ solve(crossprod(X), crossprod(X, y))  3.95804  4.192608  5.603482  4.710674
         uq      max neval cld
- 311.75524 674.7178   100   b
-  73.92241 343.1228   100  a 
+ 20.621285 53.97933   100   b
+  5.892089 16.08123   100  a 
 ```
 
 ---
@@ -210,8 +210,7 @@ b_{3} \\
 
 * Possiamo quindi scrivere 
 $$
-`\begin{aligned}
-X X^\mathsf{T} x = X^\mathsf{T} y\\
+\begin{aligned} X^\mathsf{T}X x = X^\mathsf{T} y\\
 L L^\mathsf{T} x = b\\
 L z = b
 \end{aligned}`
