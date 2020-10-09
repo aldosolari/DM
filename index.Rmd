@@ -7,9 +7,9 @@ output: markdowntemplates::minimal
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università degli Studi di Milano-Bicocca, A.A. 2020/21
+Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università degli Studi di Milano-Bicocca, A.A. 2020/21.
 
-## Calendario delle lezioni e materiale didattico
+## Calendario delle lezioni e materiale didattico.
 
 * L01 (1 Ottobre 9:30 - 11:30) SINCRONA
   * [Organizzazione del corso](docs/lezioni/L01/Organizzazione.html)
@@ -33,7 +33,7 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 
 * L05 (12 Ottobre 14:30 - 16:30) SINCRONA
 
-* L06 (13 Ottobre 12:30 - 15:30) 
+* L06 (13 Ottobre 12:30 - 15:30) SINCRONA
 
 * L07 (15 Ottobre 9:30 - 12:30) 
 
@@ -62,15 +62,15 @@ Se non specificato, la modalità di lezione è ASINCRONA.
 
 L'esame è composto da due parti:
 
-1. Prova scritta
+1. Prova scritta.
 
-2. Compiti per casa
+2. Compiti per casa.
 
 Il voto finale è dato dalla media dei voti delle parti 1. e 2. Lo studente (oppure il docente) può richiedere la prova orale.
 
-Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 1 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi](docs/hw/gruppiDM.pdf) di (al massimo) tre persone (tranne il gruppo RANDOM). Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
+Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/d/e/1FAIpQLSdOOTc_IcCx8Nzv7JhxqIcs7C3nvTv9mdUS3PpMSMpF7thNxQ/viewform?usp=sf_link) entro il 1 Ottobre 2020 viene data la possibilità di svolgere i compiti per casa in [gruppi](docs/hw/gruppiDM.pdf) di (al massimo) tre persone (tranne il gruppo RANDOM) secondo le modalità previste. Gli iscritti verranno suddivisi in gruppi in maniera casuale. 
 
-**Calendario degli esami**
+**Calendario degli esami**.
 
 || Sessione || Data || Luogo || Orario ||
 |-|-|-|-|-|-|-|-|-|-|
@@ -82,7 +82,7 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 || Estiva || Giugno/Luglio  || -  || -  ||
 || Estiva || Settembre  || -  || -  ||
 
-## Compiti per casa
+## Compiti per casa.
 
 || Testo || Data di consegna || Scadenza ||
 |-|-|-|-|-|-|-|-|
@@ -96,19 +96,19 @@ La scadenza sopra indicata vale per gli studenti che lavorano in [gruppi](docs/h
 Per tutti gli altri studenti, il lavoro (individuale) deve essere consegnato almeno una settimana prima della data di esame secondo le modalità previste. 
 
 
-## Libri di testo
+## Libri di testo.
 
-* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia [AS]
+* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia. [AS].
 
 * Gareth, Witten, Hastie, Tibshirani (2013). Introduction to Statistical Learning with applications in R. Springer [ISL]. Sono anche disponibili i [video](https://www.r-bloggers.com/2014/09/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/) delle lezioni. 
 
-* Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer [ESL]
+* Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer. [ESL].
 
-* Kuhn, Johnson (2019). Feature Engineering and Selection. Chapman and Hall/CRC [KJ]
+* Kuhn, Johnson (2019). Feature Engineering and Selection. Chapman and Hall/CRC. [KJ].
 
-* Lewis, Kane, Arnold (2019) A Computational Approach to Statistical Learning. Chapman And Hall/Crc [LKA]
+* Lewis, Kane, Arnold (2019) A Computational Approach to Statistical Learning. Chapman And Hall/Crc. [LKA].
 
-* Wickham, Grolemund (2015) R for Data Science. O'Reilly Cookbooks [WG]
+* Wickham, Grolemund (2015) R for Data Science. O'Reilly Cookbooks. [WG].
 
 Tutti i libri di testo (tranne il primo) sono disponibili in formato elettronico presso la [biblioteca](https://www.biblio.unimib.it/it/risorse/accesso-alle-risorse-remoto).
 

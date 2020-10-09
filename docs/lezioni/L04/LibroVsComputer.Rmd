@@ -34,7 +34,7 @@ I potenziali problemi computazionali che possono emergere sono
 
 # La stima di $\beta$
 
-Si consideri la soluzione 
+Sia $\underset{n \times 1}{y}$ il vettore delle risposte, $\underset{n \times p}{X}$ la matrice del disegno e $\underset{p\times 1}{\beta}$ il vettore dei parametri in un modello lineare. Lo stimatore OLS (*Ordinary Least Squares*)
 $$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$
 
 Questa soluzione può essere tradotta in codice R come
@@ -44,7 +44,7 @@ betahat <- solve(t(X) %*% X) %*% t(X) %*% y
 
 Tuttavia non è consigliabile calcolare il valore di $\hat{\beta}$ in questo modo.
 
-La ragione principale è che il calcolo dell'inversa di $X^\mathsf{T} X$ è molto costoso dal punto di vista computazionale ed è un'operazione potenzialmente instabile su un computer quando c'è un'elevata collinearità tra i predittori.
+La ragione principale è che il calcolo dell'inversa di $X^\mathsf{T} X$ è molto costoso dal punto di vista computazionale ed è un'operazione potenzialmente instabile su un computer quando c'è un'elevata multicollinearità tra i predittori.
 
 Inoltre, per calcolare $\hat{\beta}$ non abbiamo bisogno dell'inversa di
 $X^\mathsf{T} X$, quindi perché calcolarla?
@@ -90,9 +90,9 @@ autoplot(ms)
 
 ---
 
-# Problemi di collinearità 
+# Problemi di multicollinearità 
 
-Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a $X$ che è molto simile (ma non identica) alla prima colonna di $X$
+Per ottenere una situazione di multicollinearità, possiamo aggiungere una colonna a $X$ che è molto simile (ma non identica) alla prima colonna di $X$
 
 ```{r}
 W <- cbind(X, X[, 1] + rnorm(n, sd = 1e-10))
@@ -179,6 +179,7 @@ X^\mathsf{T} X x &= X^\mathsf{T} y \\
 L L^\mathsf{T} x &= b \\
 L z &= b
 \end{align}
+dove $\underset{p \times p}{L}$ è una matrice triangolare inferiore
  
 Prima si risolve $L z = b$ con
 ```{r, eval=F}

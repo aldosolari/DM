@@ -39,7 +39,7 @@ I potenziali problemi computazionali che possono emergere sono
 
 # La stima di `\(\beta\)`
 
-Si consideri la soluzione 
+Sia `\(\underset{n \times 1}{y}\)` il vettore delle risposte, `\(\underset{n \times p}{X}\)` la matrice del disegno e `\(\underset{p\times 1}{\beta}\)` il vettore dei parametri in un modello lineare. Lo stimatore OLS (*Ordinary Least Squares*)
 `$$\hat{\beta} = (X^\mathsf{T} X)^{-1}Xy$$`
 
 Questa soluzione può essere tradotta in codice R come
@@ -50,7 +50,7 @@ betahat &lt;- solve(t(X) %*% X) %*% t(X) %*% y
 
 Tuttavia non è consigliabile calcolare il valore di `\(\hat{\beta}\)` in questo modo.
 
-La ragione principale è che il calcolo dell'inversa di `\(X^\mathsf{T} X\)` è molto costoso dal punto di vista computazionale ed è un'operazione potenzialmente instabile su un computer quando c'è un'elevata collinearità tra i predittori.
+La ragione principale è che il calcolo dell'inversa di `\(X^\mathsf{T} X\)` è molto costoso dal punto di vista computazionale ed è un'operazione potenzialmente instabile su un computer quando c'è un'elevata multicollinearità tra i predittori.
 
 Inoltre, per calcolare `\(\hat{\beta}\)` non abbiamo bisogno dell'inversa di
 `\(X^\mathsf{T} X\)`, quindi perché calcolarla?
@@ -90,12 +90,12 @@ ms
 
 ```
 Unit: milliseconds
-                                 expr       min        lq      mean    median
-     solve(t(X) %*% X) %*% t(X) %*% y 13.513165 14.933184 21.042958 17.026827
- solve(crossprod(X), crossprod(X, y))  4.799257  4.972295  6.719871  5.358553
-       uq       max neval cld
- 22.71662 114.72907   100   b
-  6.42838  19.33626   100  a 
+                                 expr      min       lq     mean   median
+     solve(t(X) %*% X) %*% t(X) %*% y 7.314035 7.898158 8.286544 8.077520
+ solve(crossprod(X), crossprod(X, y)) 2.945594 3.110722 3.194557 3.166287
+       uq       max neval
+ 8.359393 16.050011   100
+ 3.267438  3.641133   100
 ```
 
 ---
@@ -111,9 +111,9 @@ autoplot(ms)
 
 ---
 
-# Problemi di collinearità 
+# Problemi di multicollinearità 
 
-Per ottenere una situazione di collinearità, possiamo aggiungere una colonna a `\(X\)` che è molto simile (ma non identica) alla prima colonna di `\(X\)`
+Per ottenere una situazione di multicollinearità, possiamo aggiungere una colonna a `\(X\)` che è molto simile (ma non identica) alla prima colonna di `\(X\)`
 
 
 ```r
@@ -211,6 +211,7 @@ X^\mathsf{T} X x &amp;= X^\mathsf{T} y \\
 L L^\mathsf{T} x &amp;= b \\
 L z &amp;= b
 \end{align}`
+dove `\(\underset{p \times p}{L}\)` è una matrice triangolare inferiore
  
 Prima si risolve `\(L z = b\)` con
 
