@@ -32,7 +32,7 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare AKL 2.3, 2.5, 2.6, ISL 3.5
 
 * L05 (12 Ottobre 14:30 - 16:30) SINCRONA
-  * [Il modello vs il processo di modellizzazione](docs/lezioni/L05/ModVsPM.html)
+  * [Il modello vs il processo di modellizzazione](docs/lezioni/L05/ModelVsPM.html)
 
 * L06 (13 Ottobre 12:30 - 15:30) SINCRONA
 
