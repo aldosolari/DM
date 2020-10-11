@@ -6,6 +6,8 @@
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
   </head>
   <body>
     <textarea id="source">
@@ -159,21 +161,52 @@ class: inverse, middle, center
 
 ---
 
-# Polinomio di grado 3
+# Varianza per il modello lineare
 
-.pull-left[
+* Per la regressione polinomiale di grado `\(d\)` , la stima del vettore `\(\underset{p\times 1}{\beta}\)` (con `\(p=d+1\)`) risulta pari a
+`$$\hat{\beta} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\mathbf{y}$$`
+dove `\(\underset{n \times p}{\mathbf{X}}\)` è la matrice del disegno, con matrice di varianza delle stima 
+`$$\mathbb{V}\mathrm{ar}(\hat{\beta})=\sigma^2 (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$$`
 
-![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
-]
-
-.pull-right[
-
-![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
-]
+* Quindi la varianza della previsione `\(\hat{f}(x_i)=x_i^\mathsf{T}\hat{\beta}\)` (dove `\(x_i^\mathsf{T}\)` è l' `\(i\)`-sima riga di `\(\mathbf{X}\)`) risulta pari a
+`$$\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=x_i \mathbb{V}\mathrm{ar}(\hat{\beta}) x_i^\mathsf{T}$$`
+e sommando rispetto alle `\(n\)` osservazioni
+`$$\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=\mathrm{tr}(\mathbf{X} \mathbb{V}\mathrm{ar}(\hat{\beta}) \mathbf{X}^\mathsf{T}) =\sigma^2 \mathrm{tr}(\mathbf{X}^\mathsf{T}\mathbf{X} (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} ) = \sigma^2 p$$`
 
 ---
 
-# Polinomio di grado 12
+
+```r
+d = 5
+
+# distorsione: per ottenere il valore atteso dello stimatore, stimo il modello senza errori
+Ehatf &lt;- fitted(lm(ftrue ~ poly(x,degree=d)))
+Bias2 &lt;-(ftrue - Ehatf)^2
+
+# varianza
+X &lt;- model.matrix(lm(ftrue ~ poly(x,degree=d)))
+invXtX &lt;- solve(crossprod(X))
+Var = apply(X, 1, function(x) 
+  sigmatrue^2 * t(x) %*% invXtX %*% x
+)
+```
+
+---
+
+
+```r
+barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1))
+barplot(Var,add=T, col=1, names.arg=" ")
+legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
+```
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+
+---
+
+
+# Polinomio di grado 3
 
 .pull-left[
 
@@ -183,6 +216,20 @@ class: inverse, middle, center
 .pull-right[
 
 ![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Polinomio di grado 12
+
+.pull-left[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -197,13 +244,13 @@ class: inverse, middle, center
 # Errore riducibile
 
 
-![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ---
 
 # Errore di previsione
 
-![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -212,12 +259,12 @@ class: inverse, middle, center
 
 .pull-left[
 
-![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
-![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+![](DistorsioneVsVarianza_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 ]
 
 ---
