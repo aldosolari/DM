@@ -22,16 +22,17 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare AS 3.3, ISL 2.2.2
   
 * L03 (6 Ottobre 12:30 - 15:30)
-  * [Ottimismo](docs/lezioni/L03/Ottimismo.html)
+  * [L'ottimismo](docs/lezioni/L03/Ottimismo.html)
   * [Il metodo della convalida incrociata](docs/lezioni/L03/ConvalidaIncrociata.html)
   * Studiare AS 3.5.1 - 3.5.3, ISL 5.1.1 - 5.1.4, 6.1.3
   
 * L04 (8 Ottobre 9:30 - 12:30) 
   * [Libro di testo vs Computer](docs/lezioni/L04/LibroVsComputer.html)
-  * [Regressione nonparametrica](docs/lezioni/L04/kNN.html)
+  * [La regressione nonparametrica](docs/lezioni/L04/kNN.html)
   * Studiare AKL 2.3, 2.5, 2.6, ISL 3.5
 
 * L05 (12 Ottobre 14:30 - 16:30) SINCRONA
+  * [Il modello vs il processo di modellizzazione](docs/lezioni/L05/ModVsPM.html)
 
 * L06 (13 Ottobre 12:30 - 15:30) SINCRONA
 
@@ -88,7 +89,7 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 |-|-|-|-|-|-|-|-|
 ||  || ||  ||  ||
 || [Problema 0](docs/hw/Problema0.pdf) || 3 Ottobre 2020 || 12 Ottobre 2020 ore 12 ||
-|| Problema 1 ||  12 Ottobre 2020 || - ||
+|| [Problema 1](docs/hw/Problema1.pdf) ||  12 Ottobre 2020 || 4 Novembre 2020 ore 12 ||
 || Problema 2 ||  - || - ||
 
 La scadenza sopra indicata vale per gli studenti che lavorano in [gruppi](docs/hw/gruppiDM.pdf). 
