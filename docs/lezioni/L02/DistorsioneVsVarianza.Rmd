@@ -13,7 +13,7 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=T, R.options=list(width=220))
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
 ```
 
 # Training and test set (Fixed-X setting)
@@ -194,14 +194,23 @@ yhat = fitted(fit)
 
 ---
 
-# Varianza per il modello lineare
+Per la regressione polinomiale di grado $d$ , la stima del vettore $\underset{p\times 1}{\beta}$ (con $p=d+1$) risulta pari a
+$\hat{\beta} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\mathbf{y}$
+dove $\underset{n \times p}{\mathbf{X}}$ è la matrice del disegno. La previsione per $i$-sima osservazione è $\hat{f}(x_i)=x_i^\mathsf{T}\hat{\beta}$, dove $x_i^\mathsf{T}$ è l' $i$-sima riga di $\mathbf{X}$. 
 
-* Per la regressione polinomiale di grado $d$ , la stima del vettore $\underset{p\times 1}{\beta}$ (con $p=d+1$) risulta pari a
-$$\hat{\beta} = (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\mathbf{y}$$
-dove $\underset{n \times p}{\mathbf{X}}$ è la matrice del disegno, con matrice di varianza delle stima 
-$$\mathbb{V}\mathrm{ar}(\hat{\beta})=\sigma^2 (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$$
+La distorsione risulta
+$$
+\begin{aligned}
+\mathbb{E}[\hat{f}(x_i)] - f(x_i) &= \mathbb{E}[ x_i^\mathsf{T}(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} \mathbf{X}^\mathsf{T}\mathbf{y} ] - f(x_i)\\
+&= x_i^\mathsf{T}(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\mathbb{E}[\mathbf{y}] - f(x_i) \\
+&= x_i^\mathsf{T}(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\mathbf{f} - f(x_i)
+\end{aligned}
+$$
+dove $\mathbf{f} = (f(x_1),\ldots, f(x_n))^\mathsf{T}$. 
 
-* Quindi la varianza della previsione $\hat{f}(x_i)=x_i^\mathsf{T}\hat{\beta}$ (dove $x_i^\mathsf{T}$ è l' $i$-sima riga di $\mathbf{X}$) risulta pari a
+Abbiamo inoltre
+$\mathbb{V}\mathrm{ar}(\hat{\beta})=\sigma^2 (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$,
+quindi la varianza della previsione $\hat{f}(x_i)$  risulta
 $$\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=x_i \mathbb{V}\mathrm{ar}(\hat{\beta}) x_i^\mathsf{T}$$
 e sommando rispetto alle $n$ osservazioni
 $$\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=\mathrm{tr}(\mathbf{X} \mathbb{V}\mathrm{ar}(\hat{\beta}) \mathbf{X}^\mathsf{T}) =\sigma^2 \mathrm{tr}(\mathbf{X}^\mathsf{T}\mathbf{X} (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} ) = \sigma^2 p$$
@@ -210,14 +219,15 @@ $$\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=\mathrm{tr}(\mathbf{X} \math
 
 ```{r}
 d = 5
-
-# distorsione: per ottenere il valore atteso dello stimatore, stimo il modello senza errori
-Ehatf <- fitted(lm(ftrue ~ poly(x,degree=d)))
-Bias2 <-(ftrue - Ehatf)^2
-
-# varianza
+# matrice del disegno
 X <- model.matrix(lm(ftrue ~ poly(x,degree=d)))
 invXtX <- solve(crossprod(X))
+
+# distorsione
+Bias2 <- ( apply(X, 1, function(x) 
+  x %*% invXtX %*% t(X) %*% ftrue) - ftrue)^2
+
+# varianza
 Var = apply(X, 1, function(x) 
   sigmatrue^2 * t(x) %*% invXtX %*% x
 )
@@ -254,13 +264,19 @@ lines(x,Ehatf)
 .pull-right[
 
 ```{r, echo=F}
+# matrice del disegno
 X <- model.matrix(lm(ftrue ~ poly(x,degree=d)))
 invXtX <- solve(crossprod(X))
-Ehatf <- fitted(lm(ftrue ~ poly(x,degree=d)))
-Bias2 <-(ftrue - Ehatf)^2
+
+# distorsione
+Bias2 <- ( apply(X, 1, function(x) 
+  x %*% invXtX %*% t(X) %*% ftrue) - ftrue)^2
+
+# varianza
 Var = apply(X, 1, function(x) 
   sigmatrue^2 * t(x) %*% invXtX %*% x
 )
+
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1), ylim=c(0,0.00012))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
@@ -288,13 +304,19 @@ lines(x,Ehatf)
 .pull-right[
 
 ```{r, echo=F}
+# matrice del disegno
 X <- model.matrix(lm(ftrue ~ poly(x,degree=d)))
 invXtX <- solve(crossprod(X))
-Ehatf <- fitted(lm(ftrue ~ poly(x,degree=d)))
-Bias2 <-(ftrue - Ehatf)^2
+
+# distorsione
+Bias2 <- ( apply(X, 1, function(x) 
+  x %*% invXtX %*% t(X) %*% ftrue) - ftrue)^2
+
+# varianza
 Var = apply(X, 1, function(x) 
   sigmatrue^2 * t(x) %*% invXtX %*% x
 )
+
 barplot(Bias2+Var, ylab="Bias2 + Var", names.arg=round(x,1), ylim=c(0,0.00012))
 barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
