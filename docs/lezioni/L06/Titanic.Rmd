@@ -13,104 +13,52 @@ output:
 ---
 
 ```{r startup, include = FALSE, message = FALSE, warning = FALSE}
-knitr::opts_chunk$set(echo = T, eval=F, message=F, warning=F, error=F, comment=NA, cache=F)
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F)
 ```
 
 
 
-# Problemi di classificazione
+# Previsione di variabili qualitative
 
-* Variabile risposta $Y \in \{0,1\}$ (a volte è conveniente $Y \in \{-1,1\}$)
+Siano  $(X,Y) \in \mathcal{X} \times \mathcal{Y}$ variabili casualicon una certa distribuzione congiunta (ignota), dove
+* $Y$ è una variabile risposta binaria  con $\mathcal{Y}=\{0,1\}$ (può risultare conveniente utilizzare $\mathcal{Y}=\{-1,1\}$)
+* $X=(X_1,\ldots,X_p)^\mathsf{T}$ sono $p$ predittori
 
-* Predittori $X=(X_1,\ldots,X_p)^\mathsf{T}$
+Una regola di classificazione è una funzione
+$c: \mathcal{X} \mapsto \{0,1\}$
+L'errore di classificazione (*error rate* o *classification risk*) di $c$ è definito come
+$$\mathrm{Err}(c) = \mathbb{P}(Y \neq c(X))$$
+Una regola di classificazione che minimizza l'errore di classificazione è detta di Bayes (*Bayes classifier*), e l'errore di classificazione minimo è detto **errore di Bayes** (*Bayes risk*). 
 
-* $(X,Y)$ hanno una certa distribuzione congiunta (non nota)
+La regola di classificazione di Bayes è data da
 
-* Si noti che in questo caso la funzione di regressione diventa la probabilità condizionata di $Y=1$ dato $x$
-$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$
-
-* La regola di classificazione di Bayes (*Bayes classifier*) è definita da
-$$c(x) = \left\{\begin{array}{ll}
+$$c_0(x) = \left\{\begin{array}{ll}
 1 & \mathrm{se\,\,} f(x)>1/2 \\
 0 & \mathrm{altrimenti}\\
 \end{array}\right.$$
 
----
-
-# Il tasso di errore di Bayes
-
-* Una regola di classificazione è una funzione
-$\hat{c}: x \mapsto \{0,1\}$
-
-* Per esempio, possiamo utilizzare il principio di sostituzione (*plug-in rule*)
-$$\hat{c}(x) = \left\{\begin{array}{ll}
-1 & \mathrm{if\,\,} \hat{f}(x)>1/2 \\
-0 & \mathrm{otherwise}\\
-\end{array}\right.$$
-dove $\hat{f}$ è una stima di $f$ che si basa sui dati di training
-
-* La regola di classificazione di Bayes è ottima nel senso che minimizza l'errore di classificazione:
-$$\mathbb{E}\left[\mathrm{Pr}(Y \neq c(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{c}(x))\right] \quad \forall \, \hat{c}$$
-dove il valore atteso è rispetto ad $X$
-
-* Il tasso di errore di Bayes $\mathbb{E}\left[\mathrm{Pr}(Y \neq c(x) ) \right]$ è analogo all'errore irriducibile per un problema di classificazione
+dove $f(x)$ è la funzione di regressione:
+$$f(x) = \mathbb{E}(Y|X=x) = \mathbb{P}(Y=1|X=x)$$
 
 ---
 
-# Errori di approssimazione e di stima
+# Errore stocastico e di approssimazione
 
-* Per un problema di classificazione, i concetti di distorsione e varianza si generalizzano in errori di **approssimazione** e di **stima**
+Si consideri una classe $\mathcal{C}$ di classificatori, ad esempio
+$$\mathcal{C} = \{c: c(x) = \mathbb{I}\{\mu + x^\mathsf{T}\beta\} \,\,\mathrm{dove}\,\,\mu \in \mathbb{R},\beta \in \mathbb{R}^p\}$$
 
-* Sia $\mathcal{F}$ la classe di modelli considerata
+Possiamo quindi utilizzare il training set per stimare un classificatore 
+$\hat{c} \in \mathcal{C}$.
 
-* Supponiamo di aver stimato un modello $\hat{f}$ utilizzando un numero (finito) di osservazioni di training
+Sia $$c^* = \arg\min_{c \in \mathcal{C}} \mathrm{Err}(c)$$
+e si consideri la scomposizione
+$$\mathrm{Err}(\hat{c}) - \mathrm{Err}(c_0) = \underbrace{\mathrm{Err}(\hat{c})- \mathrm{Err}(c^*)}_{\mathrm{Errore\,\,stocastico}} + \underbrace{\mathrm{Err}(c^*)- \mathrm{Err}(c_0)}_{\mathrm{Errore\,\,di\,\,approssimazione}}$$
 
-* Sia $f^*$ il miglior modello possibile in $\mathcal{F}$ ipotizzando un numero infinito di osservazioni di training
-
-* **Errore di approssimazione**: L'errore di $f^*$ dovuto al fatto che la classe $\mathcal{F}$ è limitata
-
-* **Errore di stima**: Errore del modello stimato $\hat{f}$ (relativamente ad $f^*$) dovuto al fatto che abbiamo un numero finito di osservazioni di training
-
-
-$$\mathrm{Errore\,\,riducibile} = \underbrace{\mathrm{Err}(f^*) }_{\mathrm{err.\,\,di\,\,approssimazione}}+ \underbrace{[\mathrm{Err}(\hat{f})-\mathrm{Err}(f^*)]}_{\mathrm{err.\,\,di\,\,stima}}$$
-
+La scelta di una classe $\mathcal{C}$ molta ricca riduce l'errore di approssimazione ma comporta anche un aumento dell'errore stocastico dovuto al sovra-adattamento ai dati di training
 
 ---
 
-# Classificazione con più di due classi
-
-
-* Variabile risposta con $K$ classi:  $Y \in \{1,\ldots, K\}$ 
-
-* Probabilità di appartenenza ad una certa classe condizionata al valore di $x$:
-
-$$p_k(x)=\mathrm{Pr}(Y=k|X=x), \quad k = 1,\ldots,K$$
-
-* Il classificatore di Bayes dato $x$ risulta
-$$c(x)=j \quad \mathrm{se} \quad p_j(x)=\max\{p_1(x),\ldots,p_K(x)\}$$
-* Il classificatore di Bayes minimizza l'errore 
-$$1-\mathbb{E}\big(\max_j \Pr(Y=j|X)\big)$$
-
----
-
-
-# Approcci 
-
-* **Discriminativo** Si cerca di modellare direttamente $\Pr(Y=k|X=x)$
-    - Regressione lineare o logistica
-    - $k$-NN
-    - *Support vector machine*
-    - Etc.
-
-* **Generativo** Si cerca di modellare $\Pr(Y=k|X=x)$ sfruttando il Teorema di Bayes:
-$$\Pr(Y=k|X=x) \propto \Pr(X=x|Y=k) \Pr(Y=k)$$
-    - Analisi Discriminante Lineare o Quadratica
-    - *Naive Bayes*
-    - Etc.
-
----
-
-# Errore di classificazione e accuratezza
+# Errore di training e di test
 
 * Training set: $(x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)$
 * Test set: $(x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)$
@@ -118,10 +66,10 @@ $$\Pr(Y=k|X=x) \propto \Pr(X=x|Y=k) \Pr(Y=k)$$
 
 * __Errore di classificazione (training set)__
 
-$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$
+$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}\{y_i \neq \hat{c}(x_i) \}$$
 
 * __Errore di classificazione (test set)__
-$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$
+$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} \mathbb{I}\{y^*_i \neq \hat{c}(x^*_i) \}$$
 
 * __Accuratezza (test set)__
 $$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$
@@ -136,7 +84,7 @@ class: inverse, middle, center
 
 ---
 
-# Introduzione
+# Il disastro
 
 l 15 aprile 1912, durante il suo viaggio inaugurale, il Titanic affondò dopo essersi scontrato con un iceberg, causando la morte di 1502 persone (su 2224 tra passeggeri ed equipaggio)
 
@@ -171,7 +119,7 @@ La competizione Kaggle
 
 ```{r}
 # importazione dei dati
-PATH <- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L06/"
 train <- read.csv(paste(PATH,"titanic_tr.csv",sep=""), 
                   header = TRUE, stringsAsFactors = FALSE)
 n <- nrow(train)
@@ -561,7 +509,7 @@ plot(survived~age, train, subset=sex=="female", main="female")
 
 # Bontà delle previsioni
 
-Logistic model
+Modello logistico
 
 | Predictors | Acc.Tr | Acc.Te |
 |------------|-------|--------|
@@ -715,7 +663,7 @@ plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 
 ---
 
-# Confronto tra modellu
+# Confronto tra modelli
 
 | Model | Acc.Tr | Acc.Te |
 |---|----|----|

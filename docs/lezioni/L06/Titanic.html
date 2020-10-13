@@ -24,99 +24,47 @@ class: center, middle, inverse, title-slide
 
 
 
-# Problemi di classificazione
+# Previsione di variabili qualitative
 
-* Variabile risposta `\(Y \in \{0,1\}\)` (a volte è conveniente `\(Y \in \{-1,1\}\)`)
+Siano  `\((X,Y) \in \mathcal{X} \times \mathcal{Y}\)` variabili casualicon una certa distribuzione congiunta (ignota), dove
+* `\(Y\)` è una variabile risposta binaria  con `\(\mathcal{Y}=\{0,1\}\)` (può risultare conveniente utilizzare `\(\mathcal{Y}=\{-1,1\}\)`)
+* `\(X=(X_1,\ldots,X_p)^\mathsf{T}\)` sono `\(p\)` predittori
 
-* Predittori `\(X=(X_1,\ldots,X_p)^\mathsf{T}\)`
+Una regola di classificazione è una funzione
+`\(c: \mathcal{X} \mapsto \{0,1\}\)`
+L'errore di classificazione (*error rate* o *classification risk*) di `\(c\)` è definito come
+`$$\mathrm{Err}(c) = \mathbb{P}(Y \neq c(X))$$`
+Una regola di classificazione che minimizza l'errore di classificazione è detta di Bayes (*Bayes classifier*), e l'errore di classificazione minimo è detto **errore di Bayes** (*Bayes risk*). 
 
-* `\((X,Y)\)` hanno una certa distribuzione congiunta (non nota)
+La regola di classificazione di Bayes è data da
 
-* Si noti che in questo caso la funzione di regressione diventa la probabilità condizionata di `\(Y=1\)` dato `\(x\)`
-`$$f(x) = \mathbb{E}(Y|X=x) = \mathrm{Pr}(Y=1|X=x)$$`
-
-* La regola di classificazione di Bayes (*Bayes classifier*) è definita da
-`$$c(x) = \left\{\begin{array}{ll}
+`$$c_0(x) = \left\{\begin{array}{ll}
 1 &amp; \mathrm{se\,\,} f(x)&gt;1/2 \\
 0 &amp; \mathrm{altrimenti}\\
 \end{array}\right.$$`
 
----
-
-# Il tasso di errore di Bayes
-
-* Una regola di classificazione è una funzione
-`\(\hat{c}: x \mapsto \{0,1\}\)`
-
-* Per esempio, possiamo utilizzare il principio di sostituzione (*plug-in rule*)
-`$$\hat{c}(x) = \left\{\begin{array}{ll}
-1 &amp; \mathrm{if\,\,} \hat{f}(x)&gt;1/2 \\
-0 &amp; \mathrm{otherwise}\\
-\end{array}\right.$$`
-dove `\(\hat{f}\)` è una stima di `\(f\)` che si basa sui dati di training
-
-* La regola di classificazione di Bayes è ottima nel senso che minimizza l'errore di classificazione:
-`$$\mathbb{E}\left[\mathrm{Pr}(Y \neq c(x) ) \right]\leq   \mathbb{E}\left[ \mathrm{Pr}(Y \neq \hat{c}(x))\right] \quad \forall \, \hat{c}$$`
-dove il valore atteso è rispetto ad `\(X\)`
-
-* Il tasso di errore di Bayes `\(\mathbb{E}\left[\mathrm{Pr}(Y \neq c(x) ) \right]\)` è analogo all'errore irriducibile per un problema di classificazione
+dove `\(f(x)\)` è la funzione di regressione:
+`$$f(x) = \mathbb{E}(Y|X=x) = \mathbb{P}(Y=1|X=x)$$`
 
 ---
 
-# Errori di approssimazione e di stima
+# Errore stocastico e di approssimazione
 
-* Per un problema di classificazione, i concetti di distorsione e varianza si generalizzano in errori di **approssimazione** e di **stima**
+Si consideri una classe `\(\mathcal{C}\)` di classificatori, ad esempio
+`$$\mathcal{C} = \{c: c(x) = \mathbb{I}\{\mu + x^\mathsf{T}\beta\} \,\,\mathrm{dove}\,\,\mu \in \mathbb{R},\beta \in \mathbb{R}^p\}$$`
 
-* Sia `\(\mathcal{F}\)` la classe di modelli considerata
+Possiamo quindi utilizzare il training set per stimare un classificatore 
+`\(\hat{c} \in \mathcal{C}\)`.
 
-* Supponiamo di aver stimato un modello `\(\hat{f}\)` utilizzando un numero (finito) di osservazioni di training
+Sia `$$c^* = \arg\min_{c \in \mathcal{C}} \mathrm{Err}(c)$$`
+e si consideri la scomposizione
+`$$\mathrm{Err}(\hat{c}) - \mathrm{Err}(c_0) = \underbrace{\mathrm{Err}(\hat{c})- \mathrm{Err}(c^*)}_{\mathrm{Errore\,\,stocastico}} + \underbrace{\mathrm{Err}(c^*)- \mathrm{Err}(c_0)}_{\mathrm{Errore\,\,di\,\,approssimazione}}$$`
 
-* Sia `\(f^*\)` il miglior modello possibile in `\(\mathcal{F}\)` ipotizzando un numero infinito di osservazioni di training
-
-* **Errore di approssimazione**: L'errore di `\(f^*\)` dovuto al fatto che la classe `\(\mathcal{F}\)` è limitata
-
-* **Errore di stima**: Errore del modello stimato `\(\hat{f}\)` (relativamente ad `\(f^*\)`) dovuto al fatto che abbiamo un numero finito di osservazioni di training
-
-
-`$$\mathrm{Errore\,\,riducibile} = \underbrace{\mathrm{Err}(f^*) }_{\mathrm{err.\,\,di\,\,approssimazione}}+ \underbrace{[\mathrm{Err}(\hat{f})-\mathrm{Err}(f^*)]}_{\mathrm{err.\,\,di\,\,stima}}$$`
-
+La scelta di una classe `\(\mathcal{C}\)` molta ricca riduce l'errore di approssimazione ma comporta anche un aumento dell'errore stocastico dovuto al sovra-adattamento ai dati di training
 
 ---
 
-# Classificazione con più di due classi
-
-
-* Variabile risposta con `\(K\)` classi:  `\(Y \in \{1,\ldots, K\}\)` 
-
-* Probabilità di appartenenza ad una certa classe condizionata al valore di `\(x\)`:
-
-`$$p_k(x)=\mathrm{Pr}(Y=k|X=x), \quad k = 1,\ldots,K$$`
-
-* Il classificatore di Bayes dato `\(x\)` risulta
-`$$c(x)=j \quad \mathrm{se} \quad p_j(x)=\max\{p_1(x),\ldots,p_K(x)\}$$`
-* Il classificatore di Bayes minimizza l'errore 
-`$$1-\mathbb{E}\big(\max_j \Pr(Y=j|X)\big)$$`
-
----
-
-
-# Approcci 
-
-* **Discriminativo** Si cerca di modellare direttamente `\(\Pr(Y=k|X=x)\)`
-    - Regressione lineare o logistica
-    - `\(k\)`-NN
-    - *Support vector machine*
-    - Etc.
-
-* **Generativo** Si cerca di modellare `\(\Pr(Y=k|X=x)\)` sfruttando il Teorema di Bayes:
-`$$\Pr(Y=k|X=x) \propto \Pr(X=x|Y=k) \Pr(Y=k)$$`
-    - Analisi Discriminante Lineare o Quadratica
-    - *Naive Bayes*
-    - Etc.
-
----
-
-# Errore di classificazione e accuratezza
+# Errore di training e di test
 
 * Training set: `\((x_1, y_1), (x_2,y_2),\ldots, (x_n,y_n)\)`
 * Test set: `\((x^*_1, y^*_1), (x^*_2,y^*_2),\ldots, (x^*_m,y^*_m)\)`
@@ -124,10 +72,10 @@ dove il valore atteso è rispetto ad `\(X\)`
 
 * __Errore di classificazione (training set)__
 
-`$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} I\{y_i \neq \hat{c}(x_i) \}$$`
+`$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}\{y_i \neq \hat{c}(x_i) \}$$`
 
 * __Errore di classificazione (test set)__
-`$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} I\{y^*_i \neq \hat{c}(x^*_i) \}$$`
+`$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} \mathbb{I}\{y^*_i \neq \hat{c}(x^*_i) \}$$`
 
 * __Accuratezza (test set)__
 `$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$`
@@ -142,7 +90,7 @@ class: inverse, middle, center
 
 ---
 
-# Introduzione
+# Il disastro
 
 l 15 aprile 1912, durante il suo viaggio inaugurale, il Titanic affondò dopo essersi scontrato con un iceberg, causando la morte di 1502 persone (su 2224 tra passeggeri ed equipaggio)
 
@@ -178,7 +126,7 @@ La competizione Kaggle
 
 ```r
 # importazione dei dati
-PATH &lt;- "/Users/aldosolari/Documents/mygithub/DM/dataset/"
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L06/"
 train &lt;- read.csv(paste(PATH,"titanic_tr.csv",sep=""), 
                   header = TRUE, stringsAsFactors = FALSE)
 n &lt;- nrow(train)
@@ -189,6 +137,21 @@ m &lt;- nrow(test)
 combi &lt;- rbind(train, test)
 # controllo la tipologia delle variabili
 str(combi)
+```
+
+```
+'data.frame':	1309 obs. of  11 variables:
+ $ pclass  : int  3 1 3 1 3 3 1 3 3 2 ...
+ $ survived: int  0 1 1 1 0 0 0 0 1 1 ...
+ $ name    : chr  "Braund, Mr. Owen Harris" "Cumings, Mrs. John Bradley (Florence Briggs Thayer)" "Heikkinen, Miss. Laina" "Futrelle, Mrs. Jacques Heath (Lily May Peel)" ...
+ $ sex     : chr  "male" "female" "female" "female" ...
+ $ age     : num  22 38 26 35 35 NA 54 2 27 14 ...
+ $ sibsp   : int  1 1 0 1 0 0 0 3 0 1 ...
+ $ parch   : int  0 0 0 0 0 0 0 1 2 0 ...
+ $ ticket  : chr  "A/5 21171" "PC 17599" "STON/O2. 3101282" "113803" ...
+ $ fare    : num  7.25 71.28 7.92 53.1 8.05 ...
+ $ cabin   : chr  "" "C85" "" "C123" ...
+ $ embarked: chr  "S" "C" "S" "S" ...
 ```
 
 ---
@@ -248,6 +211,33 @@ combi$cabin[combi$cabin==""] &lt;- NA
 summary(combi)
 ```
 
+```
+ pclass   survived       name               sex           age       
+ 1:323   Death:549   Length:1309        female:466   Min.   : 0.17  
+ 2:277   Alive:342   Class :character   male  :843   1st Qu.:21.00  
+ 3:709   NA's :418   Mode  :character                Median :28.00  
+                                                     Mean   :29.88  
+                                                     3rd Qu.:39.00  
+                                                     Max.   :80.00  
+                                                     NA's   :263    
+     sibsp            parch          ticket               fare        
+ Min.   :0.0000   Min.   :0.000   Length:1309        Min.   :  0.000  
+ 1st Qu.:0.0000   1st Qu.:0.000   Class :character   1st Qu.:  7.896  
+ Median :0.0000   Median :0.000   Mode  :character   Median : 14.454  
+ Mean   :0.4989   Mean   :0.385                      Mean   : 33.295  
+ 3rd Qu.:1.0000   3rd Qu.:0.000                      3rd Qu.: 31.275  
+ Max.   :8.0000   Max.   :9.000                      Max.   :512.329  
+                                                     NA's   :1        
+    cabin           embarked     survived01    
+ Length:1309        C   :270   Min.   :0.0000  
+ Class :character   Q   :123   1st Qu.:0.0000  
+ Mode  :character   S   :914   Median :0.0000  
+                    NA's:  2   Mean   :0.3838  
+                               3rd Qu.:1.0000  
+                               Max.   :1.0000  
+                               NA's   :418     
+```
+
 
 ---
 
@@ -257,10 +247,37 @@ library(VIM)
 aggr(combi[,-c(2,12)], prop = FALSE, combined = TRUE, numbers = TRUE, sortVars = TRUE, sortCombs = TRUE)
 ```
 
+![](Titanic_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+```
+
+ Variables sorted by number of missings: 
+ Variable Count
+    cabin  1014
+      age   263
+ embarked     2
+     fare     1
+   pclass     0
+     name     0
+      sex     0
+    sibsp     0
+    parch     0
+   ticket     0
+```
+
 
 ---
 
 
+```
+
+ Missings in variables:
+ Variable Count
+      age   263
+     fare     1
+    cabin  1014
+ embarked     2
+```
 
 ---
 
@@ -272,6 +289,13 @@ aggr(combi[,-c(2,12)], prop = FALSE, combined = TRUE, numbers = TRUE, sortVars =
 combi[which(is.na(combi$fare)), ]
 ```
 
+```
+     pclass survived               name  sex  age sibsp parch ticket fare cabin
+1282      3     &lt;NA&gt; Storey, Mr. Thomas male 60.5     0     0   3701   NA  &lt;NA&gt;
+     embarked survived01
+1282        S         NA
+```
+
 ---
 
 # Sostituzione dei valori mancanti
@@ -279,6 +303,22 @@ combi[which(is.na(combi$fare)), ]
 
 ```r
 aggregate(fare ~ pclass + embarked, combi, FUN=median)
+```
+
+```
+  pclass embarked    fare
+1      1        C 76.7292
+2      2        C 15.3146
+3      3        C  7.8958
+4      1        Q 90.0000
+5      2        Q 12.3500
+6      3        Q  7.7500
+7      1        S 52.0000
+8      2        S 15.3750
+9      3        S  8.0500
+```
+
+```r
 combi$fare[which(is.na(combi$fare))] &lt;- 8.0500
 ```
 
@@ -290,6 +330,15 @@ combi$fare[which(is.na(combi$fare))] &lt;- 8.0500
 ```r
 # 2 valori mancanti in embarked
 combi[which(is.na(combi$embarked)), ]
+```
+
+```
+    pclass survived                                      name    sex age sibsp
+62       1    Alive                       Icard, Miss. Amelie female  38     0
+830      1    Alive Stone, Mrs. George Nelson (Martha Evelyn) female  62     0
+    parch ticket fare cabin embarked survived01
+62      0 113572   80   B28     &lt;NA&gt;          1
+830     0 113572   80   B28     &lt;NA&gt;          1
 ```
 
 ---
@@ -307,8 +356,26 @@ combi[which(is.na(combi$embarked)), ]
 ```r
 # persone diverse hanno lo stesso numero di biglietto
 head(table(combi$ticket))
+```
+
+```
+
+110152 110413 110465 110469 110489 110564 
+     3      3      2      1      1      1 
+```
+
+```r
 # numero di persone che condividono lo stesso biglietto
 table(table(combi$ticket))
+```
+
+```
+
+  1   2   3   4   5   6   7   8  11 
+713 132  49  16   7   4   5   2   1 
+```
+
+```r
 # numero di copie dello stesso biglietto
 combi$ticketFreq &lt;- ave(1:nrow(combi),combi$ticket,FUN=length)
 ```
@@ -325,7 +392,7 @@ combi$price &lt;- combi$fare/combi$ticketFreq
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -333,6 +400,11 @@ combi$price &lt;- combi$fare/combi$ticketFreq
 
 ```r
 boxplot(fare ~ pclass + embarked + sex, data=combi, subset=pclass==1 &amp; sex=="female"); abline(h=80)
+```
+
+![](Titanic_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+```r
 combi$embarked[which(is.na(combi$embarked))] &lt;- c("C","C")
 ```
 
@@ -344,6 +416,19 @@ combi$embarked[which(is.na(combi$embarked))] &lt;- c("C","C")
 ```r
 # Età come funzione di pclass e sex
 aggregate(age ~ pclass + sex, combi, FUN=mean)
+```
+
+```
+  pclass    sex      age
+1      1 female 37.03759
+2      2 female 27.49922
+3      3 female 22.18533
+4      1   male 41.02927
+5      2   male 30.81538
+6      3   male 25.96226
+```
+
+```r
 # Modello lineare
 fit.age &lt;- lm(age ~ sex*pclass, 
           data = combi[!is.na(combi$age),])
@@ -379,11 +464,31 @@ class: inverse, middle, center
 
 ```r
 round(mean(train$survived01),2)
+```
+
+```
+[1] 0.38
+```
+
+```r
 yhat &lt;- rep("Death",m)
 # matrice di confusione
 table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Death   260   158
+```
+
+```r
 # accuratezza
 mean(yhat == testsurvived)
+```
+
+```
+[1] 0.6220096
 ```
 
 ---
@@ -402,7 +507,7 @@ plot(survived ~ sex, train)
 
 .pull-right[
 
-
+![](Titanic_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -415,8 +520,22 @@ phat &lt;- predict(fit, newdata=test, type = "response")
 yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
 # matrice di confusione 
 table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Alive    46   106
+    Death   214    52
+```
+
+```r
 # accuratezza
 mean(yhat == testsurvived)
+```
+
+```
+[1] 0.7655502
 ```
 
 ---
@@ -430,17 +549,23 @@ Prima i bambini? Qual è la relazione tra età e sopravvivenza?
 summary(glm(survived ~ age, train, family="binomial"))$ coefficients 
 ```
 
+```
+                Estimate Std. Error   z value  Pr(&gt;|z|)
+(Intercept) -0.193249397 0.16694357 -1.157573 0.2470383
+age         -0.009628612 0.00526435 -1.829022 0.0673963
+```
+
 ---
 
 
 .pull-left[
-
+![](Titanic_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 ]
 
 
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -458,7 +583,7 @@ plot(survived~pclass, train)
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -471,21 +596,35 @@ phat &lt;- predict(fit, newdata=test, type = "response")
 yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
 # matrice di confusione
 table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Alive    43    64
+    Death   217    94
+```
+
+```r
 # accuratezza
 mean(yhat == testsurvived)
+```
+
+```
+[1] 0.6722488
 ```
 
 ---
 
 # Età e classe
 
-
+![](Titanic_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
 
 ---
 
 # Albero di classificazione
 
-
+![](Titanic_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -500,6 +639,8 @@ library(rpart.plot)
 fit &lt;- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =  3))
 rpart.plot(fit, type=0, extra=2)
 ```
+
+![](Titanic_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -519,8 +660,22 @@ rpart.plot(fit, type=0, extra=2)
 yhat &lt;- predict(fit, newdata=test, type="class")
 # matrice di confusione
 table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Death   215    86
+    Alive    45    72
+```
+
+```r
 # accuratezza
 mean(yhat == testsurvived)
+```
+
+```
+[1] 0.6866029
 ```
 
 ---
@@ -528,11 +683,11 @@ mean(yhat == testsurvived)
 # Genere e classe
 
 .pull-left[
-
+![](Titanic_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -540,11 +695,11 @@ mean(yhat == testsurvived)
 # Genere e età
 
 .pull-left[
-
+![](Titanic_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -552,7 +707,7 @@ mean(yhat == testsurvived)
 
 # Bontà delle previsioni
 
-Logistic model
+Modello logistico
 
 | Predictors | Acc.Tr | Acc.Te |
 |------------|-------|--------|
@@ -579,11 +734,31 @@ class: inverse, middle, center
 
 ```r
 combi$name[1]
+```
+
+```
+[1] "Braund, Mr. Owen Harris"
+```
+
+```r
 library(dplyr)
 library(stringr)
 combi &lt;- combi %&gt;% 
      mutate(title = str_extract(name, "[a-zA-Z]+\\."))
 table(combi$title)
+```
+
+```
+
+    Capt.      Col. Countess.      Don.     Dona.       Dr. Jonkheer.     Lady. 
+        1         4         1         1         1         8         1         1 
+   Major.   Master.     Miss.     Mlle.      Mme.       Mr.      Mrs.       Ms. 
+        2        61       260         2         1       757       197         2 
+     Rev.      Sir. 
+        8         1 
+```
+
+```r
 combi$title &lt;- factor(combi$title)
 ```
 
@@ -593,6 +768,8 @@ combi$title &lt;- factor(combi$title)
 ```r
 plot(survived ~ title, combi[1:n,])
 ```
+
+![](Titanic_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -610,7 +787,7 @@ plot(survived ~ wbm, combi[1:n,])
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -623,6 +800,12 @@ plot(survived ~ wbm, combi[1:n,])
 ```r
 # the first character of cabin is the deck
 table(substr(combi$cabin, 1, 1))
+```
+
+```
+
+ A  B  C  D  E  F  G  T 
+22 65 94 46 41 21  5  1 
 ```
 ]
 
@@ -643,7 +826,7 @@ plot(survived ~ familysize, combi[1:n,])
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -660,7 +843,7 @@ plot(survived ~ surnameFreq, combi[1:n,])
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-41-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -678,7 +861,7 @@ plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 ]
 
 .pull-right[
-
+![](Titanic_files/figure-html/unnamed-chunk-43-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -697,7 +880,7 @@ plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 
 ---
 
-# Confronto tra modellu
+# Confronto tra modelli
 
 | Model | Acc.Tr | Acc.Te |
 |---|----|----|

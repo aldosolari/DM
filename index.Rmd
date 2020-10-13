@@ -36,6 +36,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare KJ 1; AS 2; WG 3, 5, 7, 22, 24
 
 * L06 (13 Ottobre 12:30 - 15:30) SINCRONA
+  * [I dati Netflix](docs/lezioni/L06/Netflix.html)
+  * [I dati Titanic](docs/lezioni/L06/Titanic.html)
 
 * L07 (15 Ottobre 9:30 - 12:30) 
 

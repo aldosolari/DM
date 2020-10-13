@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## I dati Netflix
+### Aldo Solari
+
+---
+
+
+
+
+Carichiamo solo i dati di training (senza considerare le date)
+
+
+```r
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+X &lt;- read.table(paste(PATH,"Train_ratings_all.dat", sep=""))
+titles &lt;- read.table(paste(PATH,"Movie_titles.txt", sep=""), sep=",")
+names(X) &lt;- substr(as.character(titles[,2]),1,20)
+y &lt;- read.table(paste(PATH,"Train_y_rating.dat", sep=""))
+names(y) &lt;- "y"
+```
+
+---
+
+% di valori mancanti per film?
+
+
+```r
+barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
+```
+
+![](Netflix_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+
+
+---
+
+Come è stato valutato il film Miss Congeniality?
+
+.pull-left[
+
+```r
+table(y)
+```
+
+```
+y
+   1    2    3    4    5 
+ 213  865 3378 3648 1896 
+```
+]
+
+.pull-right[
+
+```r
+plot(table(y)/nrow(X))
+```
+
+![](Netflix_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+Valutazione media rispetto ai film senza dati mancanti?
+
+
+```r
+sort(apply(data.frame(X[,1:14],y),2,mean))
+```
+
+```
+                   y   Sweet.Home.Alabama The.Day.After.Tomorr 
+              3.6149               3.6749               3.7045 
+     What.Women.Want              Con.Air         Pearl.Harbor 
+              3.7060               3.7287               3.7316 
+             Twister             The.Rock           Armageddon 
+              3.7546               4.0168               4.0183 
+        Pretty.Woman          The.Patriot     Independence.Day 
+              4.0748               4.1073               4.1463 
+Pirates.of.the.Carib       The.Green.Mile         Forrest.Gump 
+              4.3482               4.4563               4.5143 
+```
+
+---
+
+Quali sono i film (senza dati mancanti) correlati con Miss Congeniality?
+
+
+```r
+cor(X[,1:14],y)
+```
+
+```
+                              y
+Independence Day     0.24162763
+The Patriot          0.17759425
+The Day After Tomorr 0.25891344
+Pirates of the Carib 0.18422559
+Pretty Woman         0.33229913
+Forrest Gump         0.05705839
+The Green Mile       0.15723339
+Con Air              0.26409257
+Twister              0.29339065
+Sweet Home Alabama   0.41202983
+Pearl Harbor         0.26412197
+Armageddon           0.26165660
+The Rock             0.19529609
+What Women Want      0.34656778
+```
+
+---
+
+Divisione in training e test
+
+
+```r
+m &lt;- 2000
+n &lt;- nrow(X) - m
+set.seed(123)
+test.id &lt;- sample(n+m,m)
+test &lt;- data.frame(y=y[test.id,], X[test.id,])
+train &lt;- data.frame(y=y[-test.id,], X[-test.id,])
+```
+
+Modello nullo
+
+
+```r
+yhat0 &lt;- mean(train$y)
+# RMSE.te
+sqrt(mean((test$y-yhat0)^2))
+```
+
+```
+[1] 0.9560507
+```
+
+---
+
+Modello lineare (con i valori mancanti codificati = 0)
+
+
+```r
+fit1 &lt;- lm(y ~ ., train)
+# RMSE.tr
+sqrt(mean((train$y-fitted(fit1))^2))
+```
+
+```
+[1] 0.7611544
+```
+
+```r
+# RMSE.te
+yhat1 &lt;- predict(fit1, newdata=test)
+sqrt(mean((test$y-yhat1)^2))
+```
+
+```
+[1] 0.7822294
+```
+
+```r
+# un piccolo accorgimento
+yhat2 &lt;- pmin(yhat1,5)
+sqrt(mean((test$y-yhat2)^2))
+```
+
+```
+[1] 0.7821606
+```
+
+---
+
+Modello lineare con i film senza dati mancanti
+
+
+```r
+train14 &lt;- train[,1:15]; fit3 &lt;- lm(y ~ ., train14); summary(fit3)$coefficients
+```
+
+```
+                         Estimate Std. Error    t value     Pr(&gt;|t|)
+(Intercept)           0.341724285 0.09032965  3.7830799 1.560316e-04
+Independence.Day      0.050440064 0.01325064  3.8066125 1.419371e-04
+The.Patriot          -0.020051632 0.01160663 -1.7276020 8.409828e-02
+The.Day.After.Tomorr  0.047758480 0.01080414  4.4203878 9.982651e-06
+Pirates.of.the.Carib  0.067028134 0.01190966  5.6280466 1.884303e-08
+Pretty.Woman          0.164142506 0.01155000 14.2114759 2.764859e-45
+Forrest.Gump         -0.078750454 0.01330751 -5.9177471 3.398530e-09
+The.Green.Mile        0.041720419 0.01340504  3.1122926 1.862959e-03
+Con.Air               0.072018911 0.01218768  5.9091561 3.579767e-09
+Twister               0.089302280 0.01169862  7.6335743 2.547314e-14
+Sweet.Home.Alabama    0.229353823 0.01084727 21.1439235 1.345376e-96
+Pearl.Harbor          0.039194007 0.01045236  3.7497757 1.782437e-04
+Armageddon            0.012692268 0.01274345  0.9959837 3.192882e-01
+The.Rock             -0.009923535 0.01280086 -0.7752238 4.382304e-01
+What.Women.Want       0.154181153 0.01142401 13.4962328 4.630644e-41
+```
+
+```r
+yhat3 &lt;- predict(fit3, newdata=test); sqrt(mean((test$y-yhat3)^2))
+```
+
+```
+[1] 0.8229959
+```
+
+---
+
+# Regressione lineare multidimensionale
+
+Si veda AS 2.1.3
+
+Se ci sono `\(q\)` variabili risposta `\(\underset{n \times q}{Y}\)`, e consideriamo `\(q\)` modelli di regressione lineare usando la stessa matrice del disegno `\(\underset{n \times p}{X}\)`, arriviamo alla formulazione
+`$$\underset{n \times q}{Y} = \underset{n \times p}{X} \underset{p \times q}{B} + \underset{n \times q}{E}$$`
+dove `\(B\)` è la matrice formata da `\(q\)` colonne di dimensione `\(p\)`, ciascuna delle quali rappresenta i parametri di regressione per la corrispondente colonna di `\(Y\)`, e la matrice `\(E\)` è costituita di termini di errore tali che
+`$$\mathbb{V}\mathrm{ar}(e_i) = \Sigma$$`
+dove `\(e_i^\mathsf{T}\)` rappresenta la `\(i\)`-sima riga di `\(E\)`, per `\(i=1,\ldots,n\)`, e `\(\Sigma\)` è la matrice di varianza/covarianza che esprime la correlazione delle variabili risposta. Allora la soluzione del problema dei minimi quadrati multidimensionali è 
+`$$\hat{B} = (X^\mathsf{T} X)^{-1}X^\mathsf{T} Y$$` 
+che sono i `\(q\)` vettori stimati per ciascuna variabile risposta, 
+mentre la stima di `\(\Sigma\)` è 
+`\(\hat{\Sigma} = \frac{1}{n-p} Y^\mathsf{T} H Y\)`
+
+---
+
+Per i dati Neflix, la variabile risposta `\(Y\in \mathcal{Y}=\{1,2,3,4,5\}\)`. Sia 
+
+
+
+`$$Y_j = \left\{\begin{array}{cc}
+1 &amp; \mathrm{se\,\,} Y = j\\
+0 &amp; \mathrm{altrimenti}
+\end{array}\right.$$`
+
+per `\(j\in \mathcal{Y}\)`. Si noti che con il modello lineare per la `\(j\)`-ma variabile risposta `\(Y_j\)` possiamo stimare `$$f(x) = \mathbb{E}(Y_j|X=x) = \mathbb{P}(Y_j=1|X=x)$$`
+
+Possiamo inoltre stimare il valore atteso condizionato
+`$$\mathbb{E}(Y|X=x) = \sum_{j \in \mathcal{Y} } j \cdot \mathbb{P}(Y=j|X=x)$$`
+---
+
+
+```r
+q = 5
+Y = matrix(0, nrow=n, ncol=q)
+for (j in 1:q) Y[train$y==j,j]=1
+X.tr = as.matrix(cbind(1,X[-test.id,]))
+Bhat = solve(t(X.tr) %*% X.tr) %*% t(X.tr) %*% Y
+X.te = as.matrix(cbind(1,X[test.id,]))
+Yhat = X.te %*% Bhat
+yhat3 &lt;- (1:q)[apply(Yhat, 1, which.max)]
+sqrt(mean((test$y-yhat3)^2))
+```
+
+```
+[1] 0.8840249
+```
+
+```r
+yhat4 = Yhat %*% 1:q
+sqrt(mean((test$y-yhat4)^2))
+```
+
+```
+[1] 0.7822294
+```
+
+---
+
+
+```r
+## SOTTOMISSIONE DI PROVA SU BEEVIVA
+# PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+# X.tr = read.table(paste(PATH,"Train_ratings_all.dat", sep=""))
+# y.tr = read.table (paste(PATH,"Train_y_rating.dat", sep=""))
+# train = data.frame (X.tr, y=y.tr$V1)
+# X.te = read.table(paste(PATH,"Test_ratings_all.dat", sep=""))
+# test = data.frame (X.te)
+# fit = lm(y~.,data=train)
+# yhat = predict(fit, newdata=test)
+# write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLanguage": "R",
+"countIncrementalSlides": false,
+"highlightLines": true
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
