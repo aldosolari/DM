@@ -39,7 +39,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * [I dati Netflix](docs/lezioni/L06/Netflix.html)
   * [I dati Titanic](docs/lezioni/L06/Titanic.html)
 
-* L07 (15 Ottobre 9:30 - 12:30) 
+* L07 (15 Ottobre 9:30 - 12:30) SINCRONA
+  * [Bagging e Foreste Casuali](docs/lezioni/L07/BaggingFC.html)
 
 * L08 (19 Ottobre 14:30 - 16:30) 
 

@@ -22,6 +22,23 @@ class: center, middle, inverse, title-slide
 
 
 
+# Sottomissione di prova su BeeViva
+
+
+```r
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+X.tr = read.table(paste(PATH,"Train_ratings_all.dat", sep=""))
+y.tr = read.table (paste(PATH,"Train_y_rating.dat", sep=""))
+train = data.frame (X.tr, y=y.tr$V1)
+X.te = read.table(paste(PATH,"Test_ratings_all.dat", sep=""))
+test = data.frame (X.te)
+fit = lm(y~.,data=train)
+yhat = predict(fit, newdata=test)
+write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
+```
+
+---
+
 Carichiamo solo i dati di training (senza considerare le date)
 
 
@@ -43,7 +60,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 
 
@@ -70,7 +87,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -98,7 +115,7 @@ Pirates.of.the.Carib       The.Green.Mile         Forrest.Gump
 
 ---
 
-Quali sono i film (senza dati mancanti) correlati con Miss Congeniality?
+Quali sono i film (senza dati mancanti) maggiormente correlati con Miss Congeniality?
 
 
 ```r
@@ -235,23 +252,24 @@ dove `\(e_i^\mathsf{T}\)` rappresenta la `\(i\)`-sima riga di `\(E\)`, per `\(i=
 `$$\hat{B} = (X^\mathsf{T} X)^{-1}X^\mathsf{T} Y$$` 
 che sono i `\(q\)` vettori stimati per ciascuna variabile risposta, 
 mentre la stima di `\(\Sigma\)` è 
-`\(\hat{\Sigma} = \frac{1}{n-p} Y^\mathsf{T} H Y\)`
+`\(\hat{\Sigma} = \frac{1}{n-p} Y^\mathsf{T}(I_n - H) Y\)`
 
 ---
 
 Per i dati Neflix, la variabile risposta `\(Y\in \mathcal{Y}=\{1,2,3,4,5\}\)`. Sia 
-
-
 
 `$$Y_j = \left\{\begin{array}{cc}
 1 &amp; \mathrm{se\,\,} Y = j\\
 0 &amp; \mathrm{altrimenti}
 \end{array}\right.$$`
 
-per `\(j\in \mathcal{Y}\)`. Si noti che con il modello lineare per la `\(j\)`-ma variabile risposta `\(Y_j\)` possiamo stimare `$$f(x) = \mathbb{E}(Y_j|X=x) = \mathbb{P}(Y_j=1|X=x)$$`
+per `\(j\in \mathcal{Y}\)`. Otteniamo quindi una variabile risposta multidimensionale `\(\underset{n \times 5}{Y}\)`. 
 
+Si noti che dal modello lineare per la `\(j\)`-ma variabile risposta `\(Y_j\)` possiamo stimare `$$f(x) = \mathbb{E}(Y_j|X=x) = \mathbb{P}(Y_j=1|X=x)$$`
 Possiamo inoltre stimare il valore atteso condizionato
 `$$\mathbb{E}(Y|X=x) = \sum_{j \in \mathcal{Y} } j \cdot \mathbb{P}(Y=j|X=x)$$`
+In questo caso il risultato coincide con quanto ottenuto dal modello lineare con risposta unidimensionale `\(Y\)`.
+
 ---
 
 
@@ -280,20 +298,8 @@ sqrt(mean((test$y-yhat4)^2))
 [1] 0.7822294
 ```
 
----
-
-
 ```r
-## SOTTOMISSIONE DI PROVA SU BEEVIVA
-# PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
-# X.tr = read.table(paste(PATH,"Train_ratings_all.dat", sep=""))
-# y.tr = read.table (paste(PATH,"Train_y_rating.dat", sep=""))
-# train = data.frame (X.tr, y=y.tr$V1)
-# X.te = read.table(paste(PATH,"Test_ratings_all.dat", sep=""))
-# test = data.frame (X.te)
-# fit = lm(y~.,data=train)
-# yhat = predict(fit, newdata=test)
-# write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
+# si confronti yhat4 con yhat1
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
