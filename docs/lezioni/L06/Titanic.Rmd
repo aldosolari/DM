@@ -269,7 +269,7 @@ points(price ~ ticketFreq, combi, subset=pclass==3, col=2)
 ---
 
 ```{r}
-boxplot(fare ~ pclass + embarked + sex, data=combi, subset=pclass==1 & sex=="female"); abline(h=80)
+boxplot(price ~ pclass + embarked + sex, data=combi, subset=pclass==1 & sex=="female"); abline(h=40)
 combi$embarked[which(is.na(combi$embarked))] <- c("C","C")
 ```
 
