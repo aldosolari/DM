@@ -6,6 +6,8 @@
     <meta name="author" content="Aldo Solari" />
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
   </head>
   <body>
     <textarea id="source">
@@ -91,11 +93,11 @@ ms
 ```
 Unit: milliseconds
                                  expr      min       lq     mean   median
-     solve(t(X) %*% X) %*% t(X) %*% y 7.314035 7.898158 8.286544 8.077520
- solve(crossprod(X), crossprod(X, y)) 2.945594 3.110722 3.194557 3.166287
+     solve(t(X) %*% X) %*% t(X) %*% y 7.515607 8.086387 9.054039 8.323334
+ solve(crossprod(X), crossprod(X, y)) 3.081143 3.178645 3.305489 3.242446
        uq       max neval
- 8.359393 16.050011   100
- 3.267438  3.641133   100
+ 8.975729 29.061958   100
+ 3.354523  4.219635   100
 ```
 
 ---
@@ -294,10 +296,10 @@ La decomposizione QR (ridotta) prevede
 dove `\(Q\)` è una matrice ortogonale tale che `\(Q^\mathsf{T} Q = I\)`, ed `\(R\)` è una matrice triangolare superiore, quindi
 $$
 `\begin{aligned}
-X^\mathsf{T}X \beta= X^\mathsf{T} y\\
-R^\mathsf{T} Q^\mathsf{T} Q R = R^\mathsf{T} Q^\mathsf{T} y\\
-R^\mathsf{T} R = R^\mathsf{T} Q^\mathsf{T} y\\
- R =  Q^\mathsf{T} y\\
+X^\mathsf{T}X \beta &amp;= X^\mathsf{T} y\\
+R^\mathsf{T} Q^\mathsf{T} Q R \beta &amp;= R^\mathsf{T} Q^\mathsf{T} y\\
+R^\mathsf{T} R \beta &amp;= R^\mathsf{T} Q^\mathsf{T} y\\
+ R \beta &amp;=  Q^\mathsf{T} y\\
 \end{aligned}`
 $$
 

@@ -243,10 +243,10 @@ $$\underset{n \times p}{X} = \underset{n \times p}{Q}\underset{p \times p}{R}$$
 dove $Q$ è una matrice ortogonale tale che $Q^\mathsf{T} Q = I$, ed $R$ è una matrice triangolare superiore, quindi
 $$
 \begin{aligned}
-X^\mathsf{T}X \beta= X^\mathsf{T} y\\
-R^\mathsf{T} Q^\mathsf{T} Q R = R^\mathsf{T} Q^\mathsf{T} y\\
-R^\mathsf{T} R = R^\mathsf{T} Q^\mathsf{T} y\\
- R =  Q^\mathsf{T} y\\
+X^\mathsf{T}X \beta &= X^\mathsf{T} y\\
+R^\mathsf{T} Q^\mathsf{T} Q R \beta &= R^\mathsf{T} Q^\mathsf{T} y\\
+R^\mathsf{T} R \beta &= R^\mathsf{T} Q^\mathsf{T} y\\
+ R \beta &=  Q^\mathsf{T} y\\
 \end{aligned}
 $$
 
