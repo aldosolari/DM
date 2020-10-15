@@ -308,7 +308,7 @@ class: inverse, middle, center
 
 # Modello nullo 
 
-* Training set: 38.38% di passeggeri è sopravvissuto, 61.62% no
+* Training set: il 38.38% dei passeggeri è sopravvissuto
 * Il modello nullo utilizza solo $y$ e prevede 'nessun sopravvissuto'
 
 ```{r}
@@ -369,7 +369,7 @@ summary(glm(survived ~ age, train, family="binomial"))$ coefficients
 .pull-left[
 ```{r, echo=FALSE}
 ageclass = cut(train$age, breaks = c(0,10,20,30,40,50,60,70,80))
-barplot(prop.table(table(train$survived,ageclass),2), xlab="Age class")
+barplot(prop.table(table(train$survived01==0,ageclass),2), xlab="Age class")
 ```
 ]
 
@@ -387,7 +387,7 @@ plot(survived ~ age, train)
 
 .pull-left[
 
-Le presone benestanti hanno maggiore probabilità di sopravvivenza?
+I passeggeri che viaggiavano in prima classe hanno avuto maggiore probabilità di sopravvivenza?
 
 ```{r, eval=F}
 plot(survived~pclass, train)
