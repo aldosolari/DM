@@ -23,70 +23,44 @@ class: center, middle, inverse, title-slide
 
 
 
-# Outline
+# Combinazione di modelli
 
+In molte situazioni concrete, diverse modelli sembrano adattarsi bene ai dati e non sembra essercene uno di preferibile.
 
-* Bagging
+In maniera analoga e forse più evidente, la previsione attraverso metodi più instabili, come ad esempio alberi decisionali, è fortemente influenzata dalla scelta specifica dell'insieme di dati usato per la stima. 
 
-* Spam data
+Se tale insieme viene modificato di poco, si può ottenere un modello completamente diverso dall'originale, con circa lo stesso errore di previsione. Molti modelli possono quindi, risultare simili in termini di errore di previsione, ma molto diversi in quanto a forma.
 
-* Random forests
+Per tentare di migliorare la capacità previsiva di ciascun modello, una possibilità è quella di combinare le previsione ottenute da modelli diversi. 
 
----
+L'apprendimento di insieme (*ensemble learning*) produce un modello che in qualche maniera raccoglie le qualità delle singole componenti e per questo spesso porta a previsioni più accurate.
 
-# Ensemble methods
+Per ottenere una combinazione di modelli, ci sono diversi approcci: in questa lezione vedremo il *bagging* e la foresta casuale (*random forest*).
 
-* Ensemble methods are techniques that create multiple
-models and then combine them to produce improved results
-
-* These models, when used as inputs of ensemble methods,
-are often called __weak learners__
-
-* Ensemble learning is appealing because that it is able to
-boost weak learners which are slightly better than random
-guess to strong learners which can make very accurate
-predictions
-
-* However, ensemble methods increases __computation time__ and
-reduces __interpretability__
-
-* For example, classification and regression trees are simple and useful for interpretation. However they  are typically not competitive with other approaches in terms of prediction accuracy
-
-* We will see that ensemble methods such as __bagging__ and __random forests__ grow multiple trees which are then combined to yield a single prediction. Combining a large number of trees can often result in
-dramatic improvements in prediction accuracy, at the
-expense of some interpretation loss
+Tuttavia, i metodi di ensemble richiedono un maggiore costo computazionale e spesso si perde l'interpretabilità dei risultati.
 
 ---
 
-# Instability of trees
+# Instabilità degli alberi decisionali
 
-* The primary disadvantage of trees is that they are rather
-unstable (high variance)
+Uno degli svantaggi principali degli alberi decisionali è che sono piuttosto
+instabili (hanno variabilità elevata ). Spesso una piccola modifica nei dati di training si traduce nella costruzione di un albero completamente diverso. 
 
-* In other words, a small change in the data often results in a completely different tree
+La ragione principale di 
+questa instabilità è che se ad un certo livello dell'alberto cambia la regola di suddivisione (*split*), cambiano anche tutte suddivisioni sottostanti, propagando così la variabilità.
 
-* One major reason for this instability is that if a split changes, all the splits under it change as well, thereby propagating the variability
-
-* We will learn how to control the variance, or __stabilize__ the predictions made by trees
-
-* In  doing so, we can greatly improve prediction accuracy but we suffer in terms of interpretability
 
 ---
 
-# The boostrap 
+# Il bootstrap 
 
-* The __bootstrap__ is an useful resampling tool in statistics
-
-* A bootstrap sample of size `\(n\)` from the training data is
+Il *bootstrap* è una procedura di ricampionamento. Un campione bootstrap di ampiezza `\(n\)` ottenuto a partire dai dati di training è dato da
 `$$(\tilde{x}_1, \tilde{y}_1), (\tilde{x}_2, \tilde{y}_2), \ldots, (\tilde{x}_n, \tilde{y}_n)$$`
-where each `\((\tilde{x}_i, \tilde{y}_i)\)` are drawn from uniformly at random from `$$(x_1, y_1), (x_2, y_2), \ldots, (x_n, x_n)$$` with __replacement__
+dove ciascuna osservazione `\((\tilde{x}_i, \tilde{y}_i)\)` si ottiene estraendo con ripetizione le osservazioni dei dati di training `$$(x_1, y_1), (x_2, y_2), \ldots, (x_n, x_n)$$` 
 
-* Not all of the training points are represented in a bootstrap sample, and some are represented more than once. The probability for one observation not to be drawn in one draw is `\(1 - \frac{1}{n}\)`
-
-* For large `\(n\)`, the probability for one observation not to be drawn in any of the `\(n\)` draws is
+Non tutte le osservazioni del training set sono presenti in un campione bootstrap e alcune sono presenti più volte. La probabilità che un'osservazione originale non venga selezionata in una singola estrazione è `\(1 - \ frac {1} {n}\)`. Per `\(n\)` elevato, la probabilità che un'osservazione originale non venga estratta in nessuna delle `\(n\)` estrazioni è
 `$$\lim_{n\rightarrow \infty} \left(1- \frac{1}{n}\right)^n = \frac{1}{e} \approx 0.368$$`
-
-* We can expect `\(\approx 1/3\)` of the `\(n\)` original observations to be __out-of-bag__ (OOB)
+Ci possiamo quindi aspettare che circa `\(\approx 1/3\)` delle `\(n\)` osservazioni originali saranno escluse dal campione bootrap (*out-of-bag*, OOB).
 
 ---
 
@@ -116,29 +90,24 @@ table(table(bagged))
 379 178  61  18   2 
 ```
 
-
----
-layout: false
-class: inverse, middle, center
-
-# Bagging
-
 ---
 
-# Bagging trees
+# Bagging 
 
-* Bootstrap AGGregation, or __bagging__, is a general procedure for reducing the variance of a model and it is particularly useful in the case of regression or classification trees
+*Bootstrap AGGregation*, o *bagging*, è una procedura generale per ridurre la variabilità di un modello, e risulta particolarmente utile nel caso di alberi di regressione o di classificazione. 
 
-1. Generate `\(B\)` different bootstrapped training sets
+L'algoritmo prevede di
+
+1. Generare `\(B\)` campioni boostrap dal training set
 `$$(\tilde{x}_1^b, \tilde{y}_1^b), (\tilde{x}_2^b, \tilde{y}_2^b), \ldots, (\tilde{x}_n^b, \tilde{y}_n^b), \qquad b=1,\ldots,B$$`
 
-2. Fit a regression tree `\(\hat{f}^{b}\)` or a classification tree `\(\hat{c}^{b}\)` for each bootstrapped training set 
+2. Stimare un albero di regressione `\(\hat{f}^{b}\)` o di classificazione `\(\hat{c}^{b}\)` utilizzando ciascun campione bootstrap;
 
-3. Average all the predictions:
+3. Calcolare la media delle previsioni
 `$$\bar{f}(x) = \frac{1}{B} \sum_{b=1}^{B} \hat{f}^{b}(x)$$`
-for regression trees and
+per gli alberi di regressione o la moda
 `$$\bar{c}(x) = \mathrm{Mode}\{\hat{c}^{b}(x),b=1,\ldots,B\}$$`
-for classification trees (**consensus**)
+per gli alberi di classificazine (che rappresenta il voto di maggioranza, o *consensus*).
 
 ---
 
@@ -161,28 +130,23 @@ ESL p. 285: Bagging helps decrease the misclassification rate of the classifier 
 
 ---
 
-# Bagging estimates of class probabilities
+# Bagging per problemi di classificazione
 
-* For a classification problem with `\(K\)` classes, we may want to estimate the class probabilities out of our bagging procedure
+Per un problema di classificazione con `\(K\)` classi, è possibile stimare le probabilità di appartenza a ciascuna classe utilizzando il bagging.
 
-* What about using the proportion of votes that were for each class? This is generally not a good estimate
-
-* Classification trees already gives us a set of
-predicted class probabilities at `\(x\)`: `\(\hat{p}_k^b(x), k=1,\ldots,K\)`. These are simply the proportion of points in the appropriate region that are in each class
-
-* The bagging estimates of class probabilities are given by
+Gli alberi di classificazione fornisco una stima delle probabilità di appartenza a ciascuna classe dato `\(x\)`: `\(\hat{p}_k^b(x), k=1,\ldots,K\)`. La stima bagging è data dalla semplice media 
 `$$\bar{p}_k(x) = \frac{1}{B} \sum_{b=1}^{B} \hat{p}_k^{b}(x), \quad k=1,\ldots,K$$`
+La classificazione finale del bagging corrisponde alla classe con maggiore probabilità.
 
-* The final bagged classifier just chooses the class with the highest probability
 
-* This form of bagging is preferred if it is desired to get estimates of the class probabilities. Also, it can sometimes help the overall prediction accuracy
+Questa variante del bagging è preferibile se si desidera ottenere stime delle probabilità di classe.
 
 ---
 
-# Breiman (1996) Bagging predictors
+# Breiman (1996) Bagging Predictors. *Machine learning*
 
-Example from the original Breiman paper on bagging: comparing
-the misclassification error of the CART tree (pruning performed by cross-validation) and of the bagging classifier (with `\(B = 50\)`):
+Confronto in termini di errore di classificazione tra l'albero decisionale (algoritmo CART, potatura dell'albero mediante convalida incrociata) e il classificatore *bagging* (con `\(B=50\)` campioni bootstrap).
+
 
 | Data set | CART | Bagging |
 |---|---|----|---|
@@ -196,16 +160,15 @@ the misclassification error of the CART tree (pruning performed by cross-validat
 
 ---
 
-# Out-of-bag error
+# Stima dell'errore di previsione mediante osservazioni *OOB*
 
-* Each bagged tree makes use of `\(\approx 2/3\)` of the original observations
+Un albero decisionale costruito su un campione boostrap utilizza circa `\(\approx 2/3\)` delle osservazioni originali.
 
-* We can predict the response for the `\(i\)`th observation using
-each of the bagged trees in which that observation was OOB
+Possiamo quindi prevedere la risposta per l' `\(i\)`-sima osservazione utilizzando gli alberi per i quali quell'osservazione risulta OOB.
 
-* This yields `\(\approx B/3\)` predictions for the `\(i\)`th observation, which we average (probability or consensus)
+Questo produce circa `\(B/3\)` previsioni per l'osservazione `\(i\)`-sima, che combiniamo calcolando la media (delle previsioni o della probabilità stimate) o la moda. 
 
-* This estimate is essentially the LOOCV error for bagging, if `\(B\)` is large
+Si può quindi stimare l'errore di previsione senza ricorrere a soluzioni come la convalida incrociata.
 
 ---
 
@@ -235,25 +198,26 @@ Matt Brittin. CEO Google UK
 
 ---
 
-# Spam data
+# Dati Spam
 
 
-* 4601 email messages sent to `George` at HP-Labs
+4601 email inviate a `George`, un dipendente di Hewlett-Packard
 
-* He labeled 1813 of these as `spam`, with the remainder being `good` email 
+George ha etichettato 1813 e-mail come `spam`, mentre le rimandenti come `good` 
 
-* The goal is to build a customized spam filter for George: predict whether an e-mail message is `spam` or `good`
+L'obiettivo è di costruire un filtro spam per George, ovvero prevedere se una e-mail è  `spam` oppure `good`
 
-* Recorded for each email message is the relative frequency of certain key words (e.g. `business` , `address` , `free` ,  `George`) and certain characters: ( , [ , ! , $ , \#. Included as well are three different recordings of capitalized letters
+Per ciascuna email sono state registrate le frequenze relative di alcune parole chiave
+e.g. `business` , `address` , `free` ,  `George`, etc.
+e di certi caratteri: ( , [ , ! , $ , \#. Sono incluse anche tre diverse registrazioni di lettere maiuscole
 
-* Publicly available dataset, available from the [UC Irvine data repository](archive.ics.uci.edu/ml/datasets/Spambase).  More details about the data can be found [here](https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names)
+Si tratta di un dataset accessibile al pubblico, disponibile presso  [UC Irvine data repository](archive.ics.uci.edu/ml/datasets/Spambase).  Ulteriori informazioni su questi dati sono disponibili [qui](https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.names)
 
-* For this problem not all errors are equal; we want to avoid filtering
-out good e-mail, while letting spam get through is not desirable but
-less serious in its consequences
+Per questo problema non tutti gli errori sono uguali: è preferibile evitare di filtrare
+email "buone", mentre lasciare passare lo spam non è desiderabile ma ha conseguenze meno gravi
 
-* We will evaluate predictions in terms of accuracy and __specificity__, i.e.
-`$$\frac{\# \mathrm{\,\,correctly\,\,predicted\,\,emails}}{\# \mathrm{\,\,true\,\,emails}}$$`
+Per questo motivo valuteremo le previsioni sia in termini di accuratezza che di specificità:
+`$$\frac{\# \mathrm{\,\,email\,\,buone\,\,previste\,\,correttamente}}{\# \mathrm{\,\,email\,\,buone}}$$`
 
 ---
 
@@ -269,7 +233,7 @@ ESL, Table 1.1: Average percentage of words or characters in an email message eq
 
 
 ```r
-#Load the data and split into training and test sets.
+## Caricamento dei dati e suddivisione in training e test
 rm(list=ls())
 spam &lt;- read.csv("https://web.stanford.edu/~hastie/CASI_files/DATA/SPAM.csv",header=T)
 spam$spam = as.factor(ifelse(spam$spam==T,"spam","email"))
@@ -284,7 +248,7 @@ m = nrow(test)
 
 
 ```r
-# A function to calculate prediction accuracy and specificity 
+# Una funzione per calcolare l'accuratezza e la specificità 
 score &lt;- function(phat, truth, name="model") {
   ctable &lt;- table(truth=truth,
                   yhat=(phat&gt;0.5))
@@ -296,13 +260,13 @@ score &lt;- function(phat, truth, name="model") {
 
 ---
 
-# Null model
+# Modello nullo
 
 
 ```r
 phat.null = rep(mean(train$spam=="spam"),m)
 yhat.null = ifelse(phat.null&gt;.5,"spam","email")
-# confusion matrix
+## matrice di confusione
 table(Predicted=yhat.null, True=test$spam)
 ```
 
@@ -313,7 +277,7 @@ Predicted email spam
 ```
 
 ```r
-# score
+## score
 score(phat.null, test$spam, name="null")
 ```
 
@@ -324,7 +288,7 @@ score(phat.null, test$spam, name="null")
 
 ---
 
-# Classification tree
+# Albero di classificazione
 
 
 ```r
@@ -390,45 +354,72 @@ plot(1:B, spec, xlab="Bagging iterations", ylab="Specificity", type="l")
 
 ---
 
-# Random forests
+# Foreste casuali
 
-* Create even more variation in individual trees
+L'idea delle foreste casuali è rendere ancora più diversi gli alberi costruiti sui campioni boostrap.
 
-* Bagging varies the __rows__ of the training set (randomly draw observations)
+Da un punto di vista algoritmico:
 
-* Random forests varies also the __columns__ of the training set (randomly draw predictors)
+* Bagging modifica le righe del training set  (campionamento casuale con ripetizione delle osservazioni)
 
----
-
-# Tuning parameter
-
-* Before each split, select `\(m \leq p\)` of the predictors at random as candidates for splitting
-
-* `\(m\)` is a __tuning parameter__
-
-* Typically `\(m = \sqrt{p}\)` for classification and `\(m=p/3\)` for regression
-
-* `\(m=p\)` gives Bagging as a special case
-
+* La foresta casuale (*random forest*) modifica anche le colonne del training set (sottocampione casuale senza reinserimento dei predittori)
 
 ---
 
-# Why is random forests working?
+# Il parametro di *tuning* della foresta casuale
 
-* Random sampling of the predictors __decorrelates__ the trees. This reduces the variance when we 
-average the trees
+Prima di effettuare la suddivisione in corrispondenza di un certo nodo dell'albero (*split*), seleziona a caso `\(m\)` predittori come possibili candidati per lo *split*, con `\(1 \leq m \leq p\)`. 
 
-* Recall that given a set of identical distributed (but not necessarily independent) variables `\(Z_1,\ldots,Z_B\)` with pairwise correlation `\(\mathbb{C}\mathrm{orr}(Z_j, Z_l) = \rho\)`, mean `\(\mathbb{E}(Z_j) = \mu\)` and variance `\(\mathbb{V}\mathrm{ar}(Z_j) = \sigma^2\)`, then (see the next slide)
+Quindi, per far crescere l'albero, anziché esplorare per ciascun nodo tutti i possibili `\(p\)` predittori per decidere quale utilizzare per effettuare lo *split*,  vengono esplorati solo `\(m\)` predittori scelti a caso. 
 
+`\(m\)` rappresenta il parametro di *tuning* della foresta casuale. Solitamente 
+* `\(m = \sqrt{p}\)` per problemi di classificazione; 
+* `\(m=p/3\)` problemi di regressione.
+
+Si noti che la scelta `\(m=p\)` corrisponde al *bagging* come caso particolare di una foresta casuale. 
+
+
+---
+
+# Perchè le foreste casuali funzionano?
+
+Si consideri per semplicità un problema di regressione. Sia `\(\hat{T}_D\)` un albero di regressione stimato sul training set `\(D=\{(X_i,Y_i), i=1,\ldots,n\}\)`. Sia `\(\bar{T} = \mathbb{E} (\hat{T}_D)\)` e supponiamo di voler prevedere l'osservazione `\((X^*,Y^*)\)` del test set, con `\((X^*,Y^*) \stackrel{d}{=}(X_1,Y_1)\)`.
+Possiamo quindi scomporre l'errore di previsione di `\(\hat{T}_D\)` come
 $$
-\displaystyle \mathbb{V}\mathrm{ar}(\bar{Z}) = \rho \sigma^2 + \frac{(1-\rho)}{B} \sigma^2
+`\begin{aligned}
+\underbrace{\mathbb{E}[\{Y^* - \hat{T}_D(X^*) \}^2]}_{\mathrm{Errore\,\,di\,\,previsione\,\,di\,\,}\hat{T}_D} &amp;= \mathbb{E}[\{Y^* - \underbrace{\bar{T}(X^*)}_{\mathbb{E}(\hat{T}_D(X^*)|X^*)} + \bar{T}(X^*) - \hat{T}_D(X^*) \}^2]\\
+&amp;= \mathbb{E}[\{Y^* - \bar{T}(X^*) \}^2] + \mathbb{E}\{ \mathbb{V}\mathrm{ar}(\hat{T}_D(X^*)|X^*) \}\\
+&amp;+ \underbrace{2 \mathbb{E}\{ \mathbb{E}[\{Y-\bar{T}(X^*)\}\{\bar{T}(X^*) - \hat{T}_D(X^*)\}| X^*]}_{=0}\}\\
+&amp; = \underbrace{\mathbb{E}[\{Y^* - \bar{T}(X^*) \}^2]}_{\mathrm{Errore\,\,di\,\,previsione\,\,di\,\,}\bar{T}} + \mathbb{E}\{ \mathbb{V}\mathrm{ar}(\hat{T}_D(X^*)|X^*) \}
+\end{aligned}`
 $$
- 
-* The idea in random forests is to improve the variance
-reduction of bagging by reducing the correlation `\(\rho\)` between the
-trees, without increasing the variance `\(\sigma^2\)` too much
+
+La foresta casuale cerca di "stimare" `\(\bar{T}\)`.
+
+Se l'albero `\(\hat{T}_D\)` è complesso (l'abbiamo lasciato crescere), ci aspettiamo `\(\mathbb{E}\{ \mathbb{V}\mathrm{ar}(\hat{T}_D(X^*)|X^*) \}\)` elevato, ma l'errore di previsione di `\(\bar{T}\)` potrebbe risultare basso se `\(\bar{T}\)` riesce ad approssimare bene `\(x^* \mapsto \mathbb{E}(Y^*|X^*=x^*)\)`
+
 
 ---
+
+# La foresta casuale riduce la correlazione tra gli alberi
+
+Il sottocampionamento dei predittori serve a rendere gli alberi `\(\hat{T}_{D^*_{b}}, b=1,\ldots,B\)` meno correlati fra di loro (più vicini all'indipendenza). 
+
+Ipotizzando che gli alberi `\(\hat{T}_{D^*_b}, b=1,\ldots,B\)` siano v.c. identicamente distribuite (ma non necessariamente indipendenti) con correlazione `\(\mathbb{C}\mathrm{orr}(\hat{T}_{D^*_b}, \hat{T}_{D^*_{\tilde{b}}}) = \rho\geq 0\)` per `\(b\neq \tilde{b}\)`, risulta (vedi la prossima slide)
+$$
+`\begin{aligned}
+\mathbb{V}\mathrm{ar}[\bar{T}_{\mathrm{rf}}(x)] &amp;= \frac{1-\rho}{B} \mathbb{V}\mathrm{ar}[\hat{T}_{D^*_b}(x)] + \rho \mathbb{V}\mathrm{ar}[\hat{T}_{D^*_b}(x)]
+\end{aligned}`
+$$
+Il primo termine può essere reso piccolo a piacere aumentando `\(B\)`, mentre il secondo termine non dipende da `\(B\)`, quindi è preferibile avere `\(\rho\)` più piccolo possibile. 
+
+Il sottocampionamento dei predittori previsto nell'algoritmo della foresta casuale serve a diminuire `\(\rho\)`.
+
+
+---
+
+Siano `\(Z_1,\ldots,Z_B\)` v.c. identicamente distribuite (ma non necessariamente indipendenti) `\(Z_1,\ldots,Z_B\)` con correlazione `\(\mathbb{C}\mathrm{orr}(Z_j, Z_l) = \rho\)`, media `\(\mathbb{E}(Z_j) = \mu\)` e varianza `\(\mathbb{V}\mathrm{ar}(Z_j) = \sigma^2\)`,. Allora
+`$$\mathbb{V}\mathrm{ar}(\bar{Z}) =  \frac{(1-\rho)}{B} \sigma^2 + \rho \sigma^2$$`
 
 *  `\(\displaystyle \rho = \frac{1}{\sigma^2}[ \mathbb{E}(Z_i Z_j) - \mathbb{E}(Z_i) \mathbb{E}(Z_j)]\)`
 
@@ -440,10 +431,7 @@ trees, without increasing the variance `\(\sigma^2\)` too much
 
 * `\(\displaystyle \mathbb{E}(\sum_{j=1}^{B}Z_j) = \sum_{j=1}^{B} \mathbb{E}(Z_j)=  B \mu\)`
 
-`\begin{eqnarray*}
-\mathbb{V}\mathrm{ar}(\bar{Z}) &amp;=&amp; \frac{1}{B^2} \mathbb{V}\mathrm{ar}(\sum_{j=1}^{B}Z_j) \\
-&amp;=&amp;  \frac{1}{B^2} \{ \mathbb{E}[(\sum_{j=1}^{B}Z_j)^2] - [ \mathbb{E}(\sum_{j=1}^{B}Z_j) ]^2  \} 
-\end{eqnarray*}`
+* `\(\displaystyle \mathbb{V}\mathrm{ar}(\bar{Z}) = \frac{1}{B^2} \mathbb{V}\mathrm{ar}(\sum_{j=1}^{B}Z_j) =  \frac{1}{B^2} \{ \mathbb{E}[(\sum_{j=1}^{B}Z_j)^2] - [ \mathbb{E}(\sum_{j=1}^{B}Z_j) ]^2  \}\)`
 
 ---
 
@@ -455,21 +443,21 @@ spam data
 
 ---
 
-# randomForest()
+# La funzione randomForest()
 
 
 ```r
 randomForest(formula, 
   data = ,
   ntree = , # default 500
-  mtry = , # default sqrt(p) or p/3
-  nodesize = , # default 1 or 5
+  mtry = , # default sqrt(p) o p/3
+  nodesize = , # default 1 o 5
   importance = ) # default: FALSE
 ```
 
-* In bagging and random forests trees are grown large without pruning, only the minimum number of observations per node - `nodesize` -  is fixed `\(=1\)` for classification and `\(=5\)` for regression
+Per il *bagging* o per le foreste casuali, gli alberi vengono fatti crescere senza potatura, e il numero minimo di osservazioni per nodo - `nodesize` -  è per defualt `\(=1\)` per problemi di classificazione e `\(=5\)` per problemi di regressione
 
-* Number of randomly selected predictors `mtry` `\(=\sqrt{p}\)` for classification and `\(=p/3\)` for regression. Note that `mtry` `\(=p\)` is bagging
+Il numero di predittori selezionati casualmente - `mtry` - è pari a `\(=\sqrt{p}\)` per problemi di classificazione e `\(=p/3\)` per problemi di regressione. Si noti che `mtry` `\(=p\)` corrisponde al *bagging*
 
 ---
 
@@ -502,7 +490,7 @@ score(phat.rf, test$spam, name="random forest")
 
 
 ```r
-# out-of-bag estimate of error
+# stima dell'errore out-of-bag
 plot(fit.rf)
 ```
 
@@ -511,17 +499,18 @@ plot(fit.rf)
 
 ---
 
-# Variable importance
+# Importanza dei predittori
 
-* How might we get such a measure of variable importance from a random forest?
+La funzione `randomForests` permette di calcolare delle misure di "importanza" dei predittori (argomenti `importance=TRUE`). 
 
-* The function `randomForests()` provides two different ways (argument `importance=TRUE`):
+La misura più interessante corrispondente all'argomento `type=1`, e viene calcolata permutando le osservazioni OOB: 
 
-1. The first measure (`type=1`) is computed from permuting OOB (out-of-bag) data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable (adding noise). The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences
+* Per ciascun albero, viene registrato l'errore di previsione per le osservazioni OOB;
 
-2. The second measure (`type=2`) is the total decrease in node impurities from splitting on the variable, averaged over all trees. For classification, the node impurity is measured by the Gini index. For regression, it is measured by RSS
+* Poi si fa la stessa operazione però dopo aver permutato i valori del predittore;
 
-* So, the first compares the prediction of a variable with a random version of itself, while the second considers the error rates induced by splitting on a variable
+* Infine si calcola la differenza tra queste due misure d'errore, considerando tutti gli alberi e normalizzando con la deviazione standard della differenza
+
 
 ---
 
@@ -541,18 +530,15 @@ varImpPlot(fit.rf, type=1)
 
 ---
 
-# Random forest takeaways
+# Riepilogo sulle foreste casuali
 
-* Bagging stabilizes decision trees and improves accuracy by reducing variance. Random forests further improve decision tree performance by de-correlating the individual trees in the bagging ensemble
 
-*  Random forests' variable importance measures can help you determine which variables are contributing the most strongly to your model
+Le foreste casuali sono semplici da usare e spesso efficaci per fare previsioni. I punti di forza sono
 
-* Random forests are one of the better off-the-shelf methods. Strengths:
-    - Easily incorporates features of different types (categorical and numeric)
-    - Tolerance to irrelevant features
-    - Some tolerance to correlated inputs
-    - Good with big data
-    - Handling of missing values
+* Funzionano con predittori numerici o categoriali
+* Tollerano abbastanza bene l'inclusione di predittori irrilevanti
+* Tollerano abbastanza bene predittori fortemente correlati
+* Gli alberi decisionali possono gestire la presenza di dati mancanti (ad esempio si veda [qui](https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf) per l'algoritmo CART implementato nella funzione `rpart`). Per le foreste casuali con la funzione `randomForests`, bisogna specificare l'argomento ` na.action = na.roughfix` (che sostituisce i valori mancanti con la mediana o la moda)
 
 ---
 
