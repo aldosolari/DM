@@ -458,22 +458,60 @@ class: inverse, middle, center
 
 ---
 
-#  Gradient descent update rule
+# Gradient descent 
 
-* Find $\hat{\mathbf{f}}^{b+1}$ such that $L(\hat{\mathbf{f}}^{b+1}) \leq L(\hat{\mathbf{f}}^b)$ where $L(\cdot)$ is the loss function, e.g. quadratic loss $L(\hat{\mathbf{f}}) = \frac{1}{n}\sum_{i=1}^{n}L(y_i,\hat{f}(x_i))= \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$ and
-$\hat{\mathbf{f}}=(\hat{f}(x_1), \ldots,\hat{f}(x_n))^\mathsf{T}$
+Suppose we wish to minimize a continuously diffentiable (loss) function $L:\mathbb{R}^n \mapsto \mathbb{R}$: 
+$$\min_{\mathbf{f} \in \mathbb{R}^n} L(\mathbf{f})$$ 
 
-* The second-order Taylor expansion of $L$ gives
-$$L(\mathbf{g})  \approx L(\mathbf{f}) + \nabla L(\mathbf{f})^\mathsf{T} (\mathbf{g} - \mathbf{f}) + \frac{1}{2}(\mathbf{g} - \mathbf{f})^\mathsf{T} \nabla^2 L(\mathbf{f}) (\mathbf{g} - \mathbf{f})$$
+Given an initial guess $\mathbf{f}_0$, gradient descent iteratively moves the guess toward lower values of $L$
+by taking steps in the direction of the negative gradient $-\nabla L(\mathbf{f})$. 
+<!-- Locally, the negated gradient -->
+<!-- is the steepest descent direction, i.e., the direction that $\mathbf{f}$ would need to move in order to decrease $L$ the fastest -->
+To see this, consider a first-order Taylor expansion 
+$$L(\mathbf{f} +  \mathbf{d}) \approx L(\mathbf{f}) +  \nabla L(\mathbf{f})^{\mathsf{T}} \mathbf{d}$$
+where $\mathbf{d}$ is a vector of unit length, i.e. $\|\mathbf{d}\|_2=1$. In other words, given a particular point $\mathbf{f}$, we would like to find the direction $\mathbf{d}$ such that 
+$L(\mathbf{f} +  \mathbf{d})$ is minimized. The solution is
+$$\mathbf{d} = -\frac{\nabla L(\mathbf{f})}{\|\nabla L(\mathbf{f})\|_2}$$
 
-* Consider the Quadratic approximation of $L$, replacing $\nabla^2 L(\mathbf{f})$ by $\frac{1}{\lambda}\mathbf{I}$ (replacing the curvature given by the
-Hessian with a much simpler notion of curvature – something spherical), we have
-$$L(\mathbf{g})  \approx L(\mathbf{f}) + \nabla L(\mathbf{f})^\mathsf{T} (\mathbf{g} - \mathbf{f}) + \frac{1}{2 \lambda}(\mathbf{g} - \mathbf{f})^\mathsf{T}(\mathbf{g} - \mathbf{f})$$
-* This is a convex quadratic, so we know we can minimize it just by setting its gradient to 0. Minimizing this w.r.t. $\mathbf{g}$, we get
-\begin{aligned}
-& \frac{\partial L(\mathbf{g})}{\partial \mathbf{g}} \approx \nabla L(\mathbf{f}) + \frac{1}{2}(\mathbf{g} - \mathbf{f})\\
-& \Rightarrow \mathbf{g} = \mathbf{f} + \lambda (-\nabla L(\mathbf{f}))
-\end{aligned}
+Iterations of the steepest descent are 
+$$\mathbf{f}^{(b+1)} = \mathbf{f}^{(b)} + \lambda \mathbf{g}$$
+where $\mathbf{g}=-\nabla L(\mathbf{f})$ is the negative gradient and $\lambda$ is some step size (think about it as $\| \nabla L(\mathbf{f}) \|^{-1}_2$)
+
+
+---
+
+$$L(f) = 1.2 (f-2)^2 + 3.2, \qquad g(f) = - 2.4 (f-2)$$
+
+```{r}
+fs <- seq(0,4,len = 100)
+L <-  function(f) { 1.2 * (f-2)^2 + 3.2 }
+g <- function(f){ - 1.2 * 2 * (f-2)}
+
+fun_gd <- function(f, lambda, iter) {
+  ftrace <- f
+  Ltrace <- L(f)
+  for (i in 1:iter) {
+    f <- f + lambda * g(f)
+    ftrace <- c(ftrace,f)
+    Ltrace <- c(Ltrace,L(f))
+    }
+  data.frame(
+    "f" = ftrace,
+    "L_f" = Ltrace
+    )
+}
+```
+
+---
+
+```{r}
+plot(ylim = c(3,8), x = fs, y = L(fs), type = "l", 
+     ylab = expression(1.2(f-2)^2 + 3.2),xlab = "f")
+
+res <- fun_gd(f=0.1, lambda = 0.6, iter =100)
+points(x=res$f, y=res$L_f, type="b")
+```
+
 
 
 ---
@@ -487,7 +525,7 @@ $$L(\mathbf{g})  \approx L(\mathbf{f}) + \nabla L(\mathbf{f})^\mathsf{T} (\mathb
     (a) Compute the pointwise negative gradient of the __loss function__ at the current fit
 $$r_i = -\frac{\partial L(y_i,f_i)}{\partial f_i}\left|_{f_i=\hat{f}^{b-1}(x_i)}\right., \quad i=1,\ldots,n$$
 
-    (b) Approximate the negative gradient by a tree $g$ with depht $d$:
+    (b) Approximate the negative gradient e.g. by a tree $g$ with depth $d$:
     $$(x_1,r_1),\ldots,(x_n,r_n)\rightarrow \hat{g}(x)$$
     
     (c) Update 
