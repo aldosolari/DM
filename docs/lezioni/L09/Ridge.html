@@ -23,39 +23,6 @@ class: center, middle, inverse, title-slide
 
 
 
-&lt;!-- # Matrix notation --&gt;
-
-&lt;!-- Vector of response:  --&gt;
-&lt;!-- $$\underset{n\times 1}{\mathbf{y}} =  --&gt;
-&lt;!-- \left[ --&gt;
-&lt;!-- \begin{array}{c} --&gt;
-&lt;!-- y_1   \\ --&gt;
-&lt;!-- \cdots\\ --&gt;
-&lt;!-- y_i  \\ --&gt;
-&lt;!-- \cdots\\ --&gt;
-&lt;!-- y_n \\ --&gt;
-&lt;!-- \end{array}\right]$$ --&gt;
-
-&lt;!-- Design matrix: --&gt;
-&lt;!-- $$\underset{n\times p}{\mathbf{X}} = [\mathbf{x}_1 \cdots \mathbf{x}_p] =  \left[ --&gt;
-&lt;!-- \begin{array}{cccccc} --&gt;
-&lt;!-- x_{1}^\mathsf{T}   \\ --&gt;
-&lt;!-- x_{2}^\mathsf{T}  \\ --&gt;
-&lt;!-- \cdots   \\ --&gt;
-&lt;!-- x_{i}^\mathsf{T}    \\ --&gt;
-&lt;!-- \cdots\\ --&gt;
-&lt;!-- x_{n}^\mathsf{T}\\ --&gt;
-&lt;!-- \end{array}\right] = \left[ --&gt;
-&lt;!-- \begin{array}{cccccc} --&gt;
-&lt;!-- x_{11}  &amp; x_{12}  &amp; \cdots   &amp;  x_{1j}  &amp; \cdots   &amp;   x_{1p}  \\ --&gt;
-&lt;!-- x_{21}  &amp; x_{22} &amp; \cdots   &amp;  x_{2j}  &amp; \cdots   &amp;   x_{2p}  \\ --&gt;
-&lt;!-- \cdots   &amp; \cdots   &amp;  \cdots &amp; \cdots   &amp;  \cdots  \\ --&gt;
-&lt;!-- x_{i1}  &amp; x_{i2} &amp; \cdots   &amp;  x_{ij}&amp; \cdots   &amp; x_{ip}    \\ --&gt;
-&lt;!-- \cdots   &amp; \cdots   &amp;  \cdots  &amp;  \cdots   &amp;  \cdots\\ --&gt;
-&lt;!-- x_{n1}   &amp; x_{n2} &amp; \cdots   &amp; x_{nj}    &amp;  \cdots   &amp;   x_{np}\\ --&gt;
-&lt;!-- \end{array}\right]$$ --&gt;
-
-&lt;!-- --- --&gt;
 
 # Il teorema di Gauss-Markov 
 
@@ -241,7 +208,7 @@ Le colonna `\(j\)`-sima di `\(\mathbf{U}\)` ( `\(\mathbf{V}\)` ) è denominata `
 
 Il calcolo di questa decomposizione richiede un numero di operazioni dell'ordine `\(O(np\min(n,p))\)`. 
 
-Tale fattorizzazione è indicata come fattorizzazione SVD completa. Nella versione normalmente utilizzata, denominata forma SVD ridotta, se `\(n&gt;p\)`, la matrice `\(\mathbf{U}\)` è sostituita con le sue prime `\(p\)` colonne, mentre `\(\mathbf{D}\)` con le sue prime `\(p\)` righe. Allora `\(\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}\)` dove `\(\mathbf{U} \in \mathbb{R}^{n\times p}\)` ha colonne ortonormali, i.e. `\(\mathbf{U}\mathbf{U}^\mathsf{T} = \mathbf{I}\)` (ma non è più quadrata) mentre `\(\mathbf{D}\)` è quadrata e diagonale. C'è una versione equivalente per `\(p&gt;n\)`.  
+Tale fattorizzazione è indicata come fattorizzazione SVD completa. Nella versione normalmente utilizzata, denominata forma SVD ridotta, se `\(n&gt;p\)`, la matrice `\(\mathbf{U}\)` è sostituita con le sue prime `\(p\)` colonne, mentre `\(\mathbf{D}\)` con le sue prime `\(p\)` righe. Allora `\(\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}\)` dove `\(\mathbf{U} \in \mathbb{R}^{n\times p}\)` ha colonne ortonormali, i.e. `\(\mathbf{U}^\mathsf{T}\mathbf{U} = \mathbf{I}\)` (ma non è più quadrata) mentre `\(\mathbf{D}\)` è quadrata e diagonale. C'è una versione equivalente per `\(p&gt;n\)`.  
 
 ---
 
@@ -258,28 +225,159 @@ Utilizzando la SVD ridotta, possiamo scrivere i valori stimati dalla regressione
 
 Per confronto, i valori stimati con OLS (quando `\(\mathbf{X}\)` ha rango pieno) sono
 `$$\begin{aligned}
-\mathbf{X}\hat{\boldsymbol{\beta}}^{\mathrm{OLS}} &amp;= \mathbf{U}^\mathsf{T} \mathbf{U}\mathbf{y}
+\mathbf{X}\hat{\boldsymbol{\beta}}^{\mathrm{OLS}} &amp;= \mathbf{U} \mathbf{U}^\mathsf{T}\mathbf{y}
 \end{aligned}$$`
 
 Si noti che `\(\mathbf{X}\mathbf{V}_1 = D_{11}\mathbf{U}_1\)` corrisponde alla prima componente principale, `\(\mathbf{X}\mathbf{V}_2 = D_{22}\mathbf{U}_2\)` alla seconda (che è ortogonale alla prima), `\(\mathbf{X}\mathbf{V}_3 = D_{33}\mathbf{U}_3\)` alla terza (che è ortogonale alle precedenti), etc.
 
-La regressione *ridge* contrae maggiormente `\(\mathbf{y}\)` nelle ultime componenti principali di `\(\mathbf{X}\)`. Quindi funzionerà molto bene quando il segnale è presente nella componente principale di `\(\mathbf{X}\)`. 
+Lo stimatore *ridge* si può riscrivere come
+`$$\begin{aligned}
+\hat{\boldsymbol{\beta}}^R_\lambda &amp; = \mathbf{V}\mathrm{diag}\left(\frac{D_{11}^2}{D_{11}^2+\lambda}, \ldots, \frac{D_{pp}^2}{D_{pp}^2+\lambda}\right) \mathbf{U}^\mathsf{T}\mathbf{y}
+\end{aligned}$$`
 
-&lt;!-- --- --&gt;
+La regressione *ridge* contrae maggiormente `\(\mathbf{y}\)` nelle ultime componenti principali di `\(\mathbf{X}\)`. Quindi funzionerà molto bene quando il segnale è presente nella prima componente principale di `\(\mathbf{X}\)`. 
 
-&lt;!-- # Solution path --&gt;
+---
 
 
-&lt;!-- __Solution path__ of the ridge estimator: --&gt;
-&lt;!-- `$$\{\hat{\boldsymbol{\beta}}(\lambda): \lambda \in [0,\infty) \}$$` --&gt;
+```r
+## Generazione dei dati
+set.seed(123)
+n &lt;- 100
+x1 &lt;- rnorm(n)
+x2 &lt;- x1 + 0.5*rnorm(n)
+x1 &lt;- (x1 - mean(x1))/sd(x1)
+x2 &lt;- (x2 - mean(x2))/sd(x2)
+x &lt;- cbind(x1, x2)
 
-&lt;!-- As `\(\lambda \rightarrow 0\)`, `\(\hat{\boldsymbol{\beta}}(\lambda) \rightarrow \hat{\boldsymbol{\beta}}\)` --&gt;
+## SVD (ridotta) di x
+svd_x &lt;- svd(x)
+str(svd_x)
+```
 
-&lt;!-- As `\(\lambda \rightarrow \infty\)`, `\(\hat{\boldsymbol{\beta}}(\lambda) \rightarrow \mathbf{0}_p\)` --&gt;
+```
+List of 3
+ $ d: num [1:2] 13.64 3.47
+ $ u: num [1:100, 1:2] -0.0858 -0.0253 0.1551 -0.0083 -0.0174 ...
+ $ v: num [1:2, 1:2] 0.707 0.707 0.707 -0.707
+```
 
-&lt;!-- All regression coefficients are shrunken towards zero as the tuning parameter `\(\lambda\)` increases --&gt;
+```r
+(svd_x$v)
+```
 
-&lt;!-- This behaviour is not strictly monotone in `\(\lambda\)`: `\(\lambda_a &gt; \lambda_b\)` does not necessarily imply `\(|\hat{\beta}_j(\lambda_a)| &lt; |\hat{\beta}_j(\lambda_b)|\)` --&gt;
+```
+          [,1]       [,2]
+[1,] 0.7071068  0.7071068
+[2,] 0.7071068 -0.7071068
+```
+
+```r
+## Si noti che sono proporzionali a (1,1) e (-1,1) a causa della standardizzazione
+```
+
+---
+
+
+```r
+## diagramma di dispersione (utilizzando la stessa scala)
+library(MASS)
+eqscplot(x1, x2)
+## Aggiungo le linee corrispondenti ai vettori dei pesi delle componenti principali
+eqscplot(x1, x2)
+abline(0, 1)
+abline(0, -1)
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+## Generazione della risposta
+sigma &lt;- 5
+errors &lt;- sigma*rnorm(n)
+errors &lt;- errors - mean(errors)
+
+sig_easy &lt;- sqrt(n)*svd_x$u[, 1]
+sig_hard &lt;- sqrt(n)*svd_x$u[, 2]
+
+y_easy &lt;- sig_easy + errors
+y_hard &lt;- sig_hard + errors
+
+## Regressione ridge
+lambda_max &lt;- 200
+nlambda &lt;- 101
+lambda &lt;- seq(from=0, to=lambda_max, length.out=nlambda)
+lambda_mat &lt;- rep(lambda, each = 2)
+dim(lambda_mat) &lt;- c(2, nlambda)
+
+U &lt;- svd_x$u
+U_t &lt;- t(U)
+V &lt;- svd_x$v
+D_lambda_inv &lt;- svd_x$d^2/(svd_x$d^2 + lambda_mat) # matrice 2 x nlambda
+
+coef_easy &lt;- V %*% (D_lambda_inv * as.numeric((U_t %*% y_easy)))
+
+fit_easy &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_easy))
+fit_hard &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_hard))
+```
+
+---
+
+
+```r
+## Stima dei coefficienti
+matplot(main="Coefficients", ylab=expression(hat(beta)), xlab=expression(lambda),
+        x=lambda, y=t(coef_easy), type="l")
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+## Errore di previsione
+
+nreps &lt;- 500
+out_mat_easy &lt;- out_mat_hard &lt;- matrix(nrow=nlambda, ncol=nreps)
+
+for (i in seq_len(nreps)) {
+  errors &lt;- sigma*rnorm(n)
+  errors &lt;- errors - mean(errors)
+  sig_easy &lt;- sqrt(n)*svd_x$u[, 1]
+  sig_hard &lt;- sqrt(n)*svd_x$u[, 2]
+  y_easy &lt;- sig_easy + errors
+  y_hard &lt;- sig_hard + errors
+  
+  fit_easy &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_easy))
+  fit_hard &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_hard))
+  
+  out_mat_easy[, i] &lt;-  colMeans((fit_easy - sig_easy)^2)
+  out_mat_hard[, i] &lt;- colMeans((fit_hard - sig_hard)^2)
+}
+```
+
+
+---
+
+
+```r
+op &lt;- par(mfrow=c(2, 1))
+
+plot(main="easy", ylab="MSPE", xlab=expression(lambda),
+     x=lambda, y=rowMeans(out_mat_easy), type="l")
+plot(main="hard", ylab="MSPE", xlab=expression(lambda),
+     x=lambda, y=rowMeans(out_mat_hard), type="l")
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+```r
+par(op)
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

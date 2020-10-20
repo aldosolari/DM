@@ -48,7 +48,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * [Boosting](docs/lezioni/L08/Boosting.html)
   * AS 5.8.2; ISL 8.2.3
 
-* L09 (20 Ottobre 12:30 - 15:30) 
+* L09 (20 Ottobre 12:30 - 15:30) SINCRONA
+  * [Regressione ridge](docs/lezioni/L09/Ridge.html)
 
 * L10 (22 Ottobre 9:30 - 12:30) 
 

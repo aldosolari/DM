@@ -17,39 +17,6 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 ```
 
 
-<!-- # Matrix notation -->
-
-<!-- Vector of response:  -->
-<!-- $$\underset{n\times 1}{\mathbf{y}} =  -->
-<!-- \left[ -->
-<!-- \begin{array}{c} -->
-<!-- y_1   \\ -->
-<!-- \cdots\\ -->
-<!-- y_i  \\ -->
-<!-- \cdots\\ -->
-<!-- y_n \\ -->
-<!-- \end{array}\right]$$ -->
-
-<!-- Design matrix: -->
-<!-- $$\underset{n\times p}{\mathbf{X}} = [\mathbf{x}_1 \cdots \mathbf{x}_p] =  \left[ -->
-<!-- \begin{array}{cccccc} -->
-<!-- x_{1}^\mathsf{T}   \\ -->
-<!-- x_{2}^\mathsf{T}  \\ -->
-<!-- \cdots   \\ -->
-<!-- x_{i}^\mathsf{T}    \\ -->
-<!-- \cdots\\ -->
-<!-- x_{n}^\mathsf{T}\\ -->
-<!-- \end{array}\right] = \left[ -->
-<!-- \begin{array}{cccccc} -->
-<!-- x_{11}  & x_{12}  & \cdots   &  x_{1j}  & \cdots   &   x_{1p}  \\ -->
-<!-- x_{21}  & x_{22} & \cdots   &  x_{2j}  & \cdots   &   x_{2p}  \\ -->
-<!-- \cdots   & \cdots   &  \cdots & \cdots   &  \cdots  \\ -->
-<!-- x_{i1}  & x_{i2} & \cdots   &  x_{ij}& \cdots   & x_{ip}    \\ -->
-<!-- \cdots   & \cdots   &  \cdots  &  \cdots   &  \cdots\\ -->
-<!-- x_{n1}   & x_{n2} & \cdots   & x_{nj}    &  \cdots   &   x_{np}\\ -->
-<!-- \end{array}\right]$$ -->
-
-<!-- --- -->
 
 # Il teorema di Gauss-Markov 
 
@@ -226,7 +193,7 @@ Le colonna $j$-sima di $\mathbf{U}$ ( $\mathbf{V}$ ) è denominata $j$-simo vett
 
 Il calcolo di questa decomposizione richiede un numero di operazioni dell'ordine $O(np\min(n,p))$. 
 
-Tale fattorizzazione è indicata come fattorizzazione SVD completa. Nella versione normalmente utilizzata, denominata forma SVD ridotta, se $n>p$, la matrice $\mathbf{U}$ è sostituita con le sue prime $p$ colonne, mentre $\mathbf{D}$ con le sue prime $p$ righe. Allora $\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}$ dove $\mathbf{U} \in \mathbb{R}^{n\times p}$ ha colonne ortonormali, i.e. $\mathbf{U}\mathbf{U}^\mathsf{T} = \mathbf{I}$ (ma non è più quadrata) mentre $\mathbf{D}$ è quadrata e diagonale. C'è una versione equivalente per $p>n$.  
+Tale fattorizzazione è indicata come fattorizzazione SVD completa. Nella versione normalmente utilizzata, denominata forma SVD ridotta, se $n>p$, la matrice $\mathbf{U}$ è sostituita con le sue prime $p$ colonne, mentre $\mathbf{D}$ con le sue prime $p$ righe. Allora $\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}$ dove $\mathbf{U} \in \mathbb{R}^{n\times p}$ ha colonne ortonormali, i.e. $\mathbf{U}^\mathsf{T}\mathbf{U} = \mathbf{I}$ (ma non è più quadrata) mentre $\mathbf{D}$ è quadrata e diagonale. C'è una versione equivalente per $p>n$.  
 
 ---
 
@@ -243,29 +210,124 @@ $$\begin{aligned}
 
 Per confronto, i valori stimati con OLS (quando $\mathbf{X}$ ha rango pieno) sono
 $$\begin{aligned}
-\mathbf{X}\hat{\boldsymbol{\beta}}^{\mathrm{OLS}} &= \mathbf{U}^\mathsf{T} \mathbf{U}\mathbf{y}
+\mathbf{X}\hat{\boldsymbol{\beta}}^{\mathrm{OLS}} &= \mathbf{U} \mathbf{U}^\mathsf{T}\mathbf{y}
 \end{aligned}$$
 
 Si noti che $\mathbf{X}\mathbf{V}_1 = D_{11}\mathbf{U}_1$ corrisponde alla prima componente principale, $\mathbf{X}\mathbf{V}_2 = D_{22}\mathbf{U}_2$ alla seconda (che è ortogonale alla prima), $\mathbf{X}\mathbf{V}_3 = D_{33}\mathbf{U}_3$ alla terza (che è ortogonale alle precedenti), etc.
 
-La regressione *ridge* contrae maggiormente $\mathbf{y}$ nelle ultime componenti principali di $\mathbf{X}$. Quindi funzionerà molto bene quando il segnale è presente nella componente principale di $\mathbf{X}$. 
+Lo stimatore *ridge* si può riscrivere come
+$$\begin{aligned}
+\hat{\boldsymbol{\beta}}^R_\lambda & = \mathbf{V}\mathrm{diag}\left(\frac{D_{11}^2}{D_{11}^2+\lambda}, \ldots, \frac{D_{pp}^2}{D_{pp}^2+\lambda}\right) \mathbf{U}^\mathsf{T}\mathbf{y}
+\end{aligned}$$
 
-<!-- --- -->
+La regressione *ridge* contrae maggiormente $\mathbf{y}$ nelle ultime componenti principali di $\mathbf{X}$. Quindi funzionerà molto bene quando il segnale è presente nella prima componente principale di $\mathbf{X}$. 
 
-<!-- # Solution path -->
+---
+
+```{r}
+## Generazione dei dati
+set.seed(123)
+n <- 100
+x1 <- rnorm(n)
+x2 <- x1 + 0.5*rnorm(n)
+x1 <- (x1 - mean(x1))/sd(x1)
+x2 <- (x2 - mean(x2))/sd(x2)
+x <- cbind(x1, x2)
+
+## SVD (ridotta) di x
+svd_x <- svd(x)
+str(svd_x)
+(svd_x$v)
+## Si noti che sono proporzionali a (1,1) e (-1,1) a causa della standardizzazione
+```
+
+---
+
+```{r}
+## diagramma di dispersione (utilizzando la stessa scala)
+library(MASS)
+eqscplot(x1, x2)
+## Aggiungo le linee corrispondenti ai vettori dei pesi delle componenti principali
+eqscplot(x1, x2)
+abline(0, 1)
+abline(0, -1)
+```
+
+---
+
+```{r}
+## Generazione della risposta
+sigma <- 5
+errors <- sigma*rnorm(n)
+errors <- errors - mean(errors)
+
+sig_easy <- sqrt(n)*svd_x$u[, 1]
+sig_hard <- sqrt(n)*svd_x$u[, 2]
+
+y_easy <- sig_easy + errors
+y_hard <- sig_hard + errors
+
+## Regressione ridge
+lambda_max <- 200
+nlambda <- 101
+lambda <- seq(from=0, to=lambda_max, length.out=nlambda)
+lambda_mat <- rep(lambda, each = 2)
+dim(lambda_mat) <- c(2, nlambda)
+
+U <- svd_x$u
+U_t <- t(U)
+V <- svd_x$v
+D_lambda_inv <- svd_x$d^2/(svd_x$d^2 + lambda_mat) # matrice 2 x nlambda
+
+coef_easy <- V %*% (D_lambda_inv * as.numeric((U_t %*% y_easy)))
+
+fit_easy <- U %*% (D_lambda_inv * as.numeric(U_t %*% y_easy))
+fit_hard <- U %*% (D_lambda_inv * as.numeric(U_t %*% y_hard))
+```
+
+---
+
+```{r}
+## Stima dei coefficienti
+matplot(main="Coefficients", ylab=expression(hat(beta)), xlab=expression(lambda),
+        x=lambda, y=t(coef_easy), type="l")
+```
+
+---
+
+```{r}
+## Errore di previsione
+
+nreps <- 500
+out_mat_easy <- out_mat_hard <- matrix(nrow=nlambda, ncol=nreps)
+
+for (i in seq_len(nreps)) {
+  errors <- sigma*rnorm(n)
+  errors <- errors - mean(errors)
+  sig_easy <- sqrt(n)*svd_x$u[, 1]
+  sig_hard <- sqrt(n)*svd_x$u[, 2]
+  y_easy <- sig_easy + errors
+  y_hard <- sig_hard + errors
+  
+  fit_easy <- U %*% (D_lambda_inv * as.numeric(U_t %*% y_easy))
+  fit_hard <- U %*% (D_lambda_inv * as.numeric(U_t %*% y_hard))
+  
+  out_mat_easy[, i] <-  colMeans((fit_easy - sig_easy)^2)
+  out_mat_hard[, i] <- colMeans((fit_hard - sig_hard)^2)
+}
+```
 
 
-<!-- __Solution path__ of the ridge estimator: -->
-<!-- $$\{\hat{\boldsymbol{\beta}}(\lambda): \lambda \in [0,\infty) \}$$ -->
+---
 
-<!-- As $\lambda \rightarrow 0$, $\hat{\boldsymbol{\beta}}(\lambda) \rightarrow \hat{\boldsymbol{\beta}}$ -->
+```{r}
+op <- par(mfrow=c(2, 1))
 
-<!-- As $\lambda \rightarrow \infty$, $\hat{\boldsymbol{\beta}}(\lambda) \rightarrow \mathbf{0}_p$ -->
+plot(main="easy", ylab="MSPE", xlab=expression(lambda),
+     x=lambda, y=rowMeans(out_mat_easy), type="l")
+plot(main="hard", ylab="MSPE", xlab=expression(lambda),
+     x=lambda, y=rowMeans(out_mat_hard), type="l")
 
-<!-- All regression coefficients are shrunken towards zero as the tuning parameter $\lambda$ increases -->
-
-<!-- This behaviour is not strictly monotone in $\lambda$: $\lambda_a > \lambda_b$ does not necessarily imply $|\hat{\beta}_j(\lambda_a)| < |\hat{\beta}_j(\lambda_b)|$ -->
-
-
-
+par(op)
+```
 
