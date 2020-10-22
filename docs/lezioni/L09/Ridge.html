@@ -474,24 +474,44 @@ Quindi l'errore di previsione stimato con LOOCV per un dato  `\(\lambda\)` può 
 
 ---
 
-# Una scorciatoia per le stime
+# La matrice di Gram
 
 I valori stimati dalla regressione *ridge* sono
 `$$\mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I} )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
 Questa quantità si può riscrivere come
 `$$\begin{aligned}
-\mathbf{X}\mathbf{X}^\mathsf{T}(\mathbf{X}\mathbf{X}^\mathsf{T} + \lambda \mathbf{I} )^{-1} \mathbf{y}
+\mathbf{X}\mathbf{X}^\mathsf{T}(\mathbf{X}\mathbf{X}^\mathsf{T} + \lambda \mathbf{I} )^{-1} \mathbf{y} = \mathbf{K}(\mathbf{K}+ \lambda \mathbf{I})^{-1}\mathbf{y}
 \end{aligned}$$`
 
 Si noti che
-* `\(\mathbf{X}^\mathsf{T}\mathbf{X}\)` è `\(p\times p\)`, mentre la matrice di Gram `\(\mathbf{X}\mathbf{X}^\mathsf{T}\)` è `\(n\times n\)`
+* `\(\mathbf{X}^\mathsf{T}\mathbf{X}\)` è `\(p\times p\)`, mentre la matrice di Gram `\(\mathbf{K}=\mathbf{X}\mathbf{X}^\mathsf{T}\)` è `\(n\times n\)` dove `\(K_{ij}=\{\mathbf{K}\}_{ij} = x_i^\mathsf{T} x_j = \sum_{k}x_{ik}x_{jk}\)`
 
 * Calcolare i valori stimati utilizzando la prima espressione richiede un numero di operazioni dell'ordine `\(O(np^2+p^3)\)`. Se `\(p\ll n\)` può risultare computazionalmente impegnativo. La seconda espressione invece richiede un numero di operazioni dell'ordine `\(O(n^2p+n^3)\)`
 
-* I valori previsti dalla regressione *ridge* dipendono solo da `\(\mathbf{K}=\mathbf{X}\mathbf{X}^\mathsf{T}\)` dove `\(K_{ij}=\{\mathbf{K}\}_{ij} = x_i^\mathsf{T} x_j\)`
 
 ---
 
+Supponiamo di voler aggiungere interazioni e termini al quadrato
+
+`$$\begin{aligned}
+x_{i1},x_{i2},\ldots, x_{ip}\\
+x_{i1}x_{i1},x_{i1}x_{i2},\ldots, x_{i1}x_{ip}\\
+x_{i2}x_{i1},x_{i2}x_{i2},\ldots, x_{i2}x_{ip}\\
+\vdots\\
+x_{ip}x_{i1},x_{ip}x_{i2},\ldots, x_{ip}x_{ip}\\
+\end{aligned}$$`
+
+per un totale di `\(O(p^2)\)` predittori,  il costo computazionale è dell'ordine `\(O(n^2p^2 + n^3)\)` che può essere proibitivo se `\(p \gg n\)`. 
+
+Però si può calcolare `\(\mathbf{K}\)` direttamente. Se definiamo
+`$$K_{ij} = (\frac{1}{2} + x_i^\mathsf{T} x_j)^2 -\frac{1}{4}= \sum_{k} x_{ik}x_{jk} + \sum_{k,l} x_{ik}x_{il}x_{jk}x_{jl}$$`
+
+possiamo calcolare i valori stimati dal modello come
+`$$\mathbf{K}(\mathbf{K}+ \lambda \mathbf{I})^{-1}\mathbf{y}$$`
+e il costo computazionale si riduce a un numero di operazioni dell'ordine `\(O(n^2p)\)`
+
+
+---
 
 # Decomposizione ai valori singolari
 
