@@ -131,7 +131,7 @@ Quando `\(\mathrm{rank}(\mathbf{X}) &lt; p\)`, ci sono infinite soluzioni nel pr
 
 Supponiamo `\(p &gt; n = \mathrm{rank}(\mathbf{X})\)`. Sia `\(\mathcal{C}(\mathbf{X})\)` lo spazio `\(n\)`-dimensionale formato dalle colonne di `\(\mathbf{X}\)` e `\(\mathcal{V}=\mathcal{C}(\mathbf{X})^\bot\)` lo spazio `\(p-n\)` dimensionale ortogonale a `\(\mathcal{C}(\mathbf{X})\)`, i.e. lo spazio nullo di `\(\mathbf{X}\)`
 
-* Allora `\(\mathbf{X}\mathbf{v} = \mathbf{0}_p\)` per qualunque `\(\mathbf{v} \in \mathcal{V}\)`, e `\(\mathbf{X}^\mathsf{T}\mathbf{X}\mathbf{v} = \mathbf{X}^\mathsf{T}\mathbf{0}_p = \mathbf{0}_n\)`, la soluzione delle equazioni normali `\(\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T}\mathbf{y}\)` è
+Allora `\(\mathbf{X}\mathbf{v} = \mathbf{0}_p\)` per qualunque `\(\mathbf{v} \in \mathcal{V}\)`, e `\(\mathbf{X}^\mathsf{T}\mathbf{X}\mathbf{v} = \mathbf{X}^\mathsf{T}\mathbf{0}_p = \mathbf{0}_n\)`, la soluzione delle equazioni normali `\(\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T}\mathbf{y}\)` è
 `$$\underset{p\times 1}{\hat{\boldsymbol{\beta}}} = (\mathbf{X}^\mathsf{T}\mathbf{X})^{-}\mathbf{X}^\mathsf{T} \mathbf{y} + \mathbf{v} \quad \forall\,\, \mathbf{v} \in \mathcal{V}$$`
 dove `\(\mathbf{A}^-\)` indica l'inversa di Moore-Penrose della matrice `\(\mathbf{A}\)`
 
@@ -154,12 +154,18 @@ Il parametro `\(\lambda \geq 0\)`, che controlla l'ammontare della penalità e q
 
 # L'intercetta
 
-Nella formulazione precedente l'intercetta non viene penalizzata. La ragione di ciò è che se cambiamo l'origine dei predittori (ad es. il predittore temperatura è misurato in unità Kelvin anziché Celsius), i valori stimati dal modello non cambiano.
+Si noti che nella formulazione precedente l'intercetta non viene penalizzata. La ragione di ciò è che se cambiamo l'origine dei predittori (ad es. il predittore temperatura è misurato in unità Kelvin anziché Celsius), i valori stimati dal modello non cambiano.
 
-Tuttavia, `\(\mathbf{X}\boldsymbol{\beta}\)` non è invariante a trasformazioni di scala dei predittori, quindi è pratica comune centrare ciascuna colonna di `\(\mathbf{X}\)` (quindi rendendola ortogonale al termine intercetta) e poi scalare i predittori in modo tale che la loro norma Euclidea (o `\(\ell_2\)`) risulti pari `\(\sqrt{n}\)`. 
+Tuttavia, `\(\mathbf{X}\boldsymbol{\beta}\)` non è invariante a trasformazioni di scala dei predittori, quindi è pratica comune centrare le colonne di `\(\mathbf{X}\)` (rendendole ortogonali all'intercetta) e ri-scalare i predittori (di solito in modo tale che la loro norma Euclidea risulti pari `\(\sqrt{n}\)` o 1). 
 
-E' immediato dimostrare che dopo questa standardizzazione di 
-`\(\mathbf{X}\)`, `\(\hat{\mu}_\lambda^R = \bar{y} = n^{-1}\sum_{i=1}^{n}y_i\)`, quindi possiamo assumere  `\(\sum_{i=1}^{n}y_i=0\)` sostituendo `\(y_i\)` con `\(y_i - \bar{y}\)` e quindi omettere `\(\mu\)` dalla nostra funzione obiettivo. 
+E' possibile dimostrare (si veda l'esercizio seguente) che se le colonne di 
+`\(\mathbf{X}\)` sono centrate, si ottiene `\(\hat{\mu}_\lambda^R = \bar{y} = n^{-1}\sum_{i=1}^{n}y_i\)`, quindi possiamo assumere `\(\sum_{i=1}^{n}y_i=0\)` sostituendo `\(y_i\)` con `\(y_i - \bar{y}\)` e quindi omettere `\(\mu\)` dalla nostra funzione obiettivo. 
+
+Da qui in poi, ogni qualvolta ci riferiamo alla regressione *ridge*, assumeremo che 
+
+* la risposta `\(\mathbf{y}\)` è centrata (o standardizzata)
+* la matrice del disegno `\(\mathbf{X}\)` è centrata (o standardizzata)
+
 
 ---
 
@@ -169,12 +175,200 @@ Si consideri la minimizzazione del seguente funzione obiettivo che coinvolge la 
 `$$\min_{(\mu,\boldsymbol{\beta}) \in \mathbb{R} \times \mathbb{R}^p} \left\{ \| \mathbf{y} - \mu\mathbf{1}_n - \mathbf{X}\boldsymbol{\beta}\|_2^2 + J(\boldsymbol{\beta}) \right\}$$`
 Qui `\(J:\mathbb{R}^p \rightarrow \mathbb{R}\)` è una funzione di penalità arbitraria. Si supponga che `\(\sum_{i=1}^{n}x_{ij}=0\)` per `\(j=1,\ldots,p\)`. Assumendo che una soluzione  `\((\hat{\mu},\hat{\boldsymbol{\beta}})\)` esista, si dimostri che `\(\hat{\mu} = \bar{y}\)`. 
 
-Ora si consideri `\(J(\boldsymbol{\beta})= \lambda \|\boldsymbol{\beta}\|^2_2\)` in modo da ottenere la funzione obiettivo della regressione *ridge*. Si dimostri che
-`$$\hat{\boldsymbol{\beta}}^R_\lambda = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+Ora si consideri `\(\sum_{i=1}^{n}y_i = 0\)` e sia `\(J(\boldsymbol{\beta})= \lambda \|\boldsymbol{\beta}\|^2_2\)` in modo da ottenere la funzione obiettivo della regressione *ridge*: 
 
-Da qui in poi, ogni qualvolta ci riferiamo alla regressione *ridge*, assumeremo che `\(\mathbf{X}\)` ha le colonne centrate sulla media. 
+`$$\min_{\boldsymbol{\beta} \in  \mathbb{R}^p} \left\{ \| \mathbf{y} -  \mathbf{X}\boldsymbol{\beta}\|_2^2 + \|\boldsymbol{\beta}\|^2_2 \right\}$$`
 
-Si noti che anche se `\(\mathbf{X}\)` non ha rango pieno, è comunque possibile calcolare lo stimatore. D'altra parte, se `\(\mathbf{X}\)` ha rango pieno, vale il teorema che segue. 
+Si dimostri che
+`$$\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda = (\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+
+Per la dimostrazione, si vedano le note scritte a mano. 
+
+---
+
+# I dati Hitters
+
+Un dataset con `\(n=322\)` giocatori di baseball su cui sono state misurate `\(p=20\)` variabili
+
+.pull-left[
+AtBat
+Number of times at bat in 1986
+
+Hits
+Number of hits in 1986
+
+HmRun
+Number of home runs in 1986
+
+Runs
+Number of runs in 1986
+
+RBI
+Number of runs batted in in 1986
+
+Walks
+Number of walks in 1986
+
+Years
+Number of years in the major leagues
+
+CAtBat
+Number of times at bat during his career
+
+CHits
+Number of hits during his career
+
+CHmRun
+Number of home runs during his career
+
+CRuns
+Number of runs during his career
+]
+
+.pull-right[
+CRBI
+Number of runs batted in during his career
+
+CWalks
+Number of walks during his career
+
+League
+A factor with levels A and N indicating player's league at the end of 1986
+
+Division
+A factor with levels E and W indicating player's division at the end of 1986
+
+PutOuts
+Number of put outs in 1986
+
+Assists
+Number of assists in 1986
+
+Errors
+Number of errors in 1986
+
+**Salary**
+1987 annual salary on opening day in thousands of dollars
+
+NewLeague
+A factor with levels A and N indicating player's league at the beginning of 1987
+]
+
+---
+
+# lm.ridge
+
+
+```r
+rm(list=ls())
+library(ISLR)
+data(Hitters)
+# togliamo le righe con valori mancanti
+Hitters =na.omit(Hitters )
+# least squares
+fit.lm = lm(Salary ~ ., Hitters)
+# lm.ridge
+library(MASS)
+fit.ridge = lm.ridge(Salary ~ ., Hitters, lambda=1) 
+```
+
+---
+
+
+```r
+# coefficienti
+round(data.frame(lm=coef(fit.lm), ridge=coef(fit.ridge)),4)
+```
+
+```
+                   lm     ridge
+(Intercept)  163.1036  159.9382
+AtBat         -1.9799   -1.8396
+Hits           7.5008    6.5845
+HmRun          4.3309    2.0781
+Runs          -2.3762   -1.1535
+RBI           -1.0450   -0.3568
+Walks          6.2313    5.7407
+Years         -3.4891   -8.0870
+CAtBat        -0.1713   -0.0987
+CHits          0.1340    0.1961
+CHmRun        -0.1729    0.4764
+CRuns          1.4543    0.9687
+CRBI           0.8077    0.4969
+CWalks        -0.8116   -0.7000
+LeagueN       62.5994   62.1389
+DivisionW   -116.8492 -120.5144
+PutOuts        0.2819    0.2813
+Assists        0.3711    0.3277
+Errors        -3.3608   -3.6038
+NewLeagueN   -24.7623  -27.4197
+```
+
+---
+
+# Il percorso della stima *ridge*
+
+
+Il percorso della stima *ridge* è dato da
+`$$\{\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda: \lambda \in [0,\infty) \}$$`
+
+Se `\(\lambda \rightarrow 0\)`, allora `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda\rightarrow \hat{\boldsymbol{\beta}}^{\mathrm{OLS}}\)`
+
+Se `\(\lambda \rightarrow \infty\)`, allora  `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda\rightarrow \mathbf{0}_p\)`
+
+Si noti che questo comportamento non è strettamente monotono rispetto a `\(\lambda\)`, ovvero  `\(\lambda_a &gt; \lambda_b\)` non implica necessariamente che `\(|\hat{\beta}^{\mathrm{R}}_j(\lambda_a)| &lt; |\hat{\beta}^{\mathrm{R}}_j(\lambda_b)|\)`
+
+---
+
+# glmnet
+
+
+```r
+glmnet(X, y,
+family="gaussian",
+alpha = 0, # default = 1 (LASSO), 0 = ridgde
+nlambda = 100, # default
+standardize = TRUE, # default
+intercept=TRUE # default
+)
+```
+
+Si veda la guida a [glmnet](https://web.stanford.edu/~hastie/glmnet/glmnet_alpha.html)
+
+---
+
+
+```r
+X = model.matrix(fit.lm)
+y = Hitters$Salary
+n = nrow(X)
+
+# standardizzazione
+Xstd = scale(X[,-1])[,]*sqrt((n-1)/n)
+ystd = scale(y)[,]*sqrt((n-1)/n)
+```
+
+---
+
+
+```r
+library(glmnet)
+fit.std = glmnet(Xstd, ystd, alpha = 0, family="gaussian")
+plot(fit.std, xvar="lambda")
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+# In scala originale
+fit = glmnet(X, y, alpha = 0, family="gaussian")
+plot(fit, xvar="lambda")
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -182,60 +376,243 @@ Si noti che anche se `\(\mathbf{X}\)` non ha rango pieno, è comunque possibile 
 
 Per `\(\lambda\)` sufficientemente piccolo (che dipende da `\(\boldsymbol{\beta}^0\)` e `\(\sigma^2\)`), 
 
-`$$\mathbb{E}\{(\hat{\boldsymbol{\beta}}^{\mathrm{OLS}}- \boldsymbol{\beta}^0)(\hat{\boldsymbol{\beta}}^{\mathrm{OLS}}- \boldsymbol{\beta}^0)^\mathsf{T}\} - \mathbb{E}\{(\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}} - \boldsymbol{\beta}^0)(\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}}- \boldsymbol{\beta}^0)^\mathsf{T}\}$$`
+`$$\mathbb{E}(\hat{\boldsymbol{\beta}}^{\mathrm{OLS}}- \boldsymbol{\beta}^0)(\hat{\boldsymbol{\beta}}^{\mathrm{OLS}}- \boldsymbol{\beta}^0)^\mathsf{T} - \mathbb{E}(\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}} - \boldsymbol{\beta}^0)(\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}}- \boldsymbol{\beta}^0)^\mathsf{T}$$`
 è positiva definita. 
 
-(per la dimostrazione, si vedano le note scritte a mano). 
+Per la dimostrazione, si vedano le note scritte a mano. 
 
 ---
 
-Il teorema dice che lo stimatore ridge è  preferibile a OLS in termini di errore di previsione (nel setting Fixed-X) a condizione che `\(\lambda\)` sia scelto in modo appropriato. 
-
-Per essere in grado di utilizzare efficacemente la regressione *ridge*, abbiamo bisogno di un modo per selezionare un buon `\(\lambda\)` - lo faremo con il metodo della convalida incrociata. 
-
-Ciò che il teorema non ci dice veramente è in quali situazioni
-ci aspettiamo che la regressione *ridge* abbia buone capacità di previsione. Per capirlo, utilizzeremo la decomposizione ai valori singolari (SVD)
+![](Ridge_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ---
+
+# Il caso di una variabile gaussiana
+
+`\(Y = \mu + \varepsilon\)` con `\(\varepsilon \sim N(0,\sigma^2)\)`
+
+Dato il training set `\(Y_1,\ldots,Y_n\)`, vogliamo prevedere una futura osservazione `\(Y\)`
+
+Stimatore media campionaria: `\(\bar{Y} = \frac{1}{n}\sum_{i=1}^{n} Y_i\)`
+
+La scomposizione Distorsione-Varianza risulta
+$$
+`\begin{aligned}
+\mathbb{E}\{[Y - \bar{Y} ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \bar{Y} ) ]^2 + \mathbb{V}\mathrm{ar}( \bar{Y} )\\
+&amp; = \sigma^2 + 0 + \sigma^2/n
+\end{aligned}`
+$$
+
+Il teorema di Rao-Blackwell ci dice che `\(\bar{Y}\)` è lo stimatore a varianza minima tra i non distorti. Possiamo fare meglio?
+
+---
+
+# Contrazione della media campionaria
+
+Stimatore che "contrae" la media campionaria  `\(\hat{Y}_{\lambda} = \lambda \bar{Y}\)` con `\(\lambda \in [0,1]\)` 
+
+Scomposizione distorsione-varianza 
+$$
+`\begin{aligned}
+\mathbb{E}\{[Y - \hat{Y}_\lambda ]^2 \} &amp; = \sigma^2 + [\mathbb{B}\mathrm{ias}( \hat{Y}_\lambda ) ]^2 + \mathbb{V}\mathrm{ar}( \hat{Y}_\lambda )\\
+&amp; = \sigma^2 + [\mu - \lambda \mu]^2 + \lambda^2\frac{\sigma^2}{n}
+\end{aligned}`
+$$
+
+Proviamo a minimizzare questa quantità. 
+Risolvendo `\(\displaystyle \frac{d}{d \lambda} \mathbb{E}\{[Y - \hat{Y}_\lambda ]^2 \}  = 0\)` otteniamo  il valore ottimale
+`$$\lambda^*=\frac{\mu^2}{\mu^2 + \sigma^2/n}$$` 
+che minimizza `\(\mathbb{E}\{[Y - \hat{Y}_{\lambda} ]^2 \}\)`. Tuttavia, `\(\lambda^*\)` dipende da parametri ignoti
+
+---
+
+# La scelta del parametro di *shrinkage*
+
+Finora abbiamo discusso le proprietà della regressione *ridge* considerando `\(\lambda\)` noto. 
+
+Nella pratica, questo parametro è ignoto e bisogna scegliere un valore. Per fare ciò, di solito si utilizza il metodo della convalida incrociata 
+
+---
+
+
+```r
+# K-fold CV
+K &lt;- 5
+fit.cv &lt;-cv.glmnet(X[,-1],y, alpha=0, nfolds = K, grouped=FALSE)
+plot(fit.cv)
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+# lambda selezionato da K-fold CV
+hatlambda &lt;-fit.cv$lambda.min
+hatlambda
+```
+
+```
+[1] 314.7237
+```
+
+---
+
+# Scorciatoia per calcolare il LOOCV
+
+La matrice "hat" della regressione *ridge* è 
+`$$\mathbf{H}_\lambda = \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I}_p )^{-1}\mathbf{X}^\mathsf{T}$$`
+
+Si può dimostrare che
+`$$\frac{1}{n}\sum_{i=1}^{n}\Big[ y_i - x_i^\mathsf{T} \hat{\boldsymbol{\beta}}^{-i}_\lambda \Big]^2 = \frac{1}{n}\sum_{i=1}^{n} \left[ \frac{y_i - x_i^\mathsf{T} \hat{\boldsymbol{\beta}}_\lambda}{1-\{\mathbf{H}_\lambda\}_{ii}} \right]^2$$`
+dove `\(\hat{\boldsymbol{\beta}}^{-i}_\lambda\)` è la stima *ridge* escludento l'osservazione `\(i\)`-sima e  `\(\{\mathbf{H}_\lambda\}_{ii}\)` è l' `\(i\)`-simo elemento diagonale di `\(\mathbf{H}_\lambda\)`
+
+
+Quindi l'errore di previsione stimato con LOOCV per un dato  `\(\lambda\)` può essere calcolato direttamente utilizzando 
+`\(\mathbf{H}(\lambda)\)` e il vettore risposta senza dover ricalcolare le stime `\(n\)` volte. Computazionalmente, questo è un grande vantaggio
+
+---
+
+# Una scorciatoia per le stime
+
+I valori stimati dalla regressione *ridge* sono
+`$$\mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I} )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}$$`
+Questa quantità si può riscrivere come
+`$$\begin{aligned}
+\mathbf{X}\mathbf{X}^\mathsf{T}(\mathbf{X}\mathbf{X}^\mathsf{T} + \lambda \mathbf{I} )^{-1} \mathbf{y}
+\end{aligned}$$`
+
+Si noti che
+* `\(\mathbf{X}^\mathsf{T}\mathbf{X}\)` è `\(p\times p\)`, mentre la matrice di Gram `\(\mathbf{X}\mathbf{X}^\mathsf{T}\)` è `\(n\times n\)`
+
+* Calcolare i valori stimati utilizzando la prima espressione richiede un numero di operazioni dell'ordine `\(O(np^2+p^3)\)`. Se `\(p\ll n\)` può risultare computazionalmente impegnativo. La seconda espressione invece richiede un numero di operazioni dell'ordine `\(O(n^2p+n^3)\)`
+
+* I valori previsti dalla regressione *ridge* dipendono solo da `\(\mathbf{K}=\mathbf{X}\mathbf{X}^\mathsf{T}\)` dove `\(K_{ij}=\{\mathbf{K}\}_{ij} = x_i^\mathsf{T} x_j\)`
+
+---
+
 
 # Decomposizione ai valori singolari
 
 la decomposizione ai valori singolari, detta anche SVD (dall'acronimo inglese *Singular Value Decomposition*) è una generalizzazione della decomposizione spettrale (*eigendecomposition*) di una matrice quadrata. Possiamo fattorizzare `\(\mathbf{X} \in \mathbb{R}^{n\times p}\)` in
-`$$\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}$$`
-dove `\(\mathbf{U} \in \mathbb{R}^{n\times n}\)` e `\(\mathbf{V} \in \mathbb{R}^{p\times p}\)` sono matrici ortogonali e `\(\mathbf{D} \in \mathbb{R}^{n\times p}\)` ha `\(D_{11}\geq D_{22} \geq \ldots \geq D_{mm}\geq 0\)` dove `\(m=\min(n,p)\)` e tutti gli altri elementi pari a 0. 
+`$$\mathbf{X} = \tilde{\mathbf{U}} \tilde{\mathbf{D}} \mathbf{V}^\mathsf{T}$$`
+dove `\(\tilde{\mathbf{U}} \in \mathbb{R}^{n\times n}\)` e `\(\mathbf{V} \in \mathbb{R}^{p\times p}\)` sono matrici ortogonali e `\(\tilde{\mathbf{D}} \in \mathbb{R}^{n\times p}\)` ha `\(D_{11}\geq D_{22} \geq \ldots \geq D_{mm}\geq 0\)` dove `\(m=\min(n,p)\)` e tutti gli altri elementi pari a 0. Le colonna `\(r\)`-sima di `\(\tilde{\mathbf{U}}\)` ( `\(\mathbf{V}\)` ) è denominata `\(r\)`-simo vettore singolare sinistro (destro), e `\(D_{rr}\)` è l' `\(r\)`-simo valore singolare. 
 
-Le colonna `\(j\)`-sima di `\(\mathbf{U}\)` ( `\(\mathbf{V}\)` ) è denominata `\(j\)`-simo vettore singolare sinistro (destro), e `\(D_{jj}\)` è il `\(j\)`-simo valore singolare. 
+Tale fattorizzazione è indicata come fattorizzazione SVD **completa**. Nella versione normalmente utilizzata, denominata forma SVD **ridotta**, se `\(n&gt;p\)`, la matrice `\(\tilde{\mathbf{U}}\)` è sostituita con le sue prime `\(p\)` colonne, mentre `\(\tilde{\mathbf{D}}\)` con le sue prime `\(p\)` righe. Allora `\(\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}\)` dove 
+* `\(\mathbf{U} \in \mathbb{R}^{n\times p}\)`  non è più quadrata ma ha colonne ortonormali, i.e. `\(\tilde{\mathbf{U}}^\mathsf{T}\tilde{\mathbf{U}} = \mathbf{I}\)` 
+* `\(\mathbf{D}\)` è quadrata e diagonale
+* `\(\mathbf{V}\)` è una matrice ortogonale, i.e. `\(\mathbf{V}^\mathsf{T}\mathbf{V}=\mathbf{V}\mathbf{V}^\mathsf{T} = \mathbf{I}\)`, quindi `\(\mathbf{V}^\mathsf{T} = \mathbf{V}^{-1}\)` 
 
-Il calcolo di questa decomposizione richiede un numero di operazioni dell'ordine `\(O(np\min(n,p))\)`. 
-
-Tale fattorizzazione è indicata come fattorizzazione SVD completa. Nella versione normalmente utilizzata, denominata forma SVD ridotta, se `\(n&gt;p\)`, la matrice `\(\mathbf{U}\)` è sostituita con le sue prime `\(p\)` colonne, mentre `\(\mathbf{D}\)` con le sue prime `\(p\)` righe. Allora `\(\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}\)` dove `\(\mathbf{U} \in \mathbb{R}^{n\times p}\)` ha colonne ortonormali, i.e. `\(\mathbf{U}^\mathsf{T}\mathbf{U} = \mathbf{I}\)` (ma non è più quadrata) mentre `\(\mathbf{D}\)` è quadrata e diagonale. C'è una versione equivalente per `\(p&gt;n\)`.  
+C'è una versione equivalente per `\(p&gt;n\)`.
 
 ---
 
-
-Sia `\(\mathbf{X} \in \mathbb{R}^{n\times p}\)` la nostra matrice del disegno, e supponiamo `\(n\geq p\)`. 
-
-
-Utilizzando la SVD ridotta, possiamo scrivere i valori stimati dalla regressione *ridge* come
+Sia `\(\mathbf{X} \in \mathbb{R}^{n\times p}\)` la nostra matrice del disegno, e supponiamo `\(n\geq p\)`. Utilizzando la SVD ridotta, possiamo scrivere i valori stimati dalla regressione *ridge* come
 
 `$$\begin{aligned}
-\mathbf{X}\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}} &amp;= \mathbf{U} \mathbf{D} (\mathbf{D}^2 + \lambda \mathbf{I})^{-1} \mathbf{D}\mathbf{U}^\mathsf{T}\mathbf{y} \\
-&amp;= \sum_{j=1}^{p} \mathbf{U}_j \frac{D^2_{jj}}{D^2_{jj} +\lambda} \mathbf{U}_j^\mathsf{T}\mathbf{y}
+\mathbf{X}\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}} &amp;= \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I} )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}\\
+&amp;= \mathbf{U}\mathbf{D}\mathbf{V}^\mathsf{T}(\mathbf{V}\mathbf{D}^2\mathbf{V}^\mathsf{T} + \lambda \mathbf{I})^{-1} \mathbf{V}\mathbf{D}\mathbf{U}^\mathsf{T} \mathbf{y}\\
+&amp; = \mathbf{U} \mathbf{D} (\mathbf{D}^2 + \lambda \mathbf{I})^{-1} \mathbf{D}\mathbf{U}^\mathsf{T}\mathbf{y} \\
+&amp;= \sum_{j=1}^{p} \mathbf{U}_j \left(\frac{D^2_{jj}}{D^2_{jj} +\lambda}\right) \mathbf{U}_j^\mathsf{T}\mathbf{y}
+\end{aligned}$$`
+dove nel passaggio dalla seconda alla terza riga abbiamo utilizzato 
+`$$\begin{aligned}
+\mathbf{V}\mathbf{D}^2\mathbf{V}^\mathsf{T} + \lambda \mathbf{I} &amp;= \mathbf{V}(\mathbf{D}^2 + \lambda \mathbf{I})\mathbf{V}^\mathsf{T}\\
+(\mathbf{V}(\mathbf{D}^2 + \lambda \mathbf{I})\mathbf{V}^\mathsf{T})^{-1} &amp;= \mathbf{V}(\mathbf{D}^2 + \lambda \mathbf{I})^{-1}\mathbf{V}^\mathsf{T} \\
 \end{aligned}$$`
 
 Per confronto, i valori stimati con OLS (quando `\(\mathbf{X}\)` ha rango pieno) sono
 `$$\begin{aligned}
-\mathbf{X}\hat{\boldsymbol{\beta}}^{\mathrm{OLS}} &amp;= \mathbf{U} \mathbf{U}^\mathsf{T}\mathbf{y}
+\mathbf{X}\hat{\boldsymbol{\beta}}^{\mathrm{OLS}} = \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X}  )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y} =  \sum_{j=1}^{p} \mathbf{U}_j  \mathbf{U}_j^\mathsf{T}\mathbf{y}
 \end{aligned}$$`
 
-Si noti che `\(\mathbf{X}\mathbf{V}_1 = D_{11}\mathbf{U}_1\)` corrisponde alla prima componente principale, `\(\mathbf{X}\mathbf{V}_2 = D_{22}\mathbf{U}_2\)` alla seconda (che è ortogonale alla prima), `\(\mathbf{X}\mathbf{V}_3 = D_{33}\mathbf{U}_3\)` alla terza (che è ortogonale alle precedenti), etc.
+quindi la regressione *ridge* moltiplica la `\(j\)`-ma colonna `\(\mathbf{U}_j\)` per `\(D^{2}_{jj}/(D^{2}_{jj} + \lambda)\)`; se `\(D_{jj}\)` è un valore piccolo, la contrazione verso lo zero (*shrinkage*) sarà più forte.
 
-Lo stimatore *ridge* si può riscrivere come
-`$$\begin{aligned}
-\hat{\boldsymbol{\beta}}^R_\lambda &amp; = \mathbf{V}\mathrm{diag}\left(\frac{D_{11}^2}{D_{11}^2+\lambda}, \ldots, \frac{D_{pp}^2}{D_{pp}^2+\lambda}\right) \mathbf{U}^\mathsf{T}\mathbf{y}
-\end{aligned}$$`
 
-La regressione *ridge* contrae maggiormente `\(\mathbf{y}\)` nelle ultime componenti principali di `\(\mathbf{X}\)`. Quindi funzionerà molto bene quando il segnale è presente nella prima componente principale di `\(\mathbf{X}\)`. 
+
+---
+
+# Analisi delle componenti principali
+
+L'analisi delle componenti principali (in inglese *Principal Component Analysis* o abbreviata PCA) per una matrice (centrata) `\(\mathbf{X}\)` comporta la trasformazione lineare
+`$$\mathbf{Z} = \mathbf{X}\mathbf{V} = \mathbf{U}\mathbf{D}$$`
+da cui si ottengono `\(p\)` componenti principali:
+
+* la prima componente principale `\(\mathbf{Z}_1 = \mathbf{X}\mathbf{V}_1 = D_{11}\mathbf{U}_1\)` è la combinazione lineare (normalizzata) dei predittori che ha varianza massima: `\(\mathbb{V}\mathrm{ar}(\mathbf{Z}_1)=(D_{11})^2/n\)`
+
+* la seconda componente principale `\(\mathbf{Z}_2 = \mathbf{X}\mathbf{V}_2= D_{22}\mathbf{U}_2\)` ha varianza massima `\(\mathbb{V}\mathrm{ar}(\mathbf{Z}_2)=(D_{22})^2/n\)` soddisfando il vincolo di essere ortogonale alla precedente, i.e. `\(\mathbf{Z}_2 \bot \mathbf{Z}_1\)`
+
+* la terza componente principale `\(\mathbf{Z}_3 = \mathbf{X}\mathbf{V}_3= D_{33}\mathbf{U}_3\)` ha varianza massima `\(\mathbb{V}\mathrm{ar}(\mathbf{Z}_3)=(D_{33})^2/n\)` soddisfando il vincolo di essere ortogonale alla due precedenti, etc. 
+
+La regressione basata sulle prime `\(q &lt; p\)` componenti principali è detta PCR (*Principal Component Regression*)
+
+
+
+---
+
+# OLS, *ridge* e PCR
+
+Stimatore OLS
+
+`$$\hat{\boldsymbol{\beta}}^{\mathrm{OLS}}  = \mathbf{V}\mathrm{\,\,diag}\Big(\frac{1}{D_{11}},\ldots,\frac{1}{D_{pp}}\Big) \mathbf{U}^\mathsf{T}\mathbf{y}$$`
+
+Stimatore *ridge*
+
+`$$\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda  = \mathbf{V}\mathrm{\,\,diag}\Big(\frac{D_{11}}{D^2_{11} + \lambda},\ldots,\frac{D_{11}}{D^2_{pp} + \lambda}\Big) \mathbf{U}^\mathsf{T}\mathbf{y}$$`
+
+Stimatore PCR
+
+`$$\hat{\boldsymbol{\beta}}^{\mathrm{PCR}}_q  = \mathbf{V}\mathrm{\,\,diag}\Big(\frac{1}{D_{11}},\ldots,\frac{1}{D_{qq}},0,\ldots,0\Big) \mathbf{U}^\mathsf{T}\mathbf{y}$$`
+
+---
+
+# Regressione *ridge* con SVD
+
+
+```r
+lm_ridge &lt;- function(X,y,lambdas){
+  svd_x &lt;- svd(X)
+  U &lt;- svd_x$u
+  V &lt;- svd_x$v
+  sval &lt;- svd_x$d
+  k &lt;- length(lambdas)
+  betahat &lt;- matrix(NA_real_, nrow=k, ncol=ncol(X))
+  for (j in seq_len(k)){
+    D &lt;- diag(sval/(sval^2 + lambdas[j]))
+    betahat[j,] &lt;- V %*% D %*% t(U) %*% y
+  }
+  betahat
+}
+```
+
+---
+
+
+
+```r
+lambdas &lt;- fit.std$lambda*n
+betahat &lt;- lm_ridge(Xstd,ystd,lambdas)
+matplot(log(lambdas), betahat, type="l", lty=1)
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+
+# Simulazione
+
+Sia `\(\mathbf{X} = \in \mathbb{R}^{n\times p}\)` la matrice del disegno (standardizzata) con `\(n=100\)` e `\(p=2\)`. Possiamo scrivere `\(\mathbf{X}= \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}\)` e supponiamo che 
+`$$\boldsymbol{\beta}^0 = \mathbf{V}\mathbf{D}^{-1}\boldsymbol{\gamma}^0$$`
+quindi la risposta sarà generata dal modello
+`$$\begin{aligned}\mathbf{y} &amp;= \mathbf{X}\boldsymbol{\beta}^0 + \boldsymbol{\varepsilon}\\
+&amp;= \mathbf{U}\boldsymbol{\gamma}^0 + \boldsymbol{\varepsilon}\end{aligned}$$`
+
+Considereremo una situazione "facile" per la regressione *ridge*, ovvero quando il segnale è presente solo sulla prima componente principale di `\(\mathbf{X}\)`:
+`$$\boldsymbol{\gamma}^0 = (\sqrt{n},0)^\mathsf{T}$$`
+e una "difficile", ovvero il segnale è presente solo sull' ultima componente principale di `\(\mathbf{X}\)`:
+`$$\boldsymbol{\gamma}^0 = (0,\sqrt{n})^\mathsf{T}$$`
+
+
 
 ---
 
@@ -248,10 +625,10 @@ x1 &lt;- rnorm(n)
 x2 &lt;- x1 + 0.5*rnorm(n)
 x1 &lt;- (x1 - mean(x1))/sd(x1)
 x2 &lt;- (x2 - mean(x2))/sd(x2)
-x &lt;- cbind(x1, x2)
+X &lt;- cbind(x1, x2)
 
 ## SVD (ridotta) di x
-svd_x &lt;- svd(x)
+svd_x &lt;- svd(X)
 str(svd_x)
 ```
 
@@ -272,24 +649,18 @@ List of 3
 [2,] 0.7071068 -0.7071068
 ```
 
-```r
-## Si noti che sono proporzionali a (1,1) e (-1,1) a causa della standardizzazione
-```
-
 ---
 
 
 ```r
-## diagramma di dispersione (utilizzando la stessa scala)
+## diagramma di dispersione e componenti principali
 library(MASS)
-eqscplot(x1, x2)
-## Aggiungo le linee corrispondenti ai vettori dei pesi delle componenti principali
 eqscplot(x1, x2)
 abline(0, 1)
 abline(0, -1)
 ```
 
-![](Ridge_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](Ridge_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -318,7 +689,7 @@ U_t &lt;- t(U)
 V &lt;- svd_x$v
 D_lambda_inv &lt;- svd_x$d^2/(svd_x$d^2 + lambda_mat) # matrice 2 x nlambda
 
-coef_easy &lt;- V %*% (D_lambda_inv * as.numeric((U_t %*% y_easy)))
+coef_easy &lt;- V %*% (D_lambda_inv/svd_x$d * as.numeric((U_t %*% y_easy)))
 
 fit_easy &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_easy))
 fit_hard &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_hard))
@@ -333,7 +704,7 @@ matplot(main="Coefficients", ylab=expression(hat(beta)), xlab=expression(lambda)
         x=lambda, y=t(coef_easy), type="l")
 ```
 
-![](Ridge_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](Ridge_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -355,7 +726,7 @@ for (i in seq_len(nreps)) {
   fit_easy &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_easy))
   fit_hard &lt;- U %*% (D_lambda_inv * as.numeric(U_t %*% y_hard))
   
-  out_mat_easy[, i] &lt;-  colMeans((fit_easy - sig_easy)^2)
+  out_mat_easy[, i] &lt;- colMeans((fit_easy - sig_easy)^2)
   out_mat_hard[, i] &lt;- colMeans((fit_hard - sig_hard)^2)
 }
 ```
@@ -363,21 +734,25 @@ for (i in seq_len(nreps)) {
 
 ---
 
+.pull-left[
 
 ```r
-op &lt;- par(mfrow=c(2, 1))
-
-plot(main="easy", ylab="MSPE", xlab=expression(lambda),
+plot(main="easy", ylab="MSE", xlab=expression(lambda),
      x=lambda, y=rowMeans(out_mat_easy), type="l")
-plot(main="hard", ylab="MSPE", xlab=expression(lambda),
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+plot(main="hard", ylab="MSE", xlab=expression(lambda),
      x=lambda, y=rowMeans(out_mat_hard), type="l")
 ```
 
-![](Ridge_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
-
-```r
-par(op)
-```
+![](Ridge_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

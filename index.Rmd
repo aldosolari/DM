@@ -41,19 +41,22 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare ISL 2.2.3, 5.1.5
 
 * L07 (15 Ottobre 9:30 - 12:30) SINCRONA
-  * [Bagging e Foreste Casuali](docs/lezioni/L07/BaggingFC.html)
-  * AS 5.8.1, 5.8.3; ISL 8.2.1, 8.2.2
+  * [I dati Titanic](docs/lezioni/L06/Titanic.html)
 
 * L08 (19 Ottobre 14:30 - 16:30) SINCRONA
-  * [Boosting](docs/lezioni/L08/Boosting.html)
-  * AS 5.8.2; ISL 8.2.3
+  * [Bagging e Foreste Casuali](docs/lezioni/L07/BaggingFC.html)
+  * Studiare AS 5.8.1, 5.8.3; ISL 8.2.1, 8.2.2
 
 * L09 (20 Ottobre 12:30 - 15:30) SINCRONA
-  * [Regressione ridge](docs/lezioni/L09/Ridge.html)
+  * [Boosting](docs/lezioni/L08/Boosting.html)
+  * Studiare AS 5.8.2; ISL 8.2.3
 
-* L10 (22 Ottobre 9:30 - 12:30) 
+* L10 (22 Ottobre 9:30 - 12:30) SINCRONA
+  * [Regressione ridge](docs/lezioni/L09/Ridge.html)
+  * Studiare ISL 6, 6.2.1, 6.3.1, 6.4
 
 * L11 (26 Ottobre 14:30 - 16:30) 
+
 
 * L12 (27 Ottobre 12:30 - 15:30) 
 
