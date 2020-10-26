@@ -39,6 +39,50 @@ write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
 
 ---
 
+# Dati esterni: DEFINETTI
+
+
+```r
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+library(readr)
+definetti &lt;- read_csv(paste0(PATH,"definetti.csv"))
+names(definetti)
+```
+
+```
+ [1] "X1"             "title"          "year"           "duration"      
+ [5] "country"        "language"       "genre"          "director"      
+ [9] "actors"         "prod_comp"      "budget"         "profits"       
+[13] "nomination_num" "oscar_num"      "princ_genre1"   "princ_genre2"  
+```
+
+
+---
+
+# Dati esterni: NEYMAN
+
+
+```r
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+library(readr)
+neyman &lt;- neyman &lt;- read_delim(paste0(PATH, "neyman.csv"), 
+";", escape_double = FALSE, trim_ws = TRUE)
+names(neyman)
+```
+
+```
+ [1] "title"                  "year"                   "genre"                 
+ [4] "duration"               "country"                "language"              
+ [7] "director"               "writer"                 "production_company"    
+[10] "budget"                 "usa_gross_income"       "worlwide_gross_income" 
+[13] "metascore"              "actor_1"                "actor_2"               
+[16] "age.rating"             "oscar_bestfilm_nominee" "oscar_bestfilm_winner" 
+```
+
+---
+
+# Esempio di analisi
+
 Carichiamo solo i dati di training (senza considerare le date)
 
 
@@ -60,7 +104,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 
 
@@ -87,7 +131,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -300,36 +344,6 @@ sqrt(mean((test$y-yhat4)^2))
 
 ```r
 # si confronti yhat4 con yhat1
-```
-
-
----
-
-
-```r
-## codifico i valori mancanti come NA
-is.na(X) &lt;- (X==0)
-test &lt;- data.frame(y=y[test.id,], X[test.id,])
-train &lt;- data.frame(y=y[-test.id,], X[-test.id,])
-
-## bagging
-library(rpart)
-B = 50
-yhat = numeric(m)
-for (i in 1:B){
-use = sample(n,n,rep=T)
-tree = rpart (y~., data=train[use,], cp=0.0001)
-yhat = yhat + predict(tree, newdata=test)
-if (i%%10==0) cat(i, sqrt(mean ((yhat/i-test$y)^2)),"\n")
-}
-```
-
-```
-10 0.8128322 
-20 0.7987157 
-30 0.7951924 
-40 0.7941534 
-50 0.7919506 
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

@@ -32,6 +32,32 @@ write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
 
 ---
 
+# Dati esterni: DEFINETTI
+
+```{r, eval=T}
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+library(readr)
+definetti <- read_csv(paste0(PATH,"definetti.csv"))
+names(definetti)
+```
+
+
+---
+
+# Dati esterni: NEYMAN
+
+```{r, eval=T}
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+library(readr)
+neyman <- neyman <- read_delim(paste0(PATH, "neyman.csv"), 
+";", escape_double = FALSE, trim_ws = TRUE)
+names(neyman)
+```
+
+---
+
+# Esempio di analisi
+
 Carichiamo solo i dati di training (senza considerare le date)
 
 ```{r}
@@ -182,24 +208,6 @@ sqrt(mean((test$y-yhat4)^2))
 ```
 
 
----
 
-```{r}
-## codifico i valori mancanti come NA
-is.na(X) <- (X==0)
-test <- data.frame(y=y[test.id,], X[test.id,])
-train <- data.frame(y=y[-test.id,], X[-test.id,])
-
-## bagging
-library(rpart)
-B = 50
-yhat = numeric(m)
-for (i in 1:B){
-use = sample(n,n,rep=T)
-tree = rpart (y~., data=train[use,], cp=0.0001)
-yhat = yhat + predict(tree, newdata=test)
-if (i%%10==0) cat(i, sqrt(mean ((yhat/i-test$y)^2)),"\n")
-}
-```
 
 
