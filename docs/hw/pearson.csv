@@ -1,0 +1,101 @@
+budget;company;country;director;genre;gross;name;rating;released;runtime;score;star;votes;writer;year
+45000000.0;Castle Rock Entertainment;USA;Donald Petrie;Action;106807667.0;Miss.Congeniality;PG-13;22/12/2000;109;6.2;Sandra Bullock;150621;Marc Lawrence;2000
+75000000.0;Twentieth Century Fox Film Corporation;USA;Roland Emmerich;Action;306169255.0;Independence.Day;PG-13;03/07/1996;145;7.0;Will Smith;461225;Dean Devlin;1996
+110000000.0;Columbia Pictures Corporation;USA;Roland Emmerich;Action;113330342.0;The.Patriot;R;28/06/2000;165;7.2;Mel Gibson;221478;Robert Rodat;2000
+125000000.0;Twentieth Century Fox Film Corporation;USA;Roland Emmerich;Action;186740799.0;The.Day.After.Tomorrow;PG-13;28/05/2004;124;6.4;Dennis Quaid;356977;Roland Emmerich;2004
+140000000.0;Walt Disney Pictures;USA;Gore Verbinski;Action;305413918.0;Pirates.of.the.Caribbean..The.Curse.of.the.Black.Pearl;PG-13;09/07/2003;143;8.0;Johnny Depp;886092;Ted Elliott;2003
+14000000.0;Touchstone Pictures;USA;Garry Marshall;Comedy;178406268.0;Pretty.Woman;R;23/03/1990;119;7.0;Richard Gere;233319;J.F. Lawton;1990
+55000000.0;Paramount Pictures;USA;Robert Zemeckis;Comedy;330252182.0;Forrest.Gump;PG-13;06/07/1994;142;8.8;Tom Hanks;1402876;Winston Groom;1994
+60000000.0;Castle Rock Entertainment;USA;Frank Darabont;Crime;136801374.0;The.Green.Mile;R;10/12/1999;189;8.5;Tom Hanks;879924;Stephen King;1999
+75000000.0;Touchstone Pictures;USA;Simon West;Action;101117573.0;Con.Air;R;06/06/1997;115;6.8;Nicolas Cage;239462;Scott Rosenberg;1997
+92000000.0;Warner Bros.;USA;Jan de Bont;Action;241721524.0;Twister;PG-13;10/05/1996;113;6.3;Helen Hunt;152463;Michael Crichton;1996
+38000000.0;Touchstone Pictures;USA;Andy Tennant;Comedy;127223418.0;Sweet.Home.Alabama;PG-13;27/09/2002;108;6.2;Reese Witherspoon;89028;Douglas J. Eboch;2002
+140000000.0;Touchstone Pictures;USA;Michael Bay;Action;198542554.0;Pearl.Harbor;PG-13;25/05/2001;183;6.1;Ben Affleck;272170;Randall Wallace;2001
+140000000.0;Touchstone Pictures;USA;Michael Bay;Action;201573391.0;Armageddon;PG-13;01/07/1998;151;6.6;Bruce Willis;344203;Jonathan Hensleigh;1998
+75000000.0;Hollywood Pictures;USA;Michael Bay;Action;134069511.0;The.Rock;R;07/06/1996;136;7.4;Sean Connery;274324;David Weisberg;1996
+70000000.0;Paramount Pictures;USA;Nancy Meyers;Comedy;182811707.0;What.Women.Want;PG-13;15/12/2000;127;6.4;Mel Gibson;169079;Josh Goldsmith;2000
+81000000.0;Spyglass Entertainment;USA;Tom Shadyac;Comedy;242829261.0;Bruce.Almighty;PG-13;23/05/2003;101;6.7;Jim Carrey;319425;Steve Koren;2003
+85000000.0;Warner Bros.;USA;Steven Soderbergh;Crime;183405771.0;Oceans.Eleven;PG-13;07/12/2001;116;7.8;George Clooney;434421;George Clayton Johnson;2001
+60000000.0;Universal Pictures;USA;Doug Liman;Action;121661683.0;The.Bourne.Identity;PG-13;14/06/2002;119;7.9;Franka Potente;442597;Tony Gilroy;2002
+60000000.0;Paramount Pictures;USA;F. Gary Gray;Action;106128601.0;The.Italian.Job;PG-13;30/05/2003;111;7.0;Donald Sutherland;302646;Troy Kennedy-Martin;2003
+120000000.0;Twentieth Century Fox Film Corporation;USA;Alex Proyas;Action;144801023.0;I.Robot;PG-13;16/07/2004;115;7.1;Will Smith;423244;Jeff Vintar;2004
+15000000.0;DreamWorks;USA;Sam Mendes;Drama;130096601.0;American.Beauty;R;01/10/1999;122;8.4;Kevin Spacey;899755;Alan Ball;1999
+50000000.0;Lynda Obst Productions;USA;Donald Petrie;Comedy;105813373.0;How.to.Lose.a.Guy.in.10.Days;PG-13;07/02/2003;116;6.4;Kate Hudson;172078;Michele Alexander;2003
+140000000.0;Warner Bros.;USA;Richard Donner;Action;130444603.0;Lethal.Weapon.4;R;10/07/1998;127;6.6;Mel Gibson;135019;Shane Black;1998
+150000000.0;DreamWorks;USA;Andrew Adamson;Animation;436471036.0;Shrek.2;PG;19/05/2004;93;7.2;Mike Myers;342666;William Steig;2004
+4000000.0;Focus Features;USA;Sofia Coppola;Drama;44585453.0;Lost.in.Translation;R;03/10/2003;102;7.8;Bill Murray;345221;Sofia Coppola;2003
+15000000.0;Paramount Pictures;USA;Tony Scott;Action;179800601.0;Top.Gun;PG;16/05/1986;110;6.9;Tom Cruise;236909;Jim Cash;1986
+8000000.0;Miramax;USA;Quentin Tarantino;Crime;107928762.0;Pulp.Fiction;R;14/10/1994;154;8.9;John Travolta;1456787;Quentin Tarantino;1994
+90000000.0;Touchstone Pictures;USA;Dominic Sena;Action;101648571.0;Gone.in.60.Seconds;PG-13;09/06/2000;118;6.5;Nicolas Cage;230823;H.B. Halicki;2000
+40000000.0;Hollywood Pictures;USA;M. Night Shyamalan;Drama;293506292.0;The.Sixth.Sense;PG-13;06/08/1999;107;8.1;Bruce Willis;766528;M. Night Shyamalan;1999
+94000000.0;New Line Cinema;USA;Peter Jackson;Adventure;342551365.0;Lord.of.the.Rings..The.Two.Towers;PG-13;18/12/2002;179;8.7;Elijah Wood;1206786;J.R.R. Tolkien;2002
+32000000.0;Fox 2000 Pictures;USA;George Tillman Jr.;Biography;48818921.0;Men.of.Honor;R;10/11/2000;129;7.2;Cuba Gooding Jr.;94931;Scott Marshall Smith;2000
+103000000.0;DreamWorks;USA;Ridley Scott;Action;187705427.0;Gladiator;R;05/05/2000;155;8.5;Russell Crowe;1081122;David Franzoni;2000
+93000000.0;New Line Cinema;New Zealand;Peter Jackson;Adventure;315544750.0;Lord.of.the.Rings..The.Fellowship.of.the.Ring;PG-13;19/12/2001;178;8.8;Elijah Wood;1352483;J.R.R. Tolkien;2001
+31000000.0;Touchstone Pictures;USA;Emile Ardolino;Comedy;139610000.0;Sister.Act;PG;29/05/1992;100;6.3;Whoopi Goldberg;70833;Paul Rudnick;1992
+70000000.0;Paramount Pictures;USA;Bruce Beresford;Crime;116741558.0;Double.Jeopardy;R;24/09/1999;105;6.4;Ashley Judd;60299;David Weisberg;1999
+60000000.0;Castle Rock Entertainment;USA;Marc Lawrence;Comedy;93354851.0;Two.Weeks.Notice;PG-13;20/12/2002;101;6.1;Sandra Bullock;91854;Marc Lawrence;2002
+175000000.0;Warner Bros.;USA;Wolfgang Petersen;Drama;133378256.0;Troy;R;14/05/2004;163;7.2;Brad Pitt;414038;Homer;2004
+21000000.0;Touchstone Pictures;USA;Wes Anderson;Comedy;52364010.0;The.Royal.Tenenbaums;R;04/01/2002;110;7.6;Gene Hackman;225505;Wes Anderson;2001
+100000000.0;Walt Disney Pictures;USA;Jon Turteltaub;Action;173008894.0;National.Treasure;PG;19/11/2004;131;6.9;Nicolas Cage;268591;Jim Kouf;2004
+75000000.0;Columbia Pictures Corporation;USA;Peter Segal;Comedy;120908074.0;X50.First.Dates;PG-13;13/02/2004;99;6.8;Adam Sandler;283647;George Wing;2004
+48000000.0;Paramount Pictures;USA;Steven Spielberg;Action;197171806.0;Indiana.Jones.and.the.Last.Crusade;PG-13;24/05/1989;127;8.3;Harrison Ford;566432;Jeffrey Boam;1989
+17000000.0;Perfect World Pictures (Beijing);USA;David E. Talbert;Comedy;41715860.0;My.Big.Fat.Greek.Wedding;PG-13;11/11/2016;111;6.0;Kimberly Elise;3366;David E. Talbert;2016
+25000000.0;Warner Bros.;USA;Clint Eastwood;Crime;90135191.0;Mystic.River;R;15/10/2003;138;8.0;Sean Penn;361466;Brian Helgeland;2003
+200000000.0;Twentieth Century Fox Film Corporation;USA;James Cameron;Drama;658672302.0;Titanic;PG-13;19/12/1997;194;7.8;Leonardo DiCaprio;862554;James Cameron;1997
+6000000.0;Great American Films Limited Partnership;USA;Emile Ardolino;Drama;63952836.0;Dirty.Dancing;PG-13;21/08/1987;100;6.9;Patrick Swayze;155978;Eleanor Bergstein;1987
+52000000.0;DreamWorks;USA;Steven Spielberg;Biography;164615351.0;Catch.Me.If.You.Can;PG-13;25/12/2002;141;8.1;Leonardo DiCaprio;611179;Jeff Nathanson;2002
+94000000.0;Pixar Animation Studios;USA;Andrew Stanton;Animation;380843261.0;Finding.Nemo..Widescreen.;G;30/05/2003;100;8.1;Albert Brooks;772029;Andrew Stanton;2003
+63000000.0;Warner Bros.;USA;Lana Wachowski;Action;171479930.0;The.Matrix;R;31/03/1999;136;8.7;Keanu Reeves;1339820;Lilly Wachowski;1999
+30000000.0;Miramax;USA;Quentin Tarantino;Action;70099045.0;Kill.Bill..Vol..1;R;10/10/2003;111;8.1;Uma Thurman;807087;Quentin Tarantino;2003
+35000000.0;Columbia Pictures Corporation;Germany;Adam Shankman;Comedy;60400856.0;The.Wedding.Planner;PG-13;26/01/2001;103;5.2;Jennifer Lopez;65818;Pamela Falk;2001
+25000000.0;Castle Rock Entertainment;USA;Frank Darabont;Crime;28341469.0;The.Shawshank.Redemption.Special.Edition;R;14/10/1994;142;9.3;Tim Robbins;1861666;Stephen King;1994
+140000000.0;Warner Bros.;USA;Edward Zwick;Action;111110575.0;The.Last.Samurai;R;05/12/2003;154;7.7;Tom Cruise;340268;John Logan;2003
+36000000.0;New Line Cinema;USA;Nick Cassavetes;Crime;71756802.0;John.Q;PG-13;15/02/2002;116;7.1;Denzel Washington;106341;James Kearns;2002
+102000000.0;Jonathan Krane Group;USA;Dominic Sena;Action;69772969.0;Swordfish;R;08/06/2001;99;6.5;John Travolta;161863;Skip Woods;2001
+75000000.0;Universal Pictures;USA;Paul Greengrass;Action;176241941.0;The.Bourne.Supremacy;PG-13;23/07/2004;108;7.8;Matt Damon;379648;Robert Ludlum;2004
+60000000.0;DreamWorks;USA;Steven Spielberg;Comedy;77872883.0;The.Terminal;PG-13;18/06/2004;128;7.3;Tom Hanks;330983;Andrew Niccol;2004
+140000000.0;Columbia Pictures Corporation;USA;Barry Sonnenfeld;Action;190418803.0;Men.in.Black.II;PG-13;03/07/2002;88;6.1;Tommy Lee Jones;284356;Lowell Cunningham;2002
+200000000.0;Columbia Pictures Corporation;USA;Sam Raimi;Action;373585825.0;Spider.Man.2;PG-13;30/06/2004;127;7.3;Tobey Maguire;451467;Stan Lee;2004
+72000000.0;Icon Entertainment International;USA;Mel Gibson;Biography;75600000.0;Braveheart;R;24/05/1995;178;8.4;Mel Gibson;807256;Randall Wallace;1995
+90000000.0;Columbia Pictures Corporation;USA;Barry Sonnenfeld;Adventure;250690539.0;Men.in.Black;PG-13;02/07/1997;98;7.3;Tommy Lee Jones;438633;Lowell Cunningham;1997
+22000000.0;Paramount Pictures;USA;Jerry Zucker;Drama;217631306.0;Ghost;PG-13;13/07/1990;127;7.0;Patrick Swayze;164846;Bruce Joel Rubin;1990
+85000000.0;Columbia Pictures Corporation;USA;Wolfgang Petersen;Action;172956409.0;Air.Force.One;R;25/07/1997;124;6.5;Harrison Ford;155674;Andrew W. Marlowe;1997
+94000000.0;New Line Cinema;USA;Peter Jackson;Adventure;377845905.0;Lord.of.the.Rings..The.Return.of.the.King;PG-13;17/12/2003;201;8.9;Elijah Wood;1332020;J.R.R. Tolkien;2003
+0.0;7 Films Cinéma;France;Élie Chouraqui;Action;519596.0;Man.on.Fire;R;04/09/1987;87;5.9;Scott Glenn;1340;A.J. Quinnell;1987
+92000000.0;Pixar Animation Studios;USA;Brad Bird;Animation;261441092.0;The.Incredibles;PG;05/11/2004;115;8.0;Craig T. Nelson;520926;Brad Bird;2004
+50000000.0;Columbia Pictures Corporation;USA;Steven Brill;Comedy;126293452.0;Mr.Deeds;PG-13;28/06/2002;96;5.8;Adam Sandler;118036;Clarence Budington Kelland;2002
+65000000.0;Paramount Pictures;USA;Michael Mann;Crime;101005703.0;Collateral;R;06/08/2004;115;7.6;Tom Cruise;312190;Stuart Beattie;2004
+139000000.0;Columbia Pictures Corporation;USA;Sam Raimi;Action;403706375.0;Spider.Man;PG-13;03/05/2002;121;7.3;Tobey Maguire;587005;Stan Lee;2002
+70000000.0;DreamWorks;USA;Steven Spielberg;Drama;216540909.0;Saving.Private.Ryan;R;24/07/1998;169;8.6;Tom Hanks;979007;Robert Rodat;1998
+52000000.0;Universal Pictures;USA;Steven Soderbergh;Biography;125595205.0;Erin.Brockovich;R;17/03/2000;131;7.3;Julia Roberts;145443;Susannah Grant;2000
+115000000.0;Pixar Animation Studios;USA;Pete Docter;Animation;289916256.0;Monsters.Inc.;G;02/11/2001;92;8.1;Billy Crystal;652440;Pete Docter;2001
+60000000.0;DreamWorks Animation;USA;Andrew Adamson;Animation;267665011.0;Shrek..Full.screen.;PG;18/05/2001;90;7.9;Mike Myers;506495;William Steig;2001
+19000000.0;Strong Heart/Demme Production;USA;Jonathan Demme;Crime;130742922.0;The.Silence.of.the.Lambs;R;14/02/1991;118;8.6;Jodie Foster;990212;Thomas Harris;1991
+9000000.0;Newmarket Capital Group;USA;Christopher Nolan;Mystery;25544867.0;Memento;R;25/05/2001;113;8.5;Guy Pearce;929360;Christopher Nolan;2000
+115000000.0;Paramount Pictures;USA;Simon West;Action;131144183.0;Tomb.Raider;PG-13;15/06/2001;100;5.8;Angelina Jolie;167892;Sara B. Cooper;2001
+6000000.0;Paramount Pictures;USA;John Hughes;Comedy;70136369.0;Ferris.Buellers.Day.Off;PG-13;11/06/1986;103;7.8;Matthew Broderick;264740;John Hughes;1986
+55000000.0;Revolution Studios;USA;Wayne Wang;Comedy;94011225.0;Maid.in.Manhattan;PG-13;13/12/2002;105;5.1;Jennifer Lopez;72953;John Hughes;2002
+66000000.0;Twentieth Century Fox Film Corporation;USA;Jon Amiel;Action;87704396.0;Entrapment;PG-13;30/04/1999;113;6.3;Sean Connery;93659;Ronald Bass;1999
+55000000.0;Universal Pictures;USA;Jay Roach;Comedy;166244045.0;Meet.the.Parents;PG-13;06/10/2000;108;7.0;Ben Stiller;275232;Greg Glienna;2000
+20000000.0;Twentieth Century Fox Film Corporation;USA;Rawson Marshall Thurber;Comedy;114326736.0;Dodgeball.A.True.Underdog.Story;PG-13;18/06/2004;92;6.7;Ben Stiller;198343;Rawson Marshall Thurber;2004
+25000000.0;United Artists;USA;Barry Levinson;Drama;172825435.0;Rain.Man;R;16/12/1988;133;8.0;Dustin Hoffman;408473;Barry Morrow;1988
+90000000.0;Universal Pictures;USA;Tom Shadyac;Biography;135026902.0;Patch.Adams;PG-13;25/12/1998;115;6.7;Robin Williams;86765;Patch Adams;1998
+70000000.0;Columbia Pictures Corporation;USA;Tim Burton;Adventure;66257002.0;Big.Fish;PG-13;09/01/2004;125;8.0;Ewan McGregor;369336;Daniel Wallace;2003
+63000000.0;Fox 2000 Pictures;USA;David Fincher;Drama;37030102.0;Fight.Club;R;15/10/1999;139;8.8;Brad Pitt;1492073;Chuck Palahniuk;1999
+80000000.0;Columbia Pictures Corporation;USA;Clark Johnson;Action;116934650.0;S.W.A.T.;PG-13;08/08/2003;117;6.0;Samuel L. Jackson;125305;Robert Hamner;2003
+10000000.0;Be Gentlemen Limited Partnership;USA;Gus Van Sant;Drama;138433435.0;Good.Will.Hunting;R;09/01/1998;126;8.3;Robin Williams;675871;Matt Damon;1997
+40000000.0;Columbia Pictures Corporation;USA;Rob Reiner;Drama;141340178.0;A.Few.Good.Men;R;11/12/1992;138;7.7;Tom Cruise;196002;Aaron Sorkin;1992
+90000000.0;Touchstone Pictures;USA;Tony Scott;Action;111549836.0;Enemy.of.the.State;R;20/11/1998;132;7.3;Will Smith;199848;David Marconi;1998
+95000000.0;Paramount Pictures;USA;Simon West;Crime;102705852.0;The.Generals.Daughter;R;18/06/1999;116;6.3;John Travolta;45376;Nelson DeMille;1999
+102000000.0;Twentieth Century Fox Film Corporation;USA;Steven Spielberg;Action;132072926.0;Minority.Report;PG-13;21/06/2002;145;7.7;Tom Cruise;430579;Philip K. Dick;2002
+80000000.0;Columbia Pictures Corporation;USA;Nancy Meyers;Comedy;124728738.0;Somethings.Gotta.Give;PG-13;12/12/2003;128;6.7;Jack Nicholson;96603;Nancy Meyers;2003
+20000000.0;Lucasfilm;USA;Steven Spielberg;Adventure;225686079.0;Raiders.of.the.Lost.Ark;PG;22/10/1981;115;8.5;Harrison Ford;99103;George Lucas;1981
+75000000.0;Revolution Studios;USA;Peter Segal;Comedy;135645823.0;Anger.Management;PG-13;11/04/2003;106;6.2;Jack Nicholson;180365;David Dorfman;2003
+12000000.0;Fox Searchlight Pictures;USA;Alexander Payne;Comedy;71503593.0;Sideways;R;21/01/2005;126;7.5;Paul Giamatti;158415;Rex Pickett;2004
+30000000.0;Miramax;USA;Quentin Tarantino;Action;66208183.0;Kill.Bill..Vol..2;R;16/04/2004;137;8.0;Uma Thurman;555508;Quentin Tarantino;2004
+11000000.0;Universal Pictures;USA;Paul Weitz;Comedy;102561004.0;American.Pie;R;09/07/1999;95;7.0;Jason Biggs;332271;Adam Herz;1999
+38000000.0;Universal Pictures;USA;Rob Cohen;Action;144533925.0;The.Fast.and.the.Furious;PG-13;22/06/2001;106;6.7;Vin Diesel;295769;Ken Li;2001
+35000000.0;Paramount Pictures;USA;Richard Linklater;Comedy;81261177.0;The.School.of.Rock;PG-13;03/10/2003;108;7.1;Jack Black;224330;Mike White;2003
+400000.0;Fox Searchlight Pictures;USA;Jared Hess;Comedy;44540956.0;Napoleon.Dynamite;PG;27/08/2004;96;6.9;Jon Heder;171007;Jared Hess;2004
+29000000.0;New Line Cinema;USA;Nick Cassavetes;Drama;81001787.0;The.Notebook;PG-13;25/06/2004;123;7.9;Gena Rowlands;430711;Jeremy Leven;2004

@@ -64,7 +64,6 @@ names(definetti)
 
 ```r
 PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
-library(readr)
 neyman &lt;- neyman &lt;- read_delim(paste0(PATH, "neyman.csv"), 
 ";", escape_double = FALSE, trim_ws = TRUE)
 names(neyman)
@@ -77,6 +76,28 @@ names(neyman)
 [10] "budget"                 "usa_gross_income"       "worlwide_gross_income" 
 [13] "metascore"              "actor_1"                "actor_2"               
 [16] "age.rating"             "oscar_bestfilm_nominee" "oscar_bestfilm_winner" 
+```
+
+---
+
+# Dati esterni: FISHER
+
+
+```r
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+fisher &lt;- read_csv(paste0(PATH,"fisher.csv"))
+names(fisher)
+```
+
+```
+ [1] "X1"                    "imdb_title_id"         "title"                
+ [4] "original_title"        "year"                  "date_published"       
+ [7] "genre"                 "duration"              "country"              
+[10] "language"              "director"              "writer"               
+[13] "production_company"    "actors"                "description"          
+[16] "avg_vote"              "votes"                 "budget"               
+[19] "usa_gross_income"      "worlwide_gross_income" "metascore"            
+[22] "reviews_from_users"    "reviews_from_critics" 
 ```
 
 ---
@@ -104,7 +125,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 
 
@@ -131,7 +152,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 ]
 
 
