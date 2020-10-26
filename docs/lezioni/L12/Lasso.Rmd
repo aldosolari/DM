@@ -1,0 +1,560 @@
+---
+title: "Lasso and best subset selection"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightLanguage: R
+      ratio: '16:9'
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+* Three norms
+
+* Lasso
+
+* Best subset selection
+
+* Variable selection and cross-validation
+
+
+---
+
+# Three norms
+
+Let's consider three canonical choices: the $\ell_0$
+, $\ell_1$ and $\ell_2$ norms
+$$\|\boldsymbol{\beta} \|_0 = \sum_{j=1}^{p}1\{\beta_j\neq 0\}, \quad \|\boldsymbol{\beta} \|_1 = \sum_{j=1}^{p} |\beta_j |, \quad \|\boldsymbol{\beta} \|_2 =\Big( \sum_{j=1}^{p} \beta_j^2 \Big)^{1/2}$$
+
+The three norms are special cases of the $\ell_q$ norm:
+$$\| \boldsymbol{\beta} \|_{q} =  (\sum_{j=1}^{p}|\beta_j|^q)^{1/q}$$
+
+
+Strictly speacking, "the $\ell_0$ norm" is not a norm : it does not satisfy positive homogeneity, i.e. $\|a\boldsymbol{\beta} \|_0 \neq a \|\boldsymbol{\beta} \|_0$ for $a>0$
+
+---
+
+![](images/four.jpg)
+
+---
+
+# Penalized problems
+
+In penalized form, the use of the $\ell_0$
+, $\ell_1$ and $\ell_2$ norms gives rise to the problems
+
+* Best subset selection
+    $$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 + \lambda\| \boldsymbol{\beta}\|_0$$
+* Lasso regression
+    $$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 + \lambda\| \boldsymbol{\beta}\|_1$$
+*  Ridge regression
+    $$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 + \lambda\| \boldsymbol{\beta}\|^2_2$$
+
+with  tuning parameter $\lambda\geq 0$ 
+
+---
+
+# Constrained problems
+
+In constrained form, the use of the $\ell_0$
+, $\ell_1$ and $\ell_2$ norms gives rise to the problems
+
+* Best subset selection
+    $$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|_0 \leq k$$
+* Lasso regression
+    $$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|_1 \leq t$$
+*  Ridge regression
+    $$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|^2_2 \leq t$$
+
+where $k$ and $t$ are the tuning parameters
+
+Note that it makes sense to restrict $k$ to be an integer: in best subset selection, we want to find the "best" subset of predictors of size $k$, where "best" is in terms of the achieved training error
+
+---
+
+# Penalized and constrained problems
+
+* The penalized and constrained problems with the $\ell_1$ and $\ell_2$ norms (lasso and ridge) are equivalent: for any $t\geq 0$ and solution $\hat{\boldsymbol{\beta}}$ of the constrained problem, there is a value $\lambda\geq 0$ such that  $\hat{\boldsymbol{\beta}}$ also solves the penalized problem, and vice versa
+
+* The penalized and constrained problems with the  $\ell_0$ norm (best subset selection) are not equivalent: for every value of $\lambda \geq 0$ and solution $\hat{\boldsymbol{\beta}}$ of the penalized problem, there is a value of $k$ such that $\hat{\boldsymbol{\beta}}$ solves the constrained problem, but the converse is not true
+
+---
+
+# Convexity
+
+* The lasso and ridge regression problems have a very important property: they are __convex optimization problems__
+
+* It is convexity that allows to equate the penalized and constrained problems
+
+* It is also convexity that allows to efficiently obtain the lasso and ridge regression solutions
+
+* The lasso penalty term is not strictly convex and it makes the solutions non-linear in the $y_i$, and there is no closed form expression as in ridge
+
+* Why is a convex optimization problem so special? The short answer: because any local minimizer is a global minimizer
+
+* Best subset selection is not convex. It is known to be __NP-hard__, in some sense the worst kind of nonconvex problem
+
+---
+
+
+# Sparsity
+
+* Sparsity is the assumption that only a "small" number of predictors have an effect, i.e. have $\beta_j \neq 0$
+
+*  We would like our estimator $\hat{\boldsymbol{\beta}}$ to be __sparse__, meaning that most $\hat{\beta}_j$ are zero
+
+* The ridge regression estimator is not sparse
+
+* The best subset selection estimator and the lasso estimator are sparse
+
+* Why does the $\ell_1$ norm induces sparsity and not the $\ell_2$ norm? Look at the lasso and ridge constraint sets (ISLR, Figure 6.7)
+
+---
+
+![](images/constraints.jpg)
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Lasso
+
+---
+
+
+# Lasso regression
+
+* Solve the penalized problem
+$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 + \lambda\| \boldsymbol{\beta}\|_1$$
+or, equivalently, the constrained problem
+$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|_1 \leq t$$
+
+* The solution is known as LASSO: Least Absolute Shrinkage and
+Selection Operator (Tibshirani, 1996)
+
+* Shrinkage: $\hat{\boldsymbol{\beta}}(\lambda)$ is the lasso shrunken estimate
+
+* Selection: $\hat{\mathcal{A}}(\lambda) = \{X_j: \hat{\beta}_j(\lambda) \neq 0\}$ is the set of active predictors
+
+---
+
+Figure 2.1 in Hastie, Tibshirani, Wainwright (2015) [Statistical Learning with Sparsity](https://web.stanford.edu/~hastie/StatLearnSparsity/) 
+
+![](images/lassoridge.jpg)
+
+---
+
+# The one standard error rule
+
+* Usually we choose the tuning parameter $\lambda$ that minimize the CV error
+
+* This rule often ends up selecting models that are larger than desiderable for interpretation purposes
+
+* We can achieve smaller, simpler models with comparable predictive performance by using a simple device called the __one standard error rule__
+
+* We can compute cross-validation "standard errors" as
+$$\mathrm{SE}(\mathrm{CVErr}) = \frac{1}{\sqrt{K}}\mathrm{sd}(\mathrm{Err}^{-1},\ldots,\mathrm{Err}^{-K})$$
+where $\mathrm{Err}^{-k}$ denotes the error incurred in predicting the observations in the $k$ hold-out fold, $k=1,\ldots,K$
+
+* The one standard error rule choooses the tuning parameter value corresponding to the simplest model whose CV error is within one standard error of the minimum
+
+---
+
+![](images/oneserule.jpg)
+
+# Regularization
+
+![](images/biasvar.jpg)
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Best subset selection
+
+---
+
+# Best subset selection
+
+* Solve the constrained problem
+$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|_0 \leq k$$
+
+* The solution is the best subset of predictors of size $k$, known as __best subset selection__
+
+* The problem is nonconvex (NP-hard): it requires
+searching through all ${p \choose k}$ subsets of predictors
+
+---
+
+# Algorithm
+
+Set $B_0$ as the null model (only intercept)
+
+For $k=1,\ldots,p$:
+
+1. Fit all ${ p \choose k }$ models that contain exactly $k$ predictors
+
+2. Pick the "best" among these ${ p \choose k }$ models, and call it $B_k$, where "best" is defined having the smallest residual sum of squares RSS = $n \mathrm{MSE}_{\mathrm{Tr}}$
+
+Select a single best model from among $B_0,B_1,\ldots,B_p$ using AIC, BIC, Cross-Validation, etc.
+
+
+---
+
+![](images/bestsubset.jpg)
+
+---
+
+# Backward stepwise selection
+
+
+* __Greedy algorithm__ sub-optimal to best subset selection but computationally efficient
+* Applicable only when $n>p$
+
+__Algorithm__
+
+Set $S_p$ as the full model (all $p$ predictors)
+
+For $k=p,p-1,\ldots,1$:
+
+1. Consider all $k$ models that contain all but one of the predictors in $S_k$, for a total of $k-1$ predictors
+
+2. Choose the "best" among these $k$ models and call it $S_{k-1}$, where "best" is defined having the smallest RSS
+
+Select a single best model from among $S_0,S_1,\ldots,S_p$ using AIC, BIC, cross-validation, etc.
+
+---
+
+# Forward stepwise selection
+
+
+* Greedy algorithm sub-optimal to best subset selection but computationally efficient
+* Applicable also when $p>n$ to construct the sequence $S_0, S_1,\ldots,S_{n-1}$
+
+__Algorithm__
+
+Set $S_0$ as the null model (only intercept)
+
+For $k=0,\ldots,\min(n-1,p-1)$:
+
+
+1. Consider all $p-k$ models that augment the predictors in $S_k$ with one additional predictor
+
+2. Choose the "best" among these $p-k$ models and call it $S_{k+1}$, where "best" is defined having the smallest RSS
+
+Select a single best model from among $S_0,S_1,S_2, \ldots$ using AIC, BIC, cross-validation, etc.
+
+
+---
+
+# Forward with AIC-based stopping rule
+
+Set $S_0$ as the null model and $k=0$
+
+1. Consider all $p-k$ models that augment the predictors in $S_k$ with one additional predictor
+
+2. Choose the "best" among these $p-k$ models and call it $S_{k+1}$, where "best" is defined having the smallest AIC
+
+3. If AIC( $S_{k+1}$ ) $<$ AIC( $S_k$ ), set $k=k+1$ and go to 1., otherwise STOP
+
+---
+
+# Application to Hitters data
+
+```{r}
+rm(list=ls())
+library(ISLR)
+data(Hitters)
+Hitters = Hitters[complete.cases(Hitters),]
+Hitters[,"League"]=(Hitters[,"League"]=="A")*1
+Hitters[,"Division"]=(Hitters[,"Division"]=="E")*1
+Hitters[,"NewLeague"]=(Hitters[,"NewLeague"]=="A")*1
+set.seed(1)
+train.id = sample(nrow(Hitters),nrow(Hitters)/2)
+train = Hitters[train.id,]
+names(train)[19] = "y" 
+X = as.matrix(train[,-19])
+y = train$y
+n = nrow(X)
+p = ncol(X)
+test = Hitters[-train.id,]
+names(test)[19] = "y" 
+X.star = as.matrix(test[,-19])
+y.star = test$y
+m = nrow(X.star)
+```
+
+---
+
+```{r}
+# Full model
+fit.full = lm(y ~ ., train)
+RMSE.full = sqrt(mean( (predict(fit.full, newdata=test) - y.star )^2 ))
+RMSE.full
+```
+
+---
+
+```{r}
+# Ridge regression
+require(glmnet)
+K = 10
+set.seed(123)
+ridge.cv<-cv.glmnet(X,y,alpha=0, nfolds = K, grouped=FALSE)
+hatlambda <-ridge.cv$lambda.min
+yhat.ridge = predict(ridge.cv, s=hatlambda, newx=X.star, exact=TRUE)
+RMSE.ridge = sqrt(mean( (yhat.ridge - y.star)^2 ))
+RMSE.ridge
+```
+
+
+---
+
+```{r}
+# LASSO
+fit.lasso <- glmnet(X, y, alpha=1)
+plot(fit.lasso, xvar="lambda", label=T)
+```
+
+---
+
+```{r}
+# The one-standard error rule
+set.seed(123)
+cv.lasso <-cv.glmnet(X, y, alpha=1, nfolds = K)
+hatlambda<-cv.lasso$lambda.1se
+yhat.lasso = predict(fit.lasso, s=hatlambda, newx=X.star, exact=T)
+RMSE.lasso = sqrt(mean( (yhat.lasso - y.star)^2 ))
+RMSE.lasso
+```
+
+---
+
+```{r}
+# Best subset
+library(leaps)
+fit.bests <- regsubsets(y~.,train, nvmax=p)
+summary.bests<-summary(fit.bests)
+summary.bests$outmat
+```
+
+---
+
+```{r}
+# Best Cp
+plot(summary.bests$cp, xlab="k", ylab="Cp", type="b")
+```
+
+---
+
+```{r}
+# best BIC
+plot(fit.bests, scale="bic")
+```
+
+---
+
+```{r}
+# function predict for regsubsets
+predict.regsubsets =function(object ,newdata ,id ,...){
+ form=as.formula(object$call[[2]])
+ mat=model.matrix(form, newdata)
+ coefi =coef(object, id=id)
+ xvars =names(coefi)
+ mat[,xvars]%*%coefi
+}
+
+yhat.bestBIC = predict.regsubsets(fit.bests, newdata=test, id=which.min(summary.bests$bic))
+RMSE.BIC = sqrt(mean( (yhat.bestBIC - y.star)^2 ))
+RMSE.BIC
+```
+
+---
+
+```{r}
+# Forward with AIC stopping rule
+fit.null = lm(y ~ 1, train)
+fit.fwdAIC = step(fit.null, scope=list(upper=fit.full), direction="forward", k=2, trace=0)
+summary(fit.fwdAIC)$coeff
+yhat.fwdAIC = predict(fit.fwdAIC, newdata=test)
+RMSE.fwdAIC = sqrt(mean( (yhat.fwdAIC - y.star)^2 ))
+RMSE.fwdAIC
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Variable selection and cross-validation
+
+---
+
+# Variable selection and cross-validation
+
+* See ISLR, 6.5.3
+
+* Since variable selection is part of the model building process,  cross-validation should account for the __variability of the selection__ when calculating estimates of the test error
+
+* If the full data set is used to perform the best subset selection step, the cross-validation errors that we obtain will not be accurate estimates of the test error
+
+* To choose among the models of different sizes using cross-validation, we perform best
+subset selection within each iteration of the cross-validation
+
+* Note that possibly different subsets of the "best" predictors are generated at each iteration of the cross-validation
+
+---
+
+```{r}
+# Validation set
+set.seed(1)
+is.va = sample(c(T,F), n, replace = TRUE)
+err.va = vector()
+fit = regsubsets(y ~.,data=train[!is.va,],nvmax=p)
+for (j in 1:p){
+  yhat=predict(fit, train[is.va,], id=j)
+  err.va[j] = mean( (train$y[is.va]-yhat)^2 )
+}
+yhat.bestVa = predict.regsubsets(fit.bests, newdata=test, id=which.min(err.va))
+RMSE.bestVa = sqrt(mean( (yhat.bestVa - y.star)^2 ))
+RMSE.bestVa
+```
+
+---
+
+```{r}
+# K-fold Cross-Validation
+set.seed(123)
+folds = sample(1:K, n, replace =TRUE)
+KCV = matrix(NA, K, p)
+for (k in 1:K){
+  fit_k = regsubsets(y ~.,data=train[folds!=k,],nvmax=p)
+  for (j in 1:p){
+    yhat_k=predict(fit_k, train[folds==k,], id=j)
+    KCV[k,j]=mean( (train$y[folds==k]-yhat_k)^2 )
+  }
+}
+```
+
+---
+
+```{r}
+plot(1:p,apply(KCV,2,mean), type="b", ylab="CV error", xlab="k")
+```
+
+---
+
+```{r}
+yhat.bestCV = predict.regsubsets(fit.bests, newdata=test, id=4)
+RMSE.bestCV = sqrt(mean( (yhat.bestCV - y.star)^2 ))
+RMSE.bestCV
+```
+
+---
+
+```{r}
+data.frame(
+  fit = c("full","ridge","lasso","best bic", "best fwd aic", "best va", "best cv"),
+  RMSE = c(RMSE.full,RMSE.ridge,RMSE.lasso, RMSE.BIC, RMSE.fwdAIC, RMSE.bestVa, RMSE.bestCV)
+)
+```
+
+
+
+---
+
+# ESL Chapter 7.10.2
+
+Consider a scenario with $n = 50$ samples in two equal-sized classes, and $p = 5000$ quantitative
+predictors (standard Gaussian) that are independent of the class labels. The true (test) error rate of any classifier is 50%. Try the following approach:
+
+1. choose the 100 predictors having highest correlation
+with the class labels
+
+2. use a 1-nearest neighbor classifier, based on just these 100 *selected* predictors. 
+
+3. Use $K$-fold CV to estimate the test error of the final model
+
+
+
+---
+
+```{r}
+set.seed(123)
+n = 50
+p = 5000
+y = c(rep(0,n/2),rep(1,n/2))
+X = matrix(rnorm(p*n), ncol=p)
+# compute p correlations between each predictor and the response
+cors = apply(X,2, function(x) cor(y,x))
+# columns of the best 100 predictors
+colbest100 = sort(-abs(cors), index.return=T)$ix[1:100]
+# best 100 predictors
+Xbest = X[,colbest100]
+# CV
+require(class)
+K<-5
+set.seed(123)
+folds <- sample( rep(1:K,length=n) )
+Err.CV = vector()
+for (k in 1:K){
+out = which(folds==k)
+# predict the held-out samples using k nearest neighbors
+pred <- knn(train = Xbest[ -out, ],test = Xbest[out, ], cl = y[-out], k = 1)
+# % of misclassified samples
+Err.CV[k] = mean( y[out] != pred)
+}
+mean(Err.CV)
+```
+
+---
+
+Leaving observations out after the variables have been selected does not correctly mimic the application of the classifier to a completely independent
+test set, since these predictors have already seen the left out observations. Here is the correct way to carry out cross-validation in this example:
+
+1. Divide the observations into $K$ cross-validation folds at random
+2. For each fold $k = 1,\ldots,K$
+
+    a. Find the best 100 predictors that have the largest (in absolute value) correlation with the class labels, using all of the observations except those in fold $k$
+    
+    b. Using just this subset of predictors, fit a 1-nearest neighbor classifier, using all of the observations except those in fold $k$
+    
+    c. Use the classifier to predict the class labels for the observations in fold $k$
+    
+---
+
+```{r}
+set.seed(123)
+n = 50
+p = 5000
+y = c(rep(0,n/2),rep(1,n/2))
+X = matrix(rnorm(p*n), ncol=p)
+require(class)
+K<-5
+set.seed(123)
+folds <- sample( rep(1:K,length=n) )
+Err.CV = vector()
+for (k in 1:K){
+out = which(folds==k)
+cors = apply(X[-out, ],2, function(x) cor(y[-out],x))
+colbest100 = sort(-abs(cors), index.return=T)$ix[1:100]
+Xbest = X[,colbest100]
+pred <- knn(train = Xbest[-out, ],
+            test = Xbest[out, ],
+            cl = y[-out], k = 1)
+Err.CV[k] = mean( y[out] != pred)
+}
+mean(Err.CV)
+```

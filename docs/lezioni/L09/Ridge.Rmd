@@ -516,35 +516,12 @@ K = sapply(1:n, function(j)
 yhat = K %*% solve(K + mylambda*diag(n)) %*% y
 ```
 
-
 ---
 
 layout: false
 class: inverse, middle, center
 
-# *Dati NYC taxicab*
-
----
-
-
-Ciascuna osservazione corrisponde ad una corsa in taxi nella città di New York nel mese di Maggio 2015. 
-
-La variabile risposta è la percentuale di mancia lasciata al tassista (`tip_perc`). 
-
-```{r}
-# importazione dei dati
-PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L09/"
-taxi <- read.csv(paste(PATH,"taxi.csv"))
-head(taxi)
-```
-
-
----
-
-layout: false
-class: inverse, middle, center
-
-# *Principal components regression*
+# Principal components regression
 
 ---
 
@@ -583,9 +560,6 @@ $$\begin{aligned}
 \end{aligned}$$
 
 quindi la regressione *ridge* moltiplica la $j$-ma colonna $\mathbf{U}_j$ per $D^{2}_{jj}/(D^{2}_{jj} + \lambda)$; se $D_{jj}$ è un valore piccolo, la contrazione verso lo zero (*shrinkage*) sarà più forte.
-
-
----
 
 
 ---
@@ -775,3 +749,15 @@ plot(main="hard", ylab="MSE", xlab=expression(lambda),
      x=lambda, y=rowMeans(out_mat_hard), type="l")
 ```
 ]
+
+---
+
+```{r}
+rm(list=ls())
+data(Hitters)
+Hitters = na.omit(Hitters)
+library(pls)
+fit.pcr=pcr(Salary ~ ., data=Hitters, scale=TRUE, validation ="CV")
+validationplot(fit.pcr, val.type="MSEP")
+```
+

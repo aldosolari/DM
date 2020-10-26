@@ -522,7 +522,7 @@ che corrisponde al prodotto scalare di vettori della forma
 `$$(x_{i1},\ldots,x_{ip},x_{i1}x_{i1}, \ldots,x_{i1}x_{ip}, x_{i2}x_{i1}, \ldots, x_{i2}x_{ip}, \ldots, x_{ip}x_{ip})^\mathsf{T}$$`
 Ora il costo computazionale per calcolare `\(\mathbf{K}\)` è di `\(O(n^2p)\)` operazioni, e possiamo 
 calcolare i valori stimati dal modello come
-`\(\mathbf{K}(\mathbf{K}+ \lambda\mathbf{I})^{-1}\mathbf{y}\)`
+`\(\mathbf{K}(\mathbf{K}+ \lambda\mathbf{I})^{-1}\mathbf{y}\)`. 
 ---
 
 
@@ -545,6 +545,12 @@ K = sapply(1:n, function(j)
 yhat = K %*% solve(K + mylambda*diag(n)) %*% y
 ```
 
+---
+
+layout: false
+class: inverse, middle, center
+
+# Principal components regression
 
 ---
 
@@ -583,7 +589,6 @@ Per confronto, i valori stimati con OLS (quando `\(\mathbf{X}\)` ha rango pieno)
 \end{aligned}$$`
 
 quindi la regressione *ridge* moltiplica la `\(j\)`-ma colonna `\(\mathbf{U}_j\)` per `\(D^{2}_{jj}/(D^{2}_{jj} + \lambda)\)`; se `\(D_{jj}\)` è un valore piccolo, la contrazione verso lo zero (*shrinkage*) sarà più forte.
-
 
 
 ---
@@ -808,6 +813,20 @@ plot(main="hard", ylab="MSE", xlab=expression(lambda),
 
 ![](Ridge_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
 ]
+
+---
+
+
+```r
+rm(list=ls())
+data(Hitters)
+Hitters = na.omit(Hitters)
+library(pls)
+fit.pcr=pcr(Salary ~ ., data=Hitters, scale=TRUE, validation ="CV")
+validationplot(fit.pcr, val.type="MSEP")
+```
+
+![](Ridge_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

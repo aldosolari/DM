@@ -53,9 +53,17 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 
 * L10 (22 Ottobre 9:30 - 12:30) SINCRONA
   * [Regressione ridge](docs/lezioni/L09/Ridge.html)
-  * Studiare ISL 6, 6.2.1, 6.3.1, 6.4
+  * Studiare ISL 6, 6.2.1, 6.3.1, 6.7.1; AKL 3.1, 3.2, 3.4
 
-* L11 (26 Ottobre 14:30 - 16:30) 
+* L11 (26 Ottobre 14:30 - 16:30) SINCRONA
+  * [Best subsets](docs/lezioni/L11/Bestsubsets.html)
+  * Studiare ISL 6.1, 6.5
+  
+* L12 (26 Ottobre 12:30 - 15:30) SINCRONA
+  * Lasso
+  * Studiare ISL 6.2.2, 6.2.3, 6.2
+
+
 
 
 * L12 (27 Ottobre 12:30 - 15:30) 
