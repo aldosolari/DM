@@ -455,11 +455,24 @@ $$\begin{aligned}
 \mathbf{X}\mathbf{X}^\mathsf{T}(\mathbf{X}\mathbf{X}^\mathsf{T} + \lambda \mathbf{I} )^{-1} \mathbf{y} = \mathbf{K}(\mathbf{K}+ \lambda \mathbf{I})^{-1}\mathbf{y}
 \end{aligned}$$
 
-Si noti che
-* $\mathbf{X}^\mathsf{T}\mathbf{X}$ è $p\times p$, mentre la matrice di Gram $\mathbf{K}=\mathbf{X}\mathbf{X}^\mathsf{T}$ è $n\times n$ dove $K_{ij}=\{\mathbf{K}\}_{ij} = x_i^\mathsf{T} x_j = \sum_{k}x_{ik}x_{jk}$
+Si noti che $\mathbf{X}^\mathsf{T}\mathbf{X}$ è una matrice $p\times p$, mentre $\mathbf{K}=\mathbf{X}\mathbf{X}^\mathsf{T}$ è una matrice $n\times n$, detta matrice di Gram, dove ciascun elemento $$K_{ij}=\{\mathbf{K}\}_{ij} = x_i^\mathsf{T} x_j = \sum_{k=1}^{p}x_{ik}x_{jk}$$ 
+dipende solamente dal prodotto scalare tra due osservazioni (la riga $i$-sima $x_i^\mathsf{T}$ e la riga $j$-sima $x_j^\mathsf{T}$ della matrice del disegno)
 
-* Calcolare i valori stimati utilizzando la prima espressione richiede un numero di operazioni dell'ordine $O(np^2+p^3)$. Se $p\ll n$ può risultare computazionalmente impegnativo. La seconda espressione invece richiede un numero di operazioni dell'ordine $O(n^2p+n^3)$
+---
 
+# Numero di operazioni 
+
+Il numero di operazioni eseguite in un secondo dalla CPU è denominato *FLOPS*, acronimo di *FLoating point Operations Per Second*. Se confrontiamo i due approcci per calcolare i valori stimati dalla regressione *ridge*
+
+$$i.\quad \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I} )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y} \qquad \mathrm{vs} \qquad ii.\quad \mathbf{X}\mathbf{X}^\mathsf{T}(\mathbf{X}\mathbf{X}^\mathsf{T} + \lambda \mathbf{I} )^{-1} \mathbf{y}$$
+
+Calcolare i valori stimati utilizzando $i.$ richiede un numero di operazioni dell'ordine $O(np^2+p^3)$. Se $p\ll n$ può risultare computazionalmente impegnativo. 
+
+La notazione $O$-grande, e.g. $O(n^3)$ indica che esiste una costante positiva $M$ tale che il numero effettivo di operazioni è inferiore a $Mn^3$. 
+
+Calcolare i valori stimati utilizzando $ii.$ invece richiede un numero di operazioni dell'ordine $O(n^2p+n^3)$.
+
+Per determinare il numero di operazioni richieste per vari tipi di operazioni si veda ad esempio [qui](http://www.stat.cmu.edu/~ryantibs/convexopt-F18/scribes/Lecture_19.pdf) o l'appendice B.2 del libro AKL. 
 
 ---
 
@@ -473,15 +486,65 @@ x_{i2}x_{i1},x_{i2}x_{i2},\ldots, x_{i2}x_{ip}\\
 x_{ip}x_{i1},x_{ip}x_{i2},\ldots, x_{ip}x_{ip}\\
 \end{aligned}$$
 
-per un totale di $O(p^2)$ predittori,  il costo computazionale è dell'ordine $O(n^2p^2 + n^3)$ che può essere proibitivo se $p \gg n$. 
+per un totale di $O(p^2)$ predittori. In questo caso il costo computazionale utilizzando $ii.$ è dell'ordine $O(n^2p^2 + n^3)$ che può essere proibitivo se $p \gg n$. 
 
-Però si può calcolare $\mathbf{K}$ direttamente. Se definiamo
+Tuttavia, invece di creare tutti i predittori aggiuntivi e poi calcolare la matrice $\mathbf{K}$, possiamo provare a calcolare $\mathbf{K}$ direttamente. Definiamo
 $$K_{ij} = (\frac{1}{2} + x_i^\mathsf{T} x_j)^2 -\frac{1}{4}= \sum_{k} x_{ik}x_{jk} + \sum_{k,l} x_{ik}x_{il}x_{jk}x_{jl}$$
+che corrisponde al prodotto scalare di vettori della forma
+$$(x_{i1},\ldots,x_{ip},x_{i1}x_{i1}, \ldots,x_{i1}x_{ip}, x_{i2}x_{i1}, \ldots, x_{i2}x_{ip}, \ldots, x_{ip}x_{ip})^\mathsf{T}$$
+Ora il costo computazionale per calcolare $\mathbf{K}$ è di $O(n^2p)$ operazioni, e possiamo 
+calcolare i valori stimati dal modello come
+$\mathbf{K}(\mathbf{K}+ \lambda\mathbf{I})^{-1}\mathbf{y}$. 
+---
 
-possiamo calcolare i valori stimati dal modello come
-$$\mathbf{K}(\mathbf{K}+ \lambda \mathbf{I})^{-1}\mathbf{y}$$
-e il costo computazionale si riduce a un numero di operazioni dell'ordine $O(n^2p)$
+```{r}
+n = 100
+p = 20
+set.seed(123)
+y = rnorm(n)
+X = matrix(rnorm(n*p),ncol=p)
 
+mylambda = 1
+
+X2 = cbind(X,do.call(cbind, lapply(1:p, function(i) X[,i] *  apply(X,2,identity)) ))
+G <- X2 %*% t(X2)
+yhat2 = G %*% solve(G + mylambda*diag(n)) %*% y
+
+K = sapply(1:n, function(j)
+  apply(X,1,function(x) (0.5 + t(x) %*% X[j,] )^2 - 0.25 )
+)
+yhat = K %*% solve(K + mylambda*diag(n)) %*% y
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# *Dati NYC taxicab*
+
+---
+
+
+Ciascuna osservazione corrisponde ad una corsa in taxi nella città di New York nel mese di Maggio 2015. 
+
+La variabile risposta è la percentuale di mancia lasciata al tassista (`tip_perc`). 
+
+```{r}
+# importazione dei dati
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L09/"
+taxi <- read.csv(paste(PATH,"taxi.csv"))
+head(taxi)
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# *Principal components regression*
 
 ---
 
@@ -521,6 +584,8 @@ $$\begin{aligned}
 
 quindi la regressione *ridge* moltiplica la $j$-ma colonna $\mathbf{U}_j$ per $D^{2}_{jj}/(D^{2}_{jj} + \lambda)$; se $D_{jj}$ è un valore piccolo, la contrazione verso lo zero (*shrinkage*) sarà più forte.
 
+
+---
 
 
 ---
