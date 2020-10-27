@@ -179,27 +179,29 @@ The one standard error rule choooses the tuning parameter value corresponding to
 
 ---
 
+```{r}
+library(glmnet); library(hdi); data(riboflavin); X = riboflavin$x; y = riboflavin$y
+```
+
 .pull-left[
 ```{r}
-rm(list=ls())
-library(ISLR)
-data(Hitters)
-Hitters=na.omit(Hitters)
-X = model.matrix(lm(Salary ~ -1 + ., Hitters))
-y = Hitters$Salary
-K <- 5
-library(glmnet)
-fit.cv <-cv.glmnet(X,y, alpha=1, nfolds = K, grouped=FALSE)
+ridge <- cv.glmnet(X,y,alpha=0)
+plot(ridge, ylim=c(0,1))
 ```
 ]
 
 .pull-right[
 ```{r}
-plot(fit.cv)
+lasso <- cv.glmnet(X,y,alpha=1)
+plot(lasso, ylim=c(0,1))
 ```
-
 ]
 
+---
+
+ELS, Figure 7.2
+
+![](images/biasvar.jpg)
 
 ---
 
@@ -241,3 +243,6 @@ $$\hat{\boldsymbol{\beta}}^{\mathrm{E}}_{\lambda,\alpha} = \arg\min_{\boldsymbol
 Setting $\alpha$ to 1 yields the Lasso regression and setting it to 0 the ridge regression. 
 
 Adding a small $\ell_2$-penalty preserves the variable selection and convexity properties of the $\ell_1$-penaltized regression, while reducing the variance of the model when $\boldsymbol{X}$ contains sets of highly correlated variables. 
+
+
+

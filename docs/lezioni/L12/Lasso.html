@@ -185,31 +185,36 @@ The one standard error rule choooses the tuning parameter value corresponding to
 
 ---
 
+
+```r
+library(glmnet); library(hdi); data(riboflavin); X = riboflavin$x; y = riboflavin$y
+```
+
 .pull-left[
 
 ```r
-rm(list=ls())
-library(ISLR)
-data(Hitters)
-Hitters=na.omit(Hitters)
-X = model.matrix(lm(Salary ~ -1 + ., Hitters))
-y = Hitters$Salary
-K &lt;- 5
-library(glmnet)
-fit.cv &lt;-cv.glmnet(X,y, alpha=1, nfolds = K, grouped=FALSE)
+ridge &lt;- cv.glmnet(X,y,alpha=0)
+plot(ridge, ylim=c(0,1))
 ```
+
+![](Lasso_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
 ```r
-plot(fit.cv)
+lasso &lt;- cv.glmnet(X,y,alpha=1)
+plot(lasso, ylim=c(0,1))
 ```
 
-![](Lasso_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
-
+![](Lasso_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 ]
 
+---
+
+ELS, Figure 7.2
+
+![](images/biasvar.jpg)
 
 ---
 
