@@ -60,8 +60,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare ISL 6.1, 6.5
   
 * L12 (26 Ottobre 12:30 - 15:30) SINCRONA
-  * Lasso
-  * Studiare ISL 6.2.2, 6.2.3, 6.2
+  * [Lasso](docs/lezioni/L12/Lasso.html)
+  * Studiare ISL 6.2.2, 6.2.3, 6.2; AKL 7.1, 7.2, 7.4
 
 
 

@@ -149,6 +149,32 @@ names(pearson)
 
 ---
 
+
+# Dati esterni: BREIMAN
+
+
+```r
+breiman &lt;- read_delim(paste0(PATH, "breiman.csv"), 
+";", escape_double = FALSE, trim_ws = TRUE)
+dim(breiman)
+```
+
+```
+[1] 6820   15
+```
+
+```r
+names(breiman)
+```
+
+```
+ [1] "budget"   "company"  "country"  "director" "genre"    "gross"   
+ [7] "name"     "rating"   "released" "runtime"  "score"    "star"    
+[13] "votes"    "writer"   "year"    
+```
+
+---
+
 # Esempio di analisi
 
 Carichiamo solo i dati di training (senza considerare le date)
@@ -172,7 +198,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 
 
@@ -199,7 +225,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 ]
 
 

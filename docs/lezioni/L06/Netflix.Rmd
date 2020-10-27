@@ -77,6 +77,18 @@ names(pearson)
 
 ---
 
+
+# Dati esterni: BREIMAN
+
+```{r, eval=T}
+breiman <- read_delim(paste0(PATH, "breiman.csv"), 
+";", escape_double = FALSE, trim_ws = TRUE)
+dim(breiman)
+names(breiman)
+```
+
+---
+
 # Esempio di analisi
 
 Carichiamo solo i dati di training (senza considerare le date)
