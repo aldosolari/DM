@@ -46,6 +46,14 @@ write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
 PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
 library(readr)
 definetti &lt;- read_csv(paste0(PATH,"definetti.csv"))
+dim(definetti)
+```
+
+```
+[1] 100  16
+```
+
+```r
 names(definetti)
 ```
 
@@ -63,9 +71,16 @@ names(definetti)
 
 
 ```r
-PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
-neyman &lt;- neyman &lt;- read_delim(paste0(PATH, "neyman.csv"), 
+neyman &lt;- read_delim(paste0(PATH, "neyman.csv"), 
 ";", escape_double = FALSE, trim_ws = TRUE)
+dim(neyman)
+```
+
+```
+[1] 100  18
+```
+
+```r
 names(neyman)
 ```
 
@@ -84,8 +99,15 @@ names(neyman)
 
 
 ```r
-PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
 fisher &lt;- read_csv(paste0(PATH,"fisher.csv"))
+dim(fisher)
+```
+
+```
+[1] 100  23
+```
+
+```r
 names(fisher)
 ```
 
@@ -98,6 +120,31 @@ names(fisher)
 [16] "avg_vote"              "votes"                 "budget"               
 [19] "usa_gross_income"      "worlwide_gross_income" "metascore"            
 [22] "reviews_from_users"    "reviews_from_critics" 
+```
+
+---
+
+# Dati esterni: PEARSON
+
+
+```r
+pearson &lt;- read_delim(paste0(PATH, "pearson.csv"), 
+";", escape_double = FALSE, trim_ws = TRUE)
+dim(pearson)
+```
+
+```
+[1] 100  15
+```
+
+```r
+names(pearson)
+```
+
+```
+ [1] "budget"   "company"  "country"  "director" "genre"    "gross"   
+ [7] "name"     "rating"   "released" "runtime"  "score"    "star"    
+[13] "votes"    "writer"   "year"    
 ```
 
 ---
@@ -125,7 +172,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 
 
@@ -152,7 +199,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 ]
 
 

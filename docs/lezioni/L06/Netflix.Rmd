@@ -38,6 +38,7 @@ write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
 PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
 library(readr)
 definetti <- read_csv(paste0(PATH,"definetti.csv"))
+dim(definetti)
 names(definetti)
 ```
 
@@ -47,9 +48,9 @@ names(definetti)
 # Dati esterni: NEYMAN
 
 ```{r, eval=T}
-PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
-neyman <- neyman <- read_delim(paste0(PATH, "neyman.csv"), 
+neyman <- read_delim(paste0(PATH, "neyman.csv"), 
 ";", escape_double = FALSE, trim_ws = TRUE)
+dim(neyman)
 names(neyman)
 ```
 
@@ -58,9 +59,20 @@ names(neyman)
 # Dati esterni: FISHER
 
 ```{r, eval=T}
-PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
 fisher <- read_csv(paste0(PATH,"fisher.csv"))
+dim(fisher)
 names(fisher)
+```
+
+---
+
+# Dati esterni: PEARSON
+
+```{r, eval=T}
+pearson <- read_delim(paste0(PATH, "pearson.csv"), 
+";", escape_double = FALSE, trim_ws = TRUE)
+dim(pearson)
+names(pearson)
 ```
 
 ---
