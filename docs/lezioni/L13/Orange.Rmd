@@ -98,7 +98,10 @@ new products and services (called **appetency**), and willingness to respond fav
 
 ```{r}
 # import data
-load("docs/lezioni/L13/Orange.Rdata")
+library(repmis)
+source_data("https://github.com/aldosolari/DM/tree/master/docs/lezioni/L13/Orange.Rdata?raw=True")
+writeLines(x, tmp <- tempfile())
+y <- load(tmp)
 n = nrow(train)
 m = nrow(test)
 combi = rbind(train,test)
