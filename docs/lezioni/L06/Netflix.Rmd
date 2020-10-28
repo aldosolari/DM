@@ -48,7 +48,7 @@ names(definetti)
 # Dati esterni: NEYMAN
 
 ```{r, eval=T}
-neyman <- read_excel(paste0(PATH, "neyman.xlsx")
+neyman <- read_excel(paste0(PATH, "neyman.xlsx"))
 dim(neyman)
 names(neyman)
 ```
