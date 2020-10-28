@@ -66,6 +66,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 * L13 (29 Ottobre 9:30 - 12:30) 
   * [Dati Orange](docs/lezioni/L13/Orange.html)
 
+
+
 * L14 (2 Novembre 14:30 - 16:30) 
 
 * L15 (3 Novembre 12:30 - 15:30) 
