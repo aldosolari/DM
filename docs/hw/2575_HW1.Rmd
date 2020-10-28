@@ -1,0 +1,87 @@
+---
+title: "Relazione dati Netflix"
+author: "Aldo Solari, matricola 2575"
+output: pdf_document
+---
+
+
+# Relazione
+
+L’obiettivo dell'analisi è di prevedere la valutazione (*rating*) di 2931 utenti del test set per il film Miss Detective. 
+
+Il modello utilizzato per ottenere le previsioni finali è un semplice modello lineare 
+$$\hat{y}^*_i = \hat{\beta}_0 + \sum_{j=1}^{99}\hat{\beta}_j x^*_{ij} + \hat{\beta}_{100} z^*_i$$
+dove 
+
+* $x^*_{ij}$ è la valutazione dell'utente $i$-simo sul film $j$-simo del test set (e vale 0 se il dato è mancante);
+* $z^*_i$ è una variabile indicatrice che vale 1 se l'utente $i$-simo del test set assegna mediamente valutazioni più alte ai film di genere romantico o drammatico rispetto ad altri generi di film, altrimento vale 0; questa variabile è stata creata utilizzando un dataset esterno;
+* $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_{100}$ sono le stime dei coefficienti del modello ottenute sulla base del training set. 
+
+
+*Sintesi del processo di modellizzazione*
+
+1. *Pre-elaborazione dei dati*
+
+Non è stata effettuata alcuna pre-elaborazione dei dati. 
+
+2. *Dati mancanti*
+
+Non è stato effettuato alcun trattamento dei dati mancanti. Visto che nel dataset originale i dati mancanti sono codificati con il valore 0, sono stati trattati come valori numerici nel modello lineare. 
+
+3. *Feature engineering*
+
+Utilizzando il dataset esterno messo a disposizione dal gruppo DEFINETTI, è stata creata una variabile indicatrice che vale 1 se l'utente assegna mediamente valutazioni più alte ai film di genere romantico o drammatico rispetto ad altri generi di film, altrimenti vale 0. 
+
+4. *Feature selection*
+
+Non è stata effettuata alcuna selezione dei predittori. 
+
+5. *Dati esterni*
+
+E' stato utilizzato il dataset messo a disposizione dal gruppo DEFINETTI.
+
+6. *Modelli*
+
+Non sono stati considerati altri modelli oltre al modello lineare utilizzato per la previsione finale (per il quale non erano previsti parametri di *tuning*).     
+
+
+
+\newpage
+
+# Codice riproducibile
+
+Includere **solo** il codice indispensabile per ottenere la previsione finale, e visualizzare i primi valori previsti con `head(yhat)`.
+
+```{r, warning=FALSE, message=FALSE}
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
+X.tr = read.table(paste(PATH,"Train_ratings_all.dat", sep=""))
+y.tr = read.table(paste(PATH,"Train_y_rating.dat", sep=""))
+train = data.frame(X.tr, y=y.tr$V1)
+X.te = read.table(paste(PATH,"Test_ratings_all.dat", sep=""))
+test = data.frame(X.te)
+definetti <- read.csv(paste0(PATH,"definetti.csv"))
+genre <- definetti$princ_genre2[-100]
+rd <- rep(0,length(genre))
+rd[(genre=="Romance" | genre=="Drama")] <- 1
+m.tr <- apply(X.tr,1,function(x) mean(x[x!=0]))
+m1.tr <- apply(X.tr,1,function(x) sum(x[x!=0]*rd[x!=0])/sum(rd[x!=0]))
+z.tr <- m1.tr >= m.tr
+train$z <- z.tr 
+m.te <- apply(X.te,1,function(x) mean(x[x!=0]))
+m1.te <- apply(X.te,1,function(x) sum(x[x!=0]*rd[x!=0])/sum(rd[x!=0]))
+z.te <- m1.te >= m.te
+test$z <- z.te
+fit = lm(y~.,data=train)
+yhat = pmin(predict(fit, newdata=test),5)
+head(yhat)
+# file .TXT sottomesso
+# write.table(file="2575.txt", yhat, row.names = FALSE, col.names = FALSE)
+```
+
+\newpage
+
+```{r}
+sessionInfo()
+```
+
+
