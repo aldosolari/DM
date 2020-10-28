@@ -48,6 +48,7 @@ names(definetti)
 # Dati esterni: NEYMAN
 
 ```{r, eval=T}
+library(readxl)
 neyman <- read_excel(paste0(PATH, "neyman.xlsx"))
 dim(neyman)
 names(neyman)
@@ -98,6 +99,16 @@ colnames(gauss)<- c("ID","Italian Title","Title","Year","Date","Genre","Duration
 "World_Gross_Income","Metascore","Users_Review","Critics_Reviews")
 dim(gauss)
 names(gauss)
+```
+
+---
+
+# Dati esterni: NIGHTINGALE
+
+```{r, eval=T}
+nightingale <- read_csv(paste0(PATH, "nightingale.csv"))
+dim(nightingale)
+names(nightingale)
 ```
 
 ---
