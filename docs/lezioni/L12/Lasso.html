@@ -50,7 +50,7 @@ we know that `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda\)` will also be th
 `$$\| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|^2_2 \leq \|\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda\|^2_2$$`
 
 In other words, ridge regression can be seen as solving the constrained problem
-`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|^2_2 \leq t$$`
+`$$\min_{\boldsymbol{\beta} \in \mathbb{R}^p} \| \mathbf{y} - \mathbf{X}\boldsymbol{\beta} \|^2_2 \mathrm{\,\,\,\,subject\,\,to\,\,}\|\boldsymbol{\beta}\|^2_2 \leq s$$`
 for a tuning parameter `\(s\geq 0\)`. 
 
 The two problems are equivalent: for any `\(\lambda \geq 0\)` and solution `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda\)`, there is a value `\(s\geq 0\)` such that `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_\lambda\)` also solve the constrained problem; and, for any `\(s \geq 0\)` and solution `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_s\)`, there is a value `\(\lambda\geq 0\)` such that `\(\hat{\boldsymbol{\beta}}^{\mathrm{R}}_s\)` also solve the penalized problem
@@ -221,8 +221,8 @@ ELS, Figure 7.2
 # Group Lasso
 
 Suppose we have a partition `\(G_1,\ldots, G_q\)` of `\(\{1,\ldots,p\}\)`. The group Lasso penalty (Yuan and Lin, 2006) is given by 
-`$$\lambda \sum_{j=1}^{q} m_j \|\boldsymbol{\beta}_{G_j}\|_2$$`
-The multipliers `\(m_j&gt;0\)` serve to balance cases where the groups are of very different sizes; typically we choose `\(m_j = sqrt{|G_j|}\)`. 
+`$$\lambda \sum_{j=1}^{q} m_j \|\boldsymbol{\beta}_{G_j}\|_1$$`
+The multipliers `\(m_j&gt;0\)` serve to balance cases where the groups are of very different sizes; typically we choose `\(m_j = \sqrt{|G_j|}\)`. 
 
 This penalty encourages either an entire group `\(G\)` to have `\(\hat{\boldsymbol{\beta}}_{G}= \mathbf{0}\)` or `\(\hat{\beta}_k \neq 0\)` for all `\(k \in G\)`. 
 
