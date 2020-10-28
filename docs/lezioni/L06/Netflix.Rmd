@@ -89,6 +89,20 @@ names(breiman)
 
 ---
 
+# Dati esterni: GAUSS
+
+```{r, eval=T}
+gauss <- read_csv(paste0(PATH, "gauss.csv"))
+colnames(gauss)<- c("ID","Italian Title","Title","Year","Date","Genre","Duration",
+"Country","Language","Director","Writer","Production Company",
+"Actors","Description","AVG_Vote","Votes","Budget","USA_Gross_Income",
+"World_Gross_Income","Metascore","Users_Review","Critics_Reviews")
+dim(gauss)
+names(gauss)
+```
+
+---
+
 # Esempio di analisi
 
 Carichiamo solo i dati di training (senza considerare le date)

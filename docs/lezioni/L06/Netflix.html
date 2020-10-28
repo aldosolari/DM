@@ -175,6 +175,39 @@ names(breiman)
 
 ---
 
+# Dati esterni: GAUSS
+
+
+```r
+gauss &lt;- read_csv(paste0(PATH, "gauss.csv"))
+colnames(gauss)&lt;- c("ID","Italian Title","Title","Year","Date","Genre","Duration",
+"Country","Language","Director","Writer","Production Company",
+"Actors","Description","AVG_Vote","Votes","Budget","USA_Gross_Income",
+"World_Gross_Income","Metascore","Users_Review","Critics_Reviews")
+dim(gauss)
+```
+
+```
+[1] 85855    22
+```
+
+```r
+names(gauss)
+```
+
+```
+ [1] "ID"                 "Italian Title"      "Title"             
+ [4] "Year"               "Date"               "Genre"             
+ [7] "Duration"           "Country"            "Language"          
+[10] "Director"           "Writer"             "Production Company"
+[13] "Actors"             "Description"        "AVG_Vote"          
+[16] "Votes"              "Budget"             "USA_Gross_Income"  
+[19] "World_Gross_Income" "Metascore"          "Users_Review"      
+[22] "Critics_Reviews"   
+```
+
+---
+
 # Esempio di analisi
 
 Carichiamo solo i dati di training (senza considerare le date)
@@ -198,7 +231,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 
 
@@ -225,7 +258,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 ]
 
 
