@@ -71,7 +71,7 @@ names(definetti)
 
 
 ```r
-neyman &lt;- read_delim(paste0(PATH,"neyman.csv"), ";", escape_double = FALSE, trim_ws = TRUE)
+neyman &lt;- read_csv2(paste0(PATH,"neyman.csv"))
 dim(neyman)
 ```
 
@@ -230,6 +230,62 @@ names(nightingale)
 
 ---
 
+# Dati esterni: STUDENT
+
+
+```r
+student &lt;- read_csv(paste0(PATH, "student.csv"))
+dim(student)
+```
+
+```
+[1] 100  69
+```
+
+```r
+names(student)
+```
+
+```
+ [1] "X1"                        "title"                    
+ [3] "imdb_title_id"             "year"                     
+ [5] "budget"                    "revenue"                  
+ [7] "director"                  "runtime"                  
+ [9] "production_company"        "metascore"                
+[11] "reviews_from_users"        "reviews_from_critics"     
+[13] "sexprotagonista"           "sexcoprotagonista"        
+[15] "bellezzafemminile"         "bellezzamaschile"         
+[17] "genere"                    "weighted_average_vote"    
+[19] "total_votes"               "mean_vote"                
+[21] "median_vote"               "votes_10"                 
+[23] "votes_9"                   "votes_8"                  
+[25] "votes_7"                   "votes_6"                  
+[27] "votes_5"                   "votes_4"                  
+[29] "votes_3"                   "votes_2"                  
+[31] "votes_1"                   "allgenders_0age_avg_vote" 
+[33] "allgenders_0age_votes"     "allgenders_18age_avg_vote"
+[35] "allgenders_18age_votes"    "allgenders_30age_avg_vote"
+[37] "allgenders_30age_votes"    "allgenders_45age_avg_vote"
+[39] "allgenders_45age_votes"    "males_allages_avg_vote"   
+[41] "males_allages_votes"       "males_0age_avg_vote"      
+[43] "males_0age_votes"          "males_18age_avg_vote"     
+[45] "males_18age_votes"         "males_30age_avg_vote"     
+[47] "males_30age_votes"         "males_45age_avg_vote"     
+[49] "males_45age_votes"         "females_allages_avg_vote" 
+[51] "females_allages_votes"     "females_0age_avg_vote"    
+[53] "females_0age_votes"        "females_18age_avg_vote"   
+[55] "females_18age_votes"       "females_30age_avg_vote"   
+[57] "females_30age_votes"       "females_45age_avg_vote"   
+[59] "females_45age_votes"       "top1000_voters_rating"    
+[61] "top1000_voters_votes"      "us_voters_rating"         
+[63] "us_voters_votes"           "non_us_voters_rating"     
+[65] "non_us_voters_votes"       "genere_1"                 
+[67] "genere_2"                  "oscar"                    
+[69] "nomination"               
+```
+
+---
+
 # Esempio di analisi
 
 Carichiamo solo i dati di training (senza considerare le date)
@@ -253,7 +309,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 
 
@@ -280,7 +336,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 ]
 
 
