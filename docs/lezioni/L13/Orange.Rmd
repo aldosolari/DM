@@ -98,10 +98,10 @@ new products and services (called **appetency**), and willingness to respond fav
 
 ```{r}
 # import data
-library(repmis)
-source_data("https://github.com/aldosolari/DM/tree/master/docs/lezioni/L13/Orange.Rdata?raw=True")
-writeLines(x, tmp <- tempfile())
-y <- load(tmp)
+library(readr)
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L13"
+train <- read_csv(paste0(PATH,"OrangeTr.csv"))
+train <- read_csv(paste0(PATH,"OrangeTr.csv"))
 n = nrow(train)
 m = nrow(test)
 combi = rbind(train,test)
