@@ -34,7 +34,7 @@ write.table(file="mymissc.txt", yhat, row.names = FALSE, col.names = FALSE)
 
 # Dati esterni: DEFINETTI
 
-```{r, eval=T}
+```{r}
 PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/hw/"
 library(readr)
 definetti <- read_csv(paste0(PATH,"definetti.csv"))
@@ -47,9 +47,8 @@ names(definetti)
 
 # Dati esterni: NEYMAN
 
-```{r, eval=T}
-library(readxl)
-neyman <- read_excel(paste0(PATH, "neyman.xlsx"))
+```{r}
+neyman <- read_delim(paste0(PATH,"neyman.csv"), ";", escape_double = FALSE, trim_ws = TRUE)
 dim(neyman)
 names(neyman)
 ```
@@ -58,7 +57,7 @@ names(neyman)
 
 # Dati esterni: FISHER
 
-```{r, eval=T}
+```{r}
 fisher <- read_csv(paste0(PATH,"fisher.csv"))
 dim(fisher)
 names(fisher)
@@ -68,7 +67,7 @@ names(fisher)
 
 # Dati esterni: PEARSON
 
-```{r, eval=T}
+```{r}
 pearson <- read_delim(paste0(PATH, "pearson.csv"), 
 ";", escape_double = FALSE, trim_ws = TRUE)
 dim(pearson)
@@ -80,7 +79,7 @@ names(pearson)
 
 # Dati esterni: BREIMAN
 
-```{r, eval=T}
+```{r}
 breiman <- read_delim(paste0(PATH, "breiman.csv"), 
 ";", escape_double = FALSE, trim_ws = TRUE)
 dim(breiman)
@@ -91,7 +90,7 @@ names(breiman)
 
 # Dati esterni: GAUSS
 
-```{r, eval=T}
+```{r}
 gauss <- read_csv(paste0(PATH, "gauss.csv"))
 colnames(gauss)<- c("ID","Italian Title","Title","Year","Date","Genre","Duration",
 "Country","Language","Director","Writer","Production Company",
@@ -105,10 +104,20 @@ names(gauss)
 
 # Dati esterni: NIGHTINGALE
 
-```{r, eval=T}
+```{r}
 nightingale <- read_csv(paste0(PATH, "nightingale.csv"))
 dim(nightingale)
 names(nightingale)
+```
+
+---
+
+# Dati esterni: STUDENT
+
+```{r}
+student <- read_csv(paste0(PATH, "student.csv"))
+dim(student)
+names(student)
 ```
 
 ---

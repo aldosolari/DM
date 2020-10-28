@@ -71,8 +71,7 @@ names(definetti)
 
 
 ```r
-neyman &lt;- read_delim(paste0(PATH, "neyman.csv"), 
-";", escape_double = FALSE, trim_ws = TRUE)
+neyman &lt;- read_delim(paste0(PATH,"neyman.csv"), ";", escape_double = FALSE, trim_ws = TRUE)
 dim(neyman)
 ```
 
@@ -208,6 +207,29 @@ names(gauss)
 
 ---
 
+# Dati esterni: NIGHTINGALE
+
+
+```r
+nightingale &lt;- read_csv(paste0(PATH, "nightingale.csv"))
+dim(nightingale)
+```
+
+```
+[1] 100   5
+```
+
+```r
+names(nightingale)
+```
+
+```
+[1] "X1"             "original_title" "year"           "genre"         
+[5] "prim_gen"      
+```
+
+---
+
 # Esempio di analisi
 
 Carichiamo solo i dati di training (senza considerare le date)
@@ -231,7 +253,7 @@ names(y) &lt;- "y"
 barplot(sort(apply(X==0, 2, mean)), horiz=T, names.arg=F) 
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 
 
@@ -258,7 +280,7 @@ y
 plot(table(y)/nrow(X))
 ```
 
-![](Netflix_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+![](Netflix_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 ]
 
 
