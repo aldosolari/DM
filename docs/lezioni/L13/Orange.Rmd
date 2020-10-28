@@ -99,9 +99,14 @@ new products and services (called **appetency**), and willingness to respond fav
 ```{r}
 # import data
 library(readr)
-PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L13"
+library(dplyr)
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/lezioni/L13/"
 train <- read_csv(paste0(PATH,"OrangeTr.csv"))
-train <- read_csv(paste0(PATH,"OrangeTr.csv"))
+train <- train %>% mutate_if(is.character, factor)
+train <- data.frame(train)
+test <- read_csv(paste0(PATH,"OrangeTe.csv"))
+test <- test %>% mutate_if(is.character, factor)
+test <- data.frame(test)
 n = nrow(train)
 m = nrow(test)
 combi = rbind(train,test)
@@ -149,7 +154,7 @@ plot(sort(pMiss2), type="h", ylim=c(0,100), xlab="variables", ylab="% of missing
 ```{r}
 # observations by % of missingness
 pMiss1 = apply(train,1,pMiss)
-plot(sort(pMiss1), type="h", ylim=c(0,100), xlab="obervations", ylab="% of missing (variables)")
+plot(sort(pMiss1), type="h", ylim=c(0,100), xlab="observations", ylab="% of missing (variables)")
 ```
 
 ---
@@ -335,8 +340,8 @@ calib = train.all[is.calib,]
 ```{r}
 # Tabulate levels of Var218.
 table218 <- table(
-   Var218=train[,'Var218'],  
-   churn=train[,'churn'], 
+   Var218=train$Var218,  
+   churn=train$churn, 
 # Include NA values in tabulation
    useNA='ifany') 	
 table218
@@ -361,8 +366,8 @@ table218[,2]/(table218[,1]+table218[,2])
 
 ```{r}
 y = train$churn
-x = train[ ,"Var218"]
-xstar = calib[,'Var218']
+x = train$Var218
+xstar = calib$Var218
 
 # how often (%) y is positive for the training data
 pPos <- sum(y==1)/length(y)
