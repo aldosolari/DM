@@ -66,13 +66,11 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 * L13 (29 Ottobre 9:30 - 12:30) 
   * [Dati Orange](docs/lezioni/L13/Orange.html)
 
-
-
 * L14 (2 Novembre 14:30 - 16:30) 
 
 * L15 (3 Novembre 12:30 - 15:30) 
 
-* L16 (5 Novembre 9:30 - 12:30) 
+* L16 (10 Novembre 12:30 - 15:30) 
 
 
 Se non specificato, la modalità di lezione è SINCRONA.
@@ -107,8 +105,8 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 |-|-|-|-|-|-|-|-|
 ||  || ||  ||  ||
 || [Problema 0](docs/hw/Problema0.pdf) || 3 Ottobre 2020 || 12 Ottobre 2020 ore 12 ||
-|| [Problema 1](docs/hw/Problema1.pdf) ||  12 Ottobre 2020 || 4 Novembre 2020 ore 12 ||
-|| Problema 2 ||  - || - ||
+|| [Problema 1](docs/hw/Problema1.pdf) ||  12 Ottobre 2020 || 10 Novembre 2020 ore 12 ||
+|| [Problema 2](docs/hw/Problema2.pdf) ||  30 Ottobre 2020 || 13 Novembre 2020 ore 12 ||
 
 La scadenza sopra indicata vale per gli studenti che lavorano in [gruppi](docs/hw/gruppiDM.pdf). 
 

@@ -532,7 +532,7 @@ $$\mathbf{X} = \tilde{\mathbf{U}} \tilde{\mathbf{D}} \mathbf{V}^\mathsf{T}$$
 dove $\tilde{\mathbf{U}} \in \mathbb{R}^{n\times n}$ e $\mathbf{V} \in \mathbb{R}^{p\times p}$ sono matrici ortogonali e $\tilde{\mathbf{D}} \in \mathbb{R}^{n\times p}$ ha $D_{11}\geq D_{22} \geq \ldots \geq D_{mm}\geq 0$ dove $m=\min(n,p)$ e tutti gli altri elementi pari a 0. Le colonna $r$-sima di $\tilde{\mathbf{U}}$ ( $\mathbf{V}$ ) è denominata $r$-simo vettore singolare sinistro (destro), e $D_{rr}$ è l' $r$-simo valore singolare. 
 
 Tale fattorizzazione è indicata come fattorizzazione SVD **completa**. Nella versione normalmente utilizzata, denominata forma SVD **ridotta**, se $n>p$, la matrice $\tilde{\mathbf{U}}$ è sostituita con le sue prime $p$ colonne, mentre $\tilde{\mathbf{D}}$ con le sue prime $p$ righe. Allora $\mathbf{X} = \mathbf{U} \mathbf{D} \mathbf{V}^\mathsf{T}$ dove 
-* $\mathbf{U} \in \mathbb{R}^{n\times p}$  non è più quadrata ma ha colonne ortonormali, i.e. $\tilde{\mathbf{U}}^\mathsf{T}\tilde{\mathbf{U}} = \mathbf{I}$ 
+* $\mathbf{U} \in \mathbb{R}^{n\times p}$  non è più quadrata ma ha colonne ortonormali, i.e. $\mathbf{U}^\mathsf{T}\mathbf{U} = \mathbf{I}$ 
 * $\mathbf{D}$ è quadrata e diagonale
 * $\mathbf{V}$ è una matrice ortogonale, i.e. $\mathbf{V}^\mathsf{T}\mathbf{V}=\mathbf{V}\mathbf{V}^\mathsf{T} = \mathbf{I}$, quindi $\mathbf{V}^\mathsf{T} = \mathbf{V}^{-1}$ 
 
@@ -546,6 +546,7 @@ $$\begin{aligned}
 \mathbf{X}\hat{\boldsymbol{\beta}}_\lambda^{\mathrm{R}} &= \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X} + \lambda \mathbf{I} )^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}\\
 &= \mathbf{U}\mathbf{D}\mathbf{V}^\mathsf{T}(\mathbf{V}\mathbf{D}^2\mathbf{V}^\mathsf{T} + \lambda \mathbf{I})^{-1} \mathbf{V}\mathbf{D}\mathbf{U}^\mathsf{T} \mathbf{y}\\
 & = \mathbf{U} \mathbf{D} (\mathbf{D}^2 + \lambda \mathbf{I})^{-1} \mathbf{D}\mathbf{U}^\mathsf{T}\mathbf{y} \\
+& = \mathbf{U} \mathbf{D}^2 (\mathbf{D}^2 + \lambda \mathbf{I})^{-1}\mathbf{U}^\mathsf{T}\mathbf{y} \\
 &= \sum_{j=1}^{p} \mathbf{U}_j \left(\frac{D^2_{jj}}{D^2_{jj} +\lambda}\right) \mathbf{U}_j^\mathsf{T}\mathbf{y}
 \end{aligned}$$
 dove nel passaggio dalla seconda alla terza riga abbiamo utilizzato 
