@@ -1,0 +1,484 @@
+---
+title: "Data Mining"
+subtitle: "Linear smoothers"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true    
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, 
+                      comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Non-linearity
+
+One situation in which linear models begin to perform
+non-optimally is when the relationship between the response $y$ and the predictor $x$ is not linear nor can it be approximated closely by a linear relationship. 
+
+As an example of a non-linear model consider 
+$$y_i = \cos(\beta_1 \cdot x_i) + e^{-x_i \cdot \beta_2} + \varepsilon_i$$
+The approach for estimating the unknown parameters given a set of observations is to minimize the sum of squared residuals, known as *non-linear least squares* (but there is no closed-form solution). 
+
+However, often we just know that
+$$\mathbb{E}(y_i) = f(x_i)$$
+holds for some unknown function $f$. 
+
+---
+
+# Basis expansion
+
+Recall that linear regression requires only that the relationship with respect to the parameter $\beta_j$ be linear.
+
+For example, with a scalar value of $x_i$, we can use the polynomial basis
+$$y_i = \sum_{k=1}^{K}x_i^{k-1} \cdot \beta_j + \varepsilon_i$$
+
+In general, we model the relationship
+$$y_i = \sum_{k=1}^{K} B_{k}(x_i) \cdot \beta_j + \varepsilon_i$$
+for some **basis function** $B_{k}$. This method is known as a **basis expansion**.
+
+---
+
+# Polynomial regression may be problematic
+
+
+When using a polynomial, the global nature of the estimation problem in these cases leads to poor local performance in the presence of high noise variance or with regression functions $f$ that have many critical
+points.
+
+Consider the following functional form for $x$
+$$f(x) = \sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2}$$
+
+Even with a polynomial of degree 15, the fit is fairly poor in many areas, and 'wiggles' in some places where there doesn't appear to be a need to
+
+
+---
+
+```{r}
+set.seed(123)
+x = sort(runif(500)); fx = sin(2*(4*x-2)) + 2*exp(-(16^2)*((x-.5)^2))
+y = rnorm(500, fx, .3)
+plot(x, y, col="lightgray"); lines(x, fx, col=2, lwd=2)
+lines(x, fitted(lm(y ~ poly(x,15))), lwd=2)
+```
+
+
+<!-- # Orthonormal basis -->
+
+<!-- A useful property is to form an orthonormal basis. Specifically, this means that when we take the constructed matrix $\mathbf{Z}$, the inner product $\mathbf{Z}^{\mathsf{T}} \mathbf{Z}$ will be equal to the identity matrix. -->
+
+<!-- If we consider the intercept term -->
+<!-- $$\tilde{\mathbf{Z}} = \left[\mathbf{1} \,\,\mathbf{Z}\right]$$ -->
+<!-- this has an immediate computational benefit in that the least squares estimator becomes -->
+<!-- $$\hat{\boldsymbol{\beta}} = (\tilde{\mathbf{Z}}^{\mathsf{T}} \tilde{\mathbf{Z}})^{-1}\tilde{\mathbf{Z}}^{\mathsf{T}} \mathbf{y} =   \left[ -->
+<!-- \begin{array}{c} \frac{1}{n} \mathbf{1}^{\mathsf{T}}\mathbf{y} \\ -->
+<!-- \mathbf{Z}^{\mathsf{T}} \mathbf{y} \\ -->
+<!-- \end{array}\right]$$ -->
+
+<!-- This formula simplifies such that we can directly compute -->
+<!-- $$\hat{\beta}_j =  \sum_{i=1}^{n} y_i \cdot B_{j,K}(x_i), \quad j>1$$ -->
+<!-- This is useful because if we have already calculated the model for $K$, the model for -->
+<!-- $K + 1$ will have the same first $K$ terms followed be a new $K + 1$th term. -->
+
+---
+
+In lieu of a higher-order polynomial fit, imagine fitting two linear polynomials to the data: one
+for points less than $k$ and another for points greater than $k$.
+
+Using indicator functions, we can describe this approach with a specific basis expansion
+$$
+\begin{aligned}
+B_1(x) &= I(x\leq k)\\
+B_2(x) &= x\cdot I(x\leq k)\\
+B_3(x) &= I(x> k)\\
+B_4(x) &= x\cdot I(x> k)\\
+\end{aligned}
+$$
+
+It will be useful going forward to re-parameterize this in terms of a baseline intercept and slope for $x\leq k$ and changes in these values for points $x > k$
+
+$$
+\begin{aligned}
+B_1(x) &= 1\\
+B_2(x) &= x\\
+B_3(x) &= I(x> k)\\
+B_4(x) &= (x-k)\cdot I(x> k)\\
+\end{aligned}
+$$
+
+A shortcoming  is that at the point
+$k$, known as a **knot,** the predicted values will generally not be continuous. 
+
+It is possible to modify our original basis to force continuity at the knot $k$ by
+removing the secondary intercept described by $B_3(x)$.
+
+Notice that forcing one constraint, continuity at $k$, has reduced the degrees of freedom by one, from 4 down to 3.
+
+---
+
+How might we generalize this to fitting
+separate quadratic term on the two halves of the data? One approach would be to use the basis functions
+$$
+\begin{aligned}
+B_1(x) &= 1\\
+B_2(x) &= x\\
+B_3(x) &= x^2\\
+B_4(x) &= (x-k)\cdot I(x> k)\\
+B_5(x) &= (x-k)^2\cdot I(x> k)\\
+\end{aligned}
+$$
+Here we have two quadratic polynomials (2 × 3) minus one constraint, for a total of 6 − 1 = 5 degrees of
+freedom.
+
+The function will be continuous at the knot but is not constrained to have a continuous derivative at the point. 
+
+This is easy to accomplish, however,
+by removing the $B_4(x)$ basis.
+
+Notice that once again the inclusion of
+an additional constraint, a continuous first derivative, reduces the degrees of
+freedom by one.
+
+---
+
+Defining the positive part function $(\cdot)_{+}$ as
+
+$$(x)_{+} = \left\{\begin{array}{cc}
+x & x\geq 0\\
+0 & \mathrm{otherwise}
+\end{array}\right.$$
+
+we may generalize to an arbitrarily large polynomial of order $M$ by using the basis
+$$
+\begin{aligned}
+B_1(x) &= 1\\
+B_{j+1}(x) &= x^j, \quad j=1,\ldots,M\\
+B_{M+2}(x) &= (x-k)^{M}_+
+\end{aligned}
+$$
+This basis results in a function with continuous derivatives of orders 0 through $M−1$.
+
+---
+
+# Truncated power basis
+
+We can further generalize this by considering a set of $P$ knots $\{k_p\}_{p=1}^{P}$ given by 
+$$
+\begin{aligned}
+B_1(x) &= 1\\
+B_{j+1}(x) &= x^j, \quad j=1,\ldots,M\\
+B_{M+p+1}(x) &= (x-k_p)^{M}_+, \quad p=1,\ldots,P
+\end{aligned}
+$$
+This defines the **truncated power basis** of order $M$. 
+
+It yields piecewise $M$th order polynomials with continuous derivatives of order 0 through $M − 1$.
+
+There are $P + 1$ polynomials of order $M$ and $P$ sets of $M$
+constraints; the truncated power basis has $(P +1)(M+1)−PM$, or $1+M+P$, free parameters.
+
+---
+
+# Regression splines
+
+Now that we have defined these basis functions, we can fit a regression
+model to learn the representation of the unknown function $f(x)$ by minimizing
+the sum of squared residuals over all functions spanned by this basis.
+
+As with
+any basis expansion, we can compute the solution by explicitly constructing
+a design matrix $\mathbf{B}$ as
+$$B_{i,j} = B_{j}(x_i) \qquad i=1,\ldots,n,\quad j=1,\ldots,1+M+P$$
+
+The regression spline can be written as
+$$\hat{f}(x) = \sum_{j=1}^{1+P+M} \hat{\beta}_j B_{j}(x)$$
+where $\hat{\boldsymbol{\beta}}$ is given by 
+$$\hat{\boldsymbol{\beta}} = (\mathbf{B}^{\mathsf{T}}\mathbf{B})^{-1}\mathbf{B}^{\mathsf{T}}\mathbf{y}$$
+
+
+<!-- Then, to calculate $f(x^*)$, we simply compute the basis expansion at $x^*$ -->
+<!-- $$g_i = B_{j-1}(x^*) \qquad i=1,\ldots,n;\,\, j=1,\ldots,1+M+P $$ -->
+
+By far the most commonly used truncated power basis functions are those with $M$ equal to three.
+
+---
+
+```{r}
+trunc_power_x <- function(x, knots, order=1L)
+{
+  M <- order
+  P <- length(knots)
+  n <- length(x)
+  k <- knots
+
+  X <- matrix(0, ncol=(1L + M + P), nrow = n)
+  for (j in seq(0L, M))
+  {
+    X[, j+1] <- x^j
+  }
+  for (j in seq(1L, P))
+  {
+    X[, j + M + 1L] <- (x - k[j])^M * as.numeric(x > k[j])
+  }
+  X
+}
+```
+
+---
+
+```{r}
+knots <- seq(0.1, 0.9, 0.1)
+G <- trunc_power_x(x, knots, order = 3L)
+yhat <- G %*% solve(crossprod(G)) %*% crossprod(G, y)
+plot(x, y, col="lightgray"); lines(x, fx, col=2, lwd=2)
+lines(x, yhat, lwd=2); abline(v=knots, lty=2)
+```
+
+---
+
+# Natural cubic splines
+
+An observed behavior when using splines as a form of basis expansion
+for regression is that predicted values often behave erratically for values less
+than the smallest knot and larger than the largest knot.
+
+Natural splines solve
+this problem by enforcing another constraint on the truncated power basis. Specifically, the function is made to only have order $(M − 1)/2$ outside of
+the extremal knots. 
+
+In the case of $M$ equal to three, natural cubic splines are
+linear outside of these boundary knots. A formula for the natural cubic splines
+is given by
+$$
+\begin{aligned}
+B_1(x) &= 1\\
+B_2(x) &= x\\
+B_{j+2}(x) &= \frac{(x-k_j)^3_+ - (x-k_P)^3_+}{k_P-k_j} - \frac{(x-k_{P-1})^3_+ - (x-k_P)^3_+}{k_P-k_{P-1}}, \quad j=1,\ldots,P-2
+\end{aligned}
+$$
+
+---
+
+```{r}
+nat_spline_x <- function(x, knots)
+{
+  P <- length(knots)
+  n <- length(x)
+  k <- knots
+  d <- function(z, j)
+  {
+    out <- (x - k[j])^3 * as.numeric(x > k[j])
+    out <- out - (x - k[P])^3 * as.numeric(x > k[P])
+    out <- out / (k[P] - k[j])
+    out
+  }
+
+  X <- matrix(0, ncol=P, nrow=n)
+  X[, 1L] <- 1
+  X[, 2L] <- x
+  for (j in seq(1L, (P-2L)))
+  {
+    X[, j + 2L] <- d(x, j) - d(x, P - 1L)
+  }
+  X
+}
+```
+
+---
+
+```{r}
+knots <- seq(0.1, 0.9, 0.1)
+G <- nat_spline_x(x, knots)
+yhat <- G %*% solve(crossprod(G)) %*% crossprod(G, y)
+plot(x, y, col="lightgray"); lines(x, fx, col=2, lwd=2)
+lines(x, yhat, lwd=2); abline(v=knots, lty=2)
+```
+
+---
+
+# The number of knots and where to put them
+
+Natural cubic splines have one shortcoming: deciding the number and the placement of the knots.
+
+Smoothing splines offer an alternative that selects every training point as a knot. 
+
+
+Simply interpolating all points by cubic splines is generally not a good idea. Smoothing splines address this problem by controlling smoothness with penalization.
+
+---
+
+# Smoothing splines
+
+Given data $(x_i,y_i)$, $i=1,\ldots,n$, 
+<!-- with distinct, ordered $x$-values $x_1 < \ldots < x_n$, -->
+and smoothing parameter $\lambda$, a *cubic smoothing spline* is defined as the function which solves the minimization problem 
+<!-- $$\hat{f} = \arg\min_{f \in \mathcal{C}^2} \int_{x_1}^{x_n} f''(x)^2 dx \quad \mathrm{such\,\,that\,\,} \sum_{i=1}^{n}(y_i - f(x_i))^2 \leq \lambda$$ -->
+$$\frac{1}{n}\sum_{i=1}^{n}(y_i - f(x_i))^2 + \lambda \int (f''(x))^2dx$$
+where $f$ belongs to the family of twice-differentiable functions. It can be shown that out of all twice-differentiable functions $f$, the one that minimizes the objective function is a natural cubic spline with knots at every unique value of $x_i$. The second term is the roughness penalty and controls how wiggly $f$ is:
+
+* $f''$ is the second derivative of $f$ with respect to $x$: it would be zero if $f$ were linear, so this measures the curvature of $f$ at $x$
+
+* the sign of $f''(x)$ says whether the curvature at $x$ is concave
+or convex, but we don’t care about that so we square it. We then integrate this over all $x$ to say how curved $f$ is, on average 
+
+The penalty is modulated by the tuning parameter $\lambda\geq 0$:
+
+* $\lambda=0$ imposes no restrictions and $f$ will therefore interpolate the data 
+* $\lambda = \infty$ renders curvature impossible, and the function $f$ becomes linear
+
+
+---
+
+We can write the spline
+objective function in terms of the basis functions
+$$\| \mathbf{y} - \mathbf{B}\boldsymbol{\beta}\|^2_{2} + n\lambda \boldsymbol{\beta}^\mathsf{T}\mathbf{\Omega} \boldsymbol{\beta}$$
+where the matrix $\mathbf{B}$ is with elements given by the natural cubic spline basis $$B_{ij} = B_{j}(x_i)$$
+
+and the matrix $\mathbf{\Omega}$ encodes information about the curvature of the basis function
+$$\Omega_{jk} = \int B''_j(x) B''_k(x)dx$$
+
+The solution has an explicit form: 
+$$\hat{\boldsymbol{\beta}}_\lambda = ( \mathbf{B}^\mathsf{T}   \mathbf{B} + n\lambda \mathbf{\Omega} )^{-1} \mathbf{B}^\mathsf{T}  \mathbf{y}$$
+
+---
+
+# Selection of $\lambda$
+
+Smoothing spline estimates are linear 
+$$\hat{\mathbf{y}} = \mathbf{B}\hat{\boldsymbol{\beta}}_\lambda =  \mathbf{B}( \mathbf{B}^\mathsf{T}   \mathbf{B} + \lambda \mathbf{\Omega} )^{-1} \mathbf{B}^\mathsf{T}  \mathbf{y}
+= \mathbf{H}_\lambda \mathbf{y}$$
+where $\mathbf{H}^\lambda$ is the smoothing matrix.  
+
+LOOCV selects the value of  $\lambda$ which minimizes 
+$$\sum_{i=1}^{n}( y_i - \hat{f}^{-i}_{\lambda}(x_i))^2 =  \sum_{i=1}^{n} \left( \frac{y_i - \hat{f}_{\lambda}(x_i)}{1- \{\mathbf{H}_\lambda\}_{ii}}\right)^2$$
+
+Generalized cross-validation selects the value of $\lambda$ which minimizes 
+$$\sum_{i=1}^{n} \left( \frac{y_i - \hat{f}_{\lambda}(x_i)}{1-  \mathrm{trace}(\mathbf{H}_\lambda)/n } \right)^2$$
+---
+
+```{r}
+fit <- smooth.spline(x, y, all.knots=T, cv=T); yhat <- fit$y
+plot(x, y, col="lightgray"); lines(x, fx, col=2, lwd=2); lines(x, yhat, lwd=2)
+```
+
+---
+
+# Application: U.S. census tract data
+
+We will look at the five year tract-level ACS data published
+in 2015. 
+
+Tracts correspond to neighborhoods in urban areas and have around 4000 people.
+
+The goal will be to predict a response variable from the survey as a function of univariate demographic variables.
+
+```{r}
+library(data.table)
+tract <- fread("curl http://www.comp-approach.com/casl-data.zip | tar -xf- --to-stdout *acs_tract.csv")
+names(tract)
+```
+
+---
+
+We want to stratify our training set to include a balanced number of tracts from each community based statistical areas (CBSA). 
+
+```{r}
+set.seed(1)
+rnum <- runif(nrow(tract))
+tract$flag <- 1
+```
+
+Setting all of the data to the training set by default, we now compute the 60th percentile of rnum for each CBSA.
+
+```{r}
+coff <- tapply(rnum, tract$cbsa_name, quantile, probs = 0.5)
+coff <- coff[match(tract$cbsa_name, names(coff))]
+tract$flag[rnum > coff] <- 2
+
+tab <- table(tract$cbsa_name, tract$flag)
+head(tab)
+```
+
+
+
+
+---
+
+```{r}
+rmse <- function(y, y_hat, by)
+{
+  if (missing(by))
+  {
+    ret <- sqrt(mean((y - y_hat)^2))
+  } else {
+    ret <- sqrt(tapply((y - y_hat)^2, by, mean))
+  }
+  ret
+}
+```
+
+---
+
+```{r}
+  cv_smooth_spline <- function(X, y){
+  spar_vals <- seq(0, 2, by = 0.01)
+  vals <- rep(NA_real_, length(spar_vals))
+  for (i in seq_along(spar_vals))
+  {
+    res <- smooth.spline(X, y, spar = spar_vals[i])
+    vals[i] <- res$cv.crit
+  }
+  spar <- spar_vals[which.min(vals)]
+  res <- smooth.spline(X, y, spar = spar)
+  res
+}
+```
+
+---
+
+# Housing costs by distance to city center
+
+We will try to predict the median housing costs, by
+household, as a function of the distance of the tract to its CBSA centroid. 
+
+```{r}
+X <- tract$center_dist
+y <- tract$housing_costs
+```
+
+We want to fit a separate model for each of the CBSAs.
+
+```{r}
+cbsa <- "Seattle-Tacoma-Bellevue, WA"
+index <- which(tract[,"cbsa_name"] == cbsa)
+X_cbsa <- X[index]
+y_cbsa <- y[index]
+train_cbsa <- tract$flag[index]
+```
+
+
+---
+
+```{r}
+res <- cv_smooth_spline(X_cbsa[train_cbsa == 1],
+y_cbsa[train_cbsa == 1])
+y_hat <- predict(res, X_cbsa)$y
+rmse(y_cbsa, y_hat, train_cbsa)
+```
+
+---
+
+
+```{r}
+plot(X_cbsa[train_cbsa == 1], y_cbsa[train_cbsa == 1], col="#00000033", xlab="x", ylab="y")
+sX_cbsa <- sort(X_cbsa, index.return=T)
+lines(sX_cbsa$x, y_hat[sX_cbsa$ix], lwd=2)
+```
+
+

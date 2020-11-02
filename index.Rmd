@@ -56,7 +56,7 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare ISL 6, 6.2.1, 6.3.1, 6.7.1; AKL 3.1, 3.2, 3.4
 
 * L11 (26 Ottobre 14:30 - 16:30) 
-  * [Best subsets](docs/lezioni/L11/Bestsubsets.html)
+  * [Best subset](docs/lezioni/L11/Bestsubsets.html)
   * Studiare ISL 6.1, 6.5
   
 * L12 (26 Ottobre 12:30 - 15:30) 
@@ -67,6 +67,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * [Dati Orange](docs/lezioni/L13/Orange.html)
 
 * L14 (2 Novembre 14:30 - 16:30) 
+  * [Linear smoothers](docs/lezioni/L14/LinearSmoothers.html)
+  * Studiare ISL 7.1, 7.2, 7.3, 7.4, 7.5;  AKL 4.1, 4.2, 4.5, 4.6 
 
 * L15 (3 Novembre 12:30 - 15:30) 
 

@@ -1,0 +1,752 @@
+---
+title: "Data Mining"
+subtitle: "Moving beyond linearity"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true    
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, 
+                      comment=NA, cache=F, R.options=list(width=220))
+```
+
+
+# Outline
+
+
+* Regression splines
+
+* Natural cubic splines
+
+* Smoothing splines
+
+* Generalized additive models
+
+---
+
+# Moving beyond linearity
+
+In many data situations, the relationship between $x$ and $y$ is not linear. 
+Common approaches in regression to deal with nonlinear relationships are
+
+* Polynomial regression
+
+* Step functions
+
+* Regression splines
+
+* Smoothing splines
+
+* Local regression, e.g. LOWESS (locally weighted scatterplot smoothing)
+
+---
+
+# Polynomial regression may be problematic
+
+* Suppose 
+$$y = f(x) + \varepsilon$$
+
+* Consider the following functional form for $x$
+$$f(x) = sin(2(4x-2)) + 2e^{-(16^2)(x-.5)^2}$$
+
+* Even with a polynomial of degree 15, the fit is fairly poor in many areas, and 'wiggles' in some places where there doesn't appear to be a need to
+
+---
+
+```{r}
+set.seed(123)
+x = sort(runif(500))
+fx = sin(2*(4*x-2)) + 2*exp(-(16^2)*((x-.5)^2))
+y = rnorm(500, fx, .3)
+plot(x, y, col="lightgray")
+lines(x, fx, col=2, lwd=2)
+lines(x, fitted(lm(y ~ poly(x,15))), lwd=2)
+```
+
+
+---
+
+# Piecewise polynomial
+
+* So how might we solve the problem we saw with polynomial regression? 
+
+* One way would be to divide the data into chunks at various points (__knots__), and fit a polynomial model within that subset of data
+
+* Define $K$ knots (internal breakpoints) on the range of $x$:
+$$\min(x)<\xi_1< \ldots < \xi_K<\max(x)$$
+which define $K+1$ pieces or segments
+
+* Fit a polynomial model on each of the $K+1$ intervals 
+
+$$(-\infty, \xi_{1}], (\xi_{1}, \xi_{2}], \ldots, (\xi_{K-1}, \xi_{K}], (\xi_{K}, +\infty)$$
+
+---
+
+```{r}
+knots = seq(0.1, 0.9, by=.1)
+xcut = cut(x, c(-Inf,knots,Inf) )
+plot(x,y ,col="lightgray")
+lines(x, fx, col=2, lwd=2)
+abline(v=knots, lty=2)
+for (i in 1:length(levels(xcut)) ){
+sub = (xcut==levels(xcut)[i])
+lines(x[sub], fitted(lm(y[sub] ~ poly(x[sub],3))), lwd=2 )
+}
+```
+
+---
+
+# Step function
+
+```{r, echo=FALSE}
+plot(x,y ,col="lightgray")
+lines(x, fx, col=2, lwd=2)
+abline(v=knots, lty=2)
+for (i in 1:length(levels(xcut)) ){
+sub = (xcut==levels(xcut)[i])
+lines(x[sub], fitted(lm(y[sub] ~ 1)), lwd=2)
+}
+```
+
+
+---
+
+# Piecewise linear regression
+
+```{r, echo=F}
+plot(x,y ,col="lightgray")
+lines(x, fx, col=2, lwd=2)
+abline(v=knots, lty=2)
+for (i in 1:length(levels(xcut))){
+sub = (xcut==levels(xcut)[i])
+lines(x[sub], fitted(lm(y[sub] ~ x[sub])), lwd=2 )
+}
+```
+
+---
+
+# Basis functions
+
+Consider a general basis expansion for $x$:
+
+$$f(x) = \sum_{j=1}^{p} \beta_j  b_j(x)$$
+where $b_j(\cdot)$ are known functions called __basis functions__. For example
+
+* 3rd degree polynomial: 
+$$b_1(x) = 1, b_2(x)= x, b_{3}(x) = x^2,  b_{4}(x) = x^3$$
+
+* Step function with $K$ knots: 
+$$b_1(X) = I\{x < \xi_1\}, b_2(x) = I\{\xi_1 \leq x < \xi_2\} ,\ldots, b_{K}(x) = I\{\xi_{K-1} \leq x < \xi_K\},  b_{K+1}(x) = I\{ x \geq \xi_K\}$$
+
+* Piecewise linear with $K$ knots:
+
+\begin{align}
+& b_1(x) =I\{x < \xi_1\}, b_2(x) = x \cdot I\{x < \xi_1\},\\ 
+& b_3(x) = I\{\xi_1 \leq x < \xi_2\}, b_4(x) = x \cdot I\{\xi_1 \leq x < \xi_2\},\\
+& \ldots, b_{2K}(x) = I\{ x \geq \xi_K\}, b_{2(K+1)}(x) = x \cdot I\{ x\geq \xi_K\}\\
+\end{align}
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Regression splines
+
+---
+
+# Regression splines
+
+A __spline__ of __degree__ $d$ with knots $\xi_1,\ldots,\xi_K$ is a
+piecewise-polynomial function $f$ of degree $d$  that is continuous and has
+continuous derivatives of orders $1$, . . . $d-1$, at its knot points, i.e. 
+
+* $f$ is a polynomial of degree $d$ on each of the intervals $$(-\infty,\xi_1],[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}], [\xi_{K}, \infty)$$
+
+* $f$ is continuous and has continuous derivatives of orders $1$, . . . $d-1$ at each knot, i.e.  $$f(\xi_k^-)=f(\xi_k^+), \quad f'(\xi_k^-)=f'(\xi_k^+), \quad \ldots, \quad f^{(d-1)}(\xi_k^-)=f^{(d-1)}(\xi_k^+), \quad k=1,\ldots,K$$ where $\xi_k^+$ and $\xi_k^-$ indicate indicate the left and right limits of the function at $\xi_k$
+
+
+---
+
+# Truncated power basis
+
+* A __spline__ of __degree__ $d$ with knots $\xi_1,\ldots,\xi_K$ can be defined by the __truncated power basis__:
+$$b_j(x) = x^{j-1}, \quad j=1,\ldots,d+1$$
+$$b_{d+k+1}(x) = (x - \xi_k)_+^{d}, \quad k=1,\ldots, K$$
+where $(\cdot)_+$ defines the positive portion of its argument, i.e. 
+
+$$(x - \xi_k)^d_+= \begin{cases} 
+(x-\xi_k)^d & x \geq \xi_k \\ 
+0 & \textrm{otherwise}
+\end{cases}$$
+
+* While the truncated power
+basis is conceptually simple, it is not too attractive numerically: powers of
+large numbers can lead to severe rounding problems
+
+* In contrast, the $B$-**spline basis** allows for efficient computations
+
+---
+
+```{r}
+d = 1
+K = length(knots)
+n = length(x)
+bs = matrix(NA,ncol=d+K+1, nrow=n)
+bs[,1:(d+1)] = cbind(1,poly(x,d, raw=TRUE))
+bs[,(d+2):(d+K+1)] = sapply(1:K, function(k) ifelse(x >= knots[k], (x-knots[k])^d, 0))
+```
+
+---
+
+```{r}
+plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
+for (i in 1:ncol(bs)) lines(x,bs[,i], col=i)
+```
+
+---
+
+```{r}
+fit = lm(y ~ .-1, data=data.frame(bs))
+betas = coef(fit)
+betas
+bsScaled = sapply(1:length(betas),function(j) bs[,j]*betas[j])
+```
+
+---
+
+```{r}
+plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
+for (i in 1:ncol(bsScaled)) lines(x,bsScaled[,i], col=i)
+```
+
+---
+
+```{r}
+plot(x,y ,col="lightgray")
+lines(x, fx, col=2, lwd=2)
+abline(v=knots, lty=2)
+fitted = apply(bsScaled, 1, sum)
+lines(x,fitted, lwd=2)
+```
+
+---
+
+# B-splines basis of degree 3
+
+.pull-left[
+```{r, echo=FALSE}
+d = 3
+plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
+bs = splines::bs(x, degree=d, knots=knots[-c(1,K)], 
+       Boundary.knots=knots[c(1,K)], intercept=T)
+for (i in 1:ncol(bs)) lines(x,bs[,i], col=i)
+```
+]
+
+.pull.right[
+```{r, echo=FALSE}
+fit = lm(y ~ .-1, data=data.frame(bs))
+betas = coef(fit)
+bsScaled = sapply(1:length(betas),function(j) bs[,j]*betas[j])
+plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
+for (i in 1:ncol(bsScaled)) lines(x,bsScaled[,i], col=i)
+```
+]
+
+---
+
+# Cubic splines
+
+```{r, echo=F}
+library(splines)
+plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
+lines(x, fx, col=2, lwd=2)
+B = bs(x, intercept=TRUE,
+       knots=knots[-c(1,K)], 
+       Boundary.knots=knots[c(1,K)]
+       )
+lines(x, fitted( lm(y ~ 0 + B) ), lwd=2 )
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Natural cubic splines
+
+---
+
+# Natural cubic splines
+
+* One problem with regression splines is that the estimates
+have high variance at the boundaries
+
+* A way to remedy this problem is to force the piecewise
+polynomial function to have lower degree to the left of the
+leftmost knot, and to the right of the rightmost knot
+
+* A __natural cubic spline__ with knots $\xi_1,\ldots,\xi_K$ is a piecewise polynomial function $f$ such that
+    - $f$ is a cubic polynomial on each $$[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}]$$
+
+    - $f$ is linear on $(-\infty, \xi_1]$ and $[\xi_K,\infty)$
+    -  $f$ is continuous and has continuous derivatives $f'$ and $f''$ at each knot $\xi_1,\ldots,\xi_K$: $$f(\xi_k^-)=f(\xi_k^+),\quad  f'(\xi_k^-)=f'(\xi_k^+), \quad f''(\xi_k^-)=f''(\xi_k^+), \qquad k=1,\ldots,K$$
+
+
+---
+
+# Number of basis functions
+
+* The number of basis functions needed for a natural spline is
+$$\underbrace{4\cdot (K-1)}_{a} + \underbrace{2\cdot 2}_b - \underbrace{3\cdot K}_c = K$$ 
+where 
+  - $a$ is the number of free parameters in the interior intervals  $[\xi_1,\xi_2],[\xi_2,\xi_3],\ldots,[\xi_{K-1},\xi_{K}]$
+  - $b$ is the number of free parameters in the exterior intervals $(-\infty, \xi_1]$ and $[\xi_K,\infty)$
+  - $c$ is the number of constraints at the knots $\xi_1,\ldots,\xi_K$
+
+
+* Recall that the number of basis vectors is equal to the number of dimensions of the vector space
+
+---
+
+# Basis Matrix for Natural Cubic Splines
+
+```{r}
+library(splines)
+B = ns(x, intercept=TRUE,
+       knots=knots[-c(1,K)], 
+       Boundary.knots=knots[c(1,K)]
+       )
+head(B)
+```
+
+Note that the linear functions in the two extreme intervals are totally determined by the other cubic splines. So data points in the two extreme
+intervals (i.e., outside the two boundary knots) are wasted since they do not affect the fitting. Therefore, by default, `ns` puts the two boundary knots as the min and max of $x_i$'s.
+
+---
+
+```{r}
+library(splines)
+plot(x,y ,col="lightgray")
+abline(v=knots, lty=2)
+lines(x, fx, col=2, lwd=2)
+lines(x, fitted( lm(y ~ 0 + B ) ), lwd=2 )
+```
+
+
+---
+
+
+# The number of knots and where to put them
+
+Natural cubic splines have one shortcoming: deciding the number and the placement of the knots
+
+```{r, echo=FALSE}
+plot(x,y ,col="lightgray")
+nk = c(3,6,15)
+for (i in 1:length(nk)){
+knots = seq(0,1,length.out = nk[i]+2)[-c(1,nk[i]+2)]
+lines(x, fitted( lm(y ~ ns(x, knots=knots )) ) , col=i, lwd=2)
+}
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Smoothing splines
+
+---
+
+# Controlling smoothness with penalization
+
+We can avoid the knot selection problem altogether by formulating a penalized minimization problem
+
+ $$\underset{f \in \mathcal{F}''} \min \,\, \left\{ \sum_{i=1}^{n}(y_i - f(x_i))^2 + \lambda \int \{f''(x)\}^2 dx \right\}$$
+where $f$ belongs to the family $\mathcal{F}''$ of twice-differentiable functions
+
+* The first term is RSS, and tries to make $f(x_i)$ match $y_i$ at each $x_i$
+
+* The second term is the __roughness penalty__ and controls how wiggly $f$ is:
+    - $f''$ is the second derivative of $f$ with respect to $x$: it would be zero if $f$ were linear, so this measures the curvature of $f$ at $x$
+    - the sign of $f''(x)$ says whether the curvature at $x$ is concave
+or convex, but we don’t care about that so we square it. We then integrate this over all $x$ to say how curved $f$ is, on average 
+
+* The penalty is modulated by the __tuning parameter__ $\lambda\geq 0$:
+  - $\lambda=0$ imposes no restrictions and $f$ will therefore interpolate
+the data 
+  -  $\lambda = \infty$ renders curvature impossible, and the function $f$ becomes linear
+
+
+---
+
+# Theorem
+
+The curve or function which solves this minimization problem is called a smoothing spline, or spline curve
+
+It may sound impossible to solve the penalized minimization problem for $f$ over all possible functions in $\mathcal{F}''$, but the solution turns out to be
+surprisingly simple: it must be a __natural cubic spline__
+
+**Green and Silverman (1994)**
+
+> Out of all twice-differentiable functions $f$, the one that minimizes 
+ $$\sum_{i=1}^{n}(y_i - f(x_i))^2 + \lambda \int \{f''(t)\}^2 dt$$
+is a natural cubic spline with knots at every unique value of $x_i$
+
+
+---
+
+# Matrix formulation
+
+* Consider the natural cubic spline
+$$f(x) = \sum_{j=1}^{K} \beta_j b_j(x)$$ 
+where  $b_j(\cdot)$ are natural cubic spline basis functions and
+$K\leq n$ is the number of unique values of $x_i$ (knots)
+
+* Define the __basis matrix__ $\underset{n \times K}{\mathbf{N}}$ with elements
+$$N_{ij} = b_j(x_i), \quad i=1,\ldots,n, \quad  j=1,\ldots,K$$
+
+* Define the __penalty matrix__ $\underset{K \times K}{\mathbf{\Omega}}$ with elements
+$$\Omega_{ij} = \int b''_i(t) b''_j(t)dt$$
+
+
+---
+
+# Smoothing splines
+
+* The penalised minimization problem can be written as 
+$$\hat{\boldsymbol{\beta}}(\lambda) = \underset{\boldsymbol{\beta} }{\arg \min}\, \{ \| \mathbf{y} - \mathbf{N}\boldsymbol{\beta}\|^2_{2} + \lambda \boldsymbol{\beta}^\mathsf{T}\mathbf{\Omega} \boldsymbol{\beta} \}$$
+showing that is type of generalized ridge regression problem
+
+* The solution has an explicit form: 
+$$\hat{\boldsymbol{\beta}}(\lambda) = ( \mathbf{N}^\mathsf{T}   \mathbf{N} + \lambda \mathbf{\Omega} )^{-1} \mathbf{N}^\mathsf{T}  \mathbf{y}$$
+
+---
+
+# Selection of $\lambda$
+
+* Smoothing spline estimates are linear 
+$$\hat{\mathbf{y}} = \mathbf{N} ( \mathbf{N}^\mathsf{T}   \mathbf{N} + \lambda \mathbf{\Omega} )^{-1} \mathbf{N}^\mathsf{T}  \mathbf{y}
+= \mathbf{H}^\lambda \mathbf{y}$$
+where $\mathbf{H}^\lambda$ is the __smoothing matrix__
+
+* Selection of $\lambda$ may be based on $\mathrm{trace}(\mathbf{H}^\lambda)$
+often referred as to the "equivalent degrees of freedom" 
+
+* LOOCV selects the value of  $\lambda$ which minimizes 
+$$\sum_{i=1}^{n}( y_i - \hat{f}^{-i}_{\lambda}(x_i))^2 =  \sum_{i=1}^{n} \left( \frac{y_i - \hat{f}_{\lambda}(x_i)}{1- \{\mathbf{H}^\lambda\}_{ii}}\right)^2$$
+
+* __Generalized cross-validation__ selects the value of $\lambda$ which minimizes 
+$$\sum_{i=1}^{n} \left( \frac{y_i - \hat{f}_{\lambda}(x_i)}{1-  \mathrm{trace}(\mathbf{H}^\lambda)/n } \right)^2$$
+
+---
+
+# smooth.spline
+
+```{r}
+fit = smooth.spline(x, y, all.knots=T, cv=T)
+fit
+```
+
+
+* Cross-validation is GCV (default, `cv=FALSE`) or LOOCV (`cv=TRUE`) 
+
+* Fitting a smoothing spline with LOOCV selects $\lambda=0.000069$, or equivalently, `spar=1.41936`
+
+* PRESS is the "prediction sum of squares", i.e., the sum of the squared leave-one-out prediction errors
+
+---
+
+```{r}
+plot(x,y ,col="lightgray")
+lines(x, fx, col=2, lwd=2)
+lines(x, predict(fit)$y, lwd=2)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Generalized additive models
+
+---
+
+# Additive models
+
+* The additive model for regression is that the conditional expectation function is a sum of partial response functions, one for each predictor variable
+$$\mathbb{E}(Y|X=x) = \beta_0 + \sum_{j=1}^{p}f_j(x_j)$$
+
+* This includes the linear model as a special case, where
+$$f_j(x_j) = \beta_j x_j$$
+but it's
+clearly more general, because the $f_j$'s can be arbitrary nonlinear functions
+
+* The idea is still that each input feature makes a separate contribution to the response,
+and these just add up (hence "partial response function"), but these contributions don’t have to be strictly proportional to the inputs
+
+* We do need to add a
+restriction to make it identifiable; without loss of generality, say that
+$$\mathbb{E}(Y) = \beta_0, \qquad \mathbb{E}(f_j(X_j)) =0$$
+
+* How can we fit addittive models?
+
+---
+
+* Linear models assume
+$$\mathbb{E}(Y|X=x) = \sum_{j=0}^{p} \beta_j x_j$$
+where $x_0$ is always the constant 1
+
+* Suppose we don't condition on all $X=(X_0,\ldots,X_p)'$ but just one component of it, say $X_k$. Then 
+$$\mathbb{E}(Y|X_k=x_k) =  \beta_k x_k + \mathbb{E}(\sum_{j\neq k} \beta_j X_j|X_k=x_k)$$
+
+* Then
+$$\mathbb{E}(Y^{(k)}|X_k=x_k) =  \beta_k x_k$$
+where $Y^{(k)} = Y - \sum_{j\neq k} \beta_j X_j$ the $k$th __partial residual__: the difference between $Y$ and what we expect it to be __ignoring__ the contribution from $X_k$
+
+* This suggests the following estimation scheme for linear models, known as the
+__Gauss-Seidel algorithm__, or more commonly as __back-fitting__
+
+---
+
+* Given: 
+    - $n\times p$ matrix $\mathbf{X}$ of $p$ predictors
+    - $n\times 1$ response vector $\mathbf{y}$
+    - small tolerance $\delta > 0$
+
+* Center $\mathbf{y}$ and each column of $\mathbf{X}$
+
+* Initialize $\hat{\beta}_{j} \leftarrow 0$ for $j=1,\ldots,p$
+
+* Until (all $|\hat{\beta}_j - \gamma_j| \leq \delta$ ){
+
+    for $k=1,\ldots, p$ {
+    
+      $y_i^{(k)} = y_i - \sum_{j\neq k} \hat{\beta}_jx_{ij}$
+    
+      $\gamma_k \leftarrow$ regression coefficient of $y^{(k)}$ on $x_k$
+    
+      $\hat{\beta}_j \leftarrow  \gamma_k$
+      
+      }}
+
+* $\hat{\beta}_{0} \leftarrow \bar{y} - \sum_{j=1}^{p} \hat{\beta}_j \bar{x}_{j}$ with original data
+
+* Return $\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_p$
+
+
+---
+
+Generate a response $Y$ and predictors $X_1$, $X_2$ and $X_3$ with $n = 100$ as follows:
+
+```{r}
+n = 100
+set.seed(1)
+x1 = rnorm(n)
+x2 = rnorm(n)
+x3 = rnorm(n)
+y = 30 - 10*x1 + 20*x2 + 30*x3 + rnorm(n)
+fit = lm(y ~ x1+x2+x3)
+X = model.matrix(fit)
+```
+
+---
+
+```{r}
+# center y and X
+yc = y - mean(y)
+Xc = apply(X[,-1],2,function(x) x-mean(x))
+# initialize 
+p = ncol(Xc)
+hatbeta = rep(0,p)
+delta = 0.1
+gamma = rep(2*delta,p)
+while ( !all( abs(gamma - hatbeta) <= delta) ){
+for (k in 1:p){
+  gamma = hatbeta
+  yk = yc - Xc[,-k, drop=F] %*% hatbeta[-k, drop=F]
+  gammak = coef(lm(yk ~ 0+ Xc[,k]))
+  hatbeta[k] <- gammak
+}}
+hatbeta0<- mean(y) - sum(hatbeta*apply(X[,-1],2,mean))
+data.frame( backfitting=c(hatbeta0,hatbeta), leastsquares=coef(fit))
+```
+
+---
+
+# Backfitting additive models
+
+* Define the partial residuals by analogy with the linear case, as
+$$Y^{(k)} = Y - \left(\beta_0 - \sum_{j\neq k} f_j(x_j) \right)$$
+
+* Then 
+$$\mathbb{E}(Y^{(k)}|X_k=x_k) =  f_k(x_k)$$
+
+* We could use nearest neighbors, or splines, or kernels, or local-linear regression, or anything else
+
+---
+
+* Given: 
+    - $n\times p$ matrix of $p$ predictors 
+    - $n\times 1$ response vector 
+    - small tolerance $\delta > 0$
+    - one-dimensional smoother $s$ 
+
+* Initialize $\hat{\beta}_0 \leftarrow \bar{y}$ and $\hat{f}_{j} \leftarrow 0$ for $j=1,\ldots,p$
+
+* until (all $|\hat{f}_j - g_j| \leq \delta$ ){
+
+    for $k=1,\ldots, p$ {
+    
+      $y_i^{(k)} = y_i - \sum_{j\neq k} \hat{f}_j(x_{ij})$
+    
+      $g_k \leftarrow s( y^{(k)} \sim x_k)$
+    
+      $g_k \leftarrow g_k - n^{-1} \sum_{i=1}^{n}g_k(x_{ik})$
+    
+      $\hat{f}_{k} \leftarrow g_k$
+      
+      }
+      
+    }
+
+* Return $\hat{\beta}_0, \hat{f}_{1}, \ldots, \hat{f}_{p}$
+
+---
+
+# mgcv
+
+* The `mgcv` R package  is based not on
+backfitting, but rather on something called the *Lanczos
+algorithm*, a way of efficiently calculating truncated matrix
+decompositions that is beyond the scope of this course
+
+* The basic syntax is
+
+```{r, eval=FALSE}
+fit <- gam(y ~ s(x1) + s(x2), data=train)
+```
+
+* One can add arguments to the `s()` function, but the default is to use a __natural cubic spline basis__ and to automatically choose the smoothing parameter $\lambda$ via optimization of the __GCV__
+
+---
+
+# Interaction terms
+
+* One way to think about additive models, and about (possibly) including interaction terms, is to imagine doing a sort of __Taylor series expansion__ of the true regression function
+
+* The zero-th order expansion would be a constant:
+$$f(x)\approx \beta_0$$
+
+* A purely additive model would correspond to a first-order expansion:
+$$f(x)\approx \beta_0 + \sum_{j=1}^{p}f_j(x_j)$$
+
+* Two-way interactions come in when we go to a second-order expansion:
+$$f(x)\approx \beta_0 + \sum_{j=1}^{p}f_j(x_j) + \sum_{j=1}^{p}\sum_{k=j+1}^{p}f_{jk}(x_j,x_k)$$
+
+* For identifiability, we need $\mathbb{E}(f_{jk}(X_j,X_k) ) = 0$
+
+---
+
+# Thin-plate spline
+
+* Suppose we have two input variables, $x$ and $z$, and a single response $y$. How could we do a spline fit?
+
+* One approach is to generalize the spline optimization problem so that we penalize the curvature of the spline surface (no longer a curve)
+
+* The appropriate penalized least-squares objective function to minimize is
+$$\sum_{i=1}^{n}(y_i - f(x_i,z_i))^2 + \lambda \int \left[  \left(\frac{\partial^2 f}{\partial x^2} \right)^2 + 2\left(\frac{\partial^2 f}{\partial x \partial z} \right)^2 + \left(\frac{\partial^2 f}{\partial z^2} \right)^2 \right]$$
+
+* The solution is called a __thin-plate spline__  ( `s(x,z)` in `mgcv` )
+
+* This is appropriate when the two predictors $x$ and $z$ are measured on similar scales
+
+---
+
+# Tensor product spline
+
+* An alternative is use the spline basis functions 
+$$f(x,z) = \sum_{j=1}^{K_x}\sum_{k=1}^{K_z} \beta_{jk} b_{j}(x) b_{k}(z)$$
+
+* Doing all possible multiplications of one set of numbers or functions with another is said to give their outer product or tensor product, so this is known as a __tensor product spline__   ( `te(x,z)` in `mgcv` )
+
+* This is appropriate when the measurement scales of $x$ and $z$ are very different
+
+* We have to chose the number of terms to include for each variable ( $K_x$ and $K_z$)
+
+---
+
+# Generalized additive models
+
+* A natural step beyond generalized linear models is generalized additive models (GAMs), where instead of making the transformed mean response a linear function of the predictors, we make it an additive function of the predictors 
+
+* For example
+$$\mathrm{logit}\{ \mathbb{E}(Y|X=x) \} = \beta_0 + f_1(x_1) + f_2(x_2) + \ldots + f_p(x_p)$$
+
+---
+
+# California house prices
+
+* The Census Bureau divides the U.S. into geographic regions called __tracts__ of a few thousand people each
+
+*  Data from the 2011 American Community Survey, containing information on the housing stock and economic circumstances of every tract in California
+
+    -  __Median_house_value__ : The median value of the housing units in the tract (response)
+    - __POPULATION__, __LATITUDE__, __LONGITUDE__ : The population, latitude and longitude of the tract
+    - __Median_household_income__, __Mean_household_income__ : The median and mean income of households (in dollars, from all sources)
+    - __Total_units__, __Vacant_units__ : The total number of units and the number of vacant units
+    - __Owners__ : The percentage of households which own their home
+    - __Median_rooms__ : The median number of rooms per unit
+    - __Mean_household_size_owners__, __ Mean_household_size_renters__ The mean number of people per household which owns its home, the mean
+number of people per renting household
+
+---
+
+```{r, eval=F}
+library(RCurl)
+calif <- read.csv("https://raw.githubusercontent.com/aldosolari/DM/master/dataset/calif.csv")
+library(mgcv)
+fit <- gam(log(Median_house_value) ~ s(Median_household_income) +
+                   s(Mean_household_income) + 
+                   s(POPULATION) + 
+                   s(Total_units) + 
+                   s(Vacant_units) +
+                   s(Owners) + 
+                   s(Median_rooms) + 
+                   s(Mean_household_size_owners)  + 
+                   s(Mean_household_size_renters) + 
+                  s(LATITUDE,LONGITUDE), data=calif)
+```
+
+---
+
+```{r, eval=F}
+plot(fit, se = 2, shade = TRUE, resid = TRUE, select=1)
+```
+
+---
+
+```{r, eval=F}
+plot(fit, select = 10, se = FALSE)
+```
+
+---
+
+```{r, eval=F}
+plot(fit, select = 10, phi = 60, scheme = TRUE, ticktype = "detailed", cex.axis = 0.5)
+```
