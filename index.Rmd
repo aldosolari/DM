@@ -71,9 +71,11 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare ISL 7.1, 7.2, 7.3, 7.4, 7.5;  AKL 4.1, 4.2, 4.5, 4.6 
 
 * L15 (3 Novembre 12:30 - 15:30) 
+  * [Additive models](docs/lezioni/L15/AdditiveModels.html)
+  * [Model Stacking](docs/lezioni/L15/ModelStaking.html)
+  * Studiare ISL 7.7, AKL 6.3
 
 * L16 (10 Novembre 12:30 - 15:30) 
-
 
 Se non specificato, la modalità di lezione è SINCRONA.
 
