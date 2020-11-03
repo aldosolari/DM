@@ -19,18 +19,18 @@ knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=N
 
 # Model stacking
 
-* Stacking is a general method to combine models 
+Stacking is a general method to combine models 
 
-* Consider a __library__ of $L$ models $\hat{f}_1,\ldots, \hat{f}_L$ fitted on the training data
+Consider a __library__ of $L$ models $\hat{f}_1,\ldots, \hat{f}_L$ fitted on the training data
 $$(x_1,y_1),\ldots, (x_n,y_n)$$
 
 
-* Perhaps by combining their respective efforts, we could get even better prediction than using any
+Perhaps by combining their respective efforts, we could get even better prediction than using any
 particular one
 
-* The issue then how we might combine them for predicting the test set $y^*_1,\ldots,y^*_m$
+The issue then how we might combine them for predicting the test set $y^*_1,\ldots,y^*_m$
 
-* A linear combination 
+A linear combination 
 $$\hat{y}^{*}_i = \sum_{l=1}^{L}w_l \hat{f}_l(x^*_i)$$
 requires to define the the weights $w_1,\ldots,w_L$
 
@@ -38,27 +38,27 @@ requires to define the the weights $w_1,\ldots,w_L$
 
 # Least squares
 
-* The method of least squares provides the weights 
+The method of least squares provides the weights 
 $$\hat{w}_1,\ldots,\hat{w}_L=  \underset{w_1,\ldots,w_L}{\arg \min\,\,} \sum_{i=1}^{n} \left[ y_i - \sum_{l=1}^{L} w_l \hat{f}_l(x_i) \right]^2$$
 
-* However, in this way we fail to take into account for model complexity: models with higher complexity get higher weights
+However, in this way we fail to take into account for model complexity: models with higher complexity get higher weights
 
-* For example, consider $L$ predictors and let $\hat{f}_{l}$ be the linear model formed the best subset of predictors of size $l$, $l=1,\ldots,L$, where best is defined as having the smallest $\mathrm{MSE}_{\mathrm{Tr}}$
+For example, consider $L$ predictors and let $\hat{f}_{l}$ be the linear model formed the best subset of predictors of size $l$, $l=1,\ldots,L$, where best is defined as having the smallest $\mathrm{MSE}_{\mathrm{Tr}}$
 
-* Then all the weight goes on the largest model, that is, $\hat{w}_L = 1$ and $\hat{w}_l = 0$ for $l< L$
+Then all the weight goes on the largest model, that is, $\hat{w}_L = 1$ and $\hat{w}_l = 0$ for $l< L$
 
 ---
 
 # Stacked regression
 
-* Wolpert (1992) presented an interesting idea, called __stacked generalizations__.  This proposal was translated in statistical language by Breiman, in 1993
+Wolpert (1992) presented an interesting idea, called __stacked generalizations__.  This proposal was translated in statistical language by Breiman, in 1993
 
-* If we exclude $y_i$ in the fitting procedure of the models, then 
+If we exclude $y_i$ in the fitting procedure of the models, then 
  $\hat{f}^{-i}_1(x_i),\ldots, \hat{f}^{-i}_L(x_i)$ do not depend on $y_i$ 
 
-* __Stacked regression__ is a particular case of the model stacking algorithm (next) with $\hat{f}_{\mathrm{stack}}=$ linear model and cross-validation with $K=n$
+__Stacked regression__ is a particular case of the model stacking algorithm (next) with $\hat{f}_{\mathrm{stack}}=$ linear model and cross-validation with $K=n$
 
-* Read [Guide to Model Stacking](https://gormanalysis.com/guide-to-model-stacking-i-e-meta-ensembling/
+Read [Guide to Model Stacking](https://gormanalysis.com/guide-to-model-stacking-i-e-meta-ensembling/
 ) by Ben Gorman
 
 ---
