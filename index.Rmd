@@ -72,7 +72,7 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 
 * L15 (3 Novembre 12:30 - 15:30) 
   * [Additive models](docs/lezioni/L15/AdditiveModels.html)
-  * [Model Stacking](docs/lezioni/L15/Staking.html)
+  * [Model Stacking](docs/lezioni/L15/Stacking.html)
   * Studiare ISL 7.7, AKL 6.3
 
 * L16 (10 Novembre 12:30 - 15:30) 
