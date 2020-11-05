@@ -109,12 +109,12 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 |-|-|-|-|-|-|-|-|
 ||  || ||  ||  ||
 || [Problema 0](docs/hw/Problema0.pdf) || 3 Ottobre 2020 || 12 Ottobre 2020 ore 12 ||
-|| [Problema 1](docs/hw/Problema1.pdf) ||  12 Ottobre 2020 || 10 Novembre 2020 ore 12 ||
-|| [Problema 2](docs/hw/Problema2.pdf) ||  30 Ottobre 2020 || 13 Novembre 2020 ore 12 ||
+|| [Problema 1](docs/hw/Problema1.pdf) ||  12 Ottobre 2020 || 12 Novembre 2020 ore 9 ||
+|| [Problema 2](docs/hw/Problema2.pdf) ||  30 Ottobre 2020 || 17 Novembre 2020 ore 12 ||
 
 La scadenza sopra indicata vale per gli studenti che lavorano in [gruppi](docs/hw/gruppiDM.pdf). 
 
-Per tutti gli altri studenti, il lavoro (individuale) deve essere consegnato almeno una settimana prima della data di esame secondo le modalità previste. 
+Per tutti gli altri studenti, il lavoro (individuale) deve essere consegnato almeno una settimana prima della data di esame secondo le modalità previste (tranne per coloro che sostengono l'esame al primo appello del  18 Novembre: in questo caso le scadenze per HW1 e HW2 sono le stesse di coloro che lavorano in gruppi). 
 
 
 ## Libri di testo.
