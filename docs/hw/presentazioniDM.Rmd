@@ -1,0 +1,26 @@
+---
+title: "Presentazioni del 12 Novembre 2020, ore 9:30 - 12:30"
+subtitle: "Data Mining"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+gruppiDM <- read_csv("~/Documents/mygithub/DM/docs/hw/gruppiDM.csv")
+gruppiDM[38,] <- gruppiDM[1,]
+gruppiDM <- gruppiDM[-1,]
+nomi <- c("RANDOM", "FISHER", "TUKEY", "BREIMAN", "BAYES", "GAUSS", "NIGHTINGALE",
+"PEARSON", "STUDENT", "DEFINETTI", "NEYMAN", "GINI")
+set.seed(123)
+gruppiDM$Gruppo = sample(rep(nomi,length=37))
+gruppiDM  <- gruppiDM  %>% select("Matricola","Nome","Cognome","Gruppo") %>% arrange(Gruppo, Matricola)
+gruppiDM  <- gruppiDM[-c(6,14,35),]
+gruppiDM$ore <- c(rep("9:30",3),rep("9:45",2), rep("10:00",3), rep("10:15",3), rep("10:30",2), rep("10:45",3), rep("11:00",3),  rep("11:15",3), rep("11:30",3), rep("11:45",4), rep("12:00",3), rep("12:15",2))
+knitr::kable(gruppiDM, file="pdf", row.names = F)
+```
+
