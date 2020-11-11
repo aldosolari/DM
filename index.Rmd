@@ -76,7 +76,7 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * Studiare ISL 7.7, AKL 6.3
 
 * L16 (12 Novembre 9:30 - 12:30) 
-  * Presentazione dati Netflix
+  * [Presentazioni dei gruppi - dati Netflix](docs/hw/PresentazioniDM.pdf)
 
 Se non specificato, la modalità di lezione è SINCRONA.
 
