@@ -75,7 +75,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
   * [Model Stacking](docs/lezioni/L15/Stacking.html)
   * Studiare ISL 7.7, AKL 6.3
 
-* L16 (10 Novembre 12:30 - 15:30) 
+* L16 (12 Novembre 9:30 - 12:30) 
+  * Presentazione dati Netflix
 
 Se non specificato, la modalità di lezione è SINCRONA.
 
