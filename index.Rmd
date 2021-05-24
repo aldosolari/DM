@@ -97,12 +97,12 @@ Agli studenti che si iscrivono al seguente [form](https://docs.google.com/forms/
 || Sessione || Data || Luogo || Orario ||
 |-|-|-|-|-|-|-|-|-|-|
 ||  || ||  ||  || ||
-|| Autunnale || 18 Novembre 2020 || Telematica ||  14:30||
-|| Invernale || 11 Febbraio 2020 || - || -  ||
-|| Invernale || 25 Febbraio 2020 || -  || - ||
-|| Estiva || Giugno/Luglio || - || -  ||
-|| Estiva || Giugno/Luglio  || -  || -  ||
-|| Estiva || Settembre  || -  || -  ||
+|| Autunnale || 18 Novembre 2020 || Telematica ||  -  ||
+|| Invernale || 11 Febbraio 2021 || Telematica || -  ||
+|| Invernale || 25 Febbraio 2021 || Telematica  || - ||
+|| Estiva || 23 Giugno 2021 || Telematica || 14:00  ||
+|| Estiva || 7 Luglio 2021  || Telematica  || 14:00  ||
+|| Estiva || 6 Settembre 2021  || -  || 14:00  ||
 
 ## Compiti per casa.
 
