@@ -51,9 +51,9 @@ Questa pagina fa riferimento alla parte 1.
 || Sessione || Data || Luogo || Orario ||
 |-|-|-|-|-|-|-|-|-|-|
 ||  || ||  ||  || ||
-|| Autunnale || - || - ||  -  ||
 || Invernale || - || - || -  ||
 || Invernale || - || - || - ||
+|| Primaverile || - || - ||  -  ||
 || Estiva || - || - || -  ||
 || Estiva || - || - || - ||
 || Estiva || - || -  || - ||
