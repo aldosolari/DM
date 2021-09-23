@@ -20,17 +20,17 @@ Questa pagina fa riferimento alla parte 1.
 
 ## Calendario delle lezioni e materiale didattico.
 
-* L01 (29 Novembre 2021 10:30 - 12:30 LAB908)
-
-* L02 (1 Dicembre 2021 14:30 - 17:30 LAB716)
+* L01 (1 Dicembre 2021 14:30 - 17:30 LAB716)
   
-* L03 (3 Dicembre 2021 10:30 - 12:30 LAB908)
+* L02 (3 Dicembre 2021 10:30 - 12:30 LAB908)
 
-* L04 (10 Dicembre 2021 10:30 - 12:30 LAB908)
+* L03 (10 Dicembre 2021 10:30 - 12:30 LAB908)
 
-* L05 (13 Dicembre 2021 12:30 - 14:30 LAB907)
-  
-* L06 (15 Dicembre 2021 14:30 - 17:30 LAB716)
+* L04 (13 Dicembre 2021 12:30 - 14:30 LAB907)
+
+* L05 (15 Dicembre 2021 14:30 - 17:30 LAB716)
+
+* L06 (16 Dicembre 2021 16:30 - 18:30 LAB718)
 
 * L07 (17 Dicembre 2021 10:30 - 12:30 LAB908)
 
