@@ -6,32 +6,32 @@ bedrooms: number of bedrooms
 
 bathrooms: number of bathrooms
 
-sqft_living: size of living space
+sqft_living: Size of living area in square feet
 
-sqft_lot: size of property
+sqft_lot: Size of the lot in square feet
 
 floors: number of floors
 
-waterfront: binary indicator for a waterfront view
+waterfront: binary indicator (‘1’ if the property has a waterfront, ‘0’ if not) for a waterfront view
 
-view: rating of the quality of the view
+view: rating of the quality of the view (An index from 0 to 4 of how good the view of the property was)
 
 condition: condition of the house (poor to very good)
 
-sqft_above: size of living space above ground
+sqft_above: size (Square feet) of living space above ground
 
-sqft_basement:size of living space below ground
+sqft_basement: size (Square feet) of living space below ground
 
 yr_built: year build
 
 year_renovated): year renovated and, if not renovated, the year built
 
-zip_code: zip code
+zip_code: 5 digit zip code
 
 latitude: latitude
 
 longitude: longitude
 
-nn_sqft_living: size of living space of 15 neighbors
+nn_sqft_living: Average size of interior housing living space for the closest 15 houses, in square feet
 
-nn_sqft_lot:size of lot of 15 neighbors
+nn_sqft_lot: Average size of land lots for the closest 15 houses, in square feet

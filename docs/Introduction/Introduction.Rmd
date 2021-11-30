@@ -114,7 +114,7 @@ Le lezioni si svolgeranno in **modalità duale** (streaming da piattaforma WebEx
 
 * Oltre alle previsioni, bisognerà produrre una **relazione** contenete la descrizione dell'analisi.
 
-* Verrà valutata sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (50%).
+* Verrà valutata sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (40%) e del codice R utilizzato (10%).
 
 * E' richiesto di consegnare le previsioni, il codice R e la relazione sullo spazio dedicato che trovate nella pagina MOODLE **almeno una settimana prima dell’appello d’esame**.
 
@@ -130,11 +130,27 @@ Le lezioni si svolgeranno in **modalità duale** (streaming da piattaforma WebEx
 
 * Numero di covariate: 18
 
+* [Info file](https://aldosolari.github.io/DM/docs/HomePrices/HomePrices_info.txt)
+
 * Training set: $n = 17293$ osservazioni
 
 * Test set: $m = 4320$ osservazioni
 
 * Metrica di valutazione: *Mean Absolute Error* (MAE)
+
+---
+
+# Consegna 
+
+Nominare i file con il proprio numero di matricola (il mio è 2575)
+
+* [2575_previsione.TXT](https://aldosolari.github.io/DM/docs/HomePrices/2575_previsione.txt)
+
+* [2575_codice.R](https://aldosolari.github.io/DM/docs/HomePrices/2575_codice.R)
+
+* [2575_relazione.PDF](https://aldosolari.github.io/DM/docs/HomePrices/2575_relazione.pdf)
+
+E' obbligatorio rispettare il formato richiesto (.TXT o .PDF). 
 
 ---
 

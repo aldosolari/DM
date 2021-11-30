@@ -5,6 +5,12 @@ author: "Aldo Solari, matricola 2575"
 output: pdf_document
 ---
 
+La valutazione si baserà sulla correttezza, chiarezza e precisione della relazione. Non è previsto un limite di pagine, ma verrà premiata la capacità di sintesi, ovvero una struttura argomentativa ben articolata, elegante e leggibile. E’ possibile utilizzare fonti (libri, Internet, persone e così via) ma è richiesto di citarle nel testo. L'uso di fonti senza citarle si traduce in un voto nullo. 
+
+Tutti gli studenti sono tenuti ad aderire ad un codice di condotta, che vieta il plagio, la falsificazione, l’assistenza non
+autorizzata, imbrogli e altri atti gravi di disonestà accademica.
+ 
+
 # Relazione
 
 L’obiettivo dell'analisi è la previsione del prezzo di vendita (*price*, in scala log10) di $m=4320$ abitazioni del test set.
