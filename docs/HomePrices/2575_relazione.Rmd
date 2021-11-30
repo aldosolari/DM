@@ -39,17 +39,17 @@ ggplot(train, aes(x = price)) +
 
 Non è stata effettuata alcuna pre-elaborazione dei dati. 
 
-3. *Feature engineering*
+3. *Costruzione di nuove variabili (feature engineering)*
 
 Non è stata costruita nessuna nuova variabile.
 
-5. *Feature selection*
+5. *Selezione delle variabili (feature selection)*
 
 Non è stata effettuata alcuna selezione delle variabili. 
 
 6. *Confronto tra modelli*
 
-Non è stata effettuato alcun confronto, è stato considerato solo il modello lineare.    
+Non è stata effettuato alcun confronto, è stato considerato solo il modello lineare. Non è stata effettuata la regolazione del modello (*model tuning*) in quanto non prevista per il modello lineare. Non è stata effettuata la stima dell'errore di previsione (e.g. attraverso il metodo della convalida incrociata).   
 
 7. *Scelta del modello finale*
 

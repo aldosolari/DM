@@ -29,7 +29,7 @@ $$(x_1,y^*_1), (x_2,y^*_2), \ldots, (x_n,y^*_n)$$
 
 ```{r}
 library(readr)
-df<-read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat", col_types=cols())[-31,]
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat", col_types=cols())[-31,]
 train <- data.frame(x=df$x, y=df$y.yesterday)
 test <- data.frame(x=df$x, y=df$y.tomorrow)
 plot( y ~ x , train)
@@ -83,10 +83,51 @@ http://azzalini.stat.unipd.it/Libro-DM/f_vera.R
 
 # Domanda 1
 
-* Stimare il modello di regressione polinomiale di grado $d=3$ e aggiungere al diagramma di dispersione di $(x_i,y_i)$, $i=1,\ldots,n$ i valori previsti dal modello. Si calcoli l'errore quadratico medio sui dati di training (*Training Mean Squared Error*)
+* Stimare il modello di regressione polinomiale di grado $d=3$ 
+
+* Aggiungere al diagramma di dispersione di $(x_i,y_i)$, $i=1,\ldots,n$ i valori previsti dal modello. 
+
+* Calcolare l'errore quadratico medio sui dati di training (*Training Mean Squared Error*)
 $$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$ 
 
 * Per rispondere a questa domanda, potete utilizzare **solo** il training set, ovvero i dati `x` e `y.ieri`. 
+
+---
+
+# Soluzione 1
+
+```{r}
+d <- 3
+fit <- lm(y ~ poly(x, degree=d, raw=T), train)
+betahat <- coef(fit)
+names(betahat) <- paste("hatbeta", 1:(d+1), sep="")
+betahat
+```
+
+Dato un qualunque $x \in \mathbb{R}$, il modello prevede
+$$\hat{y} = \hat{\beta}_1 + \hat{\beta}_2 x + \hat{\beta}_3 x^2 + \hat{\beta}_4 x^3$$
+Nel seguito indicheremo con $\hat{y}_i$ i valori previsti per $x_i$, $i=1,\ldots,n$. 
+
+---
+
+Il seguente grafico rappresenta il diagramma di dispersione delle osservazioni del training set $(x_i,y_i)$ (pallini vuoti), e le mette a confronto con i valori previsti dal modello $(x_i,\hat{y}_i)$ (pallini pieni). 
+
+```{r}
+yhat <- fitted(fit)
+plot(y ~ x, train)
+points(yhat ~ x, train, pch=19)
+lines(yhat ~ x, train, lwd=2)
+```
+
+---
+
+Infine, $\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2$ 
+
+```{r}
+MSE.tr <- mean((train$y - yhat)^2)
+MSE.tr
+```
+
 
 ---
 
@@ -98,7 +139,7 @@ $$\mathrm{MSE}_{\mathrm{Te}} = \frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^
 * Si noti che $\mathrm{MSE}_{\mathrm{Te}}$ sarà calcolabile solo domani (ovvero dopo aver fatto le previsioni), a differenza dell'errore quadratico medio sui dati di training $\mathrm{MSE}_{\mathrm{Tr}}$, 
 che si può calcolare già oggi avendo a disposizione i dati di ieri.
 
-* Qual è il ragionamento (statistico) alla base della scelta effettuata?
+* Qual è il criterio (statistico) alla base della scelta effettuata?
 
 ---
 
@@ -174,26 +215,28 @@ lm( y ~ poly(x, degree=24), train)
 
 ---
 
-Si supponga di conoscere la vera $f$. **Si decida il grado** $d$ da utilizzare per prevedere generici dati di domani (non necessariamente il test set `x` e `y.domani`) con generici dati di ieri (non necessariamente il training set `x` e `y.ieri`), con l'obiettivo di minimizzare il valore atteso dell'errore di previsione, ovvero
-$$\mathbb{E}[\mathrm{MSE}_{\mathrm{Te}}] = \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}[( y^*_i - \hat{f}(x_i))^2]$$
+# Domanda 4
 
+* Si supponga di conoscere la vera $f$. **Si decida il grado** $d$ da utilizzare per prevedere generici dati di domani (non necessariamente il test set `x` e `y.domani`) con generici dati di ieri (non necessariamente il training set `x` e `y.ieri`), con l'obiettivo di minimizzare il valore atteso dell'errore di previsione, ovvero
+$$\mathbb{E}[\mathrm{MSE}_{\mathrm{Te}}] = \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}[( y^*_i - \hat{f}(x_i))^2]$$
 dove il valore atteso è rispetto alle v.c. $Y_1,\ldots,Y_n$ e $Y^*_1,\ldots,Y^*_n$. 
 
-Si giustifichi la scelta effettuata, commentando il risultato alla luce della risposta fornita alla domanda 1.
+* Si giustifichi la scelta effettuata, commentando il risultato con riferimento alla risposta fornita alla domanda 2.
 
-Lettura suggerita: Capitolo 7.2 del libro Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer
+* Lettura suggerita: Capitolo 7.2 del libro Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer
 
-Per rispondere a questa domanda, potete utilizzare **solo** la vera $f$ e il vero valore di $\sigma$, ovvero i dati `f.vera`, `x` e `sqm.vero`. 
+* Per rispondere a questa domanda, potete utilizzare **solo** la vera $f$ e il vero valore di $\sigma$, ovvero i dati `f.vera`, `x` e `sqm.vero`. 
 
 ---
 
-Si supponga di conoscere la vera $f$ e di aver osservato i dati di ieri. **Si decida il grado** $d$ da utilizzare per prevedere generici dati di domani con i dati effettivamente osservati ieri (il training set `x` e `y.ieri`), con l'obiettivo di minimizzare il valore atteso dell'errore di previsione condizionato ai dati effettivamente osservati ieri, ovvero
+# Domanda 5
+
+* Si supponga di conoscere la vera $f$ e di aver osservato i dati di ieri. **Si decida il grado** $d$ da utilizzare per prevedere generici dati di domani con i dati effettivamente osservati ieri (il training set `x` e `y.ieri`), con l'obiettivo di minimizzare il valore atteso dell'errore di previsione condizionato ai dati effettivamente osservati ieri, ovvero
 $$\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}} | Y_1=y_1,\ldots,Y_n=y_n)= \frac{1}{n}\sum_{i=1}^{n}\mathbb{E}\left[( Y^*_i - \hat{f}(x_i))^2 |  Y_1=y_1,\ldots,Y_n=y_n\right]$$
 dove il valore atteso è rispetto alle v.c. $Y^*_1,\ldots,Y^*_n$. 
 
-Si giustifichi la scelta effettuata, commentando il risultato alla luce delle risposte fornite alle domande 1. e 3.
+* Si giustifichi la scelta effettuata, commentando il risultato con riferimento alle risposte fornite alle domande 2. e 4.
 
-Per rispondere a questa domanda, potete utilizzare **solo** il training set, la vera $f$ e il vero valore di $\sigma$, ovvero i dati `x` e `y.ieri`,  `f.vera` e `sqm.vero`. 
+* Per rispondere a questa domanda, potete utilizzare **solo** il training set, la vera $f$ e il vero valore di $\sigma$, ovvero i dati `x` e `y.ieri`,  `f.vera` e `sqm.vero`. 
 
----
 

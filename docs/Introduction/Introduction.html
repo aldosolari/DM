@@ -182,7 +182,7 @@ class: inverse, middle, center
 | Machine Learning       |             | Statistical models | 
 |------------------------|--------------------|-------------|
 | target variable | `\(Y\)` | response variable |
-| attribute, feature | `\(X\)` | predictor, explanatory variable |
+| attribute, feature | `\(X\)` | covariate, explanatory variable |
 | supervised learning | model `\(Y\)` as a function of `\(X\)` | regression |
 | hypothesis | `\(Y= f(X) + \varepsilon\)` | model, regression function |
 | instances, examples | `\((Y_1,X_1),\ldots,(Y_n,X_n)\)` | samples, observations |
@@ -201,7 +201,7 @@ class: inverse, middle, center
 | | METHODS |  |
 |decision trees |  | linear/logistic regression |
 |k-nearest-neighbors | | discriminant analysis |
-|neural networks | | mixed models |
+|neural networks | | mixed model |
 |support vector machines || ridge/lasso regression |
 |adaboost | | GAM |
 |...||...|
@@ -234,27 +234,23 @@ Ci sono due obiettivi nell'analisi dei dati:
 
 
 1. **Previsione**
-Essere in grado di prevedere i valori futuri di `\(Y\)` avendo a disposizione `\(X\)`
-  - Algoritmi di machine learning
-  - Se ne occupa il 2% degli statistici accademici
+Essere in grado di prevedere i valori futuri di `\(Y\)` avendo a disposizione `\(X\)` (tramite algoritmi di machine learning)
   
 2. **Inferenza** 
-Spiegare come la natura mette in relazione `\(X\)` con `\(Y\)`
-  - Modelli probabilistici 
-  - Se ne occupa il 98% degli statistici accademici 
+Spiegare come la natura mette in relazione `\(X\)` con `\(Y\)` (tramite modelli probabilistici) 
 
 ---
 
 # Spiegare o prevedere?
 
-Supponiamo che il "vero" modello sia il seguente:
+Supponiamo che il "corretto" modello sia il seguente:
 
 `$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon$$`
 Consideriamo ora il seguente modello "sbagliato" (sottospecificato)
 
 `$$Y \approx \gamma_0+ \gamma_1 X_1 + \epsilon$$`
 
-Per ottenere una buona spiegazione dobbiamo stimare i coefficienti del modello "vero", tuttavia a volte un modello "sbagliato" può prevedere meglio `\(Y\)`:
+Per ottenere una buona spiegazione dobbiamo stimare i coefficienti del modello "corretto", tuttavia a volte un modello "sbagliato" può prevedere meglio `\(Y\)`:
   - quando le variabili `\(X_1\)` e `\(X_2\)` sono fortemente correlate
   - quando i dati sono molto "rumorosi"
   - quando `\(\beta_2\)` è un valore molto piccolo
@@ -262,6 +258,36 @@ Per ottenere una buona spiegazione dobbiamo stimare i coefficienti del modello "
 **Lettura consigliata**: 
 
 To explain or to predict? - [Shmueli (2010)](https://www.stat.berkeley.edu/~aldous/157/Papers/shmueli.pdf)
+
+---
+
+
+```r
+simulation &lt;- function(n){
+x1 &lt;- rnorm(n)
+x2 &lt;- rnorm(n, x1, 0.01)
+y &lt;- x1 + x2 + rnorm(n)
+fit_oracle &lt;- x1 + x2
+fit_correct &lt;- lm(y ~ x1 + x2)
+fit_wrong &lt;- lm(y ~ x1)
+y_new &lt;- x1 + x2 + rnorm(n)
+MSE_oracle &lt;- mean( (fit_oracle - y_new)^2 )
+MSE_correct &lt;- mean( (predict(fit_correct) - y_new)^2 )
+MSE_wrong &lt;- mean( (predict(fit_wrong) - y_new)^2 )
+return(c(MSE_oracle, MSE_correct, MSE_wrong))
+}
+
+B = 1000
+set.seed(123)
+res = replicate(B, simulation(n=10))
+row.names(res) &lt;- c("MSE_oracle", "MSE_correct", "MSE_wrong")
+rowMeans(res)
+```
+
+```
+##  MSE_oracle MSE_correct   MSE_wrong 
+##   0.9983567   1.3103582   1.1983455
+```
 
 ---
 layout: false
@@ -277,12 +303,12 @@ class: inverse, middle, center
       I libri di Anderson (1958) e di Mardia, Kent &amp; Bibby (1979)
 
     - **Modelli statistici** &lt;br&gt;
-      L'articolo di Nelder &amp; Wedderburn (1972) sui GLM
+      L'articolo di Nelder &amp; Wedderburn (1972) che introduce i GLM
 
 2. **Statistica Computer-Age**
-    - **Data Mining**: trovare comportamenti sistematici nei dati
+    - **Data Mining**
     
-    - **Machine Learning**: algoritmi che possono apprendere dai dati
+    - **Machine Learning**
 
 3. **Statistica Moderna**
     - **Statistical Learning** &lt;br&gt;
@@ -323,40 +349,6 @@ class: inverse, middle, center
     - l'obiettivo è la previsione di `\(Y\)`
         - `\(Y\)` continua : problema di __regressione__
         - `\(Y\)` binaria/categoriale : problema di  __classificazione__ 
-
----
-
-# Cos'è la scienza dei dati?
-
-&lt;img src="images/datascience.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
-
----
-
-# Data science
-
-&gt; is an interdisciplinary field [...]
-
-&gt; to extract knowledge or insights from data [...]
-
-&gt; Wikipedia
-
----
-
-# Un campo interdisciplinare
-
-![](images/venn.png)
-
----
-
-# Statistics ⊂ Data science
-
-&gt; Anche se la statistica - come scienza dell'apprendimento dai dati - è necessaria per trasformare i dati in conoscenza e azione,
-non è l'unica componente critica all'interno della scienza dei dati
-
-&gt; Quando la statistica, la gestione dei database e
-il calcolo distribuito si combineranno, vedremo emergere esperti con formazione ibrida che saranno meglio attrezzati per risolvere le sfide complesse dei Big data
-
-&gt; Jessica Utts
 
 ---
 

@@ -51,7 +51,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Introduzione al corso</td>
 <td> </td>
-<td>[SLIDES](Introduction/Introduction.html).</td>
+<td>[SLIDES](https://aldosolari.github.io/DM/docs/Introduction/Introduction.html).</td>
 <td> </td>
 <td> </td>
 <td> </td>
@@ -61,7 +61,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>A Simple Problem</td>
 <td> </td>
-<td>[SLIDES](SimpleProblem/SimpleProblem.html).</td>
+<td>[SLIDES](https://aldosolari.github.io/DM/docs/SimpleProblem/SimpleProblem.html).</td>
 <td> </td>
 <td>AS §3.2 </td>
 <td> </td>
@@ -125,19 +125,6 @@ Questa pagina fa riferimento alla parte 1.
 <td> KJ §4</td>
 <td> </td>
 </tr>
-
-<tr>
-<td>The Ames housing data</td>
-<td> </td>
-<td>[SLIDES]().</td>
-<td> </td>
-<td> KS §4 - §11 </td>
-<td> </td>
-</tr>
-
-
-
-
 
 </table>
 
