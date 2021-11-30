@@ -114,7 +114,7 @@ Le lezioni si svolgeranno in **modalità duale** (streaming da piattaforma WebEx
 
 * Oltre alle previsioni, bisognerà produrre una **relazione** contenete la descrizione dell'analisi.
 
-* Verranno valuta sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (50%).
+* Verrà valutata sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (50%).
 
 * E' richiesto di consegnare le previsioni, il codice R e la relazione sullo spazio dedicato che trovate nella pagina MOODLE **almeno una settimana prima dell’appello d’esame**.
 
@@ -126,7 +126,15 @@ Le lezioni si svolgeranno in **modalità duale** (streaming da piattaforma WebEx
 
 # Il dataset: Home sales prices 
 
+* Variabile risposta: *price* (in scala log10)
 
+* Numero di covariate: 18
+
+* Training set: $n = 17293$ osservazioni
+
+* Test set: $m = 4320$ osservazioni
+
+* Metrica di valutazione: *Mean Absolute Error* (MAE)
 
 ---
 

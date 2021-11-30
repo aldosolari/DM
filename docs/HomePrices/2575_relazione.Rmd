@@ -1,0 +1,51 @@
+---
+title: "Relazione"
+subtitle: "Home sales prices"
+author: "Aldo Solari, matricola 2575"
+output: pdf_document
+---
+
+# Relazione
+
+L’obiettivo dell'analisi è la previsione del prezzo di vendita (*price*, in scala log10) di $m=4320$ abitazioni del test set.
+
+*Sintesi del processo di modellizzazione*
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+library(readr)
+library(tidymodels)
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/HomePrices/"
+train = read_csv2(paste0(PATH,"home_prices_train.csv"))
+test = read_csv2(paste0(PATH,"home_prices_test.csv"))
+```
+
+1. *Analisi esplorativa dei dati*
+
+E' stata considerata la distribuzione della variabile risposta, rappresentata con l'istogramma che segue:
+
+```{r, echo=FALSE, fig.height=2, fig.width=3}
+ggplot(train, aes(x = price)) + 
+  geom_histogram(bins = 50) +
+  theme_bw() 
+```
+
+2. *Pre-elaborazione dei dati*
+
+Non è stata effettuata alcuna pre-elaborazione dei dati. 
+
+3. *Feature engineering*
+
+Non è stata costruita nessuna nuova variabile.
+
+5. *Feature selection*
+
+Non è stata effettuata alcuna selezione delle variabili. 
+
+6. *Confronto tra modelli*
+
+Non è stata effettuato alcun confronto, è stato considerato solo il modello lineare.    
+
+7. *Scelta del modello finale*
+
+Non è stata effettuata alcuna scelta, è stato considerato solo il modello lineare.
+
