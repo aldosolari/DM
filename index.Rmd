@@ -18,7 +18,7 @@ Il corso Data Mining (6 CFU) si divide in due parti:
 
 Questa pagina fa riferimento alla parte 1.
 
-## Calendario delle lezioni e materiale didattico.
+## Calendario delle lezioni.
 
 * L01 (1 Dicembre 2021 14:30 - 17:30 LAB716)
   
@@ -36,23 +36,114 @@ Questa pagina fa riferimento alla parte 1.
 
 * L08 (20 Dicembre 2021 12:30 - 14:30 LAB907)
 
+## Materiale didattico
+
+<table>
+
+<tr>
+<td>**ARGOMENTI**</td>
+<td> </td>
+<td>**MATERIALE**</td>
+<td> </td>
+<td>**LIBRI DI TESTO**</td>
+</tr>
+
+<tr>
+<td>Introduzione al corso</td>
+<td> </td>
+<td>[SLIDES](Introduction/Introduction.html).</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+
+<tr>
+<td>Optimism, Conflicts, and Trade-offs</td>
+<td> </td>
+<td>[SLIDES](BiasVariance/BiasVariance.html).</td>
+<td> </td>
+<td>AS §3 </td>
+<td> </td>
+</tr>
+
+
+<tr>
+<td></td>
+<td> </td>
+<td>[SLIDES](Optimism/Optimism.html).</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+
+<tr>
+<td>The Model versus the Modeling Process</td>
+<td> </td>
+<td>[SLIDES]().</td>
+<td> </td>
+<td>KJ §1.2-1.3, KS §1.3 </td>
+<td> </td>
+</tr>
+
+
+<tr>
+<td>Cars data</td>
+<td> </td>
+<td>[SLIDES](docs/Cars/Cars.html).</td>
+<td> </td>
+<td> AS §2.1 </td>
+<td> </td>
+</tr>
+
+<tr>
+<td>Titanic data</td>
+<td> </td>
+<td>[SLIDES](docs/Titanic/Titanic.html).</td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+
+<tr>
+<td>Chicago train ridership data</td>
+<td> </td>
+<td>[SLIDES]().</td>
+<td> </td>
+<td> KJ §4</td>
+<td> </td>
+</tr>
+
+<tr>
+<td>The Ames housing data</td>
+<td> </td>
+<td>[SLIDES]().</td>
+<td> </td>
+<td> KS §4 - §11 </td>
+<td> </td>
+</tr>
+
+
+
+
+
+</table>
+
 ## Modalità d'esame.
 
-* La modalità di verifica consiste nell'analisi di un dataset per il quale bisogna prevedere le osservazioni dei dati di test sulla base dei dati di training. 
+La modalità di verifica consiste nell'analisi di un dataset per il quale bisogna prevedere le osservazioni dei dati di test sulla base dei dati di training. Oltre alle **previsioni**, bisognerà produrre una **relazione** contenete la descrizione dell'analisi e il codice utilizzato da consegnare entro la scadenza prevista (almeno una settimana prima dell'appello d'esame). 
 
-* Oltre alle previsioni, bisognerà produrre una **relazione** contenete (i) la descrizione dell'analisi e (ii) il codice utilizzato da consegnare entro la scadenza prevista (almeno una settimana prima dell'appello d'esame). 
-
-* Sarà possibile consegnare le previsioni **una volta sola** per A.A. 
-
-* Lo studente (oppure il docente) può richiedere la prova orale. 
+Sarà possibile consegnare le previsioni **una volta sola** per A.A. Lo studente (oppure il docente) può richiedere la prova orale. 
 
 **Calendario degli esami**.
 
 || Sessione || Data || Luogo || Orario ||
 |-|-|-|-|-|-|-|-|-|-|
 ||  || ||  ||  || ||
-|| Invernale || - || - || -  ||
-|| Invernale || - || - || - ||
+|| Invernale || 3 Febbraio 2022 || - || 14:00  ||
+|| Invernale || 23 Febbraio 2022 || - || 14:00 ||
 || Primaverile || - || - ||  -  ||
 || Estiva || - || - || -  ||
 || Estiva || - || - || - ||
@@ -67,8 +158,4 @@ Questa pagina fa riferimento alla parte 1.
 
 * Kuhn, Silge (2021+). [Tidy Modeling with R](https://www.tmwr.org/). In progress. [KS].
 
-* Lewis, Kane, Arnold (2019) A Computational Approach to Statistical Learning. Chapman and Hall/CRC. [LKA].
-
-
-Tutti i libri di testo (tranne AS) sono disponibili in formato elettronico presso la [biblioteca](https://www.biblio.unimib.it/it/risorse/accesso-alle-risorse-remoto).
 

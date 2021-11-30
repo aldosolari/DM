@@ -1,0 +1,398 @@
+---
+title: "Data Mining"
+subtitle: "Ottimismo"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightLanguage: R
+      countIncrementalSlides: false
+      highlightLines: true   
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F)
+```
+
+
+# Visto che non conosciamo $f(x)...$
+
+* La conclusione della lezione precedente è stata
+che dobbiamo operare un compromesso tra le componenti di 
+distorsione e di varianza. Operativamente però non possiamo utilizzare la conoscenza di $f(x)$, ovviamente ignota in pratica
+
+* Presenteremo due approcci per stimare l'errore di previsione e scegliere il modello:  
+  - Il concetto di ottimismo e i criteri basati sull'informazione
+  - Il metodo della convalida incrociata
+
+---
+
+# Stima dell'errore di previsione
+
+* Calcolare l'errore quadratico medio sugli stessi dati con i quali abbiamo stimato il modello non è sembrato molto utile
+
+* Si ricordi l'esempio della regressione polinomiale: $\mathrm{MSE}_{\mathrm{Tr}}$ decresce al crescere di $d$, fino ad arrivare a 0 per $d=n-1$
+
+* Tuttavia se risultasse
+$$\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) + \mathrm{costante}$$
+allora si potrebbe stimare l'errore (atteso) di previsione come
+\begin{aligned}
+\widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})} &= \widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}})} + \mathrm{costante}\\
+ &= \mathrm{MSE}_{\mathrm{Tr}} + \mathrm{costante}\\
+\end{aligned}
+a patto di conoscere il valore della costante
+
+---
+
+# Ottimismo
+
+Si consideri il setting Fixed-X. 
+
+Chiameremo **ottimismo** la differenza 
+$$\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) - \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}}) = \frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(Y_i,\hat{f}(x_i)) = \mathrm{OptF}$$
+Maggiore è la correlazione tra $Y_i$ e $\hat{f}(x_i)$, maggiore è l'ottimismo
+
+---
+
+* Abbiamo
+\begin{aligned}
+ \mathbb{E}[(Y_i - \hat{f}(x_i))^2]& = \mathbb{V}\mathrm{ar}( Y_i - \hat{f}(x_i)) + (\mathbb{E}[Y_i - \hat{f}(x_i)])^2\\
+ &= \mathbb{V}\mathrm{ar}( Y_i) + \mathbb{V}\mathrm{ar}( \hat{f}(x_i) ) - 2\mathbb{C}\mathrm{ov}(Y_i,\hat{f}(x_i) ) + (\mathbb{E}[Y_i] - \mathbb{E}[\hat{f}(x_i)])^2\\
+\end{aligned}
+e
+\begin{aligned}
+ \mathbb{E}[(Y^*_i - \hat{f}(x_i))^2]& = \mathbb{V}\mathrm{ar}( Y^*_i - \hat{f}(x_i)) + (\mathbb{E}[Y^*_i - \hat{f}(x_i)])^2\\
+ &= \mathbb{V}\mathrm{ar}( Y_i^*) + \mathbb{V}\mathrm{ar}( \hat{f}(x_i) ) - 2\mathbb{C}\mathrm{ov}(Y_i^*,\hat{f}(x_i) ) + (\mathbb{E}[Y_i^*] - \mathbb{E}[\hat{f}(x_i)])^2\\
+\end{aligned}
+
+* Si noti che $Y^*_i$ è indipendente da $Y_i$, ma hanno la stessa distribuzione, quindi $\mathbb{E}(Y^*_i)=\mathbb{E}(Y_i)$, $\mathbb{V}\mathrm{ar}( Y_i^*) = \mathbb{V}\mathrm{ar}( Y_i)$ e $\mathbb{C}\mathrm{ov}(Y_i^*,\hat{f}(x_i))=0$. Allora
+\begin{aligned}
+ \mathbb{E}[(Y^*_i - \hat{f}(x_i))^2] &= \mathbb{V}\mathrm{ar}( Y_i) + \mathbb{V}\mathrm{ar}(\hat{f}(x_i))  + (\mathbb{E}[Y_i] - \mathbb{E}[\hat{f}(x_i)])^2\\
+ &= \mathbb{E}[ (Y_i - \hat{f}(x_i))^2] + 2\mathbb{C}\mathrm{ov}(Y_i,\hat{f}(x_i) )
+\end{aligned}
+
+* Se facciamo la media su tutte le $n$ osservazioni
+\begin{aligned}
+\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^{n}( Y^*_i - \hat{f}(x_i))^2 \right] &= \left[ \frac{1}{n}\sum_{i=1}^{n}( Y_i - \hat{f}(x_i))^2 \right] + \frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(Y_i,\hat{f}(x_i) )\\
+\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}}) & = \mathbb{E}(\mathrm{MSE}_{\mathrm{Tr}})+\frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(Y_i,\hat{f}(x_i))\\
+\end{aligned}
+
+---
+
+# Ottimismo per il modello lineare
+
+* Si noti che 
+$$\frac{2}{n}\sum_{i=1}^{n}\mathbb{C}\mathrm{ov}(Y_i,\hat{f}(x_i)) = \frac{2}{n}\mathrm{tr}( \mathbb{C}\mathrm{ov}(  \mathbf{Y}, \hat{\mathbf{f}}))$$
+dove $\mathbf{Y}=(Y_1,\ldots,Y_n)^\mathsf{T}$ e $\hat{\mathbf{f}}=(\hat{f}(x_1),\ldots,\hat{f}(x_n))^\mathsf{T}$
+
+* I valori previsti dal modello lineare si possono esprimere come
+$$\hat{\mathbf{f}}=\mathbf{H}\mathbf{Y}$$
+dove $\mathbf{H} = \mathbf{X}(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}$ è la matrice di proiezione ("*hat matrix*"), simmetrica e idempotente
+
+* Abbiamo
+$$\mathrm{tr}\{\mathbb{C}\mathrm{ov}(  \mathbf{Y}, \mathbf{H}\mathbf{Y})\}=\mathrm{tr}\{\mathbb{C}\mathrm{ov}(  \mathbf{Y},\mathbf{Y})\mathbf{H}^\mathsf{T}\} = \mathrm{tr}\{\sigma^2 \mathbf{I}_n\mathbf{H}\} = \sigma^2\mathrm{tr}\{\mathbf{X}(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\mathbf{X}^\mathsf{T}\} =\sigma^2\mathrm{tr}\{\mathbf{X}^\mathsf{T}\mathbf{X}(\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}\}$$
+e quindi
+$$\mathrm{OptF} = \frac{2\sigma^2 p}{n}$$
+
+---
+
+![](images/Opt.jpeg)
+
+---
+
+```{r}
+rm(list=ls())
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+sigmatrue = 0.01
+# MSE.tr
+n <- nrow(train)
+ds = 1:15
+ps = ds + 1
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d), train)
+fits <- lapply(ds, fun)
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+hatMSEs.te = MSEs.tr + (2*sigmatrue^2*ps)/n
+```
+
+---
+
+```{r}
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="ErrF")
+lines(ds, hatMSEs.te, type="b", col=2)
+legend("topright",c("MSE.tr","MSE.tr + Opt"), col=c(1,2), pch=19)
+```
+
+
+
+---
+
+# Cp di Mallows
+
+* $\displaystyle \mathrm{OptF}=\frac{2\sigma^2p}{n}$ richiede la conoscenza di $\sigma^2$, che però è un valore incognito
+
+* Possiamo però sostituirlo con la sua stima
+$$\hat{\sigma}^2= \frac{\mathrm{RSS}}{n-p}= \frac{\sum_{i=1}^{n}( y_i - \hat{f}(x_i))^2}{n-p}$$
+dove $\mathrm{RSS} = n \mathrm{MSE}_{\mathrm{Tr}}$ è la somma dei quadrati dei residui (*Residual Sum of Squares*)
+
+* Quindi una stima per l'errore di previsione è data da
+\begin{aligned}
+\widehat{\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})} &= \mathrm{MSE}_{\mathrm{Tr}} + \widehat{\mathrm{OptF}}\\
+\end{aligned}
+
+* Questo stimatore è noto come __Cp di Mallows__ : 
+
+$$\mathrm{Cp} = \mathrm{MSE}_{\mathrm{Tr}}  + \frac{2 \hat{\sigma}^2 p}{n}$$
+
+---
+
+
+```{r}
+hatsigma2 = (n*MSEs.tr)/(n-ps)
+Cps = MSEs.tr + (2*hatsigma2*ps)/n 
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="ErrF")
+lines(ds, Cps, type="b", col=2)
+legend("topright",c("MSE.tr","MSE.tr + hatOpt"), col=c(1,2), pch=19)
+```
+
+---
+
+```{r}
+plot(ds, hatsigma2, type="b", xlab="d", ylab="Sigma2")
+abline(h=sigmatrue^2, col=4)
+```
+
+---
+
+# Criteri basati sull'informazione: AIC e BIC
+
+* __AIC__ è definito come
+$$\mathrm{AIC} =  -2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) + 2p$$
+dove per il modello lineare $-2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) = n \log(\mathrm{MSE}_{\mathrm{Tr}})$
+
+* Per i modelli lineari, Cp e AIC sono proporzionali, e quindi il valore più piccolo per Cp corrisponde al valore più piccolo per AIC
+
+* __BIC__ è definito come
+$$\mathrm{BIC} =  -2 \cdot \mathrm{loglikelihood}(\hat{\beta},\hat{\sigma}^2) + \log(n)p$$
+
+* Dal momento che $\log(n) > 2$ per $n > 7$,
+BIC generalmente seleziona modelli meno complessi rispetto a quelli selezionati da AIC
+
+---
+
+```{r}
+AICs <- unlist( lapply(fits, AIC) )
+BICs <- unlist( lapply(fits, BIC) )
+plot(ds, AICs, type="b", col=5, ylab="Criteri basati sull'informazione", xlab="d")
+lines(ds, BICs, type="b", col=6)
+legend("topright",c("AIC","BIC"), col=c(5,6), lty=1)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Metodo della convalida incrociata
+
+---
+
+
+# Metodo della convalida incrociata
+
+* Come notato in precedenza, stimare un modello e valutarne la performance sugli stessi dati produce un risultato troppo ottimistico
+
+* Il metodo della convalida incrociata (*Cross-Validation*, abbreviato CV) valuta le previsioni del modello su dati "nuovi" al fine di fornire una stima $\widehat{\mathrm{Err}}$ dell'errore di previsione $\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$ 
+
+* L'idea alla base del metodo è di dividere le osservazioni (*data-split*): una parte dei dati (training set) è utilizzata per addestrare il modello, e i dati rimanenti (test set) sono utilizzati per misurare la performance del modello
+
+* Una delle principali caratteristiche della CV è la sua universalità. CV è un metodo __non parametrico__ che può essere applicato a qualsiasi algoritmo/modello. Questa universalità non è condivisa ad es. da Cp, che è specifico della regressione lineare
+
+
+---
+
+# Una semplice soluzione
+
+* Una semplice soluzione consiste nel dividere casualmente le $n$ osservazioni in due parti: un insieme di addestramento e un insieme di verifica
+
+* Si veda la Figure 5.1 del libro ISL
+
+* Si stima il modello $\hat{f}^{-V}$ sull'insieme delle osservazioni di addestramento $T \subset \{1,\ldots,n\}$, e lo si utilizza per prevedere le osservazioni sull'insieme di verifica $V = \{1,\ldots,n\} \setminus T$
+
+* Questo approccio fornisce una stima dell'errore di previsione (atteso)
+$$\widehat{\mathrm{Err}} = \frac{1}{\# V} \sum_{i \in V} (y_i - \hat{f}^{-V}(x_i))^2$$
+
+* Tuttavia questo procedimento riduce la numerosità delle osservazioni (ma questo non è un problema se $n$ è veramente elevato)
+
+* Se $ n $ non è molto grande, tuttavia, questa stima può essere molto variabile
+
+---
+
+# Convalida incrociata
+
+* Un modo per superare parzialmente questa arbitrarietà è dividere
+i dati in parti uguali $V_1,\ldots,V_K$.
+
+* Si veda la figura Figure 5.5 del libro ISLR
+
+* Nel metodo della convalida incrociata con $K$ porzioni (*K-fold cross-validation*) utilizziamo le osservazioni $i\notin V_k$ per addestrare il modello e le osservazioni $i \in V_k$ per valutarlo:
+$$\frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2$$
+e alla fine calcoliamo la media delle stime per stimare l'errore di previsione atteso:
+$$\widehat{\mathrm{Err}} = \frac{1}{K} \sum_{k=1}^{K}\left[ \frac{1}{\# V_k} \sum_{i \in V_k} (y_i - \hat{f}^{-V_k}(x_i))^2 \right]$$
+
+---
+
+```{r}
+rm(list=ls())
+library(readr)
+df <- read_table2("http://azzalini.stat.unipd.it/Book-DM/yesterday.dat")[-31,]
+train <- data.frame(x=df$x, y=df$y.yesterday)
+n <- nrow(train)
+# K-fold CV
+d = 3
+K = 5
+set.seed(123)
+# create folds
+folds <- sample( rep(1:K,length=n) )
+# initialize vector
+KCV <- vector()
+# loop
+for (k in 1:K){
+  fit <- lm(y~poly(x,degree=d), train, subset=which(folds!=k))
+  x.out <- train$x[which(folds==k)]
+  yhat <- predict(fit, newdata=list(x=x.out))
+  y.out <- train$y[which(folds==k)]
+  KCV[k]<- mean( ( y.out - yhat )^2 )
+}
+# KCV estimate 
+mean(KCV)
+```
+
+---
+
+```{r}
+ds = 1:12; ps = ds+1
+library(boot)
+set.seed(123)
+KCV = sapply(ds, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), train, family = gaussian), K=K )$delta[1] )
+plot(ds, KCV, type="b", log="y")
+```
+
+---
+
+# Leave-one-out cross validation
+
+* Nella __leave-one-out cross validation__ (LOOCV), ciascuna osservazione viene esclusa a turno dall'insieme delle osservazioni per essere utilizzata per la verifica della previsione
+
+* Si veda la  Figure 5.3 el libro ISL
+
+* Per $i=1,\ldots,n$:
+
+    - Escludere l' $i$-sima osservazione $(x_i,y_i)$
+    - Utilizzare le rimandenti $n-1$ osservazioni per stimare il modello $\hat{f}^{-i}$ e valutarlo sull'osservazione esclusa $(x_i,y_i)$, calcolando $(y_i - \hat{f}^{-i}(x_i))^2$
+    - Infine, calcolare la media
+$$\widehat{\mathrm{Err}} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}^{-i}(x_i))^2$$
+
+* Si noti che LOOCV è un caso particolare di $K$-fold CV che corrisponde a $K = n$. 
+
+---
+
+```{r}
+# LOOCV
+oneout <- vector()
+for (i in 1:n){
+fit_i <- lm( y~poly(x,degree=d), data=train[-i,])
+yhat_i <- predict(fit_i, newdata=data.frame(x=train$x[i]) )
+oneout[i] <- ( train$y[i] -  yhat_i )^2
+}
+mean(oneout)
+```
+
+---
+
+# LOOCV per il modello lineare
+
+* Per il modello lineare, c'è una scorciatoia per calcolare LOOCV:
+$$\frac{1}{n}\sum_{i=1}^{n}\Big( y_i - \hat{f}^{-i}(x_i) \Big)^2 = \frac{1}{n} \sum_{i=1}^{n}\left( \frac{y_i - \hat{f}(x_i)}{1-h_{ii}} \right)^2$$
+
+* $\underset{n\times p}{\mathbf{X}}$ è la matrice del disegno
+
+* $h_{ii}$ è l' $i$-simo elemento diagonale della matrice di proiezione
+$$\underset{n\times n}{\mathbf{H}} = \mathbf{X}(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T}$$
+
+---
+
+```{r}
+fit <-  lm(y~poly(x,d), train)
+# design matrix
+X <- model.matrix(fit)
+# hat matrix
+H <- X %*% solve(t(X)%*% X) %*% t(X)
+# LOOCV estimate
+mean(
+   ( (train$y - predict(fit)) / (1-diag(H))  )^2 
+) 
+```
+
+---
+
+```{r}
+LOOCV = sapply(ds, function(d) 
+     cv.glm(train, glm(y~poly(x,degree=d), 
+     train, family = gaussian) )$delta[1] )
+plot(ds, LOOCV, type="b", xlab="d")
+```
+
+---
+
+# Metodo della convalida incrociata generalizzata
+
+* Nella convalida incrociata generalizzata calcoliamo
+$$\widehat{\mathrm{Err}} =\frac{ \mathrm{MSE}_{\mathrm{Tr}}}{\left(1 - \frac{p}{n}\right)^2}$$
+dove stiamo approssimando $h_{ii}$ con la sua media
+$$\frac{1}{n}\sum_{i=1}^{n} h_{ii} = \frac{p}{n}$$
+
+---
+
+```{r}
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x,degree=d), train)
+fits <- lapply(ds, fun)
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+GCV = MSEs.tr/(1-(ps)/n )^2
+plot(ds, GCV, type="b", xlab="d")
+```
+
+---
+
+# La scelta di K
+
+* Una scelta comune per $K$ oltre a $K = n$ è di scegliere $K = 5$ o $K = 10$
+
+* Tuttavia, trarre una conclusione generale sul CV è un compito quasi impossibile a causa della varietà delle situazioni che si possono incontrare
+
+---
+
+# Compromesso distorsione-varianza per CV
+
+__Distorsione__
+
+* $K$-fold CV con $K=5$ o 10 fornisce una stima distorta (verso l'alto) dell'errore di previsione $\mathbb{E}(\mathrm{MSE}_{\mathrm{Te}})$ perchè utilizza meno osservazioni nella stima del modello (4/5 or $9/10$ delle osservazioni)
+
+* LOOCV ha distorsione molto bassa (utilizza $n-1$ osservazioni)
+
+
+__Varianza__
+
+* Solitamente LOOCV è fortemente variabile perchè è la media di $n$ quantità estremamente correlate (perchè le stime $\hat{f}^{-i}$ e $\hat{f}^{-l}$ si basano su $n-2$ osservazioni comuni), e $K$-fold CV con $K=5$ o 10 a meno variabilità perchè è la media di quantità meno correlate  
+
+*  Si ricordi che la varianza della somma di quantità fortemente correlate è maggiore di quella con quantità mediamente correlate:
+$$\mathbb{V}\mathrm{ar}(A+B) = \mathbb{V}\mathrm{ar}(A) + \mathbb{V}\mathrm{ar}(B) + 2\mathbb{C}\mathrm{ov}(A,B)$$
+
+* In generale, tuttavia, la variabilità dei diversi metodi CV spesso dipende dalla particolare applicazione
+
+
+

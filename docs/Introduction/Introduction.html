@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Mining</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Aldo Solari" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data Mining
+## Introduzione al corso
+### Aldo Solari
+
+---
+
+
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+    font-size: 25px;
+    padding: 1em 4em 1em 4em;
+}
+&lt;/style&gt;
+
+# Docente
+
+Aldo Solari
+
+* E-mail: aldo.solari@unimib.it
+
+* Ricevimento: su appuntamento concordato via email
+
+* Pagina personale: https://aldosolari.github.io/
+
+---
+
+# Data Science e Data Mining
+
+* Insegnamento **DATA MINING M** (6 CFU) 
+
+* Insegnamento DATA SCIENCE M (12 CFU) 
+    * Modulo **DATA MINING** (6 CFU) 
+    * Modulo STATISTICAL LEARNING (6 CFU) 
+
+---
+
+# Data Mining: APM e IDL
+
+  * I parte:  **APPLIED PREDICTIVE MODELLING** [APM] (3 CFU, Prof. Solari) 
+  
+  * II parte: **INTRODUCTION TO DEEP LEARNING** [IDL] (3 CFU, Prof. Borrotti) 
+
+---
+
+# Prerequisiti
+
+Si consiglia la conoscenza degli argomenti trattati nei corsi 
+
+* Probabilità e Statistica Computazionale M  
+* Statistica Avanzata M
+
+* (Machine Learning M)
+
+---
+
+# Pagine del corso 
+
+* Pagina MOODLE: https://elearning.unimib.it/course/view.php?id=38065 
+
+* Pagina WEB: https://aldosolari.github.io/DM/
+
+Queste due pagine contengono tutte le informazioni relative al corso e il materiale didattico.
+
+---
+
+# Calendario delle lezioni 
+
+L01 (1 Dicembre 2021 14:30 - 17:30 LAB716)
+
+L02 (3 Dicembre 2021 10:30 - 12:30 LAB908)
+
+L03 (10 Dicembre 2021 10:30 - 12:30 LAB908)
+
+L04 (13 Dicembre 2021 12:30 - 14:30 LAB907)
+
+L05 (15 Dicembre 2021 14:30 - 17:30 LAB716)
+
+L06 (16 Dicembre 2021 16:30 - 18:30 LAB718)
+
+L07 (17 Dicembre 2021 10:30 - 12:30 LAB908)
+
+L08 (20 Dicembre 2021 12:30 - 14:30 LAB907)
+
+Le lezioni si svolgeranno in **modalità duale** (streaming da piattaforma WebEx: https://unimib.webex.com/meet/aldo.solari ). Le lezioni **non saranno registrate**.
+
+---
+
+# Calendario degli esami
+
+|| Sessione || Data || Luogo || Orario ||
+|-|-|-|-|-|-|-|-|-|-|
+||  || ||  ||  || ||
+|| Invernale || 4 Febbraio 2022 || U7-12 || 09:30  ||
+|| Invernale || 23 Febbraio 2022 || -  || 09:30 ||
+|| Primaverile || - || -  || - ||
+|| Estiva || - || -  || - ||
+|| Estiva || - || -  || - ||
+|| Estiva || - || -  || - ||
+
+---
+
+# Esame APM
+
+* La modalità di verifica consiste nell’analisi di un dataset per il quale bisogna fornire delle **previsioni**, allegando il **codice R** utilizzato per produrle. 
+
+* Oltre alle previsioni, bisognerà produrre una **relazione** contenete la descrizione dell'analisi.
+
+* Verranno valuta sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (50%).
+
+* E' richiesto di consegnare le previsioni, il codice R e la relazione sullo spazio dedicato che trovate nella pagina MOODLE **almeno una settimana prima dell’appello d’esame**.
+
+* Sarà possibile consegnare le previsioni e la relazione **una volta sola** per A.A.
+
+* Lo studente oppure il docente può richiedere la prova orale.
+
+---
+
+# Il dataset: Home sales prices 
+
+
+
+---
+
+# Libri di testo
+
+[AS] Azzalini, Scarpa (2004). *Analisi dei dati e data mining*, Springer-Verlag Italia
+
+[KJ] Kuhn, Johnson (2019). [Feature Engineering and Selection](http://www.feat.engineering/). Chapman and Hall/CRC
+
+[KS] Kuhn, Silge (2021+). [Tidy Modeling with R](https://www.tmwr.org/). In progress.
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Statistica e Machine Learning
+
+---
+
+| Machine Learning       |             | Statistical models | 
+|------------------------|--------------------|-------------|
+| target variable | `\(Y\)` | response variable |
+| attribute, feature | `\(X\)` | predictor, explanatory variable |
+| supervised learning | model `\(Y\)` as a function of `\(X\)` | regression |
+| hypothesis | `\(Y= f(X) + \varepsilon\)` | model, regression function |
+| instances, examples | `\((Y_1,X_1),\ldots,(Y_n,X_n)\)` | samples, observations |
+| learning | `\(\displaystyle \hat{f} = \underset{f \in \mathcal{F}}{\arg\min} \sum_{i=1}^{n} \mathrm{loss}(Y_i,f(X_i))\)` | estimation, fitting |
+| classification | `\(\hat{Y} = \hat{f}(X)\)` | prediction |
+| generalization error | `\(\mathbb{E} [\, \mathrm{loss}(Y,\hat{f}(X))\,]\)` | risk |
+
+---
+
+| Machine Learning       |             | Statistical Models | 
+|------------------------|--------------------|-------------|
+| | FOCUS | |
+|prediction |  | inference |
+| | CULTURE | |
+|algorithmic/optimization |  | modeling |
+| | METHODS |  |
+|decision trees |  | linear/logistic regression |
+|k-nearest-neighbors | | discriminant analysis |
+|neural networks | | mixed models |
+|support vector machines || ridge/lasso regression |
+|adaboost | | GAM |
+|...||...|
+|random forests | | random forests |
+
+---
+
+# Uno statistico "moderno"
+
+* Il lavoro di Leo Breiman ha contribuito a colmare il divario tra i modelli statistici e il machine learning
+
+* I maggiori contributi di Breiman:
+    - Bagging
+    - Random Forests
+    - Boosting
+
+* __Statistical Learning__ = __Statistical__ Modeling + Machine __Learning__
+
+---
+
+# I due obiettivi
+
+Nel suo articolo del 2001, Leo Breiman sostiene che
+
+&gt; La statistica inizia con i dati. Pensate ai dati come se fossero generati da una scatola nera dove da un lato entra `\(X\)` e 
+dall'altro lato esce `\(Y\)` [...]
+Ci sono due obiettivi nell'analisi dei dati:
+
+![](images/blackbox.png)
+
+
+1. **Previsione**
+Essere in grado di prevedere i valori futuri di `\(Y\)` avendo a disposizione `\(X\)`
+  - Algoritmi di machine learning
+  - Se ne occupa il 2% degli statistici accademici
+  
+2. **Inferenza** 
+Spiegare come la natura mette in relazione `\(X\)` con `\(Y\)`
+  - Modelli probabilistici 
+  - Se ne occupa il 98% degli statistici accademici 
+
+---
+
+# Spiegare o prevedere?
+
+Supponiamo che il "vero" modello sia il seguente:
+
+`$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon$$`
+Consideriamo ora il seguente modello "sbagliato" (sottospecificato)
+
+`$$Y \approx \gamma_0+ \gamma_1 X_1 + \epsilon$$`
+
+Per ottenere una buona spiegazione dobbiamo stimare i coefficienti del modello "vero", tuttavia a volte un modello "sbagliato" può prevedere meglio `\(Y\)`:
+  - quando le variabili `\(X_1\)` e `\(X_2\)` sono fortemente correlate
+  - quando i dati sono molto "rumorosi"
+  - quando `\(\beta_2\)` è un valore molto piccolo
+  
+**Lettura consigliata**: 
+
+To explain or to predict? - [Shmueli (2010)](https://www.stat.berkeley.edu/~aldous/157/Papers/shmueli.pdf)
+
+---
+layout: false
+class: inverse, middle, center
+
+# Dalla statistica multivariata alla scienza dei dati
+
+---
+
+
+1. **Statistica Classica**
+    - **Analisi multivariata** &lt;br&gt;
+      I libri di Anderson (1958) e di Mardia, Kent &amp; Bibby (1979)
+
+    - **Modelli statistici** &lt;br&gt;
+      L'articolo di Nelder &amp; Wedderburn (1972) sui GLM
+
+2. **Statistica Computer-Age**
+    - **Data Mining**: trovare comportamenti sistematici nei dati
+    
+    - **Machine Learning**: algoritmi che possono apprendere dai dati
+
+3. **Statistica Moderna**
+    - **Statistical Learning** &lt;br&gt;
+      Il libro di Hastie, Tibshirani &amp; Friedman  (2001) 
+      
+    - **Data Science**
+    
+---
+
+# Letture consigliate
+
+&lt;img src="images/tukey.jpg" width="30%" height="15%" style="display: block; margin: auto;" /&gt;
+.center[John Tukey (1915-2000)]
+
+1. The Future of Data Analysis - [Tukey (1962)](https://projecteuclid.org/download/pdf_1/euclid.aoms/1177704711)
+
+2. Data Mining and Statistics: What's the connection? -  [Friedman (1998)](http://docs.salford-systems.com/dm-stat.pdf)
+
+3. Statistical Modeling: The Two Cultures - [Breiman (2001)](http://www2.math.uu.se/~thulin/mm/breiman.pdf)
+
+4. 50 years of Data Science - [Donoho (2015)](https://courses.csail.mit.edu/18.337/2015/docs/50YearsDataScience.pdf)
+
+5. Data Science vs. Statistics: Two Cultures? - [Carmichael and Marron (2018)](https://arxiv.org/pdf/1801.00371.pdf)
+
+---
+
+# Statistical learning
+
+* **Unsupervised learning**
+    - i dati sono `\(p\)` variabili `\(X_1,\ldots,X_p\)`; nessuna variabile ha uno status "speciale"
+    - L'obiettivo è 
+          - riduzione della dimensionalità
+          - clustering
+          - etc.
+
+* **Supervised learning**
+    - i dati sono una variabile risposta `\(Y\)` e `\(p\)` predittori `\(X_1,\ldots,X_p\)`
+    - l'obiettivo è la previsione di `\(Y\)`
+        - `\(Y\)` continua : problema di __regressione__
+        - `\(Y\)` binaria/categoriale : problema di  __classificazione__ 
+
+---
+
+# Cos'è la scienza dei dati?
+
+&lt;img src="images/datascience.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Data science
+
+&gt; is an interdisciplinary field [...]
+
+&gt; to extract knowledge or insights from data [...]
+
+&gt; Wikipedia
+
+---
+
+# Un campo interdisciplinare
+
+![](images/venn.png)
+
+---
+
+# Statistics ⊂ Data science
+
+&gt; Anche se la statistica - come scienza dell'apprendimento dai dati - è necessaria per trasformare i dati in conoscenza e azione,
+non è l'unica componente critica all'interno della scienza dei dati
+
+&gt; Quando la statistica, la gestione dei database e
+il calcolo distribuito si combineranno, vedremo emergere esperti con formazione ibrida che saranno meglio attrezzati per risolvere le sfide complesse dei Big data
+
+&gt; Jessica Utts
+
+---
+
+# Gauss è un data scientist?
+
+
+&lt;img src="images/gauss.jpg" width="25%" height="30%" style="display: block; margin: auto;" /&gt;
+.center[Carl Friedrich Gauss (1777 - 1855)]
+
+---
+
+# I problemi di Gauss
+
+__Problema astronomico__ 
+
+Prevedere in anticipo la posizione dell'asteroide Ceres in data 31 dicembre 1801 sulla base dei dati forniti dall'astronomo italiano Giuseppe Piazzi
+
+__Problema statistico__
+
+Determinare `\(\boldsymbol{\beta}\)` tale che minimizzi `\((\mathbf{y} - \mathbf{X}\boldsymbol{\beta})^\mathsf{T}(\mathbf{y} - \mathbf{X}\boldsymbol{\beta})\)`
+
+La soluzione di Gauss: metodo dei minimi quadrati `\(\hat{\boldsymbol{\beta}}=(\mathbf{X}^\mathsf{T}\mathbf{X})^{-1}\mathbf{X}^\mathsf{T} \mathbf{y}\)`
+
+
+__Problema computazionale__
+
+Risolvere (a mano!) il sistema di equazioni `\(\mathbf{X}^\mathsf{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^\mathsf{T} \mathbf{y}\)`
+
+La soluzione di Gauss: algoritmo di ottimizzazione (metodo di eliminazione di Gauss)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

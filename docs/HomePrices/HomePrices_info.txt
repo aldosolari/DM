@@ -1,0 +1,37 @@
+date_sold: Date of sale
+
+price: sale price (log10 units)
+
+bedrooms: number of bedrooms
+
+bathrooms: number of bathrooms
+
+sqft_living: size of living space
+
+sqft_lot: size of property
+
+floors: number of floors
+
+waterfront: binary indicator for a waterfront view
+
+view: rating of the quality of the view
+
+condition: condition of the house (poor to very good)
+
+sqft_above: size of living space above ground
+
+sqft_basement:size of living space below ground
+
+yr_built: year build
+
+year_renovated): year renovated and, if not renovated, the year built
+
+zip_code: zip code
+
+latitude: latitude
+
+longitude: longitude
+
+nn_sqft_living: size of living space of 15 neighbors
+
+nn_sqft_lot:size of lot of 15 neighbors
