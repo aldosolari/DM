@@ -45,7 +45,7 @@ Questa pagina fa riferimento alla parte 1.
 <td> </td>
 <td>**MATERIALE**</td>
 <td> </td>
-<td>**LIBRI DI TESTO**</td>
+<td>**LIBRO DI TESTO**</td>
 </tr>
 
 <tr>
@@ -54,6 +54,16 @@ Questa pagina fa riferimento alla parte 1.
 <td>[SLIDES](Introduction/Introduction.html).</td>
 <td> </td>
 <td> </td>
+<td> </td>
+</tr>
+
+
+<tr>
+<td>A Simple Problem</td>
+<td> </td>
+<td>[SLIDES](SimpleProblem/SimpleProblem.html).</td>
+<td> </td>
+<td>AS §3.2 </td>
 <td> </td>
 </tr>
 
@@ -91,7 +101,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Cars data</td>
 <td> </td>
-<td>[SLIDES](docs/Cars/Cars.html).</td>
+<td>[SLIDES]().</td>
 <td> </td>
 <td> AS §2.1 </td>
 <td> </td>
@@ -100,7 +110,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Titanic data</td>
 <td> </td>
-<td>[SLIDES](docs/Titanic/Titanic.html).</td>
+<td>[SLIDES]().</td>
 <td> </td>
 <td> </td>
 <td> </td>
@@ -133,17 +143,41 @@ Questa pagina fa riferimento alla parte 1.
 
 ## Modalità d'esame.
 
-La modalità di verifica consiste nell'analisi di un dataset per il quale bisogna prevedere le osservazioni dei dati di test sulla base dei dati di training. Oltre alle **previsioni**, bisognerà produrre una **relazione** contenete la descrizione dell'analisi e il codice utilizzato da consegnare entro la scadenza prevista (almeno una settimana prima dell'appello d'esame). 
+* La modalità di verifica consiste nell’analisi del dataset *Home sales prices* per il quale bisogna fornire delle **previsioni**, allegando il **codice R** utilizzato per produrle. 
 
-Sarà possibile consegnare le previsioni **una volta sola** per A.A. Lo studente (oppure il docente) può richiedere la prova orale. 
+* Oltre alle previsioni, bisognerà produrre una **relazione** contenete la descrizione dell'analisi.
+
+* Verrà valutata sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (40%) e del codice R utilizzato (10%).
+
+* E' richiesto di consegnare le previsioni, il codice R e la relazione sullo spazio dedicato che trovate nella pagina MOODLE **almeno una settimana prima dell’appello d’esame**.
+
+* Sarà possibile consegnare le previsioni e la relazione **una volta sola** per A.A.
+
+* Lo studente oppure il docente può richiedere la prova orale.
+
+**Home sales prices**
+
+[Training set](https://aldosolari.github.io/DM/docs/HomePrices/home_prices_train.csv)
+
+[Test set](https://aldosolari.github.io/DM/docs/HomePrices/home_prices_test.csv)
+
+[Info file](https://aldosolari.github.io/DM/docs/HomePrices/HomePrices_info.txt)
+
+Esempio di consegna (da caricare nell'apposito spazio sulla pagina MOODLE):
+
+[2575_previsione.TXT](https://aldosolari.github.io/DM/docs/HomePrices/2575_previsione.txt)
+
+[2575_codice.R](https://aldosolari.github.io/DM/docs/HomePrices/2575_codice.R)
+
+[2575_relazione.PDF](https://aldosolari.github.io/DM/docs/HomePrices/2575_relazione.pdf)
 
 **Calendario degli esami**.
 
 || Sessione || Data || Luogo || Orario ||
 |-|-|-|-|-|-|-|-|-|-|
 ||  || ||  ||  || ||
-|| Invernale || 3 Febbraio 2022 || - || 14:00  ||
-|| Invernale || 23 Febbraio 2022 || - || 14:00 ||
+|| Invernale || 4 Febbraio 2022 || - || 09:30  ||
+|| Invernale || 23 Febbraio 2022 || - || 09:30 ||
 || Primaverile || - || - ||  -  ||
 || Estiva || - || - || -  ||
 || Estiva || - || - || - ||
