@@ -61,7 +61,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>A Simple Problem</td>
 <td> </td>
-<td>[SLIDES](docs/SimpleProblem/SimpleProblem.html).</td>
+<td>[SLIDES](https://aldosolari.github.io/DM/docs/SimpleProblem/SimpleProblem.html).</td>
 <td> </td>
 <td>AS §3.2 </td>
 <td> </td>
