@@ -1,7 +1,6 @@
 ---
 title: "Data Mining"
 subtitle: "Un semplice problema-tipo"
-author: Aldo Solari
 output:
   xaringan::moon_reader:
     lib_dir: libs
