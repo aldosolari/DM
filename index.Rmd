@@ -73,7 +73,7 @@ Questa pagina fa riferimento alla parte 1.
 <td> </td>
 <td>[SLIDES](docs/BiasVariance/BiasVariance.html).</td>
 <td> </td>
-<td>AS §3 </td>
+<td>AS §3.3 </td>
 <td> </td>
 </tr>
 
@@ -83,7 +83,7 @@ Questa pagina fa riferimento alla parte 1.
 <td> </td>
 <td>[SLIDES](docs/Optimism/Optimism.html).</td>
 <td> </td>
-<td> </td>
+<td>AS §3.4, §3.5 </td>
 <td> </td>
 </tr>
 
@@ -93,7 +93,7 @@ Questa pagina fa riferimento alla parte 1.
 <td> </td>
 <td>[SLIDES]().</td>
 <td> </td>
-<td>KJ §1.2-1.3, KS §1.3 </td>
+<td>KJ §1.2, §1.3, KS §1.3 </td>
 <td> </td>
 </tr>
 
