@@ -51,7 +51,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Introduzione al corso</td>
 <td> </td>
-<td>[SLIDES](https://aldosolari.github.io/DM/docs/Introduction/Introduction.html).</td>
+<td>[SLIDES](docs/Introduction/Introduction.html).</td>
 <td> </td>
 <td> </td>
 <td> </td>
@@ -61,7 +61,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>A Simple Problem</td>
 <td> </td>
-<td>[SLIDES](https://aldosolari.github.io/DM/docs/SimpleProblem/SimpleProblem.html).</td>
+<td>[SLIDES](docs/SimpleProblem/SimpleProblem.html).</td>
 <td> </td>
 <td>AS §3.2 </td>
 <td> </td>
@@ -71,7 +71,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Optimism, Conflicts, and Trade-offs</td>
 <td> </td>
-<td>[SLIDES](BiasVariance/BiasVariance.html).</td>
+<td>[SLIDES](docs/BiasVariance/BiasVariance.html).</td>
 <td> </td>
 <td>AS §3 </td>
 <td> </td>
@@ -81,7 +81,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td></td>
 <td> </td>
-<td>[SLIDES](Optimism/Optimism.html).</td>
+<td>[SLIDES](docs/Optimism/Optimism.html).</td>
 <td> </td>
 <td> </td>
 <td> </td>
