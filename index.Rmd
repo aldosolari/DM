@@ -13,8 +13,8 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 
 Il corso Data Mining (6 CFU) si divide in due parti:
 
-1. *Applied Predictive Modelling* [APM] (3CFU, Prof. Solari).
-2. *Introduction to Deep Learning* [IDL] (3CFU, Prof. Borrotti);
+1. *Applied Predictive Modelling* [APM] (3 CFU, Prof. Aldo Solari);
+2. *Introduction to Deep Learning* [IDL] (3 CFU, Prof. Matteo Borrotti).
 
 Questa pagina fa riferimento alla parte 1.
 
