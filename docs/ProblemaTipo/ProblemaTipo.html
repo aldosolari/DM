@@ -89,7 +89,7 @@ http://azzalini.stat.unipd.it/Libro-DM/f_vera.R
 
 ---
 
-# Domanda 1
+# Domanda 0
 
 * Stimare il modello di regressione polinomiale di grado `\(d=3\)` 
 
@@ -102,7 +102,7 @@ http://azzalini.stat.unipd.it/Libro-DM/f_vera.R
 
 ---
 
-# Soluzione 1
+# Soluzione 0
 
 
 ```r
@@ -151,6 +151,52 @@ MSE.tr
 ## [1] 0.0002085353
 ```
 
+---
+
+# Domanda 1
+
+* Calcolare l'errore quadratico medio sui dati di training (*Training Mean Squared Error*)
+`$$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$` 
+per la regressione polinomiale con `\(d=0,1,\ldots,29\)`.
+
+* Si provi ad utilizzare il minor numero di righe di codice possibile.
+
+* Per rispondere a questa domanda, potete utilizzare **solo** il training set, ovvero i dati `x` e `y.ieri`. 
+
+---
+
+# Soluzione 1
+
+
+```r
+n &lt;- nrow(train)
+ds = 0:(n-1)
+ps = ds + 1
+fun &lt;- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x, degree=d, raw=T), train)
+fits &lt;- sapply(ds, fun)
+MSEs.tr &lt;- unlist( lapply(fits, deviance) )/n
+```
+
+---
+
+
+```r
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="MSE.tr")
+```
+
+![](ProblemaTipo_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+# Sovra-addattamento (overfitting)
+
+.pull-left[
+&lt;img src="ProblemaTipo_files/figure-html/unnamed-chunk-7-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="ProblemaTipo_files/figure-html/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
 
 ---
 
@@ -163,6 +209,19 @@ MSE.tr
 che si può calcolare già oggi avendo a disposizione i dati di ieri.
 
 * Qual è il criterio (statistico) alla base della scelta effettuata?
+
+---
+
+
+```r
+yhats &lt;- lapply(fits, predict)
+MSEs.te &lt;- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+plot(ds, MSEs.te, type="b", col=4, xlab="d", ylab="MSE.te")
+```
+
+![](ProblemaTipo_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ---
 

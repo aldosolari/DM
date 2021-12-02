@@ -20,21 +20,6 @@ class: center, middle, inverse, title-slide
 
 
 
-# Training and test set (Fixed-X setting)
-
-Training set 
-`$$(x_1,y_1),\ldots,(x_n,y_n)$$` 
-Test set 
-`$$(x_1,y^*_1),\ldots,(x_n,y^*_n)$$`
-Per semplicità di ragionamento, stiamo assumendo che
-
-1. i valori `\(x_1,\ldots,x_n\)` del training set sono fissati dallo sperimentatore
-
-2. i valori di `\(x\)` nel test set sono uguali ai valori di `\(x\)` nel training set
-
-Si consiglia la lettura [Rosset and Tibshirani (2018)](https://arxiv.org/pdf/1704.08160.pdf)
-
----
 
 # Il segnale e il rumore
 
@@ -154,8 +139,18 @@ class: inverse, middle, center
 
 ![](BiasVariance_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
+---
 
 
+```r
+sigmatrue=0.01
+
+x = seq(.5,3,length=30)
+
+n = length(x)
+
+ftrue &lt;- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
+```
 
 ---
 
@@ -184,14 +179,17 @@ e sommando rispetto alle `\(n\)` osservazioni
 
 
 ```r
+# grado del polinomio
 d = 5
+
 # matrice del disegno
 X &lt;- model.matrix(lm(ftrue ~ poly(x,degree=d)))
 invXtX &lt;- solve(crossprod(X))
 
 # distorsione
 Bias2 &lt;- ( apply(X, 1, function(x) 
-  x %*% invXtX %*% t(X) %*% ftrue) - ftrue)^2
+                 x %*% invXtX %*% t(X) %*% ftrue) - ftrue )^2
+
 
 # varianza
 Var = apply(X, 1, function(x) 
@@ -210,6 +208,35 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 
 ![](BiasVariance_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
+---
+
+
+
+```r
+# errore di previsione
+sigmatrue^2 + mean( Bias2 ) + mean( Var )
+```
+
+```
+[1] 0.0001217199
+```
+
+```r
+# verifichiamo via simulazione l'errore di previsione
+ErrF = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+y_new = ftrue + rnorm(n,0,sigmatrue)
+MSE.te = mean( (yhat - y_new)^2 )
+}
+B = 1000
+mean(replicate(B, ErrF(d=5)))
+```
+
+```
+[1] 0.0001201263
+```
 
 ---
 
@@ -218,12 +245,12 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 
 .pull-left[
 
-![](BiasVariance_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
-![](BiasVariance_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -232,12 +259,12 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 
 .pull-left[
 
-![](BiasVariance_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
-![](BiasVariance_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 ]
 
 
@@ -252,14 +279,13 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 # Errore riducibile
 
 
-![](BiasVariance_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 ---
 
 # Errore di previsione
 
-![](BiasVariance_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
-
+![](BiasVariance_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -267,12 +293,12 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 
 .pull-left[
 
-![](BiasVariance_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
 
-![](BiasVariance_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](BiasVariance_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 ]
 
 ---

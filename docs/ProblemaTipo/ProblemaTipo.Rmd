@@ -81,7 +81,7 @@ http://azzalini.stat.unipd.it/Libro-DM/f_vera.R
 
 ---
 
-# Domanda 1
+# Domanda 0
 
 * Stimare il modello di regressione polinomiale di grado $d=3$ 
 
@@ -94,7 +94,7 @@ $$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$
 
 ---
 
-# Soluzione 1
+# Soluzione 0
 
 ```{r}
 d <- 3
@@ -129,6 +129,56 @@ MSE.tr <- mean((train$y - yhat)^2)
 MSE.tr
 ```
 
+---
+
+# Domanda 1
+
+* Calcolare l'errore quadratico medio sui dati di training (*Training Mean Squared Error*)
+$$\mathrm{MSE}_{\mathrm{Tr}} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{f}(x_i))^2$$ 
+per la regressione polinomiale con $d=0,1,\ldots,29$.
+
+* Si provi ad utilizzare il minor numero di righe di codice possibile.
+
+* Per rispondere a questa domanda, potete utilizzare **solo** il training set, ovvero i dati `x` e `y.ieri`. 
+
+---
+
+# Soluzione 1
+
+```{r}
+n <- nrow(train)
+ds = 0:(n-1)
+ps = ds + 1
+fun <- function(d) if (d==0) lm(y~1, train) else lm(y~poly(x, degree=d, raw=T), train)
+fits <- sapply(ds, fun)
+MSEs.tr <- unlist( lapply(fits, deviance) )/n
+```
+
+---
+
+```{r}
+plot(ds, MSEs.tr, type="b", xlab="d", ylab="MSE.tr")
+```
+
+---
+
+# Sovra-addattamento (overfitting)
+
+.pull-left[
+```{r, echo=F, fig.align='center', out.width='100%', fig.asp=1}
+fit_15 <- lm( y ~ poly(x, degree=15, raw=F), train)
+yhat <- predict(fit_15, newdata=test)
+plot( y ~ x , train, main ="d = 15 sui dati di training")
+lines( yhat ~ x, train, lwd=2)
+```
+]
+
+.pull-right[
+```{r, echo=F, fig.align='center', out.width='100%', fig.asp=1}
+plot( y ~ x, test, col=4, main ="d = 15 sui dati di test")
+lines( yhat ~ x, test, lwd=2)
+```
+]
 
 ---
 
@@ -141,6 +191,16 @@ $$\mathrm{MSE}_{\mathrm{Te}} = \frac{1}{n}\sum_{i=1}^{n}( y^*_i - \hat{f}(x_i))^
 che si può calcolare già oggi avendo a disposizione i dati di ieri.
 
 * Qual è il criterio (statistico) alla base della scelta effettuata?
+
+---
+
+```{r}
+yhats <- lapply(fits, predict)
+MSEs.te <- unlist(lapply(yhats, 
+           function(yhat) mean((test$y - yhat)^2)
+           ))
+plot(ds, MSEs.te, type="b", col=4, xlab="d", ylab="MSE.te")
+```
 
 ---
 

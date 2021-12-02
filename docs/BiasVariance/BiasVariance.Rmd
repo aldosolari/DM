@@ -16,21 +16,6 @@ output:
 knitr::opts_chunk$set(echo = T, eval=T, message=F, warning=F, error=F, comment=NA, cache=F, R.options=list(width=220))
 ```
 
-# Training and test set (Fixed-X setting)
-
-Training set 
-$$(x_1,y_1),\ldots,(x_n,y_n)$$ 
-Test set 
-$$(x_1,y^*_1),\ldots,(x_n,y^*_n)$$
-Per semplicità di ragionamento, stiamo assumendo che
-
-1. i valori $x_1,\ldots,x_n$ del training set sono fissati dallo sperimentatore
-
-2. i valori di $x$ nel test set sono uguali ai valori di $x$ nel training set
-
-Si consiglia la lettura [Rosset and Tibshirani (2018)](https://arxiv.org/pdf/1704.08160.pdf)
-
----
 
 # Il segnale e il rumore
 
@@ -178,18 +163,16 @@ x = seq(.5,3,length=30)
 plot(x,ftrue, type="l", col=4)
 ```
 
+---
 
-```{r, echo=F}
-# setting
+```{r}
 sigmatrue=0.01
+
+x = seq(.5,3,length=30)
+
 n = length(x)
-B = 100
-# simulation function
-sim = function(d){
-y = ftrue + rnorm(n,0,sigmatrue)
-fit = lm(y ~ poly(x,degree=d))
-yhat = fitted(fit)
-}
+
+ftrue <- c(0.4342,0.4780,0.5072,0.5258,0.5369,0.5426,0.5447,0.5444,0.5425,0.5397,0.5364,0.5329,0.5294,0.5260,0.5229,0.5200,0.5174,0.5151,0.5131,0.5113,0.5097,0.5083,0.5071,0.5061,0.5052,0.5044,0.5037,0.5032,0.5027,0.5023)
 ```
 
 ---
@@ -218,14 +201,17 @@ $$\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=\mathrm{tr}(\mathbf{X} \math
 ---
 
 ```{r}
+# grado del polinomio
 d = 5
+
 # matrice del disegno
 X <- model.matrix(lm(ftrue ~ poly(x,degree=d)))
 invXtX <- solve(crossprod(X))
 
 # distorsione
 Bias2 <- ( apply(X, 1, function(x) 
-  x %*% invXtX %*% t(X) %*% ftrue) - ftrue)^2
+                 x %*% invXtX %*% t(X) %*% ftrue) - ftrue )^2
+
 
 # varianza
 Var = apply(X, 1, function(x) 
@@ -241,6 +227,24 @@ barplot(Var,add=T, col=1, names.arg=" ")
 legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 ```
 
+---
+
+
+```{r}
+# errore di previsione
+sigmatrue^2 + mean( Bias2 ) + mean( Var )
+
+# verifichiamo via simulazione l'errore di previsione
+ErrF = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+y_new = ftrue + rnorm(n,0,sigmatrue)
+MSE.te = mean( (yhat - y_new)^2 )
+}
+B = 1000
+mean(replicate(B, ErrF(d=5)))
+```
 
 ---
 
@@ -250,6 +254,13 @@ legend("topright", c("Bias2","Var"), col=c("gray",1), pch=c(19,19))
 .pull-left[
 
 ```{r, echo=F}
+B = 100
+# simulation function
+sim = function(d){
+y = ftrue + rnorm(n,0,sigmatrue)
+fit = lm(y ~ poly(x,degree=d))
+yhat = fitted(fit)
+}
 # 3rd degree polynomial
 d = 3
 set.seed(123)
@@ -368,7 +379,6 @@ barplot(ErrFs, ylab="Errore di previsione", names.arg=ds)
 barplot(Irr, add=T, col=1, names.arg=" ")
 legend("topright", c("Riducibile","Irriducibile"), col=c("gray",1), pch=c(19,19))
 ```
-
 
 ---
 
