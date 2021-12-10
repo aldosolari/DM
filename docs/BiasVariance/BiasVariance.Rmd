@@ -194,7 +194,7 @@ dove $\mathbf{f} = (f(x_1),\ldots, f(x_n))^\mathsf{T}$.
 Abbiamo inoltre
 $\mathbb{V}\mathrm{ar}(\hat{\beta})=\sigma^2 (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1}$,
 quindi la varianza della previsione $\hat{f}(x_i)$  risulta
-$$\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=x_i \mathbb{V}\mathrm{ar}(\hat{\beta}) x_i^\mathsf{T}$$
+$$\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=x_i^\mathsf{T} \mathbb{V}\mathrm{ar}(\hat{\beta}) x_i$$
 e sommando rispetto alle $n$ osservazioni
 $$\sum_{i=1}^{n}\mathbb{V}\mathrm{ar}(\hat{f}(x_i))=\mathrm{tr}(\mathbf{X} \mathbb{V}\mathrm{ar}(\hat{\beta}) \mathbf{X}^\mathsf{T}) =\sigma^2 \mathrm{tr}(\mathbf{X}^\mathsf{T}\mathbf{X} (\mathbf{X}^\mathsf{T} \mathbf{X})^{-1} ) = \sigma^2 p$$
 

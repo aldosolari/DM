@@ -1,0 +1,215 @@
+---
+title: "Data Mining"
+subtitle: "Chicago train ridership data"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo=T, eval=T, message=F, warning=F, error=F, comment=NA)
+```
+
+
+# Introduzione 
+
+* Le visualizzazioni  dei dati possano essere utilizzate per identificare e scoprire rappresentazioni dei predittori che aiutano a migliorare la capacità predittiva di un modello
+
+* Illustrazione con i dati raccolti sui passeggeri del sistema ferroviario “L” di Chicago
+
+* Siamo interessati a prevedere il numero di utenze alla stazione **Clark/Lake**
+
+
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggpubr)
+#library(modeldata)
+#data(Chicago)
+#names(Chicago)
+
+load("chicago.RData")
+load("stations.RData")
+
+train_plot_data <- 
+  training %>% 
+  mutate(date = train_days) %>% 
+  mutate(
+    pow = ifelse(dow %in% c("Sat", "Sun"), "Weekend", "Weekday"),
+    pow = factor(pow)
+  )
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Analisi esplorativa della variabile risposta
+
+---
+
+```{r}
+ggboxplot(train_plot_data, y="s_40380", orientation = "horiz")
+```
+
+---
+
+```{r}
+ggviolin(train_plot_data, y="s_40380", orientation = "horiz")
+```
+
+---
+
+```{r}
+gghistogram(train_plot_data, "s_40380", bins = 30)
+```
+
+---
+
+```{r}
+gghistogram(train_plot_data, "s_40380", bins=30, fill = "pow")
+```
+
+
+---
+
+```{r}
+ggscatter(train_plot_data, x="l14_40380", y="s_40380", col = "pow") + coord_equal()
+```
+
+
+---
+
+```{r}
+heatmap_data <- train_plot_data %>% 
+  dplyr::select(date, s_40380, pow) %>% 
+  mutate(
+    mmdd = format(as.Date(date), "%m-%d"),
+    yyyy = format(as.Date(date), "%Y"),
+    lt10 = ifelse(s_40380 < 10 & pow=="Weekday", 1, 0)
+  ) 
+
+break_vals <- 
+  c("01-01","01-15","02-01","02-15","03-01","03-15","04-01",
+    "04-15","05-01","05-15","06-01","06-15", "07-01","07-15",
+    "08-01", "08-15","09-01","09-15","10-01","10-15","11-01",
+    "11-15","12-01","12-15")
+
+Fig_4_7 <- ggplot(heatmap_data, aes(yyyy, mmdd)) +
+  geom_tile(aes(fill = lt10), colour = "white") +
+  scale_fill_gradient(low = "transparent", high = "red") +
+  scale_y_discrete(breaks = break_vals) +
+  xlab("Year") +
+  ylab("Month & Day") +
+  theme_bw() + 
+  theme(legend.position = "none")
+```
+
+---
+
+```{r}
+Fig_4_7 
+```
+
+
+---
+
+```{r}
+commonHolidays <- 
+  c("USNewYearsDay", "Jan02_Mon_Fri", "USMLKingsBirthday", 
+    "USPresidentsDay", "USMemorialDay", "USIndependenceDay", 
+    "Jul03_Mon_Fri", "Jul05_Mon_Fri", "USLaborDay", "USThanksgivingDay", 
+    "Day_after_Thx", "ChristmasEve", "USChristmasDay", "Dec26_wkday", 
+    "Dec31_Mon_Fri")
+
+any_holiday <- 
+  train_plot_data %>% 
+  dplyr::select(date, !!commonHolidays) %>% 
+  gather(holiday, value, -date) %>% 
+  group_by(date) %>% 
+  summarize(common_holiday = max(value)) %>% 
+  ungroup() %>% 
+  mutate(common_holiday = ifelse(common_holiday == 1, "Holiday", "Non-holiday")) %>% 
+  inner_join(train_plot_data, by = "date")
+  
+holiday_values <- 
+  any_holiday %>% 
+  dplyr::select(date, common_holiday)
+```
+
+---
+
+```{r}
+make_lag <- function(x, lag = 14) {
+  x$date <- x$date + days(lag)
+  prefix <- ifelse(lag < 10, paste0("0", lag), lag)
+  prefix <- paste0("l", prefix, "_holiday")
+  names(x) <- gsub("common_holiday", prefix, names(x))
+  x
+}
+
+lag_hol <- make_lag(holiday_values, lag = 14)
+
+nonholiday_data <-
+  any_holiday %>% 
+  left_join(lag_hol, by = "date") %>% 
+  mutate(
+    year = factor(year),
+    l14_holiday = ifelse(is.na(l14_holiday), "Non-holiday", l14_holiday)
+    ) %>% 
+  dplyr::filter(common_holiday == "Non-holiday" & l14_holiday == "Non-holiday")
+```
+
+---
+
+```{r}
+ggscatter(nonholiday_data, x="l14_40380", y="s_40380", col = "pow") + coord_equal()
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Analisi esplorativa dei predittori
+
+---
+
+```{r}
+station_names <- 
+  stations %>%
+  mutate(lag_14_name = gsub("s_", "l14_", station_id))
+
+set.seed(123)
+station_subsets <- 
+  station_names %>% 
+  sample_frac(1/3) %>% 
+  bind_rows(
+    station_names %>% 
+      dplyr::filter(name %in% c("Clark/Lake", "Lake", "Addison", "UIC-Halsted"))
+  ) %>% 
+  dplyr::distinct(description, name, lag_14_name)
+
+station_data <- 
+  train_plot_data %>%
+  filter(date >= ymd("2016-01-01") & pow == "Weekday") %>%
+  dplyr::select(matches("^L14_[0-9]"), date) %>% 
+  gather(lag_14_name, Rides, -date) %>%
+  inner_join(station_subsets, by = "lag_14_name")
+```
+
+---
+
+```{r}
+ggboxplot(station_data, x="name", y="Rides", orientation = "horizontal")
+```
+
+
+

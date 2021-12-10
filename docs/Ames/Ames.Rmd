@@ -1,0 +1,689 @@
+---
+title: "Data Mining"
+subtitle: "The Ames housing data"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo=T, eval=T, message=F, warning=F, error=F, comment=NA)
+```
+
+
+# Introduzione 
+
+* Il dataset `ames` (De Cock 2011) contiene dati su 2930 proprietà ad Ames, Iowa, con le seguenti variabili
+
+  * caratteristiche della casa (camere da letto, garage, camino, piscina, veranda, ecc.)
+  * posizione (quartiere),
+  * informazioni sul lotto (zonazione, forma, dimensione, ecc.),
+  * valutazioni di condizione e qualità,
+  * prezzo di vendita.
+
+* Esempio discusso in [Tidy Modeling with R](https://www.tmwr.org/)
+  - *4. The Ames housing data*
+  - *5. Spending our data*
+  - *6. Fitting models with `parsnip`*
+  - *7. A model workflow*
+  - *8. Feature engineering with `recipes`*
+  - *9. Judging model effectiveness*
+  - *10. Resampling for evaluating performance*
+  - *11. Comparing models with resampling*
+  - *12. Model tuning and the danger of overfitting*
+  
+---
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(modeldata)
+library(ggpubr)
+
+data(ames)
+dim(ames)
+```
+
+---
+
+```{r}
+gghistogram(ames, x="Sale_Price", bins = 50)
+```
+
+---
+
+```{r}
+gghistogram(ames, x="Sale_Price", bins = 50) + scale_x_log10()
+```
+
+---
+
+# Trasformazione della variabile risposta
+
+```{r}
+ames <- ames %>% mutate(Sale_Price = log10(Sale_Price))
+```
+
+* Lo svantaggio di trasformare la variabile risposta è principalmente legato all'interpretazione:
+
+    - i coefficienti del modello potrebbero essere più difficili da interpretare
+    - la misura dell'errore di previsione, e.g. può essere difficile comprendere la qualità di un modello il cui RMSE è 0.15 unità logaritmiche.
+
+---
+
+```{r}
+ggscatter(ames, x="Longitude", y="Latitude", color = "Neighborhood") + coord_equal()
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 5. Spendere i nostri dati
+
+---
+
+# Training and test
+
+```{r}
+set.seed(123)
+
+ames_split <- initial_split(ames, prop = 0.80, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test  <-  testing(ames_split)
+
+dim(ames_train)
+```
+
+---
+
+# Fuga di informazioni (*information leakage*)
+
+Un potenziale metodo per migliorare le previsioni sul test set potrebbe consistere nello stimare il modello utilizzando le osservazioni di training che sono più simili alle osservazioni di test
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 6. Stima del modello com `parsnip`
+
+---
+
+# Stima del modello
+
+Per stimare i coefficienti del modello
+$$y_i = \beta_0 + \beta_1 x_{1i} + \ldots + \beta_p x_{pi}$$
+possiamo utilizzare il metodo dei minimi quadrati (penalizzati), e.g. 
+
+```{r, eval = FALSE}
+model <- lm(formula, data, ...)
+
+model <- glmnet(x = matrix, y = vector, family = "gaussian", ...)
+```
+
+In `tidymodels`, la specificazione di un modello viene unificata:
+
+* Specificare il tipo di modello in base alla sua struttura matematica (ad es. regressione lineare, foresta casuale, K-vicini più vicini, ecc.).
+
+* Specificare il motore per la stima del modello. Molto spesso questo riflette il pacchetto R da utilizzare.
+
+* Quando richiesto, dichiarare se si tratta di un problema di regressione o di classificazione.
+
+---
+
+```{r}
+linear_reg() %>% set_engine("lm")
+
+linear_reg() %>% set_engine("glmnet") 
+```
+
+---
+
+```{r}
+lm_model <- 
+  linear_reg() %>% 
+  set_engine("lm")
+
+lm_fit <- 
+  lm_model %>% 
+  fit(Sale_Price ~ Longitude + Latitude, data = ames_train)
+
+lm_xy_fit <- 
+  lm_model %>% 
+  fit_xy(
+    x = ames_train %>% select(Longitude, Latitude),
+    y = ames_train %>% pull(Sale_Price)
+    )
+# La funzione fit_xy() passa i dati così come sono al modello sottostante. (e.g. non creerà variabili dummy da predittori qualitativi).
+
+tidy(lm_fit)
+```
+
+---
+
+# Previsioni
+
+```{r}
+ames_test_small <- ames_test %>% slice(1:5)
+
+predict(lm_fit, new_data = ames_test_small)
+```
+
+---
+
+# Alberi di regressione
+
+```{r}
+tree_model <- 
+  decision_tree(min_n = 2) %>% 
+  set_engine("rpart") %>% 
+  set_mode("regression")
+
+tree_fit <- 
+  tree_model %>% 
+  fit(Sale_Price ~ Longitude + Latitude, data = ames_train)
+
+predict(tree_fit, ames_test_small)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 7. Flusso di lavoro per il modello
+
+---
+
+
+```{r, echo = FALSE, out.width = '80%', warning = FALSE}
+knitr::include_graphics("images/bad-workflow.svg")
+```
+
+
+```{r, echo = FALSE, out.width = '80%', warning = FALSE}
+knitr::include_graphics("images/proper-workflow.svg")
+```
+
+---
+
+```{r}
+lm_wflow <- 
+  workflow() %>% 
+  add_model(lm_model) %>%
+  add_formula(Sale_Price ~ Longitude + Latitude)
+
+lm_wflow
+
+lm_fit <- fit(lm_wflow, ames_train)
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 8. Costruzione di variabili con `recipes`
+
+---
+
+```{r}
+lm(Sale_Price ~ Neighborhood + log10(Gr_Liv_Area) + Year_Built + Bldg_Type, data = ames)
+```
+
+---
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+         data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_dummy(all_nominal_predictors())
+
+simple_ames
+```
+
+---
+
+```{r}
+lm_wflow <- 
+  lm_wflow %>% 
+  remove_variables() %>% 
+  add_recipe(simple_ames)
+
+lm_wflow
+```
+
+
+---
+
+```{r}
+ggplot(ames_train, aes(y = Neighborhood)) + 
+  geom_bar() + 
+  theme_bw() +
+  labs(y = NULL)
+```
+
+---
+
+# Variabili dummy
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+         data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors())
+```
+
+---
+
+```{r}
+ggplot(ames_train, aes(x = Gr_Liv_Area, y = 10^Sale_Price)) + 
+  geom_point(alpha = .2) + 
+  facet_wrap(~ Bldg_Type) + 
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, col = "red") + 
+  scale_x_log10() + 
+  scale_y_log10() + 
+  theme_bw() +
+  labs(x = "Gross Living Area", y = "Sale Price (USD)")
+```
+
+---
+
+# Interazioni
+
+```{r}
+simple_ames <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type,
+         data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  # Gr_Liv_Area is on the log scale from a previous step
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") )
+```
+
+---
+
+# Funzioni spline
+
+```{r}
+library(patchwork)
+library(splines)
+
+plot_smoother <- function(deg_free) {
+  ggplot(ames_train, aes(x = Latitude, y = Sale_Price)) + 
+    geom_point(alpha = .2) + 
+    scale_y_log10() +
+    geom_smooth(
+      method = lm,
+      formula = y ~ ns(x, df = deg_free),
+      col = "red",
+      se = FALSE
+    ) + theme_bw() +
+    ggtitle(paste(deg_free, "Spline Terms"))
+}
+```
+
+---
+
+```{r}
+( plot_smoother(2) + plot_smoother(5) ) / ( plot_smoother(20) + plot_smoother(100) )
+```
+
+---
+
+```{r}
+recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + Latitude,
+         data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) %>% 
+  step_ns(Latitude, deg_free = 20)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 9. Valutare l'efficacia di un modello
+
+---
+
+```{r}
+ames_rec <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+           Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) %>% 
+  step_ns(Latitude, Longitude, deg_free = 20)
+  
+lm_model <- linear_reg() %>% set_engine("lm")
+
+lm_wflow <- 
+  workflow() %>% 
+  add_model(lm_model) %>% 
+  add_recipe(ames_rec)
+
+lm_fit <- fit(lm_wflow, ames_train)
+```
+
+
+---
+
+```{r}
+ames_test_res <- bind_cols(
+  predict(lm_fit, new_data = ames_test %>% select(-Sale_Price)), 
+  ames_test %>% select(Sale_Price))
+ames_test_res
+```
+
+
+---
+
+```{r}
+ggscatter(ames_test_res, x="Sale_Price", y=".pred") + geom_abline(lty = 2)
+```
+
+---
+
+```{r}
+ames_metrics <- metric_set(rmse, rsq, mae)
+ames_metrics(ames_test_res, truth = Sale_Price, estimate = .pred)
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 10. Ricampionamento per valutare la performance
+
+---
+
+```{r}
+rf_model <- 
+  rand_forest(trees = 1000) %>% 
+  set_engine("ranger") %>% 
+  set_mode("regression")
+
+rf_wflow <- 
+  workflow() %>% 
+  add_formula(
+    Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+      Latitude + Longitude) %>% 
+  add_model(rf_model) 
+
+rf_fit <- rf_wflow %>% fit(data = ames_train)
+```
+
+---
+
+```{r}
+estimate_perf <- function(model, dat) {
+  # Capture the names of the objects used
+  cl <- match.call()
+  obj_name <- as.character(cl$model)
+  data_name <- as.character(cl$dat)
+  data_name <- gsub("ames_", "", data_name)
+  
+  # Estimate these metrics:
+  reg_metrics <- metric_set(rmse, rsq)
+  
+  model %>% 
+    predict(dat) %>% 
+    bind_cols(dat %>% select(Sale_Price)) %>% 
+    reg_metrics(Sale_Price, .pred) %>% 
+    select(-.estimator) %>% 
+    mutate(object = obj_name, data = data_name)
+}
+```
+
+---
+
+```{r}
+estimate_perf(rf_fit, ames_train)
+estimate_perf(lm_fit, ames_train)
+```
+
+---
+
+```{r}
+estimate_perf(rf_fit, ames_test)
+estimate_perf(lm_fit, ames_test)
+```
+
+---
+
+```{r}
+set.seed(55)
+ames_folds <- vfold_cv(ames_train, v = 10, repeats = 1)
+ames_folds
+```
+
+---
+
+
+```{r}
+keep_pred <- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+
+set.seed(130)
+rf_res <- 
+  rf_wflow %>% 
+  fit_resamples(resamples = ames_folds, control = keep_pred)
+rf_res
+```
+
+---
+
+```{r}
+collect_metrics(rf_res)
+```
+
+---
+
+```{r}
+assess_res <- collect_predictions(rf_res)
+assess_res
+```
+
+---
+
+```{r}
+ggscatter(assess_res, x="Sale_Price", y=".pred") + geom_abline(lty=2)
+```
+
+---
+
+```{r}
+over_predicted <- 
+  assess_res %>% 
+  mutate(residual = Sale_Price - .pred) %>% 
+  arrange(desc(abs(residual))) %>% 
+  slice(1)
+over_predicted
+
+ames_train %>% 
+  slice(over_predicted$.row) %>% 
+  select(Gr_Liv_Area, Neighborhood, Year_Built, Bedroom_AbvGr, Full_Bath)
+```
+
+---
+
+# Calcolo in parallelo
+
+```{r, eval=FALSE}
+# The number of physical cores in the hardware:
+parallel::detectCores(logical = FALSE)
+
+# Unix and macOS only
+library(doMC)
+registerDoMC(cores = 2)
+
+# Now run fit_resamples()...
+
+registerDoSEQ()
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 11. Confronto fra modelli via ricampionamento
+
+---
+
+```{r}
+basic_rec <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+           Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors())
+
+interaction_rec <- 
+  basic_rec %>% 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) 
+
+spline_rec <- 
+  interaction_rec %>% 
+  step_ns(Latitude, Longitude, deg_free = 50)
+
+preproc <- 
+  list(basic = basic_rec, 
+       interact = interaction_rec, 
+       splines = spline_rec
+  )
+
+lm_models <- workflow_set(preproc, list(lm = lm_model), cross = FALSE)
+```
+
+---
+
+```{r}
+lm_models
+```
+
+---
+
+```{r}
+# workflow_map() prende come argomento iniziale la funzione da applicare ai flussi di lavoro, seguito dalle opzioni per quella funzione.
+lm_models <- 
+  lm_models %>% 
+  workflow_map("fit_resamples", 
+               # Options to `workflow_map()`: 
+               seed = 1101, verbose = TRUE,
+               # Options to `fit_resamples()`: 
+               resamples = ames_folds, control = keep_pred)
+```
+
+---
+
+```{r}
+lm_models
+```
+
+---
+
+```{r}
+collect_metrics(lm_models) %>% 
+  filter(.metric == "rmse")
+```
+
+---
+
+```{r}
+four_models <- 
+  as_workflow_set(random_forest = rf_res) %>% 
+  bind_rows(lm_models)
+four_models
+```
+
+---
+
+```{r}
+autoplot(four_models, metric = "rsq") + theme_bw()
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 12. Regolazione del modello
+
+---
+
+Abbiamo già incontrato un certo numero di iper-parametri
+
+* `threshold` : la soglia per combinare i quartieri in una categoria Other 
+
+* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
+
+* `deg_free` : il numero di gradi di libertà in una spline naturale
+
+
+---
+
+
+```{r}
+ames_rec <- 
+  recipe(Sale_Price ~ Gr_Liv_Area + Longitude + Latitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_ns(Longitude, deg_free = tune("long df")) %>% 
+  step_ns(Latitude,  deg_free = tune("lat df"))
+
+parameters(ames_rec)
+```
+
+---
+
+```{r}
+deg_free()
+
+spline_degree()
+
+ames_param <- 
+  ames_rec %>% 
+  parameters() %>% 
+  update(
+    `long df` = spline_degree(), 
+    `lat df` = spline_degree()
+  )
+
+ames_param
+```
+
+---
+
+```{r, eval =FALSE}
+df_vals <- seq(2, 18, by = 4)
+spline_grid <- expand.grid(`long df` = df_vals, `lat df` = df_vals)
+
+lm_mod <- linear_reg() %>% set_engine("lm")
+
+set.seed(2453)
+cv_splits <- vfold_cv(ames_train, v = 5, strata = Sale_Price)
+
+ames_res <- tune_grid(lm_mod, ames_rec, resamples = cv_splits, grid = spline_grid)
+```
+
+---
+
+```{r, eval=FALSE}
+autoplot(ames_res, metric = "rmse") + theme_bw()
+```
+

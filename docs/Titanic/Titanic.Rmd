@@ -322,7 +322,7 @@ mean(yhat == testsurvived)
 
 ---
 
-# Genere (*sex*)
+# Sesso (*sex*)
 
 .pull-left[
 
@@ -343,7 +343,7 @@ plot(survived ~ sex, train)
 ---
 
 ```{r}
-# modello logistico con solo il genere
+# modello logistico con solo il sesso
 fit <- glm(survived ~ sex, train, family="binomial")
 phat <- predict(fit, newdata=test, type = "response")
 yhat <- ifelse(phat > 0.5, "Alive","Death")
@@ -418,6 +418,7 @@ mean(yhat == testsurvived)
 # Età e classe
 
 ```{r, echo=F}
+set.seed(123)
 class.jitter <- as.numeric(train$pclass)+.7*runif(n)
 plot(age ~ class.jitter,xlim=c(.95,3.8),cex=1, xlab="Passenger class",xaxt="n", train)
 axis(side=1,at=c(1.4,2.4,3.4),label=c("1st","2nd","3rd"))
@@ -429,6 +430,7 @@ points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
 # Albero di classificazione
 
 ```{r, echo=F}
+set.seed(123)
 class.jitter <- as.numeric(train$pclass)+.7*runif(n)
 plot(age ~ class.jitter,xlim=c(.95,3.8),cex=1, xlab="Passenger class",xaxt="n", train)
 axis(side=1,at=c(1.4,2.4,3.4),label=c("1st","2nd","3rd"))
@@ -474,7 +476,7 @@ mean(yhat == testsurvived)
 
 ---
 
-# Genere e classe
+# Sesso e classe
 
 .pull-left[
 ```{r, echo=F}
@@ -490,7 +492,7 @@ plot(survived~pclass, train, subset=sex=="female", main="female")
 
 ---
 
-# Genere e età
+# Sesso e età
 
 .pull-left[
 ```{r ,echo=F}
