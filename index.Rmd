@@ -90,7 +90,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>The Model versus the Modeling Process</td>
 <td> </td>
-<td>[SLIDES](ModellingProcess/ModellingProcess.html).</td>
+<td>[SLIDES](docs/ModellingProcess/ModellingProcess.html).</td>
 <td> </td>
 <td>KJ §1.2, §1.3, KS §1.3 </td>
 <td> </td>
