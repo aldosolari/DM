@@ -70,12 +70,12 @@ Il libro di [Wickham e Grolemund (2016)](https://r4ds.had.co.nz/) [WG] illustra 
 
 * Il **modello** *per sé* rappresenta una minima parte del processo di modellizzazione.
 
-* Le sue fasi comprendono
+* Le fasi principali comprendono
 
     * *Exploratory data analysis* 
-    * *Feature engineering* (KS, capitolo 8)
-    * *Model tuning and selection* (KS, capitolo 10)
-    * *Model evaluation* (KS, capitolo 11)
+    * *Feature engineering* 
+    * *Model fitting / tuning*
+    * *Model evaluation*
 
 ---
 
@@ -97,21 +97,29 @@ Il libro di [Wickham e Grolemund (2016)](https://r4ds.had.co.nz/) [WG] illustra 
 
 ---
 
+Figure 4.1: Chicago Transit Authority ‘L’ map. For this illustration, we are interesting in predicting the ridership at the Clark/Lake station in the Chicago Loop.
+
+```{r, echo=FALSE,  out.width = '50%'}
+knitr::include_graphics("images/Chicago_L_diagram_sb.png")
+```
+
+
+---
+
 | Riflessione   | Attività      |
 |----------|:-------------:|
 | I valori di utenza giornalieri tra le stazioni sono estremamente correlati.|  EDA |
 | I valori nei giorni feriali e nel fine settimana sono molto diversi. |  EDA |
-| Un giorno dell'estate del 2010 ha un numero anormalmente elevato di corse. |  EDA |
-| Quali stazioni avevano i valori di utenza giornalieri più bassi? |  EDA |
+| 11 Giugno 2010 ha un numero estremamente elevato di utenze. |  EDA |
+| Quali stazioni hanno i valori più bassi? |  EDA |
 | Le date dovrebbero essere codificate come giorno della settimana e anno.  |  Feature engineering |
-| Forse la PCA potrebbe essere utilizzata sui predittori correlati per rendere più semplice l'utilizzo da parte dei modelli.  |  Feature engineering |
-| Le registrazioni meteorologiche orarie dovrebbero probabilmente essere riassunte in misurazioni giornaliere.  |  Feature engineering |
+| Forse i predittori correlati potrebbero essere riassunti con una PCA.  |  Feature engineering |
+| Le registrazioni meteorologiche orarie potrebbero essere riassunte in misurazioni giornaliere.  |  Feature engineering |
 | Iniziamo con una regressione lineare, K-vicini più vicini e un *boosting* di alberi decisionali.  |  Model fitting |
 | Quanti vicini K usare?  |  Model tuning |
 | Quante iterazioni di *boosting*? Poche o tante?  |  Model tuning |
 | Quali modelli hanno il MSE più basso? | Model evaluation |
 | Quali giorni sono stati previsti male?  |  EDA |
-
 
 ---
 
@@ -119,26 +127,102 @@ Il libro di [Wickham e Grolemund (2016)](https://r4ds.had.co.nz/) [WG] illustra 
 |----------|:-------------:|
 | I punteggi di importanza delle variabili indicano che le informazioni meteorologiche non sono predittive. Li scarteremo dalla prossima serie di modelli.  |  Model evaluation |
 | Sembra che dovremmo concentrarci su molte iterazioni di *boosting*.|  Model evaluation |
-| Abbiamo bisogno di codificare le funzioni delle festività per migliorare le previsioni su (e intorno a) quelle date |  Feature engineering |
+| Abbiamo bisogno di codificare le festività per migliorare le previsioni su (e intorno a) quelle date |  Feature engineering |
 | Eliminiamo K-NN dall'elenco dei modelli |  Model evaluation |
-
 
 
 ---
 
-# Concetti importanti
+Figure 4.9: Visualization of the correlation matrix of the 14-day lag ridership station predictors for non-holiday, weekdays in 2016. Stations are organized using hierarchical cluster analysis, and the organizational structure is visualized using a dendrogram (top and right).
 
-1. __Evitare il sovra-adattamento__ (*overfitting*)
+```{r, echo=FALSE,  out.width = '70%'}
+knitr::include_graphics("images/correlation.png")
+```
 
-2. __Il compromesso distorsione-varianza__ 
-    
-3.  __Modellizzazione guidata dall'esperienza vs modellizzazione guidata dai dati__
-    - Una persona esperta del contesto applicativo potrebbe avere un'idea precisa di quali dovrebbero essere i predittori da utilizzare nel modello - prima di esaminare i dati
-    - Tuttavia, a volte risulta preferibile farsi "guidare dai dati" piuttosto che dall'esperienza. Di solito la combinazione di questi due approcci funziona meglio
+---
 
-4. __Selezione delle variabili__ La presenza di predittori irrilevanti aumentano la variabilità del modello, danneggiandone le prestazioni
-    
-5. __Feature engineering__  Ci sono diversi modi per rappresentare i predittori in un modello, e alcune di queste rappresentazioni sono più efficaci di altre 
+Figure 4.5: Distribution of daily ridership at the Clark/Lake stop from 2001 to 2016 colored and faceted by weekday and weekend. Note that the y-axis counts for each panel are on different scales and the long left tail in the weekday data.
+
+```{r, echo=FALSE,  out.width = '60%'}
+knitr::include_graphics("images/eda-s-40380-distribution-POW-1.svg")
+```
+
+---
+
+
+Figure 4.4: Distribution of weekday ridership at all stations other than Clark/Lake during 2016.
+
+
+```{r, echo=FALSE,  out.width = '100%'}
+knitr::include_graphics("images/Fig_4_4.jpg")
+```
+
+---
+
+Figure 4.6: A scatter plot of the 14-day lag ridership at the Clark/Lake station and the current-day ridership at the same station.
+
+```{r, echo=FALSE,  out.width = '50%'}
+knitr::include_graphics("images/eda-s-40380-vs-l14-s40380-1.svg")
+```
+
+---
+
+Figure 4.7: Heat map of ridership from 2001 through 2016 for weekdays that have less than 10,000 rides at the Clark/Lake station. This visualization indicates that the distinct patterns of low ridership on weekdays occur on and around major US holidays.
+
+
+```{r, echo=FALSE,  out.width = '50%'}
+knitr::include_graphics("images/eda-s-40380-low-weekday-1.svg")
+```
+
+---
+
+Figure 4.8: Two-week lag in daily ridership versus daily ridership for the Clark/Lake station with common US holidays excluded and colored by part of the week.
+
+```{r, echo=FALSE,  out.width = '50%'}
+knitr::include_graphics("images/eda-weekly-lag-1.svg")
+```
+
+---
+
+Figure 3.12: The effect of adding holiday predictors to an SVM model created for the Chicago train data. The dashed line corresponds to the model of the original predictors. The solid line corresponds to the model when an indicator of holiday was included as a predictor.
+
+```{r, echo=FALSE,  out.width = '100%'}
+knitr::include_graphics("images/review-svm-xmas-1.svg")
+```
+
+---
+
+Figure 4.13: Principal component analysis of the 14-day station lag ridership. (a) The cumulative variability summarized across the first 10 components. (b) A scatter plot of the first two principal components. The first component focuses on variation due to part of the week while the second component focuses on variation due to time (year). (c) The relationship between the first principal component and ridership for each day of the week at the Clark/Lake station. (d) The relationship between second principal component and ridership for each year at the Clark/Lake station.
+
+```{r, echo=FALSE,  out.width = '40%'}
+knitr::include_graphics("images/eda-PCA-stations-1.svg")
+```
+
+---
+
+Figure 6.9: Score values from several linear projection methods for the weekend ridership at Clark and Lake. The x-axis values are the scores for each method and the y-axis is ridership (in thousands).
+
+```{r, echo=FALSE,  out.width = '50%'}
+knitr::include_graphics("images/numeric-weekend-scores-1.png")
+```
+
+---
+
+<!-- # Concetti importanti -->
+
+<!-- 1. __Evitare il sovra-adattamento__ (*overfitting*) -->
+
+<!-- 2. __Il compromesso distorsione-varianza__  -->
+
+<!-- 3.  __Modellizzazione guidata dall'esperienza vs modellizzazione guidata dai dati__ -->
+<!--     - Una persona esperta del contesto applicativo potrebbe avere un'idea precisa di quali dovrebbero essere i predittori da utilizzare nel modello - prima di esaminare i dati -->
+<!--     - Tuttavia, a volte risulta preferibile farsi "guidare dai dati" piuttosto che dall'esperienza. Di solito la combinazione di questi due approcci funziona meglio -->
+
+<!-- 4. __Selezione delle variabili__ La presenza di predittori irrilevanti aumentano la variabilità del modello, danneggiandone le prestazioni -->
+
+<!-- 5. __Feature engineering__  Ci sono diversi modi per rappresentare i predittori in un modello, e alcune di queste rappresentazioni sono più efficaci di altre  -->
+
+<!-- --- -->
 
 ---
 
@@ -161,5 +245,13 @@ Si veda l'Appendice del libro KS
 ---
 
 ![](images/model_preprocessing.png)
+
+---
+
+# Pre-processamento dei dati e feature engineering
+
+![](images/fe_venn.svg)
+
+Si veda https://topepo.github.io/2021_11_HDSI_RUG/#1
 
 

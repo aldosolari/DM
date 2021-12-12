@@ -22,43 +22,32 @@ class: center, middle, inverse, title-slide
 
 
 
-# Previsione di variabili qualitative
+# Il contesto della classificazione
 
-Siano  `\((X,Y) \in \mathcal{X} \times \mathcal{Y}\)` variabili casualicon una certa distribuzione congiunta (ignota), dove
-* `\(Y\)` è una variabile risposta binaria  con `\(\mathcal{Y}=\{0,1\}\)` (può risultare conveniente utilizzare `\(\mathcal{Y}=\{-1,1\}\)`)
+Siano  `\((X,Y) \in \mathcal{X} \times \mathcal{Y}\)` variabili casuali con distribuzione congiunta (ignota), dove
+* `\(Y \in \{0,1\}\)` è una variabile risposta binaria
 * `\(X=(X_1,\ldots,X_p)^\mathsf{T}\)` sono `\(p\)` predittori
 
-Una regola di classificazione è una funzione
-`\(c: \mathcal{X} \mapsto \{0,1\}\)`
-L'errore di classificazione (*error rate* o *classification risk*) di `\(c\)` è definito come
-`$$\mathrm{Err}(c) = \mathbb{P}(Y \neq c(X))$$`
-Una regola di classificazione che minimizza l'errore di classificazione è detta di Bayes (*Bayes classifier*), e l'errore di classificazione minimo è detto **errore di Bayes** (*Bayes risk*). 
-
-La regola di classificazione di Bayes è data da
-
-`$$c_0(x) = \left\{\begin{array}{ll}
-1 &amp; \mathrm{se\,\,} f(x)&gt;1/2 \\
+Un classificatore è una funzione
+`\(\hat{h}: \mathcal{X} \mapsto \{0,1\}\)`.
+L'errore di classificazione di `\(\hat{h}\)` è definito da
+`$$\mathrm{Err}(\hat{h}) = \mathbb{P}(Y \neq \hat{h}(X))$$`
+E' possibile mostrare che l'errore di classificazione è minimizzato dal classificatore di Bayes
+`$$h_{\mathrm{Bayes}}(x) = \left\{\begin{array}{ll}
+1 &amp; \mathrm{se\,\,} \mathbb{P}(Y=1|X=x) &gt;1/2 \\
 0 &amp; \mathrm{altrimenti}\\
 \end{array}\right.$$`
 
-dove `\(f(x)\)` è la funzione di regressione:
-`$$f(x) = \mathbb{E}(Y|X=x) = \mathbb{P}(Y=1|X=x)$$`
 
 ---
 
 # Errore stocastico e di approssimazione
 
-Si consideri una classe `\(\mathcal{C}\)` di classificatori, ad esempio
-`$$\mathcal{C} = \{c: c(x) = \mathbb{I}\{\mu + x^\mathsf{T}\beta\} \,\,\mathrm{dove}\,\,\mu \in \mathbb{R},\beta \in \mathbb{R}^p\}$$`
+Sia `$$h^* = \arg\min_{h \in \mathcal{H}} \mathrm{Err}(h)$$`
+dove `\(\mathcal{H}\)` è la classe di classificatori considerata. L'errore di previsione si può scomporre in **errore stocastico** `\(\hat{h} - h^*\)` ed **errore di approssimazione** `\(h^* - h_{\mathrm{Bayes}}\)`
 
-Possiamo quindi utilizzare il training set per stimare un classificatore 
-`\(\hat{c} \in \mathcal{C}\)`.
+![](errors.png)
 
-Sia `$$c^* = \arg\min_{c \in \mathcal{C}} \mathrm{Err}(c)$$`
-e si consideri la scomposizione
-`$$\mathrm{Err}(\hat{c}) - \mathrm{Err}(c_0) = \underbrace{\mathrm{Err}(\hat{c})- \mathrm{Err}(c^*)}_{\mathrm{Errore\,\,stocastico}} + \underbrace{\mathrm{Err}(c^*)- \mathrm{Err}(c_0)}_{\mathrm{Errore\,\,di\,\,approssimazione}}$$`
-
-La scelta di una classe `\(\mathcal{C}\)` molta ricca riduce l'errore di approssimazione ma comporta anche un aumento dell'errore stocastico dovuto al sovra-adattamento ai dati di training
 
 ---
 
@@ -70,10 +59,10 @@ La scelta di una classe `\(\mathcal{C}\)` molta ricca riduce l'errore di appross
 
 * __Errore di classificazione (training set)__
 
-`$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}\{y_i \neq \hat{c}(x_i) \}$$`
+`$$\mathrm{Err}_{\mathrm{Tr}} = \frac{1}{n} \sum_{i=1}^{n} \mathbb{I}\{y_i \neq \hat{h}(x_i) \}$$`
 
 * __Errore di classificazione (test set)__
-`$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} \mathbb{I}\{y^*_i \neq \hat{c}(x^*_i) \}$$`
+`$$\mathrm{Err}_{\mathrm{Te}} = \frac{1}{m} \sum_{i=1}^{m} \mathbb{I}\{y^*_i \neq \hat{h}(x^*_i) \}$$`
 
 * __Accuratezza (test set)__
 `$$\mathrm{Acc}_{\mathrm{Te}} = 1- \mathrm{Err}_{\mathrm{Te}}$$`
@@ -90,13 +79,13 @@ class: inverse, middle, center
 
 # Il disastro
 
-l 15 aprile 1912, durante il suo viaggio inaugurale, il Titanic affondò dopo essersi scontrato con un iceberg, causando la morte di 1502 persone (su 2224 tra passeggeri ed equipaggio)
+Il 15 aprile 1912, durante il suo viaggio inaugurale, il Titanic affondò dopo essersi scontrato con un iceberg, causando la morte di 1502 persone (su 2224 tra passeggeri ed equipaggio)
 
 ![](https://vignette.wikia.nocookie.net/foreverknight/images/7/7f/Route_of_Titanic.svg/revision/latest/scale-to-width-down/640?cb=20090303115410)
 
 * Training set di `\(n = 891\)` passeggeri, sui quali sono state misurate `\(10\)` variabili (predittori)
 
-* L'obiettivo è prevedere la sorte (1 = soppravissuto, 0 = non sopravvissuto) di `\(m = 418\)` passeggeri del test set
+* L'obiettivo è prevedere la sorte (1 = sopravissuto, 0 = deceduto) di `\(m = 418\)` passeggeri del test set
 
 
 ---
@@ -107,7 +96,7 @@ Si consiglia la lettura di [Varian (2014) Big Data: New Tricks for Econometrics]
 
 * l'esempio Titanic (sezione *Classification and Regression Trees*)
 
-* il codice R utilizzata (potete scaricare i [Data Set](https://www.aeaweb.org/jep/data/2802/2802-0003_data.zip) nella sezione *Additional Materials*)
+* il codice R utilizzato (potete scaricare il [data set](https://www.aeaweb.org/jep/data/2802/2802-0003_data.zip) nella sezione *Additional Materials*)
 
 La competizione Kaggle 
 [Titanic: Machine Learning from Disaster](https://www.kaggle.com/c/titanic). In particolare
@@ -124,11 +113,11 @@ La competizione Kaggle
 
 ```r
 # importazione dei dati
-PATH &lt;- ""
-train &lt;- read.csv(paste(PATH,"titanic_tr.csv",sep=""), 
+PATH &lt;- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/Titanic/"
+train &lt;- read.csv(paste0(PATH,"titanic_tr.csv"), 
                   header = TRUE, stringsAsFactors = FALSE)
 n &lt;- nrow(train)
-test &lt;- read.csv(paste(PATH,"titanic_te.csv",sep=""), 
+test &lt;- read.csv(paste0(PATH,"titanic_te.csv"), 
                  header = TRUE, stringsAsFactors = FALSE)
 m &lt;- nrow(test)
 # unisco il training set con il test set
@@ -154,7 +143,7 @@ str(combi)
 
 ---
 
-# Tipologia delle variabili
+# Tipologia di variabili
 
 | Name | Description |
 |---|----|
@@ -170,9 +159,11 @@ str(combi)
 | cabin     |      Cabin |
 | embarked   |     Port of Embarkation  (C = Cherbourg; Q = Queenstown; S = Southampton) |
 
-* Si veda il file informativo:  [http://biostat.mc.vanderbilt.edu/twiki/pub/Main/DataSets/titanic3info.txt](http://biostat.mc.vanderbilt.edu/twiki/pub/Main/DataSets/titanic3info.txt)
+Si veda il file [http://biostat.mc.vanderbilt.edu/twiki/pub/Main/DataSets/titanic3info.txt](http://biostat.mc.vanderbilt.edu/twiki/pub/Main/DataSets/titanic3info.txt)
 
 ---
+
+# Ricodifica di variabili
 
 
 ```r
@@ -180,14 +171,19 @@ str(combi)
 combi$survived01 &lt;- combi$survived
 combi$survived &lt;- as.factor(combi$survived01)
 levels(combi$survived) = c("Death","Alive")
+
 # test survived NA
 testsurvived &lt;- combi$survived[(n+1):(n+m)]
 combi$survived[(n+1):(n+m)] &lt;- NA
 combi$survived01[(n+1):(n+m)] &lt;- NA
+
 # ricodifica di pclass, sex, embarked in factor
 combi$pclass &lt;- as.factor(combi$pclass)
 combi$sex &lt;- as.factor(combi$sex)
 combi$embarked &lt;- as.factor(combi$embarked)
+
+# cabin contiene valori mancanti codificati con "" invece di NA
+combi$cabin[combi$cabin==""] &lt;- NA
 ```
 
 ---
@@ -199,53 +195,13 @@ class: inverse, middle, center
 
 ---
 
-# Dove sono i valori mancanti?
-
-
-```r
-# cabin contiene valori mancanti codificati "" invece di NA
-combi$cabin[combi$cabin==""] &lt;- NA
-# dove sono i valori mancanti?
-summary(combi)
-```
-
-```
- pclass   survived       name               sex           age       
- 1:323   Death:549   Length:1309        female:466   Min.   : 0.17  
- 2:277   Alive:342   Class :character   male  :843   1st Qu.:21.00  
- 3:709   NA's :418   Mode  :character                Median :28.00  
-                                                     Mean   :29.88  
-                                                     3rd Qu.:39.00  
-                                                     Max.   :80.00  
-                                                     NA's   :263    
-     sibsp            parch          ticket               fare        
- Min.   :0.0000   Min.   :0.000   Length:1309        Min.   :  0.000  
- 1st Qu.:0.0000   1st Qu.:0.000   Class :character   1st Qu.:  7.896  
- Median :0.0000   Median :0.000   Mode  :character   Median : 14.454  
- Mean   :0.4989   Mean   :0.385                      Mean   : 33.295  
- 3rd Qu.:1.0000   3rd Qu.:0.000                      3rd Qu.: 31.275  
- Max.   :8.0000   Max.   :9.000                      Max.   :512.329  
-                                                     NA's   :1        
-    cabin           embarked     survived01    
- Length:1309        C   :270   Min.   :0.0000  
- Class :character   Q   :123   1st Qu.:0.0000  
- Mode  :character   S   :914   Median :0.0000  
-                    NA's:  2   Mean   :0.3838  
-                               3rd Qu.:1.0000  
-                               Max.   :1.0000  
-                               NA's   :418     
-```
-
-
----
-
 
 ```r
 library(VIM)
 aggr(combi[,-c(2,12)], prop = FALSE, combined = TRUE, numbers = TRUE, sortVars = TRUE, sortCombs = TRUE)
 ```
 
-![](Titanic_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ```
 
@@ -296,7 +252,7 @@ combi[which(is.na(combi$fare)), ]
 
 ---
 
-# Sostituzione dei valori mancanti
+# Sostituzione del valore mancante
 
 
 ```r
@@ -348,50 +304,16 @@ combi[which(is.na(combi$embarked)), ]
 
 ---
 
-# Numero di copie dello stesso biglietto
+# Prezzo del biglietto per passeggero
 
 
 ```r
-# persone diverse hanno lo stesso numero di biglietto
-head(table(combi$ticket))
+# distribuzione di frequenza del biglietto
+combi$ticketFreq &lt;- ave(1:nrow(combi), combi$ticket, FUN=length)
+
+# prezzo del biglietto per passeggero
+combi$price &lt;- combi$fare / combi$ticketFreq
 ```
-
-```
-
-110152 110413 110465 110469 110489 110564 
-     3      3      2      1      1      1 
-```
-
-```r
-# numero di persone che condividono lo stesso biglietto
-table(table(combi$ticket))
-```
-
-```
-
-  1   2   3   4   5   6   7   8  11 
-713 132  49  16   7   4   5   2   1 
-```
-
-```r
-# numero di copie dello stesso biglietto
-combi$ticketFreq &lt;- ave(1:nrow(combi),combi$ticket,FUN=length)
-```
-
----
-
-# Prezzo del biglietto
-
-.pull-left[
-
-```r
-combi$price &lt;- combi$fare/combi$ticketFreq
-```
-]
-
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
-]
 
 ---
 
@@ -400,7 +322,7 @@ combi$price &lt;- combi$fare/combi$ticketFreq
 boxplot(price ~ pclass + embarked + sex, data=combi, subset=pclass==1 &amp; sex=="female"); abline(h=40)
 ```
 
-![](Titanic_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ```r
 combi$embarked[which(is.na(combi$embarked))] &lt;- c("C","C")
@@ -428,12 +350,18 @@ aggregate(age ~ pclass + sex, combi, FUN=mean)
 
 ```r
 # Modello lineare
-fit.age &lt;- lm(age ~ sex*pclass, 
-          data = combi[!is.na(combi$age),])
+fit.age &lt;- lm(age ~ sex*pclass, data = combi[!is.na(combi$age),])
+
 # Sostituzione dei valori mancanti
-combi$age[is.na(combi$age)] &lt;- predict(fit.age, 
-          newdata=combi[is.na(combi$age),])
+combi$age[is.na(combi$age)] &lt;- predict(fit.age, newdata=combi[is.na(combi$age),])
 ```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# Analisi esplorativa
 
 ---
 
@@ -444,13 +372,6 @@ combi$age[is.na(combi$age)] &lt;- predict(fit.age,
 train &lt;- combi[1:n,]
 test &lt;- combi[(n+1):(n+m),]
 ```
-
----
-
-layout: false
-class: inverse, middle, center
-
-# EDA e costruzione del modello
 
 ---
 
@@ -491,7 +412,7 @@ mean(yhat == testsurvived)
 
 ---
 
-# Genere (*sex*)
+# Sesso (*sex*)
 
 .pull-left[
 
@@ -505,17 +426,18 @@ plot(survived ~ sex, train)
 
 .pull-right[
 
-![](Titanic_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 ]
 
 ---
 
 
 ```r
-# modello logistico con solo il genere
+# modello logistico con solo il sesso
 fit &lt;- glm(survived ~ sex, train, family="binomial")
 phat &lt;- predict(fit, newdata=test, type = "response")
 yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
+
 # matrice di confusione 
 table(Predicted=yhat, True=testsurvived)
 ```
@@ -536,6 +458,58 @@ mean(yhat == testsurvived)
 [1] 0.7655502
 ```
 
+Questo modello classifica i passeggeri del test set in funzione del sesso: se donna, sopravvissuta, se uomo, deceduto.
+
+---
+
+# Classe
+
+.pull-left[
+
+I passeggeri che viaggiavano in prima classe hanno avuto maggiore probabilità di sopravvivenza?
+
+
+```r
+plot(survived~pclass, train)
+```
+]
+
+.pull-right[
+![](Titanic_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
+
+---
+
+
+```r
+# modello logistico con solo pclass
+fit &lt;- glm(survived ~ pclass, train, family="binomial")
+phat &lt;- predict(fit, newdata=test, type = "response")
+yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
+
+# matrice di confusione
+table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Alive    43    64
+    Death   217    94
+```
+
+```r
+# accuratezza
+mean(yhat == testsurvived)
+```
+
+```
+[1] 0.6722488
+```
+
+Questo modello classifica i passeggeri del test set in funzione della classe: se prima, sopravvissuto, se seconda o terza, deceduto.
+
+
 ---
 
 # Età
@@ -544,7 +518,7 @@ Prima i bambini? Qual è la relazione tra età e sopravvivenza?
 
 
 ```r
-summary(glm(survived ~ age, train, family="binomial"))$ coefficients 
+summary(glm(survived ~ age, train, family="binomial"))$coefficients 
 ```
 
 ```
@@ -568,61 +542,15 @@ age         -0.009628612 0.00526435 -1.829022 0.0673963
 
 ---
 
-# Classe
-
-.pull-left[
-
-I passeggeri che viaggiavano in prima classe hanno avuto maggiore probabilità di sopravvivenza?
-
-
-```r
-plot(survived~pclass, train)
-```
-]
-
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
-]
-
----
-
-
-```r
-# modello logistico con solo pclass
-fit &lt;- glm(survived ~ pclass, train, family="binomial")
-phat &lt;- predict(fit, newdata=test, type = "response")
-yhat &lt;- ifelse(phat &gt; 0.5, "Alive","Death")
-# matrice di confusione
-table(Predicted=yhat, True=testsurvived)
-```
-
-```
-         True
-Predicted Death Alive
-    Alive    43    64
-    Death   217    94
-```
-
-```r
-# accuratezza
-mean(yhat == testsurvived)
-```
-
-```
-[1] 0.6722488
-```
-
----
-
 # Età e classe
 
-![](Titanic_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 
 ---
 
 # Albero di classificazione
 
-![](Titanic_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -638,7 +566,7 @@ fit &lt;- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =
 rpart.plot(fit, type=0, extra=2)
 ```
 
-![](Titanic_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 ]
 
 .pull-right[
@@ -656,6 +584,7 @@ rpart.plot(fit, type=0, extra=2)
 
 ```r
 yhat &lt;- predict(fit, newdata=test, type="class")
+
 # matrice di confusione
 table(Predicted=yhat, True=testsurvived)
 ```
@@ -678,34 +607,7 @@ mean(yhat == testsurvived)
 
 ---
 
-# Genere e classe
-
-.pull-left[
-![](Titanic_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
-]
-
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
-]
-
----
-
-# Genere e età
-
-.pull-left[
-![](Titanic_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
-]
-
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
-]
-
-
----
-
-# Bontà delle previsioni
-
-Modello logistico
+# Modello logistico
 
 | Predictors | Acc.Tr | Acc.Te |
 |------------|-------|--------|
@@ -720,10 +622,96 @@ Modello logistico
 
 ---
 
+# Come migliorare il modello sex-only?
+
+Per migliorare il modello sex-only, dobbiamo capire 
+
+1. quali maschi sopravvivono 
+
+2. quali femmine muoiono
+
+---
+
+# Sesso e età
+
+Molti maschi sopravvissuti sono tra i giovani 
+
+.pull-left[
+![](Titanic_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+![](Titanic_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+]
+
+---
+
+# Sesso e classe
+
+La maggior parte delle femmine che muoiono viaggiano in terza classe
+
+.pull-left[
+![](Titanic_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+![](Titanic_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
+]
+
+---
+
+
+```r
+# 21/40 maschi sotto i 16 anni sopravvivono
+table(train$survived[train$sex=='male' &amp; train$age&lt;16])
+```
+
+```
+
+Death Alive 
+   19    21 
+```
+
+```r
+# 72/144 femmine che viaggiano in terza classe non sopravvivono
+table(train$survived[train$sex=='female' &amp; train$pclass==3])
+```
+
+```
+
+Death Alive 
+   72    72 
+```
+
+
+---
+
 layout: false
 class: inverse, middle, center
 
 # Feature engineering
+
+---
+
+# Cabina
+
+.pull-left[
+
+```r
+# the first character of cabin is the deck
+table(substr(combi$cabin, 1, 1))
+```
+
+```
+
+ A  B  C  D  E  F  G  T 
+22 65 94 46 41 21  5  1 
+```
+]
+
+.pull-right[
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Titanic_cutaway_diagram.png/322px-Titanic_cutaway_diagram.png)
+]
 
 ---
 
@@ -767,7 +755,7 @@ combi$title &lt;- factor(combi$title)
 plot(survived ~ title, combi[1:n,])
 ```
 
-![](Titanic_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+![](Titanic_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -785,96 +773,132 @@ plot(survived ~ wbm, combi[1:n,])
 ]
 
 .pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-36-1.png)&lt;!-- --&gt;
-]
-
-
----
-
-# Cabina
-
-.pull-left[
-
-```r
-# the first character of cabin is the deck
-table(substr(combi$cabin, 1, 1))
-```
-
-```
-
- A  B  C  D  E  F  G  T 
-22 65 94 46 41 21  5  1 
-```
-]
-
-.pull-right[
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Titanic_cutaway_diagram.png/322px-Titanic_cutaway_diagram.png)
+![](Titanic_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
 ]
 
 ---
 
-# Nucleo familiare
+# Distribuzione di frequenza dei cognomi
 
-.pull-left[
-
-```r
-combi$familysize &lt;- combi$sibsp + combi$parch + 1
-plot(survived ~ familysize, combi[1:n,])
-```
-]
-
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
-]
-
----
-
-# Frequenze dei cognomi
-
-.pull-left[
 
 ```r
 combi$surname &lt;- substring(combi$name,0,regexpr(",",combi$name)-1)
 combi$surnameFreq &lt;- ave(1:nrow(combi),combi$surname,FUN=length)
-plot(survived ~ surnameFreq, combi[1:n,])
+# famiglie con almeno 5 componenti
+table(combi$surname[combi$surnameFreq&gt;4])
 ```
-]
 
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-41-1.png)&lt;!-- --&gt;
-]
+```
 
-
+Andersson   Asplund     Brown    Carter    Davies      Ford   Fortune   Goodwin 
+       11         8         6         6         7         6         6         8 
+  Johnson     Kelly   Lefebre   Palsson    Panula      Rice   Ryerson      Sage 
+        6         5         5         5         6         6         5        11 
+    Skoog     Smith    Thomas  Williams 
+        6         6         5         5 
+```
 
 ---
 
-# Sopravvivenza secondo i cognomi
-
-.pull-left[
 
 ```r
 train = combi[1:n,]
+test = combi[(n+1):(n+m),]
 plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
 ```
-]
 
-.pull-right[
-![](Titanic_files/figure-html/unnamed-chunk-43-1.png)&lt;!-- --&gt;
-]
-
+![](Titanic_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
 
 
 ---
 
-# Modello con genere e famiglia
+# Sopravvivenza di donne e bambini nelle famiglie
 
-| Rule | Prediction |
-|---|----|
-| Man | Death |
-| Boy and all females and boys in his family live | Alive |
-| Boy and not all females and boys in his family live | Death |
-| Female and all females and boys in her family die | Death |
-| Female and not all females and boys in her family die | Alive |
+
+```r
+combi$surname[combi$wbm=='man'] &lt;- 'noGroup'
+combi$surname[combi$surnameFreq&lt;=1] &lt;- 'noGroup'
+combi$surnamesurvival &lt;- NA
+combi$surnamesurvival[1:n] &lt;- ave(combi$survived01[1:n],combi$surname[1:n])
+for (i in (n+1):(n+m)) combi$surnamesurvival[i] &lt;- combi$surnamesurvival[which(combi$surname==combi$surname[i])[1]]
+```
+
+---
+
+
+```r
+combi$predict &lt;- "Death"
+combi$predict[combi$wbm=='woman'] &lt;- "Alive"
+combi$predict[combi$wbm=='boy' &amp; combi$surnamesurvival==1] &lt;- "Alive"
+combi$predict[combi$wbm=='woman' &amp; combi$surnamesurvival==0] &lt;- "Death"
+combi$predict &lt;- factor(combi$predict)
+plot(predict ~ wbm, combi)
+```
+
+![](Titanic_files/figure-html/unnamed-chunk-39-1.png)&lt;!-- --&gt;
+
+
+---
+layout: false
+class: inverse, middle, center
+
+# Modello Gender Surname
+
+---
+
+![](gendersurname.jpg)
+
+&lt;!-- | Rule | Prediction | --&gt;
+&lt;!-- |---|----| --&gt;
+&lt;!-- | Man | Death | --&gt;
+&lt;!-- | Boy and all females and boys in his family live | Alive | --&gt;
+&lt;!-- | Boy and not all females and boys in his family live | Death | --&gt;
+&lt;!-- | Female and all females and boys in her family die | Death | --&gt;
+&lt;!-- | Female and not all females and boys in her family die | Alive | --&gt;
+
+---
+
+
+```r
+yhat &lt;- combi$predict[1:n]
+table(Predicted=yhat, True=train$survived)
+```
+
+```
+         True
+Predicted Death Alive
+    Alive    31   253
+    Death   518    89
+```
+
+```r
+mean(yhat == train$survived)
+```
+
+```
+[1] 0.8653199
+```
+
+```r
+yhat &lt;- combi$predict[(n+1):(n+m)]
+table(Predicted=yhat, True=testsurvived)
+```
+
+```
+         True
+Predicted Death Alive
+    Alive    38   113
+    Death   222    45
+```
+
+```r
+mean(yhat == testsurvived)
+```
+
+```
+[1] 0.8014354
+```
+
 
 ---
 

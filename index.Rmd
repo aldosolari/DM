@@ -87,7 +87,6 @@ Questa pagina fa riferimento alla parte 1.
 <td> </td>
 </tr>
 
-
 <tr>
 <td>The Model versus the Modeling Process</td>
 <td> </td>
@@ -97,14 +96,14 @@ Questa pagina fa riferimento alla parte 1.
 <td> </td>
 </tr>
 
-<tr>
-<td>Cars data</td>
-<td> </td>
-<td>[SLIDES](docs/Cars/Cars.html).</td>
-<td> </td>
-<td> AS §2.1 </td>
-<td> </td>
-</tr>
+<!-- <tr> -->
+<!-- <td>Cars data</td> -->
+<!-- <td> </td> -->
+<!-- <td>[SLIDES](docs/Cars/Cars.html).</td> -->
+<!-- <td> </td> -->
+<!-- <td> AS §2.1 </td> -->
+<!-- <td> </td> -->
+<!-- </tr> -->
 
 <tr>
 <td>Titanic data</td>
@@ -118,9 +117,27 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Ames housing data</td>
 <td> </td>
-<td>[SLIDES](docs/Ames/Ames.html).</td>
+<td>[SLIDES]().</td>
 <td> </td>
-<td> KS §4 - §11 </td>
+<td> KS §4 - §9 </td>
+<td> </td>
+</tr>
+
+<tr>
+<td></td>
+<td> </td>
+<td>[SLIDES]().</td>
+<td> </td>
+<td> KS §10 - §11 </td>
+<td> </td>
+</tr>
+
+<tr>
+<td></td>
+<td> </td>
+<td>[SLIDES]().</td>
+<td> </td>
+<td> KS §12 - §13 </td>
 <td> </td>
 </tr>
 
