@@ -94,13 +94,10 @@ Il libro di [Wickham e Grolemund (2016)](https://r4ds.had.co.nz/) [WG] illustra 
 
 ---
 
-# Esempio
+layout: false
+class: inverse, middle, center
 
-* In KJ, capitolo 4, viene discussa la modellizzazione dei dati sull'utenza giornaliera del sistema ferroviario pubblico di Chicago 
-
-* I predittori utilizzati sono le date del calendario, la serie storica dell'utenza, il tempo atmosferico e altri fattori
-
-* Il processo di modellizzazione può essere esemplificato con il seguente "monologo interiore" 
+# Caso studio: Chicago Train Ridership Data
 
 ---
 
@@ -108,23 +105,32 @@ Figure 4.1: Chicago Transit Authority ‘L’ map. For this illustration, we are
 
 &lt;img src="images/Chicago_L_diagram_sb.png" width="50%" /&gt;
 
+---
+
+# Chicago Train Ridership Data
+
+* Nel capitolo 4 di KJ (e capitoli successivi), viene discussa la modellizzazione del il numero di utenti giornalieri alla stazione di Clark/Lake del sistema ferroviario pubblico di Chicago 
+
+* I predittori utilizzati sono le date del calendario, la serie storica del numero di utenti nelle varie stazioni, il tempo atmosferico e altri fattori
+
+* Il processo di modellizzazione può essere esemplificato con il seguente "monologo interiore" 
 
 ---
 
 | Riflessione   | Attività      |
 |----------|:-------------:|
-| I valori di utenza giornalieri tra le stazioni sono estremamente correlati.|  EDA |
-| I valori nei giorni feriali e nel fine settimana sono molto diversi. |  EDA |
-| 11 Giugno 2010 ha un numero estremamente elevato di utenze. |  EDA |
-| Quali stazioni hanno i valori più bassi? |  EDA |
+| I valori del numero di utenti nelle diverse stazioni sono estremamente correlati.|  EDA |
+| I valori del numero di utenti nei giorni feriali e nel fine settimana sono molto diversi. |  EDA |
+| Il giorno 11 Giugno 2010 ha un valore estremamente elevato di utenze. |  EDA |
+| Quali stazioni presentano i valori più bassi? |  EDA |
 | Le date dovrebbero essere codificate come giorno della settimana e anno.  |  Feature engineering |
-| Forse i predittori correlati potrebbero essere riassunti con una PCA.  |  Feature engineering |
+| Forse i predittori fortemente correlati potrebbero essere rappresentati con una PCA.  |  Feature engineering |
 | Le registrazioni meteorologiche orarie potrebbero essere riassunte in misurazioni giornaliere.  |  Feature engineering |
-| Iniziamo con una regressione lineare, K-vicini più vicini e un *boosting* di alberi decisionali.  |  Model fitting |
-| Quanti vicini K usare?  |  Model tuning |
+| Iniziamo con una regressione lineare, `\(k\)`-vicini più vicini e un *boosting* di alberi decisionali.  |  Model fitting |
+| Quanti vicini `\(k\)` usare?  |  Model tuning |
 | Quante iterazioni di *boosting*? Poche o tante?  |  Model tuning |
 | Quali modelli hanno il MSE più basso? | Model evaluation |
-| Quali giorni sono stati previsti male?  |  EDA |
+| Quali giorni sono stati previsti in modo non soddifacente?  |  EDA |
 
 ---
 
@@ -133,28 +139,26 @@ Figure 4.1: Chicago Transit Authority ‘L’ map. For this illustration, we are
 | I punteggi di importanza delle variabili indicano che le informazioni meteorologiche non sono predittive. Li scarteremo dalla prossima serie di modelli.  |  Model evaluation |
 | Sembra che dovremmo concentrarci su molte iterazioni di *boosting*.|  Model evaluation |
 | Abbiamo bisogno di codificare le festività per migliorare le previsioni su (e intorno a) quelle date |  Feature engineering |
-| Eliminiamo K-NN dall'elenco dei modelli |  Model evaluation |
-
+| Eliminiamo `\(k\)`-NN dall'elenco dei modelli |  Model evaluation |
 
 ---
 
-Figure 4.9: Visualization of the correlation matrix of the 14-day lag ridership station predictors for non-holiday, weekdays in 2016. Stations are organized using hierarchical cluster analysis, and the organizational structure is visualized using a dendrogram (top and right).
+Figure 4.3: Distribution of daily ridership at the Clark/Lake stop from 2001 to 2016. The histogram (a) allows us to see that there are two peaks or modes in ridership distribution indicating that there may be two mechanisms affecting ridership. The box plot (b) does not have the ability to see multiple peaks in the data. However the violin plot (c) provides a compact visualization that identifies the distributional nuance.
 
-&lt;img src="images/correlation.png" width="70%" /&gt;
+&lt;img src="images/eda-s-40380-distribution-1.svg" width="60%" /&gt;
+
+---
+
+Figure 4.4: Distribution of weekday ridership at all stations other than Clark/Lake during 2016.
+
+
+&lt;img src="images/Fig_4_4.jpg" width="100%" /&gt;
 
 ---
 
 Figure 4.5: Distribution of daily ridership at the Clark/Lake stop from 2001 to 2016 colored and faceted by weekday and weekend. Note that the y-axis counts for each panel are on different scales and the long left tail in the weekday data.
 
 &lt;img src="images/eda-s-40380-distribution-POW-1.svg" width="60%" /&gt;
-
----
-
-
-Figure 4.4: Distribution of weekday ridership at all stations other than Clark/Lake during 2016.
-
-
-&lt;img src="images/Fig_4_4.jpg" width="100%" /&gt;
 
 ---
 
@@ -177,41 +181,72 @@ Figure 4.8: Two-week lag in daily ridership versus daily ridership for the Clark
 
 ---
 
-Figure 3.12: The effect of adding holiday predictors to an SVM model created for the Chicago train data. The dashed line corresponds to the model of the original predictors. The solid line corresponds to the model when an indicator of holiday was included as a predictor.
+Figure 4.9: Visualization of the correlation matrix of the 14-day lag ridership station predictors for non-holiday, weekdays in 2016. Stations are organized using hierarchical cluster analysis, and the organizational structure is visualized using a dendrogram (top and right).
 
-&lt;img src="images/review-svm-xmas-1.svg" width="100%" /&gt;
+&lt;img src="images/correlation.png" width="70%" /&gt;
+
+---
+
+Figure 4.10: Monthly average ridership per year by weekday (excluding holidays) or weekend.
+
+&lt;img src="images/eda-monthly-ridership-1.svg" width="100%" /&gt;
+
+
+---
+
+
+Figure 4.11: Monthly average gas price per gallon (USD) per year. Prices spike in the summer of 2008, which is at the same time that weekend ridership spikes.
+
+&lt;img src="images/eda-monthly-gas-prices-1.svg" width="70%" /&gt;
+
 
 ---
 
 Figure 4.13: Principal component analysis of the 14-day station lag ridership. (a) The cumulative variability summarized across the first 10 components. (b) A scatter plot of the first two principal components. The first component focuses on variation due to part of the week while the second component focuses on variation due to time (year). (c) The relationship between the first principal component and ridership for each day of the week at the Clark/Lake station. (d) The relationship between second principal component and ridership for each year at the Clark/Lake station.
 
 &lt;img src="images/eda-PCA-stations-1.svg" width="40%" /&gt;
+---
+
+# Columns vs features
+
+Figure 1.7: A series of model and feature set combinations for modeling train ridership in Chicago.
+
+&lt;img src="images/Fig_1_7.png" width="60%" /&gt;
 
 ---
 
-Figure 6.9: Score values from several linear projection methods for the weekend ridership at Clark and Lake. The x-axis values are the scores for each method and the y-axis is ridership (in thousands).
+* Set 1 - dates (4)
+    - `dow` (Mon, Tue, .., Sun)
+    - `doy` (1,2,..., 366)
+    - `week` (1,2,..., 53)
+    - `month` (Jan, Feb,.., Dec) 
+* Set 2 - 14-day lag predictors (125)
+* Set 3 - other lag predictors (875)
+* Set 4 - weather predictors  (18)
+* Set 5 - holiday binary predictors (55)
 
-&lt;img src="images/numeric-weekend-scores-1.png" width="50%" /&gt;
+---
+
+Figure 3.12: The effect of adding holiday predictors to an SVM model created for the Chicago train data. The dashed line corresponds to the model of the original predictors. The solid line corresponds to the model when an indicator of holiday was included as a predictor.
+
+&lt;img src="images/review-svm-xmas-1.svg" width="100%" /&gt;
 
 ---
 
-&lt;!-- # Concetti importanti --&gt;
+Figure 4.19: (a) The distribution of residuals from the model resampling process for the base model and the base model plus other potentially useful predictors for explaining ridership at the Clark/Lake station. (b) The partial regression plot for the effect of part of the week. (c) The partial regression plot for the 14-day lag predictor of the Clark/Lake station. (d) The partial regression plot for holiday classification.
 
-&lt;!-- 1. __Evitare il sovra-adattamento__ (*overfitting*) --&gt;
+&lt;img src="images/eda-chicago-linear-models-1.svg" width="40%" /&gt;
 
-&lt;!-- 2. __Il compromesso distorsione-varianza__  --&gt;
-
-&lt;!-- 3.  __Modellizzazione guidata dall'esperienza vs modellizzazione guidata dai dati__ --&gt;
-&lt;!--     - Una persona esperta del contesto applicativo potrebbe avere un'idea precisa di quali dovrebbero essere i predittori da utilizzare nel modello - prima di esaminare i dati --&gt;
-&lt;!--     - Tuttavia, a volte risulta preferibile farsi "guidare dai dati" piuttosto che dall'esperienza. Di solito la combinazione di questi due approcci funziona meglio --&gt;
-
-&lt;!-- 4. __Selezione delle variabili__ La presenza di predittori irrilevanti aumentano la variabilità del modello, danneggiandone le prestazioni --&gt;
-
-&lt;!-- 5. __Feature engineering__  Ci sono diversi modi per rappresentare i predittori in un modello, e alcune di queste rappresentazioni sono più efficaci di altre  --&gt;
-
-&lt;!-- --- --&gt;
 
 ---
+
+layout: false
+class: inverse, middle, center
+
+# Pre-processamento dei dati e *feature engineering*
+
+---
+
 
 # Pre-processamento dei dati
 
