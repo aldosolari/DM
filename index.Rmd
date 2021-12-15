@@ -20,21 +20,23 @@ Questa pagina fa riferimento alla parte 1.
 
 ## Calendario delle lezioni.
 
-* L01 (1 Dicembre 2021 14:30 - 17:30 LAB716)
+* L01 (1 Dicembre 2021 14:30 - 17:30 LAB716) 3h
   
-* L02 (3 Dicembre 2021 10:30 - 12:30 LAB908)
+* L02 (3 Dicembre 2021 10:30 - 12:30 LAB908) 2h
 
-* L03 (10 Dicembre 2021 10:30 - 12:30 LAB908)
+* L03 (10 Dicembre 2021 10:30 - 12:30 LAB908) 2h
 
-* L04 (13 Dicembre 2021 12:30 - 14:30 LAB907)
+* L04 (13 Dicembre 2021 12:30 - 14:30 LAB907) 2h
 
-* L05 (15 Dicembre 2021 14:30 - 17:30 LAB716)
+* L05 (15 Dicembre 2021 14:30 - 17:30 LAB716) 3h
 
-* L06 (16 Dicembre 2021 16:30 - 18:30 LAB718)
+* L06 (16 Dicembre 2021 16:30 - 18:30 LAB718) 2h
 
-* L07 (17 Dicembre 2021 10:30 - 12:30 LAB908)
+* L07 (17 Dicembre 2021 10:30 - 12:30 LAB908) 2h
 
-* L08 (20 Dicembre 2021 12:30 - 14:30 LAB907)
+* L08 (20 Dicembre 2021 12:30 - 14:30 LAB907) 2h
+
+* L09 (22 Dicembre 2021 14:30 - 17:30 LAB716) 3h
 
 ## Materiale didattico
 
@@ -117,7 +119,7 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td>Ames housing data</td>
 <td> </td>
-<td>[SLIDES]().</td>
+<td>[SLIDES](docs/Ames/Ames.html).</td>
 <td> </td>
 <td> KS §4 - §9 </td>
 <td> </td>

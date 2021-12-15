@@ -23,7 +23,7 @@ class: center, middle, inverse, title-slide
 
 # Introduzione 
 
-* Il dataset `ames` (De Cock 2011) contiene dati su 2930 proprietà ad Ames, Iowa, con le seguenti variabili
+* Il dataset `ames` contiene dati su 2930 proprietà ad Ames, Iowa, con le seguenti variabili
 
   * caratteristiche della casa (camere da letto, garage, camino, piscina, veranda, ecc.)
   * posizione (quartiere),
@@ -48,6 +48,7 @@ class: center, middle, inverse, title-slide
 ```r
 library(tidyverse)
 library(tidymodels)
+tidymodels_prefer()
 library(modeldata)
 library(ggpubr)
 
@@ -59,37 +60,104 @@ dim(ames)
 [1] 2930   74
 ```
 
+```r
+# tipologia di variabili
+table(sapply(ames, class))
+```
+
+```
+
+ factor integer numeric 
+     40      22      12 
+```
+
+Riferimenti:
+
+* [De Cock (2011)](http://jse.amstat.org/v19n3/decock.pdf)
+
+* [http://jse.amstat.org/v19n3/decock/DataDocumentation.txt](data documentation)
+
+
 ---
 
+.pull-left[
 
 ```r
 gghistogram(ames, x="Sale_Price", bins = 50)
 ```
 
 ![](Ames_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]
 
----
 
+.pull-right[
 
 ```r
 gghistogram(ames, x="Sale_Price", bins = 50) + scale_x_log10()
 ```
 
 ![](Ames_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
-
----
-
-# Trasformazione della variabile risposta
+]
 
 
 ```r
 ames &lt;- ames %&gt;% mutate(Sale_Price = log10(Sale_Price))
 ```
 
-* Lo svantaggio di trasformare la variabile risposta è principalmente legato all'interpretazione:
+---
 
-    - i coefficienti del modello potrebbero essere più difficili da interpretare
-    - la misura dell'errore di previsione, e.g. può essere difficile comprendere la qualità di un modello il cui RMSE è 0.15 unità logaritmiche.
+
+```r
+ggscatter(ames, x="Gr_Liv_Area", y="Sale_Price")
+```
+
+![](Ames_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+library(hexbin)
+hexbinplot(Sale_Price ~ Gr_Liv_Area, ames)
+```
+
+![](Ames_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+hexbinplot(Sale_Price ~ log10(Gr_Liv_Area) | Bldg_Type, ames)
+```
+
+![](Ames_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+ggplot(ames, aes(x = Latitude, y = Sale_Price)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "loess") + 
+  theme_bw() 
+```
+
+![](Ames_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+
+
+
+```r
+library(MASS)
+ggplot(ames, aes(x = Year_Built, y = Sale_Price)) +
+  geom_point(alpha = 0.1) +
+  facet_wrap(~ Central_Air, nrow=2) + 
+  geom_smooth(method = "rlm") + 
+  theme_bw() 
+```
+
+![](Ames_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -98,7 +166,7 @@ ames &lt;- ames %&gt;% mutate(Sale_Price = log10(Sale_Price))
 ggscatter(ames, x="Longitude", y="Latitude", color = "Neighborhood") + coord_equal()
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -117,7 +185,7 @@ set.seed(123)
 
 ames_split &lt;- initial_split(ames, prop = 0.80, strata = Sale_Price)
 ames_train &lt;- training(ames_split)
-ames_test  &lt;-  testing(ames_split)
+ames_test  &lt;- testing(ames_split)
 
 dim(ames_train)
 ```
@@ -129,6 +197,11 @@ dim(ames_train)
 ---
 
 # Fuga di informazioni (*information leakage*)
+
+"When the data you are using to train a machine learning algorithm happens to have the information you are trying to predict."
+
+Daniel Gutierrez, [Ask a Data Scientist: Data Leakage](https://insidebigdata.com/2014/11/26/ask-data-scientist-data-leakage/)
+
 
 Un potenziale metodo per migliorare le previsioni sul test set potrebbe consistere nello stimare il modello utilizzando le osservazioni di training che sono più simili alle osservazioni di test
 
@@ -158,7 +231,7 @@ In `tidymodels`, la specificazione di un modello viene unificata:
 
 * Specificare il tipo di modello in base alla sua struttura matematica (ad es. regressione lineare, foresta casuale, K-vicini più vicini, ecc.).
 
-* Specificare il motore per la stima del modello. Molto spesso questo riflette il pacchetto R da utilizzare.
+* Specificare il "motore" per la stima del modello, ovvero il pacchetto R da utilizzare.
 
 * Quando richiesto, dichiarare se si tratta di un problema di regressione o di classificazione.
 
@@ -225,7 +298,7 @@ tidy(lm_fit)
 ```r
 ames_test_small &lt;- ames_test %&gt;% slice(1:5)
 
-predict(lm_fit, new_data = ames_test_small)
+predict(lm_fit, new_data = ames_test_small) %&gt;% slice(1:5)
 ```
 
 ```
@@ -437,6 +510,28 @@ Dummy variables from all_nominal_predictors()
 
 
 ```r
+simple_ames_trained &lt;- prep(simple_ames, training = ames_train, verbose = TRUE)
+```
+
+```
+oper 1 step log [training] 
+oper 2 step dummy [training] 
+The retained training set is ~ 0.65 Mb  in memory.
+```
+
+```r
+simple_ames_baked &lt;- bake(simple_ames_trained, new_data = ames_test)
+dim(simple_ames_baked)
+```
+
+```
+[1] 588  35
+```
+
+---
+
+
+```r
 lm_wflow &lt;- 
   lm_wflow %&gt;% 
   remove_variables() %&gt;% 
@@ -473,7 +568,7 @@ ggplot(ames_train, aes(y = Neighborhood)) +
   labs(y = NULL)
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -493,17 +588,30 @@ simple_ames &lt;-
 
 
 ```r
-ggplot(ames_train, aes(x = Gr_Liv_Area, y = 10^Sale_Price)) + 
+ggplot(ames_train, aes(x = Gr_Liv_Area, y = Sale_Price)) + 
   geom_point(alpha = .2) + 
   facet_wrap(~ Bldg_Type) + 
   geom_smooth(method = lm, formula = y ~ x, se = FALSE, col = "red") + 
-  scale_x_log10() + 
-  scale_y_log10() + 
   theme_bw() +
   labs(x = "Gross Living Area", y = "Sale Price (USD)")
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+
+---
+
+
+
+```r
+ggplot(ames_train, aes(x = Gr_Liv_Area, y = Sale_Price)) + 
+  geom_point(alpha = .2) + 
+  facet_wrap(~ Bldg_Type) + 
+  geom_smooth(method = lm, formula = y ~ x, se = FALSE, col = "red") + 
+  theme_bw() +
+  labs(x = "Gross Living Area", y = "Sale Price (USD)")
+```
+
+![](Ames_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -551,7 +659,7 @@ plot_smoother &lt;- function(deg_free) {
 ( plot_smoother(2) + plot_smoother(5) ) / ( plot_smoother(20) + plot_smoother(100) )
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -650,7 +758,7 @@ ames_test_res
 ggscatter(ames_test_res, x="Sale_Price", y=".pred") + geom_abline(lty = 2)
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -667,496 +775,6 @@ ames_metrics(ames_test_res, truth = Sale_Price, estimate = .pred)
 1 rmse    standard      0.0754
 2 rsq     standard      0.826 
 3 mae     standard      0.0546
-```
-
----
-
-layout: false
-class: inverse, middle, center
-
-# 10. Ricampionamento per valutare la performance
-
----
-
-
-```r
-rf_model &lt;- 
-  rand_forest(trees = 1000) %&gt;% 
-  set_engine("ranger") %&gt;% 
-  set_mode("regression")
-
-rf_wflow &lt;- 
-  workflow() %&gt;% 
-  add_formula(
-    Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
-      Latitude + Longitude) %&gt;% 
-  add_model(rf_model) 
-
-rf_fit &lt;- rf_wflow %&gt;% fit(data = ames_train)
-```
-
----
-
-
-```r
-estimate_perf &lt;- function(model, dat) {
-  # Capture the names of the objects used
-  cl &lt;- match.call()
-  obj_name &lt;- as.character(cl$model)
-  data_name &lt;- as.character(cl$dat)
-  data_name &lt;- gsub("ames_", "", data_name)
-  
-  # Estimate these metrics:
-  reg_metrics &lt;- metric_set(rmse, rsq)
-  
-  model %&gt;% 
-    predict(dat) %&gt;% 
-    bind_cols(dat %&gt;% select(Sale_Price)) %&gt;% 
-    reg_metrics(Sale_Price, .pred) %&gt;% 
-    select(-.estimator) %&gt;% 
-    mutate(object = obj_name, data = data_name)
-}
-```
-
----
-
-
-```r
-estimate_perf(rf_fit, ames_train)
-```
-
-```
-# A tibble: 2 × 4
-  .metric .estimate object data 
-  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
-1 rmse       0.0366 rf_fit train
-2 rsq        0.960  rf_fit train
-```
-
-```r
-estimate_perf(lm_fit, ames_train)
-```
-
-```
-# A tibble: 2 × 4
-  .metric .estimate object data 
-  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
-1 rmse       0.0751 lm_fit train
-2 rsq        0.819  lm_fit train
-```
-
----
-
-
-```r
-estimate_perf(rf_fit, ames_test)
-```
-
-```
-# A tibble: 2 × 4
-  .metric .estimate object data 
-  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
-1 rmse       0.0696 rf_fit test 
-2 rsq        0.853  rf_fit test 
-```
-
-```r
-estimate_perf(lm_fit, ames_test)
-```
-
-```
-# A tibble: 2 × 4
-  .metric .estimate object data 
-  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
-1 rmse       0.0754 lm_fit test 
-2 rsq        0.826  lm_fit test 
-```
-
----
-
-
-```r
-set.seed(55)
-ames_folds &lt;- vfold_cv(ames_train, v = 10, repeats = 1)
-ames_folds
-```
-
-```
-#  10-fold cross-validation 
-# A tibble: 10 × 2
-   splits             id    
-   &lt;list&gt;             &lt;chr&gt; 
- 1 &lt;split [2107/235]&gt; Fold01
- 2 &lt;split [2107/235]&gt; Fold02
- 3 &lt;split [2108/234]&gt; Fold03
- 4 &lt;split [2108/234]&gt; Fold04
- 5 &lt;split [2108/234]&gt; Fold05
- 6 &lt;split [2108/234]&gt; Fold06
- 7 &lt;split [2108/234]&gt; Fold07
- 8 &lt;split [2108/234]&gt; Fold08
- 9 &lt;split [2108/234]&gt; Fold09
-10 &lt;split [2108/234]&gt; Fold10
-```
-
----
-
-
-
-```r
-keep_pred &lt;- control_resamples(save_pred = TRUE, save_workflow = TRUE)
-
-set.seed(130)
-rf_res &lt;- 
-  rf_wflow %&gt;% 
-  fit_resamples(resamples = ames_folds, control = keep_pred)
-rf_res
-```
-
-```
-# Resampling results
-# 10-fold cross-validation 
-# A tibble: 10 × 5
-   splits             id     .metrics         .notes           .predictions     
-   &lt;list&gt;             &lt;chr&gt;  &lt;list&gt;           &lt;list&gt;           &lt;list&gt;           
- 1 &lt;split [2107/235]&gt; Fold01 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [235 × 4…
- 2 &lt;split [2107/235]&gt; Fold02 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [235 × 4…
- 3 &lt;split [2108/234]&gt; Fold03 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
- 4 &lt;split [2108/234]&gt; Fold04 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
- 5 &lt;split [2108/234]&gt; Fold05 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
- 6 &lt;split [2108/234]&gt; Fold06 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
- 7 &lt;split [2108/234]&gt; Fold07 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
- 8 &lt;split [2108/234]&gt; Fold08 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
- 9 &lt;split [2108/234]&gt; Fold09 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
-10 &lt;split [2108/234]&gt; Fold10 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 1]&gt; &lt;tibble [234 × 4…
-```
-
----
-
-
-```r
-collect_metrics(rf_res)
-```
-
-```
-# A tibble: 2 × 6
-  .metric .estimator   mean     n std_err .config             
-  &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
-1 rmse    standard   0.0720    10 0.00244 Preprocessor1_Model1
-2 rsq     standard   0.835     10 0.00754 Preprocessor1_Model1
-```
-
----
-
-
-```r
-assess_res &lt;- collect_predictions(rf_res)
-assess_res
-```
-
-```
-# A tibble: 2,342 × 5
-   id     .pred  .row Sale_Price .config             
-   &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;               
- 1 Fold01  5.14    12       5.11 Preprocessor1_Model1
- 2 Fold01  5.15    49       5.10 Preprocessor1_Model1
- 3 Fold01  4.96    54       4.93 Preprocessor1_Model1
- 4 Fold01  5.04    84       5.05 Preprocessor1_Model1
- 5 Fold01  5.19    99       5.05 Preprocessor1_Model1
- 6 Fold01  5.10   116       4.98 Preprocessor1_Model1
- 7 Fold01  4.97   120       4.97 Preprocessor1_Model1
- 8 Fold01  5.12   122       5.11 Preprocessor1_Model1
- 9 Fold01  5.09   124       5.04 Preprocessor1_Model1
-10 Fold01  4.97   140       4.96 Preprocessor1_Model1
-# … with 2,332 more rows
-```
-
----
-
-
-```r
-ggscatter(assess_res, x="Sale_Price", y=".pred") + geom_abline(lty=2)
-```
-
-![](Ames_files/figure-html/unnamed-chunk-37-1.png)&lt;!-- --&gt;
-
----
-
-
-```r
-over_predicted &lt;- 
-  assess_res %&gt;% 
-  mutate(residual = Sale_Price - .pred) %&gt;% 
-  arrange(desc(abs(residual))) %&gt;% 
-  slice(1)
-over_predicted
-```
-
-```
-# A tibble: 1 × 6
-  id     .pred  .row Sale_Price .config              residual
-  &lt;chr&gt;  &lt;dbl&gt; &lt;int&gt;      &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;
-1 Fold07  4.92    32       4.11 Preprocessor1_Model1   -0.811
-```
-
-```r
-ames_train %&gt;% 
-  slice(over_predicted$.row) %&gt;% 
-  select(Gr_Liv_Area, Neighborhood, Year_Built, Bedroom_AbvGr, Full_Bath)
-```
-
-```
-# A tibble: 1 × 5
-  Gr_Liv_Area Neighborhood Year_Built Bedroom_AbvGr Full_Bath
-        &lt;int&gt; &lt;fct&gt;             &lt;int&gt;         &lt;int&gt;     &lt;int&gt;
-1         832 Old_Town           1923             2         1
-```
-
----
-
-# Calcolo in parallelo
-
-
-```r
-# The number of physical cores in the hardware:
-parallel::detectCores(logical = FALSE)
-
-# Unix and macOS only
-library(doMC)
-registerDoMC(cores = 2)
-
-# Now run fit_resamples()...
-
-registerDoSEQ()
-```
-
----
-
-layout: false
-class: inverse, middle, center
-
-# 11. Confronto fra modelli via ricampionamento
-
----
-
-
-```r
-basic_rec &lt;- 
-  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
-           Latitude + Longitude, data = ames_train) %&gt;%
-  step_log(Gr_Liv_Area, base = 10) %&gt;% 
-  step_other(Neighborhood, threshold = 0.01) %&gt;% 
-  step_dummy(all_nominal_predictors())
-
-interaction_rec &lt;- 
-  basic_rec %&gt;% 
-  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) 
-
-spline_rec &lt;- 
-  interaction_rec %&gt;% 
-  step_ns(Latitude, Longitude, deg_free = 50)
-
-preproc &lt;- 
-  list(basic = basic_rec, 
-       interact = interaction_rec, 
-       splines = spline_rec
-  )
-
-lm_models &lt;- workflow_set(preproc, list(lm = lm_model), cross = FALSE)
-```
-
----
-
-
-```r
-lm_models
-```
-
-```
-# A workflow set/tibble: 3 × 4
-  wflow_id    info             option    result    
-  &lt;chr&gt;       &lt;list&gt;           &lt;list&gt;    &lt;list&gt;    
-1 basic_lm    &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;list [0]&gt;
-2 interact_lm &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;list [0]&gt;
-3 splines_lm  &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;list [0]&gt;
-```
-
----
-
-
-```r
-# workflow_map() prende come argomento iniziale la funzione da applicare ai flussi di lavoro, seguito dalle opzioni per quella funzione.
-lm_models &lt;- 
-  lm_models %&gt;% 
-  workflow_map("fit_resamples", 
-               # Options to `workflow_map()`: 
-               seed = 1101, verbose = TRUE,
-               # Options to `fit_resamples()`: 
-               resamples = ames_folds, control = keep_pred)
-```
-
----
-
-
-```r
-lm_models
-```
-
-```
-# A workflow set/tibble: 3 × 4
-  wflow_id    info             option    result   
-  &lt;chr&gt;       &lt;list&gt;           &lt;list&gt;    &lt;list&gt;   
-1 basic_lm    &lt;tibble [1 × 4]&gt; &lt;opts[2]&gt; &lt;rsmp[+]&gt;
-2 interact_lm &lt;tibble [1 × 4]&gt; &lt;opts[2]&gt; &lt;rsmp[+]&gt;
-3 splines_lm  &lt;tibble [1 × 4]&gt; &lt;opts[2]&gt; &lt;rsmp[+]&gt;
-```
-
----
-
-
-```r
-collect_metrics(lm_models) %&gt;% 
-  filter(.metric == "rmse")
-```
-
-```
-# A tibble: 3 × 9
-  wflow_id    .config     preproc model  .metric .estimator   mean     n std_err
-  &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
-1 basic_lm    Preprocess… recipe  linea… rmse    standard   0.0799    10 0.00237
-2 interact_lm Preprocess… recipe  linea… rmse    standard   0.0794    10 0.00257
-3 splines_lm  Preprocess… recipe  linea… rmse    standard   0.0783    10 0.00257
-```
-
----
-
-
-```r
-four_models &lt;- 
-  as_workflow_set(random_forest = rf_res) %&gt;% 
-  bind_rows(lm_models)
-four_models
-```
-
-```
-# A workflow set/tibble: 4 × 4
-  wflow_id      info             option    result   
-  &lt;chr&gt;         &lt;list&gt;           &lt;list&gt;    &lt;list&gt;   
-1 random_forest &lt;tibble [1 × 4]&gt; &lt;opts[0]&gt; &lt;rsmp[+]&gt;
-2 basic_lm      &lt;tibble [1 × 4]&gt; &lt;opts[2]&gt; &lt;rsmp[+]&gt;
-3 interact_lm   &lt;tibble [1 × 4]&gt; &lt;opts[2]&gt; &lt;rsmp[+]&gt;
-4 splines_lm    &lt;tibble [1 × 4]&gt; &lt;opts[2]&gt; &lt;rsmp[+]&gt;
-```
-
----
-
-
-```r
-autoplot(four_models, metric = "rsq") + theme_bw()
-```
-
-![](Ames_files/figure-html/unnamed-chunk-46-1.png)&lt;!-- --&gt;
-
----
-
-layout: false
-class: inverse, middle, center
-
-# 12. Regolazione del modello
-
----
-
-Abbiamo già incontrato un certo numero di iper-parametri
-
-* `threshold` : la soglia per combinare i quartieri in una categoria Other 
-
-* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
-
-* `deg_free` : il numero di gradi di libertà in una spline naturale
-
-
----
-
-
-
-```r
-ames_rec &lt;- 
-  recipe(Sale_Price ~ Gr_Liv_Area + Longitude + Latitude, data = ames_train) %&gt;%
-  step_log(Gr_Liv_Area, base = 10) %&gt;% 
-  step_ns(Longitude, deg_free = tune("long df")) %&gt;% 
-  step_ns(Latitude,  deg_free = tune("lat df"))
-
-parameters(ames_rec)
-```
-
-```
-Collection of 2 parameters for tuning
-
- identifier     type    object
-    long df deg_free nparam[+]
-     lat df deg_free nparam[+]
-```
-
----
-
-
-```r
-deg_free()
-```
-
-```
-Degrees of Freedom (quantitative)
-Range: [1, 5]
-```
-
-```r
-spline_degree()
-```
-
-```
-Piecewise Polynomial Degree (quantitative)
-Range: [1, 10]
-```
-
-```r
-ames_param &lt;- 
-  ames_rec %&gt;% 
-  parameters() %&gt;% 
-  update(
-    `long df` = spline_degree(), 
-    `lat df` = spline_degree()
-  )
-
-ames_param
-```
-
-```
-Collection of 2 parameters for tuning
-
- identifier     type    object
-    long df deg_free nparam[+]
-     lat df deg_free nparam[+]
-```
-
----
-
-
-```r
-df_vals &lt;- seq(2, 18, by = 4)
-spline_grid &lt;- expand.grid(`long df` = df_vals, `lat df` = df_vals)
-
-lm_mod &lt;- linear_reg() %&gt;% set_engine("lm")
-
-set.seed(2453)
-cv_splits &lt;- vfold_cv(ames_train, v = 5, strata = Sale_Price)
-
-ames_res &lt;- tune_grid(lm_mod, ames_rec, resamples = cv_splits, grid = spline_grid)
-```
-
----
-
-
-```r
-autoplot(ames_res, metric = "rmse") + theme_bw()
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

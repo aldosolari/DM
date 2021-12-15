@@ -1,0 +1,100 @@
+---
+title: "Data Mining"
+subtitle: "Resampling for evaluating performance"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo=T, eval=T, message=F, warning=F, error=F, comment=NA)
+```
+
+
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(modeldata)
+library(ggpubr)
+
+data(ames)
+set.seed(123)
+ames_split <- initial_split(ames, prop = 0.80, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test  <-  testing(ames_split)
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 12. Regolazione del modello
+
+---
+
+Abbiamo già incontrato un certo numero di iper-parametri
+
+* `threshold` : la soglia per combinare i quartieri in una categoria Other 
+
+* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
+
+* `deg_free` : il numero di gradi di libertà in una spline naturale
+
+
+---
+
+
+```{r}
+ames_rec <- 
+  recipe(Sale_Price ~ Gr_Liv_Area + Longitude + Latitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_ns(Longitude, deg_free = tune("long df")) %>% 
+  step_ns(Latitude,  deg_free = tune("lat df"))
+
+parameters(ames_rec)
+```
+
+---
+
+```{r}
+deg_free()
+
+spline_degree()
+
+ames_param <- 
+  ames_rec %>% 
+  parameters() %>% 
+  update(
+    `long df` = spline_degree(), 
+    `lat df` = spline_degree()
+  )
+
+ames_param
+```
+
+---
+
+```{r, eval =FALSE}
+df_vals <- seq(2, 18, by = 4)
+spline_grid <- expand.grid(`long df` = df_vals, `lat df` = df_vals)
+
+lm_mod <- linear_reg() %>% set_engine("lm")
+
+set.seed(2453)
+cv_splits <- vfold_cv(ames_train, v = 5, strata = Sale_Price)
+
+ames_res <- tune_grid(lm_mod, ames_rec, resamples = cv_splits, grid = spline_grid)
+```
+
+---
+
+```{r, eval=FALSE}
+autoplot(ames_res, metric = "rmse") + theme_bw()
+```
+
