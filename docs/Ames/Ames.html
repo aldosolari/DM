@@ -520,6 +520,15 @@ The retained training set is ~ 0.65 Mb  in memory.
 ```
 
 ```r
+simple_ames_juiced &lt;- juice(simple_ames_trained)
+dim(simple_ames_juiced)
+```
+
+```
+[1] 2342   35
+```
+
+```r
 simple_ames_baked &lt;- bake(simple_ames_trained, new_data = ames_test)
 dim(simple_ames_baked)
 ```

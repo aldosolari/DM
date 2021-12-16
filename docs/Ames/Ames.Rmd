@@ -302,6 +302,8 @@ simple_ames
 
 ```{r}
 simple_ames_trained <- prep(simple_ames, training = ames_train, verbose = TRUE)
+simple_ames_juiced <- juice(simple_ames_trained)
+dim(simple_ames_juiced)
 simple_ames_baked <- bake(simple_ames_trained, new_data = ames_test)
 dim(simple_ames_baked)
 ```
