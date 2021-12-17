@@ -128,18 +128,18 @@ Questa pagina fa riferimento alla parte 1.
 <tr>
 <td></td>
 <td> </td>
-<td>[SLIDES]().</td>
+<td>[SLIDES](docs/Ames2/Ames2.html).</td>
 <td> </td>
-<td> KS §10 - §11 </td>
+<td> KS §10 - §12 </td>
 <td> </td>
 </tr>
 
 <tr>
 <td></td>
 <td> </td>
-<td>[SLIDES]().</td>
+<td>[SLIDES](docs/Ames3/Ames3.html).</td>
 <td> </td>
-<td> KS §12 - §13 </td>
+<td> KS §13 </td>
 <td> </td>
 </tr>
 
