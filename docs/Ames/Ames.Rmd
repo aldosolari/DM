@@ -124,6 +124,13 @@ ggscatter(ames, x="Longitude", y="Latitude", color = "Neighborhood") + coord_equ
 
 ---
 
+```{r, echo=FALSE,  out.width = '70%'}
+knitr::include_graphics("images/overview.png")
+```
+
+
+---
+
 layout: false
 class: inverse, middle, center
 
@@ -214,7 +221,7 @@ tidy(lm_fit)
 ```{r}
 ames_test_small <- ames_test %>% slice(1:5)
 
-predict(lm_fit, new_data = ames_test_small) %>% slice(1:5)
+predict(lm_fit, new_data = ames_test_small) 
 ```
 
 ---

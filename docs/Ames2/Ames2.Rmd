@@ -1,0 +1,378 @@
+---
+title: "Data Mining"
+subtitle: "The Ames housing data - part II"
+author: Aldo Solari
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+---
+
+```{r startup, include = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo=T, eval=T, message=F, warning=F, error=F, comment=NA)
+```
+
+
+
+layout: false
+class: inverse, middle, center
+
+# 10. Resampling for evaluating performance
+
+---
+
+# Data split
+
+```{r}
+library(tidymodels)
+data(ames)
+ames <- mutate(ames, Sale_Price = log10(Sale_Price))
+
+set.seed(123)
+ames_split <- initial_split(ames, prop = 0.80, strata = Sale_Price)
+ames_train <- training(ames_split)
+ames_test  <-  testing(ames_split)
+```
+
+---
+
+# Recipe
+
+```{r}
+ames_rec <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+           Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors()) %>% 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) %>% 
+  step_ns(Latitude, Longitude, deg_free = 20)
+```
+
+---
+
+# Workflow lm
+
+```{r}
+lm_model <- linear_reg() %>% set_engine("lm")
+
+lm_wflow <- 
+  workflow() %>% 
+  add_model(lm_model) %>% 
+  add_recipe(ames_rec)
+
+lm_fit <- fit(lm_wflow, ames_train)
+```
+
+
+---
+
+# Workflow rf
+
+
+```{r}
+rf_model <- 
+  rand_forest(trees = 1000) %>% 
+  set_engine("ranger") %>% 
+  set_mode("regression")
+
+rf_wflow <- 
+  workflow() %>% 
+  add_formula(
+    Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+      Latitude + Longitude) %>% 
+  add_model(rf_model) 
+```
+
+---
+
+# Cross-validation
+
+```{r}
+set.seed(55)
+ames_folds <- vfold_cv(ames_train, v = 10)
+ames_folds
+```
+
+---
+
+# Fit resamples
+
+```{r}
+keep_pred <- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+
+set.seed(130)
+library(tictoc)
+tic()
+rf_res <- rf_wflow %>% fit_resamples(resamples = ames_folds, control = keep_pred)
+toc()
+```
+
+---
+
+# Results
+
+```{r}
+rf_res
+```
+
+
+---
+
+```{r}
+collect_metrics(rf_res)
+```
+
+---
+
+```{r}
+assess_res <- collect_predictions(rf_res)
+assess_res
+```
+
+
+---
+
+```{r}
+assess_res %>% 
+  ggplot(aes(x = Sale_Price, y = .pred)) + 
+  geom_point(alpha = .15) +
+  geom_abline(col = "red") + 
+  coord_obs_pred() + 
+  ylab("Predicted") + 
+  theme_bw()
+```
+
+---
+
+```{r}
+over_predicted <- 
+  assess_res %>% 
+  mutate(residual = Sale_Price - .pred) %>% 
+  arrange(desc(abs(residual))) %>% 
+  slice(1)
+
+over_predicted
+```
+
+---
+
+```{r}
+ames_train %>% 
+  slice(over_predicted$.row) %>% 
+  select(Gr_Liv_Area, Neighborhood, Year_Built, Bedroom_AbvGr, Full_Bath)
+```
+
+---
+
+# Parallel processing
+
+```{r}
+# The number of physical cores in the hardware:
+parallel::detectCores(logical = FALSE)
+
+# The number of possible independent processes that can be simultaneously used:  
+parallel::detectCores(logical = TRUE)
+```
+
+---
+
+# doMC
+
+```{r}
+# Unix and macOS only
+library(doMC)
+registerDoMC(cores = 2)
+
+tic()
+set.seed(130)
+rf_res <- rf_wflow %>% fit_resamples(resamples = ames_folds, control = keep_pred)
+toc()
+# To reset the computations to sequential processing
+registerDoSEQ()
+```
+
+
+---
+
+# doParallel
+
+```{r, eval=FALSE}
+# All operating systems
+library(doParallel)
+
+# Create a cluster object and then register: 
+cl <- makePSOCKcluster(2)
+registerDoParallel(cl)
+
+# Now run fit_resamples()`...
+
+stopCluster(cl)
+```
+
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 11. Comparing models with resampling
+
+---
+
+```{r}
+basic_rec <- 
+  recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+           Latitude + Longitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_other(Neighborhood, threshold = 0.01) %>% 
+  step_dummy(all_nominal_predictors())
+
+interaction_rec <- 
+  basic_rec %>% 
+  step_interact( ~ Gr_Liv_Area:starts_with("Bldg_Type_") ) 
+
+spline_rec <- 
+  interaction_rec %>% 
+  step_ns(Latitude, Longitude, deg_free = 50)
+```
+
+
+---
+
+```{r}
+preproc <- 
+  list(basic = basic_rec, 
+       interact = interaction_rec, 
+       splines = spline_rec
+  )
+
+lm_models <- workflow_set(preproc, list(lm = lm_model), cross = FALSE)
+lm_models
+```
+
+---
+
+```{r}
+lm_models <- 
+  lm_models %>% 
+  workflow_map("fit_resamples", 
+               # Options to `workflow_map()`: 
+               seed = 1101, verbose = TRUE,
+               # Options to `fit_resamples()`: 
+               resamples = ames_folds, control = keep_pred)
+
+lm_models
+```
+
+---
+
+```{r}
+collect_metrics(lm_models) %>% 
+  filter(.metric == "rmse")
+```
+
+---
+
+```{r}
+four_models <- 
+  as_workflow_set(random_forest = rf_res) %>% 
+  bind_rows(lm_models)
+four_models
+```
+
+---
+
+```{r}
+autoplot(four_models, metric = "rsq")
+```
+
+---
+
+```{r}
+rsq_indiv_estimates <- 
+  collect_metrics(four_models, summarize = FALSE) %>% 
+  filter(.metric == "rsq") 
+
+rsq_wider <- 
+  rsq_indiv_estimates %>% 
+  select(wflow_id, .estimate, id) %>% 
+  pivot_wider(id_cols = "id", names_from = "wflow_id", values_from = ".estimate")
+```
+
+---
+
+```{r}
+rsq_wider %>% 
+  with( t.test(splines_lm, basic_lm, paired = TRUE) ) %>%
+  tidy() %>% 
+  select(estimate, p.value, starts_with("conf"))
+```
+
+---
+
+layout: false
+class: inverse, middle, center
+
+# 12. Model tuning
+
+---
+
+Abbiamo già incontrato un certo numero di iper-parametri
+
+* `threshold` : la soglia per combinare i quartieri in una categoria Other 
+
+* `deg_free` : il numero di gradi di libertà in una spline naturale
+
+* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
+
+---
+
+```{r}
+ames_rec <- 
+  recipe(Sale_Price ~ Gr_Liv_Area + Longitude + Latitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>% 
+  step_ns(Longitude, deg_free = tune("long df")) %>% 
+  step_ns(Latitude,  deg_free = tune("lat df"))
+
+parameters(ames_rec)
+```
+
+---
+
+```{r}
+deg_free()
+
+spline_degree()
+
+ames_param <- 
+  ames_rec %>% 
+  parameters() %>% 
+  update(
+    `long df` = spline_degree(), 
+    `lat df` = spline_degree()
+  )
+
+ames_param
+```
+
+---
+
+```{r}
+df_vals <- seq(2, 18, by = 4)
+spline_grid <- expand.grid(`long df` = df_vals, `lat df` = df_vals)
+
+lm_mod <- linear_reg() %>% set_engine("lm")
+
+set.seed(2453)
+cv_splits <- vfold_cv(ames_train, v = 5, strata = Sale_Price)
+
+ames_res <- tune_grid(lm_mod, ames_rec, resamples = cv_splits, grid = spline_grid)
+```
+
+---
+
+```{r}
+autoplot(ames_res, metric = "rmse") + theme_bw()
+```

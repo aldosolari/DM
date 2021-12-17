@@ -170,6 +170,11 @@ ggscatter(ames, x="Longitude", y="Latitude", color = "Neighborhood") + coord_equ
 
 ---
 
+&lt;img src="images/overview.png" width="70%" /&gt;
+
+
+---
+
 layout: false
 class: inverse, middle, center
 
@@ -292,7 +297,7 @@ tidy(lm_fit)
 ```r
 ames_test_small &lt;- ames_test %&gt;% slice(1:5)
 
-predict(lm_fit, new_data = ames_test_small) %&gt;% slice(1:5)
+predict(lm_fit, new_data = ames_test_small) 
 ```
 
 ```
@@ -571,7 +576,7 @@ ggplot(ames_train, aes(y = Neighborhood)) +
   labs(y = NULL)
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -599,7 +604,7 @@ ggplot(ames_train, aes(x = Gr_Liv_Area, y = Sale_Price)) +
   labs(x = "Gross Living Area", y = "Sale Price (USD)")
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-26-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -614,7 +619,7 @@ ggplot(ames_train, aes(x = Gr_Liv_Area, y = Sale_Price)) +
   labs(x = "Gross Living Area", y = "Sale Price (USD)")
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-28-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -662,7 +667,7 @@ plot_smoother &lt;- function(deg_free) {
 ( plot_smoother(2) + plot_smoother(5) ) / ( plot_smoother(20) + plot_smoother(100) )
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-30-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-31-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -761,7 +766,7 @@ ames_test_res
 ggscatter(ames_test_res, x="Sale_Price", y=".pred") + geom_abline(lty = 2)
 ```
 
-![](Ames_files/figure-html/unnamed-chunk-34-1.png)&lt;!-- --&gt;
+![](Ames_files/figure-html/unnamed-chunk-35-1.png)&lt;!-- --&gt;
 
 ---
 
