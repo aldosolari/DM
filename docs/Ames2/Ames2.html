@@ -140,7 +140,7 @@ toc()
 ```
 
 ```
-22.593 sec elapsed
+22.912 sec elapsed
 ```
 
 ---
@@ -303,7 +303,7 @@ toc()
 ```
 
 ```
-12.454 sec elapsed
+12.45 sec elapsed
 ```
 
 ```r
@@ -496,9 +496,10 @@ Abbiamo già incontrato un certo numero di iper-parametri
 
 * `threshold` : la soglia per combinare i quartieri in una categoria Other 
 
+* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
+
 * `deg_free` : il numero di gradi di libertà in una spline naturale
 
-* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
 
 ---
 
@@ -585,6 +586,129 @@ autoplot(ames_res, metric = "rmse") + theme_bw()
 ```
 
 ![](Ames2_files/figure-html/unnamed-chunk-27-1.png)&lt;!-- --&gt;
+
+---
+
+
+```r
+rf_spec &lt;- 
+  rand_forest(mtry = tune()) %&gt;% 
+  set_engine("ranger", regularization.factor = tune("regularization"))
+
+rf_param &lt;- parameters(rf_spec)
+rf_param
+```
+
+```
+Collection of 2 parameters for tuning
+
+     identifier                  type    object
+           mtry                  mtry nparam[?]
+ regularization regularization.factor nparam[+]
+
+Model parameters needing finalization:
+   # Randomly Selected Predictors ('mtry')
+
+See `?dials::finalize` or `?dials::update.parameters` for more information.
+```
+
+---
+
+
+```r
+rf_param %&gt;% 
+  update(mtry = mtry(c(1, 70)))
+```
+
+```
+Collection of 2 parameters for tuning
+
+     identifier                  type    object
+           mtry                  mtry nparam[+]
+ regularization regularization.factor nparam[+]
+```
+
+---
+
+
+```r
+pca_rec &lt;- 
+  recipe(Sale_Price ~ ., data = ames_train) %&gt;% 
+  # Select the square-footage predictors and extract their PCA components:
+  step_normalize(contains("SF")) %&gt;% 
+  # Select the number of components needed to capture 95% of
+  # the variance in the predictors. 
+  step_pca(contains("SF"), threshold = .95)
+  
+updated_param &lt;- 
+  workflow() %&gt;% 
+  add_model(rf_spec) %&gt;% 
+  add_recipe(pca_rec) %&gt;% 
+  parameters() %&gt;% 
+  finalize(ames_train)
+updated_param
+```
+
+```
+Collection of 2 parameters for tuning
+
+     identifier                  type    object
+           mtry                  mtry nparam[+]
+ regularization regularization.factor nparam[+]
+```
+
+```r
+updated_param %&gt;% pull_dials_object("mtry")
+```
+
+```
+# Randomly Selected Predictors (quantitative)
+Range: [1, 74]
+```
+
+
+---
+
+
+```r
+library(usemodels)
+
+use_xgboost(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+              Latitude + Longitude, 
+            data = ames_train,
+            # Add comments explaining some of the code:
+            verbose = TRUE)
+```
+
+```
+xgboost_recipe &lt;- 
+  recipe(formula = Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+    Latitude + Longitude, data = ames_train) %&gt;% 
+  step_novel(all_nominal(), -all_outcomes()) %&gt;% 
+  ## This model requires the predictors to be numeric. The most common 
+  ## method to convert qualitative predictors to numeric is to create 
+  ## binary indicator variables (aka dummy variables) from these 
+  ## predictors. However, for this model, binary indicator variables can be 
+  ## made for each of the levels of the factors (known as 'one-hot 
+  ## encoding'). 
+  step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE) %&gt;% 
+  step_zv(all_predictors()) 
+
+xgboost_spec &lt;- 
+  boost_tree(trees = tune(), min_n = tune(), tree_depth = tune(), learn_rate = tune(), 
+    loss_reduction = tune(), sample_size = tune()) %&gt;% 
+  set_mode("regression") %&gt;% 
+  set_engine("xgboost") 
+
+xgboost_workflow &lt;- 
+  workflow() %&gt;% 
+  add_recipe(xgboost_recipe) %&gt;% 
+  add_model(xgboost_spec) 
+
+set.seed(60092)
+xgboost_tune &lt;-
+  tune_grid(xgboost_workflow, resamples = stop("add your rsample object"), grid = stop("add number of candidate points"))
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

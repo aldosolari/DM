@@ -323,9 +323,10 @@ Abbiamo già incontrato un certo numero di iper-parametri
 
 * `threshold` : la soglia per combinare i quartieri in una categoria Other 
 
+* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
+
 * `deg_free` : il numero di gradi di libertà in una spline naturale
 
-* `min_n` : il numero di punti dati necessari per eseguire una suddivisione in un modello ad albero 
 
 ---
 
@@ -376,3 +377,59 @@ ames_res <- tune_grid(lm_mod, ames_rec, resamples = cv_splits, grid = spline_gri
 ```{r}
 autoplot(ames_res, metric = "rmse") + theme_bw()
 ```
+
+---
+
+```{r}
+rf_spec <- 
+  rand_forest(mtry = tune()) %>% 
+  set_engine("ranger", regularization.factor = tune("regularization"))
+
+rf_param <- parameters(rf_spec)
+rf_param
+```
+
+---
+
+```{r}
+rf_param %>% 
+  update(mtry = mtry(c(1, 70)))
+```
+
+---
+
+```{r}
+pca_rec <- 
+  recipe(Sale_Price ~ ., data = ames_train) %>% 
+  # Select the square-footage predictors and extract their PCA components:
+  step_normalize(contains("SF")) %>% 
+  # Select the number of components needed to capture 95% of
+  # the variance in the predictors. 
+  step_pca(contains("SF"), threshold = .95)
+  
+updated_param <- 
+  workflow() %>% 
+  add_model(rf_spec) %>% 
+  add_recipe(pca_rec) %>% 
+  parameters() %>% 
+  finalize(ames_train)
+updated_param
+
+updated_param %>% pull_dials_object("mtry")
+```
+
+
+---
+
+```{r}
+library(usemodels)
+
+use_xgboost(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + Bldg_Type + 
+              Latitude + Longitude, 
+            data = ames_train,
+            # Add comments explaining some of the code:
+            verbose = TRUE)
+```
+
+
+

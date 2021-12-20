@@ -14,8 +14,6 @@ knitr::opts_chunk$set(echo=T, eval=T, message=F, warning=F, error=F, comment=NA)
 ```
 
 
----
-
 layout: false
 class: inverse, middle, center
 
@@ -43,7 +41,7 @@ registerDoParallel(cores = all_cores)
 
 ```{r}
 set.seed(123)
-ames_split <- rsample::initial_split(ames, prop = 0.2, strata = Sale_Price)
+ames_split <- rsample::initial_split(ames, prop = 0.8, strata = Sale_Price)
 ```
 
 ---

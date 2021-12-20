@@ -21,8 +21,6 @@ class: center, middle, inverse, title-slide
 
 
 
----
-
 layout: false
 class: inverse, middle, center
 
@@ -52,7 +50,7 @@ registerDoParallel(cores = all_cores)
 
 ```r
 set.seed(123)
-ames_split &lt;- rsample::initial_split(ames, prop = 0.2, strata = Sale_Price)
+ames_split &lt;- rsample::initial_split(ames, prop = 0.8, strata = Sale_Price)
 ```
 
 ---
@@ -135,12 +133,12 @@ knitr::kable(head(xgboost_grid))
 
 | min_n| tree_depth| learn_rate| loss_reduction|
 |-----:|----------:|----------:|--------------:|
-|    34|          5|  0.0000000|      0.0000885|
-|     4|          5|  0.0966092|      0.0008185|
-|    16|          8|  0.0024427|      0.0000000|
-|    15|         13|  0.0000000|      0.0004953|
-|    20|         13|  0.0158018|      0.0128697|
-|    36|          2|  0.0015174|      0.0000025|
+|    38|          1|  0.0000000|      0.0000001|
+|    37|          2|  0.0359707|      0.2424528|
+|    31|          2|  0.0001142|      0.0000000|
+|    18|          6|  0.0000000|      0.0000000|
+|     9|          9|  0.0000141|      0.0004100|
+|    14|          2|  0.0000000|      0.5468054|
 
 ---
 
@@ -183,11 +181,11 @@ xgboost_tuned %&gt;%
 
 | min_n| tree_depth| learn_rate| loss_reduction|.metric |.estimator |      mean|  n|   std_err|.config               |
 |-----:|----------:|----------:|--------------:|:-------|:----------|---------:|--:|---------:|:---------------------|
-|     4|          5|  0.0966092|      0.0008185|rmse    |standard   | 0.0715140|  5| 0.0079364|Preprocessor1_Model02 |
-|    20|         13|  0.0158018|      0.0128697|rmse    |standard   | 0.0735026|  5| 0.0081500|Preprocessor1_Model05 |
-|    16|          8|  0.0024427|      0.0000000|rmse    |standard   | 0.4275769|  5| 0.0049298|Preprocessor1_Model03 |
-|    36|          2|  0.0015174|      0.0000025|rmse    |standard   | 1.0493282|  5| 0.0048538|Preprocessor1_Model06 |
-|    21|          1|  0.0000128|      0.0456215|rmse    |standard   | 4.6622422|  5| 0.0044917|Preprocessor1_Model07 |
+|    31|         10|  0.0130363|      0.0137169|rmse    |standard   | 0.0576142|  5| 0.0032617|Preprocessor1_Model07 |
+|    11|          1|  0.0184535|      0.0000243|rmse    |standard   | 0.0655329|  5| 0.0034870|Preprocessor1_Model08 |
+|    37|          2|  0.0359707|      0.2424528|rmse    |standard   | 0.0711269|  5| 0.0036330|Preprocessor1_Model02 |
+|    31|          2|  0.0001142|      0.0000000|rmse    |standard   | 4.2132874|  5| 0.0064665|Preprocessor1_Model03 |
+|    18|         14|  0.0000308|      1.1677329|rmse    |standard   | 4.5790980|  5| 0.0064609|Preprocessor1_Model10 |
 
 ---
 
@@ -202,7 +200,7 @@ knitr::kable(xgboost_best_params)
 
 | min_n| tree_depth| learn_rate| loss_reduction|.config               |
 |-----:|----------:|----------:|--------------:|:---------------------|
-|     4|          5|  0.0966092|      0.0008185|Preprocessor1_Model02 |
+|    31|         10|  0.0130363|      0.0137169|Preprocessor1_Model07 |
 
 ```r
 xgboost_model_final &lt;- xgboost_model %&gt;% 
@@ -246,9 +244,9 @@ knitr::kable(xgboost_score_train)
 
 |.metric |.estimator |.estimate |
 |:-------|:----------|:---------|
-|rmse    |standard   |0.02      |
-|rsq     |standard   |0.99      |
-|mae     |standard   |0.01      |
+|rmse    |standard   |0.04      |
+|rsq     |standard   |0.95      |
+|mae     |standard   |0.03      |
 
 ---
 
@@ -277,7 +275,7 @@ knitr::kable(xgboost_score)
 |.metric |.estimator |.estimate |
 |:-------|:----------|:---------|
 |rmse    |standard   |0.06      |
-|rsq     |standard   |0.87      |
+|rsq     |standard   |0.91      |
 |mae     |standard   |0.04      |
 
 
