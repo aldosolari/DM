@@ -144,6 +144,16 @@ Questa pagina fa riferimento alla parte 1.
 </tr>
 
 
+<tr>
+<td>Boston housing data</td>
+<td> </td>
+<td>[SLIDES](docs/Boston/Boston.html).</td>
+<td> </td>
+<td> KS §20 </td>
+<td> </td>
+</tr>
+
+
 <!-- <tr> -->
 <!-- <td>Chicago train ridership data</td> -->
 <!-- <td> </td> -->
