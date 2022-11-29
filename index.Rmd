@@ -48,7 +48,7 @@ Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università deg
 <tr>
 <td> A simple problem.</td>
 <td> [SLIDES](docs/SLIDES/Simpleproblem.pdf). </td>
-<td> [R CODE](https://github.com/aldosolari/SL/blob/master/docs/RCODE/Simpleproblem.R)</td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Simpleproblem.R)</td>
 <td> AS §3.2 </td>
 <td>  </td>
 </tr>
