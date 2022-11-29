@@ -7,36 +7,22 @@ output: markdowntemplates::minimal
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università degli Studi di Milano-Bicocca, A.A. 2021/22.
+Corso di Laurea Magistrale in Scienze Statistiche ed Economiche, Università degli Studi di Milano-Bicocca, A.A. 2022/23.
 
-## Pagina WEB di APM. 
-
-Il corso Data Mining (6 CFU) si divide in due parti:
-
-1. *Applied Predictive Modelling* [APM] (3 CFU, Prof. Aldo Solari);
-2. *Introduction to Deep Learning* [IDL] (3 CFU, Prof. Matteo Borrotti).
-
-Questa pagina fa riferimento alla parte 1.
 
 ## Calendario delle lezioni.
 
-* L01 (1 Dicembre 2021 14:30 - 17:30 LAB716) 3h
-  
-* L02 (3 Dicembre 2021 10:30 - 12:30 LAB908) 2h
+* L01 (30 Novembre 2022 14:30 - 17:30 LAB715) 3h
+* L02 (1 Dicembre 2022 11:30 - 14:30 U6-02) 3h
+* L03 (5 Dicembre 2022 15:30 - 17:30 U6-33) 2h
+* ~~L04 (12 Dicembre 2022 15:30 - 17:30 U6-33) 2h~~
+* L04 (14 Dicembre 2022 14:30 - 17:30 LAB715) 3h
+* L05 (15 Dicembre 2022 11:30 - 14:30 U6-02) 3h
+* L06 (19 Dicembre 2022 15:30 - 17:30 U6-33) 2h
+* L07 (21 Dicembre 2022 14:30 - 17:30 LAB715) 3h
+* L08 (22 Dicembre 2022 11:30 - 14:30 U6-02) 3h
 
-* L03 (10 Dicembre 2021 10:30 - 12:30 LAB908) 2h
 
-* L04 (13 Dicembre 2021 12:30 - 14:30 LAB907) 2h
-
-* L05 (15 Dicembre 2021 14:30 - 17:30 LAB716) 3h
-
-* L06 (16 Dicembre 2021 16:30 - 18:30 LAB718) 2h
-
-* L07 (17 Dicembre 2021 10:30 - 12:30 LAB908) 2h
-
-* L08 (20 Dicembre 2021 12:30 - 14:30 LAB907) 2h
-
-* L09 (22 Dicembre 2021 14:30 - 17:30 LAB716) 3h
 
 ## Materiale didattico
 
@@ -44,176 +30,88 @@ Questa pagina fa riferimento alla parte 1.
 
 <tr>
 <td>**ARGOMENTI**</td>
-<td> </td>
 <td>**MATERIALE**</td>
-<td> </td>
+<td>**DIDATTICO**</td>
 <td>**LIBRO DI TESTO**</td>
+<td>**ESERCIZI**</td>
 </tr>
 
 <tr>
-<td>Introduzione al corso</td>
-<td> </td>
-<td>[SLIDES](docs/Introduction/Introduction.html).</td>
-<td> </td>
-<td> </td>
-<td> </td>
+<td>Introduction.</td>
+<td>[SLIDES](docs/SLIDES/Introduction.pdf). </td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 
 
 <tr>
-<td>A Simple Problem</td>
-<td> </td>
-<td>[SLIDES](docs/ProblemaTipo/ProblemaTipo.html).</td>
-<td> </td>
+<td> A simple problem.</td>
+<td> [SLIDES](docs/SLIDES/Simpleproblem.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/SL/blob/master/docs/RCODE/Simpleproblem.R)</td>
 <td> AS §3.2 </td>
-<td> </td>
+<td>  </td>
+</tr>
+
+
+
+<tr>
+<td> Bias-variance tradeoff.</td>
+<td> [SLIDES](docs/SLIDES/Biasvariance.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/SL/blob/master/docs/RCODE/Biasvariance.R)</td>
+<td> AS §3.3, §4.1, HTF §2.3, §2.9, §7.2, §7.3 </td>
+<td> [ESERCIZI](docs/EXERCISES/Biasvariance.pdf).</td>
 </tr>
 
 
 <tr>
-<td>Optimism, Conflicts, and Trade-offs</td>
-<td> </td>
-<td>[SLIDES](docs/BiasVariance/BiasVariance.html).</td>
-<td> </td>
-<td>AS §3.3 </td>
-<td> </td>
+<td> Optimism.</td>
+<td> [SLIDES](docs/SLIDES/Optimism.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/SL/blob/master/docs/RCODE/Optimism.R)</td>
+<td> AS §3.4, §3.5.1, §3.5.2, §3.5.3 HTF §7.4, §7.5 </td>
+<td> [ESERCIZI](docs/EXERCISES/Optimism.pdf).</td>
 </tr>
 
-
-<tr>
-<td></td>
-<td> </td>
-<td>[SLIDES](docs/Optimism/Optimism.html).</td>
-<td> </td>
-<td>AS §3.4, §3.5 </td>
-<td> </td>
-</tr>
-
-<tr>
-<td>The Model versus the Modeling Process</td>
-<td> </td>
-<td>[SLIDES](docs/ModellingProcess/ModellingProcess.html).</td>
-<td> </td>
-<td>KJ §1.2, §1.3, §4.1, §4.2, KS §1.3, Appendix  </td>
-<td> </td>
-</tr>
-
-<!-- <tr> -->
-<!-- <td>Cars data</td> -->
-<!-- <td> </td> -->
-<!-- <td>[SLIDES](docs/Cars/Cars.html).</td> -->
-<!-- <td> </td> -->
-<!-- <td> AS §2.1 </td> -->
-<!-- <td> </td> -->
-<!-- </tr> -->
-
-<tr>
-<td>Titanic data</td>
-<td> </td>
-<td>[SLIDES](docs/Titanic/Titanic.html).</td>
-<td> </td>
-<td> </td>
-<td> </td>
-</tr>
-
-<tr>
-<td>Ames housing data</td>
-<td> </td>
-<td>[SLIDES](docs/Ames/Ames.html).</td>
-<td> </td>
-<td> KS §4 - §9 </td>
-<td> </td>
-</tr>
-
-<tr>
-<td></td>
-<td> </td>
-<td>[SLIDES](docs/Ames2/Ames2.html).</td>
-<td> </td>
-<td> KS §10 - §12 </td>
-<td> </td>
-</tr>
-
-<tr>
-<td></td>
-<td> </td>
-<td>[SLIDES](docs/Ames3/Ames3.html).</td>
-<td> </td>
-<td> KS §13 </td>
-<td> </td>
-</tr>
-
-
-<tr>
-<td>Boston housing data</td>
-<td> </td>
-<td>[SLIDES](docs/Boston/Boston.html).</td>
-<td> </td>
-<td> KS §20 </td>
-<td> </td>
-</tr>
-
-
-<!-- <tr> -->
-<!-- <td>Chicago train ridership data</td> -->
-<!-- <td> </td> -->
-<!-- <td>[SLIDES]().</td> -->
-<!-- <td> </td> -->
-<!-- <td> KJ §4</td> -->
-<!-- <td> </td> -->
-<!-- </tr> -->
 
 </table>
 
+
 ## Modalità d'esame.
 
-* La modalità di verifica consiste nell’analisi del dataset *Home sales prices* per il quale bisogna fornire delle **previsioni**, allegando il **codice R** utilizzato per produrle. 
+* La modalità di verifica consiste nell'analisi di un dataset e in una prova orale. L'analisi dei dati ha come obiettivo la verifica delle abilità di modellizzazione dei dati a fini previsivi. La prova orale riguarderà sia l'esposizione dell'analisi dei dati sia la verifica dello studio degli argomenti trattati a lezione.
 
-* Oltre alle previsioni, bisognerà produrre una **relazione** contenete la descrizione dell'analisi.
+* Per l'analisi dei dati, oltre alle previsioni, bisognerà produrre una relazione contenete la descrizione dell’analisi e il codice utilizzato. Bisogna consegnare l'analisi dei dati sulla pagina moodle del corso almeno una settimana prima dell'appello d'esame. E' possibile consegnare l'analisi dei dati una volta sola per A.A.
 
-* Verrà valutata sia l'accuratezza delle previsioni (50%) sia la qualità della relazione (40%) e del codice R utilizzato (10%).
-
-* E' richiesto di consegnare le previsioni, il codice R e la relazione sullo spazio dedicato che trovate nella pagina MOODLE **almeno una settimana prima dell’appello d’esame**.
-
-* Sarà possibile consegnare le previsioni e la relazione **una volta sola** per A.A.
-
-* Lo studente oppure il docente può richiedere la prova orale.
-
-**Home sales prices**
-
-[Training set](https://aldosolari.github.io/DM/docs/HomePrices/home_prices_train.csv)
-
-[Test set](https://aldosolari.github.io/DM/docs/HomePrices/home_prices_test.csv)
-
-[Info file](https://aldosolari.github.io/DM/docs/HomePrices/HomePrices_info.txt)
-
-Esempio di consegna (da caricare nell'apposito spazio sulla pagina MOODLE):
-
-[2575_previsione.TXT](https://aldosolari.github.io/DM/docs/HomePrices/2575_previsione.txt)
-
-[2575_codice.R](https://aldosolari.github.io/DM/docs/HomePrices/2575_codice.R)
-
-[2575_relazione.PDF](https://aldosolari.github.io/DM/docs/HomePrices/2575_relazione.pdf)
+* Il dataset verrà reso disponibile a fine Dicembre. 
+Agli studenti che si iscrivono al seguente [form](https://forms.gle/Kbb38DztqHWihd9E6) entro il 5 Dicembre 2022 verrà data la possibilità di svolgere i compiti per casa in gruppi di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale.
 
 **Calendario degli esami**.
 
 || Sessione || Data || Luogo || Orario ||
 |-|-|-|-|-|-|-|-|-|-|
 ||  || ||  ||  || ||
-|| Invernale || 4 Febbraio 2022 || - || 09:30  ||
-|| Invernale || 23 Febbraio 2022 || - || 09:30 ||
+|| Invernale || 9 Febbraio 2023 || U7-13 || 14:00  ||
+|| Invernale || 23 Febbraio 2023 || U7-13 || 14:00 ||
 || Primaverile || - || - ||  -  ||
 || Estiva || - || - || -  ||
 || Estiva || - || - || - ||
 || Estiva || - || -  || - ||
 
  
-## Libri di testo.
+## Testi di riferimento.
 
-* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia. [AS].
+* Azzalini, Scarpa (2012). Data analysis and data mining: an introduction. Oxford University Press. [AS]. 
+
+* Hastie, Tibshirani, Friedman (2009). The Elements of Statistical Learning. Springer. [HTF].
+
+### Approfondimenti :
+
+* Azzalini, Scarpa (2004). Analisi dei dati e data mining, Springer-Verlag Italia.
+
+* Lewis, Kane, Arnold (2019). A Computational Approach to Statistical Learning. Chapman And Hall/Crc. [LKA].
 
 * Kuhn, Johnson (2019). [Feature Engineering and Selection](http://www.feat.engineering/). Chapman and Hall/CRC. [KJ].
 
-* Kuhn, Silge (2021+). [Tidy Modeling with R](https://www.tmwr.org/). In progress. [KS].
+* Kuhn, Silge (2022). [Tidy Modeling with R](https://www.tmwr.org/). O'Reilly Media, Inc. [KS].
 
 
