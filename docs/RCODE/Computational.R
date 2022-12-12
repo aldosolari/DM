@@ -67,12 +67,11 @@ orthogonalize = function(X){
     v = X[,j]
     if (j > 1) {
        for (i in 1:(j-1)){
-         G[i, j] = crossprod(Z[,i], X[,j]) / crossprod(Z[,i])
+         G[i,j] = crossprod(Z[,i], X[,j]) / crossprod(Z[,i])
          v = v - G[i,j] * Z[,i]
-       }
+      }
     }
-    # G[j,j] <- sqrt(sum(v^2))
-    Z[,j] <- v #/ G[j,j]
+    Z[,j] <- v 
   }
   return(list(G=G,Z=Z))
 }
@@ -80,9 +79,13 @@ orthogonalize = function(X){
 Z = orthogonalize(X)$Z
 G = orthogonalize(X)$G
 
+head(Z %*% G)
+head(X)
+
 Zp = Z[,p]
 crossprod(Zp,y)/crossprod(Zp)
-coef(lm(y ~ X - 1))[4]
+coef(lm(y ~ X -1))[4]
+
 
 #---- Gram-Schmidt algorithm -------------
 
