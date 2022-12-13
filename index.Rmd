@@ -89,6 +89,24 @@ Giovedì inizio 11:30
 </tr>
 
 
+<tr>
+<td> Auto dataset.</td>
+<td> [SLIDES](docs/SLIDES/Auto.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Auto.R)</td>
+<td> AS §1.2.1, §1.2.2  </td>
+<td> [Not mtcars AGAIN](https://supervised-ml-course.netlify.app/chapter1) </td>
+</tr>
+
+<tr>
+<td> Titanic dataset.</td>
+<td> [SLIDES](docs/SLIDES/Titanic.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Titanic.R)</td>
+<td>   </td>
+<td> </td>
+</tr>
+
+
+
 </table>
 
 
