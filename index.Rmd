@@ -84,7 +84,7 @@ Giovedì inizio 11:30
 <td> Computational aspects.</td>
 <td> [SLIDES](docs/SLIDES/Computational.pdf). </td>
 <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Computational.R)</td>
-<td> AS §2.2.1, HTF §3.2.3, LKA §2.3, §2.5, §2.6 </td>
+<td> AS §2.2.1, §2.2.2, §2.2.3 HTF §3.2.3, LKA §2.3, §2.5, §2.6 </td>
 <td> HTF ex. 3.4 </td>
 </tr>
 
