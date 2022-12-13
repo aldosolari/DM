@@ -52,80 +52,60 @@ epsilon <- rnorm(n)
 y <- X %*% beta + epsilon 
 
 ols_chol(X,y)
-
 coef(lm(y ~ X - 1))
 
-#---- multiple regression via ortogonalization -------------
+#---- (Non-normalized) Classical Gram-Schmidt -------------
 
-orthogonalize = function(X){
+classicGS = function(X){
   X <- as.matrix(X)
   p <- ncol(X)
   n <- nrow(X)
-  G <- matrix(0, p, p)
   Z <- matrix(0, n, p)
   for (j in 1:p){
-    v = X[,j]
+    Zj = X[,j]
     if (j > 1) {
-       for (i in 1:(j-1)){
-         G[i,j] = crossprod(Z[,i], X[,j]) / crossprod(Z[,i])
-         v = v - G[i,j] * Z[,i]
+      for (k in 1:(j-1)){
+        coef = crossprod(Z[,k], X[,j]) / crossprod(Z[,k]) 
+        Zj = Zj - coef * Z[,k]
       }
     }
-    Z[,j] <- v 
+    Z[,j] <- Zj
   }
-  return(list(G=G,Z=Z))
+  return(Z)
 }
 
-Z = orthogonalize(X)$Z
-G = orthogonalize(X)$G
-
-head(Z %*% G)
-head(X)
-
+Z = classicGS(X)
 Zp = Z[,p]
 crossprod(Zp,y)/crossprod(Zp)
 coef(lm(y ~ X -1))[4]
 
+#---- QR factorization -------------
 
-#---- Gram-Schmidt algorithm -------------
-
-gramschmidt <- function(x) {
-  x <- as.matrix(x)
-  # Get the number of rows and columns of the matrix
-  p <- ncol(x)
-  n <- nrow(x)
-  
-  # Initialize the Q and R matrices
-  q <- matrix(0, n, p)
-  r <- matrix(0, p, p)
-  
-  for (j in 1:p) {
-    v = x[,j] # Step 1 of the Gram-Schmidt process v1 = a1
-    # Skip the first column
+factorizationQR = function(X){
+  X <- as.matrix(X)
+  p <- ncol(X)
+  n <- nrow(X)
+  Q <- matrix(0, n, p)
+  R <- matrix(0, p, p)
+  for (j in 1:p){
+    Zj = X[,j]
     if (j > 1) {
-      for (i in 1:(j-1)) {
-        r[i,j] <- t(q[,i]) %*% x[,j] # Find the inner product (noted to be q^T a earlier)
-        # Subtract the projection from v which causes v to become perpendicular to all columns of Q
-        v <- v - r[i,j] * q[,i] 
-      }      
+      for (k in 1:(j-1)){
+        R[k,j] = crossprod(Q[,k], X[,j])
+        Zj = Zj - R[k,j] * Q[,k]
+      }
     }
-    # Find the L2 norm of the jth diagonal of R
-    r[j,j] <- sqrt(sum(v^2))
-    # The orthogonalized result is found and stored in the ith column of Q.
-    q[,j] <- v / r[j,j]
+    R[j,j] <- sqrt( crossprod(Zj) )
+    Q[,j] <- Zj / R[j,j]
   }
-  
-  # Collect the Q and R matrices into a list and return
-  qrcomp <- list('Q'=q, 'R'=r)
-  return(qrcomp)
+  return(list(Q=Q, R=R))
 }
 
-
-res <- gramschmidt(X)
+res = factorizationQR(X)
 res$R
 
-qr_obj <- qr(X)
-R <- qr.R(qr_obj)
+res_qr <- qr(X)
+qr.R(res_qr)
 
 #---- ols_qr -------------
 
@@ -149,10 +129,6 @@ ols_qr <-
   }
 
 ols_qr(X,y)
+coef(lm(y ~ X -1))
 
-#--- colonne (computazionalmente) linearmente dipendenti
 
-qr(W)$rank
-y <- rnorm(nrow(W))
-fit <- lm(y ~ W)
-tail(coef(fit))
