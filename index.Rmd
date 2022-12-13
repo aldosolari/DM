@@ -90,6 +90,14 @@ Giovedì inizio 11:30
 
 
 <tr>
+<td> Modelling Process.</td>
+<td> [SLIDES](docs/SLIDES/ModellingProcess.pdf). </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+<tr>
 <td> Auto dataset.</td>
 <td> [SLIDES](docs/SLIDES/Auto.pdf). </td>
 <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Auto.R)</td>
