@@ -99,20 +99,67 @@ table(Predicted=yhat, True=testsurvived)
 mean(yhat == testsurvived)
 
 #--- Modello con solo Classe ---------
-
+#pdf("Figure_pclass.pdf")
 plot(survived~pclass, train)
+#dev.off()
 
 # modello logistico con solo pclass
 fit <- glm(survived ~ pclass, train, family="binomial")
 phat <- predict(fit, newdata=test, type = "response")
 yhat <- ifelse(phat > 0.5, "Alive","Death")
+
 # matrice di confusione
 table(Predicted=yhat, True=testsurvived)
 
 # accuratezza
 mean(yhat == testsurvived)
 
+#--- Modello con solo Età ---------
 summary(glm(survived ~ age, train, family="binomial"))$coefficients
 
+#ageclass = cut(train$age, breaks = c(0,10,20,30,40,50,60,70,80))
+pdf("Figure_age_equalcut.pdf")
+#barplot(prop.table(table(train$survived01==0,ageclass),2), xlab="Age class")
+dev.off()
 
+#pdf("Figure_age.pdf")
+plot(survived ~ age, train)
+#dev.off()
 
+#--- Età e classe ---------
+
+set.seed(123)
+class.jitter <- as.numeric(train$pclass)+.7*runif(n)
+#pdf("Figure_age_pclass.pdf")
+plot(age ~ class.jitter,xlim=c(.95,3.8),cex=1, xlab="Passenger class",xaxt="n", train)
+axis(side=1,at=c(1.4,2.4,3.4),label=c("1st","2nd","3rd"))
+points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
+#dev.off()
+
+set.seed(123)
+class.jitter <- as.numeric(train$pclass)+.7*runif(n)
+#pdf("Figure_age_pclass_tree.pdf")
+plot(age ~ class.jitter,xlim=c(.95,3.8),cex=1, xlab="Passenger class",xaxt="n", train)
+axis(side=1,at=c(1.4,2.4,3.4),label=c("1st","2nd","3rd"))
+points(age[survived01==0] ~ class.jitter[survived01==0],pch=19, train)
+abline(v=2.85)
+rect(1.85,18,4.0,89,col=rgb(0.5,0.5,0.5,1/4))
+rect(2.85,-5,4.0,89,col=rgb(0.5,0.5,0.5,1/4))
+#dev.off()
+
+#--- Albero di classificazione con età e classe ---------
+
+library(rpart)
+library(rpart.plot)
+fit <- rpart(survived ~ pclass + age, train, control=rpart.control(maxdepth =  3))
+#pdf("Figure_drule.pdf")
+rpart.plot(fit, type=0, extra=2)
+#dev.off()
+
+yhat <- predict(fit, newdata=test, type="class")
+
+# matrice di confusione
+table(Predicted=yhat, True=testsurvived)
+
+# accuratezza
+mean(yhat == testsurvived)
