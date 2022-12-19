@@ -117,10 +117,10 @@ mean(yhat == testsurvived)
 #--- Modello con solo Età ---------
 summary(glm(survived ~ age, train, family="binomial"))$coefficients
 
-#ageclass = cut(train$age, breaks = c(0,10,20,30,40,50,60,70,80))
-pdf("Figure_age_equalcut.pdf")
-#barplot(prop.table(table(train$survived01==0,ageclass),2), xlab="Age class")
-dev.off()
+ageclass = cut(train$age, breaks = c(0,10,20,30,40,50,60,70,80))
+#pdf("Figure_age_equalcut.pdf")
+barplot(prop.table(table(train$survived01==0,ageclass),2), xlab="Age class")
+#dev.off()
 
 #pdf("Figure_age.pdf")
 plot(survived ~ age, train)
@@ -162,4 +162,108 @@ yhat <- predict(fit, newdata=test, type="class")
 table(Predicted=yhat, True=testsurvived)
 
 # accuratezza
+mean(yhat == testsurvived)
+
+
+#--- Sesso e età ---------
+
+#pdf("Figure_age_male.pdf")
+plot(survived~age, train, subset=sex=="male", main="male")
+#dev.off()
+
+#pdf("Figure_age_female.pdf")
+plot(survived~age, train, subset=sex=="female", main="female")
+#dev.off()
+
+#--- Sesso e classe ---------
+
+#pdf("Figure_class_male.pdf")
+plot(survived~pclass, train, subset=sex=="male", main="male")
+#dev.off()
+
+#pdf("Figure_class_female.pdf")
+plot(survived~pclass, train, subset=sex=="female", main="female")
+#dev.off()
+
+# 21/40 maschi sotto i 16 anni sopravvivono
+table(train$survived[train$sex=='male' & train$age<16])
+
+# 72/144 femmine che viaggiano in terza classe non sopravvivono
+table(train$survived[train$sex=='female' & train$pclass==3])
+
+
+#--- Cabina ---------
+
+# the first character of cabin is the deck
+table(substr(combi$cabin, 1, 1))
+
+#--- Titolo ---------
+
+combi$name[1]
+library(dplyr)
+library(stringr)
+combi <- combi %>% 
+  mutate(title = str_extract(name, "[a-zA-Z]+\\."))
+table(combi$title)
+combi$title <- factor(combi$title)
+
+
+#pdf("Figure_title.pdf")
+plot(survived ~ title, combi[1:n,])
+#dev.off()
+
+#--- Uomo, ragazzo o donna? ---------
+
+combi$wbm <- "man"
+combi$wbm[grep('Master',combi$name)] <- "boy"
+combi$wbm[combi$sex=="female"] <- "woman"
+combi$wbm <- factor(combi$wbm)
+
+#pdf("Figure_wbm.pdf")
+plot(survived ~ wbm, combi[1:n,])
+#dev.off()
+
+#--- Distribuzione di frequenza dei cognomi
+
+
+combi$surname <- substring(combi$name,0,regexpr(",",combi$name)-1)
+combi$surnameFreq <- ave(1:nrow(combi),combi$surname,FUN=length)
+# famiglie con almeno 5 componenti
+table(combi$surname[combi$surnameFreq>4])
+
+
+train = combi[1:n,]
+test = combi[(n+1):(n+m),]
+
+#pdf("Figure_surname.pdf")
+plot(survived ~ as.factor(surname), train[train$surnameFreq==5,])
+#dev.off()
+
+
+#--- Sopravvivenza di donne e bambini nelle famiglie
+
+combi$surname[combi$wbm=='man'] <- 'noGroup'
+combi$surname[combi$surnameFreq<=1] <- 'noGroup'
+combi$surnamesurvival <- NA
+combi$surnamesurvival[1:n] <- ave(combi$survived01[1:n],combi$surname[1:n])
+for (i in (n+1):(n+m)) combi$surnamesurvival[i] <- combi$surnamesurvival[which(combi$surname==combi$surname[i])[1]]
+
+#--- Modello Gender Surname
+
+combi$predict <- "Death"
+combi$predict[combi$wbm=='woman'] <- "Alive"
+combi$predict[combi$wbm=='boy' & combi$surnamesurvival==1] <- "Alive"
+combi$predict[combi$wbm=='woman' & combi$surnamesurvival==0] <- "Death"
+combi$predict <- factor(combi$predict)
+
+#pdf("Figure_predict.pdf")
+plot(predict ~ wbm, combi)
+#dev.off()
+
+yhat <- combi$predict[1:n]
+table(Predicted=yhat, True=train$survived)
+mean(yhat == train$survived)
+
+yhat <- combi$predict[(n+1):(n+m)]
+table(Predicted=yhat, True=testsurvived)
 mean(yhat == testsurvived)
