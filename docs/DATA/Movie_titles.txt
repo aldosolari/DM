@@ -1,0 +1,100 @@
+1996,Independence Day
+2000,The Patriot
+2004,The Day After Tomorrow
+2003,Pirates of the Caribbean: The Curse of the Black Pearl
+1990,Pretty Woman
+1994,Forrest Gump
+1999,The Green Mile
+1997,Con Air
+1996,Twister
+2002,Sweet Home Alabama
+2001,Pearl Harbor
+1998,Armageddon
+1996,The Rock
+2000,What Women Want
+2003,Bruce Almighty
+2001,Oceans Eleven
+2002,The Bourne Identity
+2003,The Italian Job
+2004,I Robot
+1999,American Beauty
+2003,How to Lose a Guy in 10 Days
+1998,Lethal Weapon 4
+2004,Shrek 2
+2003,Lost in Translation
+1986,Top Gun
+1994,Pulp Fiction
+2000,Gone in 60 Seconds
+1999,The Sixth Sense
+2002,Lord of the Rings: The Two Towers
+2000,Men of Honor
+2000,Gladiator
+2001,Lord of the Rings: The Fellowship of the Ring
+1992,Sister Act
+1999,Double Jeopardy
+2002,Two Weeks Notice
+2004,Troy
+2001,The Royal Tenenbaums
+2004,National Treasure
+2004,50 First Dates
+1989,Indiana Jones and the Last Crusade
+2002,My Big Fat Greek Wedding
+2003,Mystic River
+1997,Titanic
+1987,Dirty Dancing
+2002,Catch Me If You Can
+2003,Finding Nemo (Widescreen)
+1999,The Matrix
+2003,Kill Bill: Vol. 1
+2001,The Wedding Planner
+1994,The Shawshank Redemption Special Edition
+2003,The Last Samurai
+2001,John Q
+2001,Swordfish
+2004,The Bourne Supremacy
+2004,The Terminal
+2002,Men in Black II
+2004,Spider-Man 2
+1995,Braveheart
+1997,Men in Black
+1990,Ghost
+1997,Air Force One
+2003,Lord of the Rings: The Return of the King
+2004,Man on Fire
+2004,The Incredibles
+2002,Mr Deeds
+2004,Collateral
+2002,Spider-Man
+1998,Saving Private Ryan
+2000,Erin Brockovich
+2001,Monsters Inc.
+2001,Shrek (Full-screen)
+1991,The Silence of the Lambs
+2000,Memento
+2001,Tomb Raider
+1986,Ferris Buellers Day Off
+2002,Maid in Manhattan
+1999,Entrapment
+2000,Meet the Parents
+2004,Dodgeball A True Underdog Story
+1988,Rain Man
+1998,Patch Adams
+2003,Big Fish
+1999,Fight Club
+2003,S.W.A.T.
+1997,Good Will Hunting
+1992,A Few Good Men
+1998,Enemy of the State
+1999,The Generals Daughter
+2002,Minority Report
+2003,Somethings Gotta Give
+1981,Raiders of the Lost Ark
+2003,Anger Management
+2004,Sideways
+2004,Kill Bill: Vol. 2
+1999,American Pie
+2001,The Fast and the Furious
+2003,The School of Rock
+2004,Napoleon Dynamite
+2004,The Notebook
+
