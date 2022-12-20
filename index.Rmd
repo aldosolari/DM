@@ -121,6 +121,14 @@ Giovedì inizio 11:30
 <td> </td>
 </tr>
 
+<tr>
+<td> Netflix dataset.</td>
+<td> [SLIDES](docs/SLIDES/Netflix.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Netflix.R)</td>
+<td> AS §2.1.3, ISL §12.3   </td>
+<td> Vedi slide. </td>
+</tr>
+
 
 
 </table>
