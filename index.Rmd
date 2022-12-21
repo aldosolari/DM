@@ -140,8 +140,12 @@ Giovedì inizio 11:30
 
 * Per l'analisi dei dati, oltre alle previsioni, bisognerà produrre una relazione contenete la descrizione dell’analisi e il codice utilizzato. Bisogna consegnare l'analisi dei dati sulla pagina moodle del corso almeno una settimana prima dell'appello d'esame. E' possibile consegnare l'analisi dei dati una volta sola per A.A.
 
-* Il dataset verrà reso disponibile a fine Dicembre. 
-Agli studenti che si iscrivono al seguente [form](https://forms.gle/Kbb38DztqHWihd9E6) entro il 5 Dicembre 2022 verrà data la possibilità di svolgere i compiti per casa in gruppi di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale.
+* Il dataset : [TRAIN](https://github.com/aldosolari/DM/blob/master/docs/DATI/train.csv) [TEST](https://github.com/aldosolari/DM/blob/master/docs/DATI/test.csv)
+[INFOFILE](https://github.com/aldosolari/DM/blob/master/docs/DATI/infofile.txt) . Esempio di consegna (da caricare nell’apposito spazio sulla pagina MOODLE):
+
+
+
+<!-- Agli studenti che si iscrivono al seguente [form](https://forms.gle/Kbb38DztqHWihd9E6) entro il 5 Dicembre 2022 verrà data la possibilità di svolgere i compiti per casa in gruppi di (al massimo) tre persone. Gli iscritti verranno suddivisi in gruppi in maniera casuale. -->
 
 **Calendario degli esami**.
 

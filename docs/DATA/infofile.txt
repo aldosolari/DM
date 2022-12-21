@@ -1,0 +1,58 @@
+La direzione marketing di un'azienda di telecomunicazioni è interessata ad analizzare il comportamento di ciascun cliente relativo al suo traffico telefonico. 
+Vogliamo affrontare il problema di prevedere il traffico telefonico per il prossimo mese utilizzando 
+i dati a disposizione fino ad oggi. Come variabile risposta si sceglie il numero di secondi totali di 
+chiamate in uscita effettuati in un fissato mese. 
+
+Il  training set si riferisce a 15310 clienti per i quali sono registrate le informazioni relative ad un totale di 99 variabili. Parte di queste sono caratteristiche del cliente (ad es. sesso ed età) o della specifica relazione tra il cliente e l'azienda (per es. la data di attivazione o presenza di eventuali servizi aggiuntivi) e parte riguardano informazioni sul traffico rilevate per ciascuno dei 9 mesi consecutivi precedenti al mese di interesse. Infine vi è la variabile relativa alla durata complessiva delle chiamate in uscita nel decimo mese, che consideriamo come variabile risposta.
+
+Le previsioni sul test set verranno valutate con il seguente comando:
+
+sum( ( log1p(test$y) - log1p(yhat) )^2 )
+
+dove test$y è la variabile risposta del test set e yhat è la previsione fornita. 
+
+
+Variable          Description 
+   
+tariff.plan       piano tariffario del cliente (fattore, 5 livelli)
+payment.method    metodo di pagamento (fattore, 3 livelli: 
+                  c/c postale, carta di credito, domicil.\,bancaria)  
+gender            sesso del cliente (fattore, 3 livelli: 
+                  M-maschio, F-femmina, B-persona giuridica)
+age               età (anni)
+activ.zone        zona geografica di attivazione (fattore, 4 livelli)  
+activ.chan        canale di vendita per attivazione (fattore, 8 livelli) 
+vas1              presenza di un primo servizio a valore aggiunto 
+vas2              presenza di un secondo servizio a valore aggiunto  
+
+
+variabili relative al traffico nei 9 mesi disponibili. 
+Per ciascun mese, indicato dalla prima parte del nome della variabile 
+(q01, q02, ..., q9) sono disponibili le seguenti variabili:
+
+Variable              Description 
+
+q_nn_.out.ch.peak     numero totale mensile di chiamate in uscita 
+                      nelle ore in cui la tariffa è più elevata
+q_nn_.out.dur.peak    durata totale mensile delle chiamate in uscita 
+                      nelle ore in cui la tariffa è più elevata
+q_nn_.out.val.peak    valore totale mensile delle chiamate in uscita
+                      nelle ore in cui la tariffa è più elevata
+q_nn_.out.ch.offpeak  numero totale mensile di chiamate in uscita 
+                      nelle ore in cui la tariffa è meno elevata
+q_nn_.out.dur.offpeak durata totale mensile delle chiamate in uscita 
+                      nelle ore in cui la tariffa è meno elevata
+q_nn_.out.val.offpeak valore totale mensile delle chiamate in uscita 
+                      nelle ore in cui la tariffa è meno elevata
+q_nn_.in.ch.tot       numero totale mensile di chiamate in entrata 
+q_nn_.in.dur.tot      durata totale mensile delle chiamate in entrata 
+q_nn_.ch.sms          numero totale mensile di SMS inviati
+q_nn_.ch.cc           numero mensile di chiamate al Servizio 
+                      di Assistenza Clienti
+
+variabile risposta y = q10.out.dur.peak + q10.out.dur.offpeak
+
+variabile status che è la variabile indicatrice 
+dell'eventuale disattivazione nel tredicesimo mese, cioè 
+tre mesi dopo l'ultimo mese di cui è disponibile il traffico
+(fattore, 2 livelli: 1--disattivo, 0--attivo). 
