@@ -1,0 +1,24 @@
+---
+title: "gruppi"
+output:
+  pdf_document: default
+  html_document: default
+date: "2022-12-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+gruppi <- read.csv("~/Documents/mygithub/DM/docs/DATA/gruppi.csv")
+x = which(gruppi$Cognome=="Arlenghi")
+y = which(gruppi$Cognome=="Porretta")
+gruppi = gruppi[-c(x,y),]
+library(tidyverse)
+gruppi = gruppi %>% select(Nome, Cognome, Matricola)
+set.seed(123)
+gruppi$TEAM = sample(rep(c("FISHER","CRAMéR", "TIBSHIRANI", "GINI"),3), size=12, replace=FALSE)
+gruppi
+```
+
