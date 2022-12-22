@@ -15,11 +15,11 @@ gruppi <- read.csv("~/Documents/mygithub/DM/docs/DATA/gruppi.csv")
 x = which(gruppi$Cognome=="Arlenghi")
 y = which(gruppi$Cognome=="Porretta")
 z = which(gruppi$Cognome=="Livio")
-gruppi = gruppi[-c(x,y),]
+gruppi = gruppi[-c(x,y,z),]
 library(tidyverse)
 gruppi = gruppi %>% select(Nome, Cognome, Matricola)
 set.seed(123)
-gruppi$TEAM = sample(rep(c("FISHER","CRAMéR", "TIBSHIRANI", "GINI"),3), size=12, replace=FALSE)
+gruppi$TEAM = sample(rep(c("FISHER","CRAMéR", "TIBSHIRANI", "GINI"),3), size=11, replace=FALSE)
 gruppi
 ```
 
