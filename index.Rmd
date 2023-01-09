@@ -132,7 +132,7 @@ Giovedì inizio 11:30
 
 <tr>
 <td> Orange dataset.</td>
-<td> [SLIDES](docs/SLIDES/ORANGE.pdf). </td>
+<td> [SLIDES](docs/SLIDES/Orange.pdf). </td>
 <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Orange.R)</td>
 <td> KJ §5.4, §8.4  </td>
 <td> Vedi slide. </td>
