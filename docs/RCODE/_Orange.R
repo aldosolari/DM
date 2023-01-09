@@ -6,7 +6,7 @@ rm(list=ls())
 # import data
 library(readr)
 library(dplyr)
-PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/DATI/"
+PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/DATA/"
 train <- read_csv(paste0(PATH,"OrangeTr.csv"))
 train <- train %>% mutate_if(is.character, factor)
 train <- data.frame(train)
@@ -24,11 +24,15 @@ test = combi[(n+1):(n+m),]
 pMiss <- function(x){sum(is.na(x))/length(x)*100}
 # predictors by % of missingness
 pMiss2 = apply(train,2,pMiss)
+#pdf("Figure_Miss2.pdf")
 plot(sort(pMiss2), type="h", ylim=c(0,100), xlab="variables", ylab="% of missing (observations)")
+#dev.off()
 
 # observations by % of missingness
 pMiss1 = apply(train,1,pMiss)
+#pdf("Figure_Miss1.pdf")
 plot(sort(pMiss1), type="h", ylim=c(0,100), xlab="observations", ylab="% of missing (variables)")
+#dev.off()
 
 # Zero-variance predictors due to complete missingness
 vars_miss = which(pMiss2==100)
@@ -75,6 +79,17 @@ length(table(V210))/n
 # freqCut = 95/5 
 # uniqueCut = 10
 
+nearzero = function(VAR){
+  freqVAR = sort(table(VAR), decreasing = TRUE)
+  RF = ifelse(length(freqVAR)>1, freqVAR[1]/freqVAR[2], Inf)
+  PUV = length(table(VAR))/n
+  return(list(RF = RF, PUV=PUV))
+}
+
+res = sapply(names(train)[-ncol(train)], function(i) nearzero(train[,i]))
+vars_nz = which(res[1,] > 95/5 & res[2,] < .10)
+vars_zv = union(vars_nz, vars_miss)
+
 #=== Type of predictors ============================
 
 #Identify which predictors are categorical and numeric.
@@ -97,7 +112,7 @@ sapply(train[,vars_cat], function(x) length(unique(x)) )
 sapply(train[,vars_cat], nlevels )
 
 # numerical predictors
-vars_num<- vars[sapply(train[,vars],class) %in% c('numeric','integer')]
+vars_num <- vars[sapply(train[,vars],class) %in% c('numeric','integer')]
 vars_num
 
 #=== Calibration set ============================

@@ -135,34 +135,38 @@ yhat11 = as.numeric(pred10$posterior%*%(1:5))
 summary(yhat11)
 sqrt(mean((test$y-yhat11)^2))
 
+#---------- ALBERI DI REGRESSIONE ------
+
 # convertire i dati mancanti in NA
 is.na(train) = train==0
 is.na(test) = test==0
 
 # albero di regressione cp = 0.02
 library(rpart)
-fit12 <- rpart (y~.,data=train,cp=0.02)
-summary(fit12) 
+fit12 <- rpart(y~.,data=train,cp=0.02)
+#summary(fit12) 
 plot(fit12)
 text(fit12, all=T, use.n=T)
 yhat12 <- predict(fit12, newdata=test)
 sqrt(mean((test$y-yhat12)^2))
 
 # albero di regressione cp = 0.0001
-fit13= rpart(y~.,data=train,cp=0.0001)
+fit13 = rpart(y~.,data=train,cp=0.0001)
 tree.res = printcp(fit13)
 #1-SE rule
 chosen.prune = min((1:dim(tree.res)[1]) [tree.res[,"xerror"] < min(tree.res[,"xerror"]+tree.res[,"xstd"])])
 tree.prune = prune(fit13, cp=tree.res[chosen.prune,"CP"])
 # predict validation
-yhat13= predict(tree.prune, newdata=test)
+yhat13 = predict(tree.prune, newdata=test)
 sqrt(mean((test$y-yhat13)^2))
 
 #---------- Bagging
 
+B = 10
+
 err.small=NULL
 pred = numeric(dim(test)[1])
-for (i in 1:100){
+for (i in 1:B){
   use = sample(nrow(train),nrow(train),rep=T)
   fit = rpart(y~.,data=train[use,], cp=0.01)
   pred = pred + predict(fit, newdata=test)
@@ -170,4 +174,122 @@ for (i in 1:100){
   err.small = c(err.small, sqrt(mean ((pred/i-test$y)^2)))
 }
 
-plot (1:100, err.small, xlab="Bagging iterations", ylab="RMSE", ylim=c(0.75, 0.85), type="l", lty=2)
+#pdf("Figure_bagging.pdf")
+plot (1:B, err.small, xlab="Bagging iterations", ylab="RMSE", ylim=c(0.75, 0.85), type="l", lty=2)
+#dev.off()
+
+#--- ESERCIZIO 5 ----------------------------
+
+#---------- algoritmo L2-boosting con alberi (missing=NA)
+lambda = 0.01
+y.now = train$y-mean(train$y)
+err.boost=err.tr.boost=NULL
+pred.boost = numeric(nrow(test))+mean(train$y)
+fitted.boost = numeric(nrow(train))+mean(train$y)
+for (i in 1:B){
+  tree.mod= rpart(y.now~.-y,data=train,maxdepth=2,cp=0.00001)
+  pred.boost = pred.boost + lambda*predict(tree.mod, newdata=test)
+  fitted.boost = fitted.boost  + lambda*predict(tree.mod)
+  y.now = train$y-fitted.boost
+  if (i%%10==0) cat (i, "train:", sqrt(mean ((fitted.boost-train$y)^2)), " test:", sqrt(mean ((pred.boost-test$y)^2)),"\n")
+  err.boost = c(err.boost, sqrt(mean ((pred.boost-test$y)^2)))
+  err.tr.boost = c(err.tr.boost, sqrt(mean ((fitted.boost-train$y)^2)))
+  }
+
+#pdf("Figure_boosting.pdf")
+plot ((1:B), err.boost, main="Boosting with alpha=0.01, maxdepth=2 and miss=NA", xlab="number of steps", ylab="RMSE",type="l")
+lines (1:B, err.tr.boost, lty=2)
+legend ("topright",legend=c("boost - valid", "boost - train"), lty=c(1,2))
+#dev.off()
+
+#--- ESERCIZIO 6 ----------------------------
+
+X.now = scale(X[,1:14], center=T, scale = F)
+colnames(X.now) = titles$V2[1:14]
+
+pca = princomp(X.now, cor=F)
+
+# Scores for Miss Congeniality da utenti con valori alti su PC1
+table(y[order(pca$scores[,1])[1:100],1])
+# Scores for Miss Congeniality da utenti con valori bassi su PC1
+table(y[order(pca$scores[,1],decreasing=T)[1:100],1])
+
+tr.sc = data.frame(pca$scores[-test.id,], y=y[-test.id,])
+te.sc = data.frame(pca$scores[test.id,], y=y[test.id,])
+
+######### PCA regression on various number of PCAs
+for (npca in 1:14){
+  pcr=lm(y~., data=tr.sc[,c(1:npca,15)])
+  te.pred = predict(pcr,newdata=te.sc[,c(1:npca,15)])
+  cat (npca, "PCA, validation error:", sqrt(mean((test$y-te.pred)^2)),"\n")}
+
+#--- ESERCIZIO 7 ----------------------------
+
+# dataset ridotto
+N <- 1000
+set.seed(123)
+ix <- sample(1:10000,size=N)
+X.small <- as.matrix(X[ix,1:14])
+n <- nrow(X.small)
+p <- ncol(X.small)
+
+# creazione dati mancanti
+nomit <- n*p*0.15
+ina <- sample(seq(n), nomit, replace = TRUE)
+inb <- sample(1:p, nomit, replace = TRUE)
+Xna <- X.small
+index.na <- cbind(ina, inb)
+Xna[index.na] <- NA
+ismiss <- is.na(Xna)
+
+# dati centrati
+Z <- scale(Xna, center=T, scale = F)
+means =attr(Z,"scaled:center")
+
+Zhat <- Z
+zbar <- colMeans(Z, na.rm = TRUE)
+Zhat[index.na] <- zbar[inb]
+
+fit.svd <- function(X, q = 1){
+  DVS <- svd(X)
+  with(DVS, 
+       u[,1:q, drop = FALSE] %*%
+         (d[1:q] * t(v[,1:q, drop = FALSE]))
+  )
+}
+
+
+n_iter <- 50 # numero di iterazioni
+for (iter in 1:n_iter){
+  # Step 2.a
+  Zapp <- fit.svd(Zhat, q = 1)
+  # Step 2.b
+  Zhat[ismiss] <- Zapp[ismiss]
+  # Step 2.c
+  e <- mean(((Z - Zapp)[!ismiss])^2)
+  cat("Iter :", iter, " Errore :", e, "\n")
+}
+
+Xhat = Zhat + matrix(rep(means,each=nrow(Z)), ncol=ncol(Z))
+cor(Xhat[ismiss], X.small[ismiss])
+plot(Xhat[ismiss], X.small[ismiss], asp=1)
+abline(a=0,b=1)
+
+mean((Xhat[ismiss] - X.small[ismiss])^2)
+
+
+#---- Modello utente - film
+W = cbind(expand.grid(rownames(Xna),colnames(Xna)),y=c(Xna))
+fit = lm(y ~ Var1 + Var2, W, subset =!is.na(W$y))
+yhat <- predict(fit, newdata=W[is.na(W$y),])
+cor(yhat, X.small[ismiss])
+plot(yhat, X.small[ismiss], asp=1)
+abline(a=0,b=1)
+abline(v=5)
+
+mean((yhat - X.small[ismiss])^2)
+
+
+
+
+

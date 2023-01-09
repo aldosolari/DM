@@ -130,6 +130,57 @@ Giovedì inizio 11:30
 </tr>
 
 
+<tr>
+<td> Orange dataset.</td>
+<td> [SLIDES](docs/SLIDES/ORANGE.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Orange.R)</td>
+<td> KJ §5.4, §8.4  </td>
+<td> Vedi slide. </td>
+</tr>
+
+<tr>
+<td> Regression splines.</td>
+<td> [SLIDES](docs/SLIDES/Splines.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Splines.R)</td>
+<td> AS §4.4.1, §4.4.2, LKA §4.5, §4.7, HTF § 5.1, §5.2 §A.B
+</td>
+<td>  </td>
+</tr>
+
+
+<!-- <tr> -->
+<!-- <td> Additive models.</td> -->
+<!-- <td> [SLIDES](docs/SLIDES/Additive.pdf). </td> -->
+<!-- <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Additive.R)</td> -->
+<!-- <td>  </td> -->
+<!-- <td>  </td> -->
+<!-- </tr> -->
+
+
+<!-- <tr> -->
+<!-- <td> Chicago dataset.</td> -->
+<!-- <td> [SLIDES](docs/SLIDES/Chicago.pdf). </td> -->
+<!-- <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Chicago.R)</td> -->
+<!-- <td>  </td> -->
+<!-- <td>  </td> -->
+<!-- </tr> -->
+
+<!-- <tr> -->
+<!-- <td> Best subset selection.</td> -->
+<!-- <td> [SLIDES](docs/SLIDES/Bestsubset.pdf). </td> -->
+<!-- <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Bestsubset.R)</td> -->
+<!-- <td>  </td> -->
+<!-- <td>  </td> -->
+<!-- </tr> -->
+
+
+<!-- <tr> -->
+<!-- <td> Ensembles of models.</td> -->
+<!-- <td> [SLIDES](docs/SLIDES/Ensembles.pdf). </td> -->
+<!-- <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Ensembles.R)</td> -->
+<!-- <td>  </td> -->
+<!-- <td>  </td> -->
+<!-- </tr> -->
 
 </table>
 
