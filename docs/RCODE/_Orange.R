@@ -3,16 +3,12 @@ rm(list=ls())
 # ORANGE DATA
 #==========================
 
+# Adapted from the code available at the support site of Zumel and Mount's book on GitHub: https://github.com/WinVector/zmPDSwR/blob/main/KDD2009/KDDmodels.Rmd
+
 # import data
-library(readr)
-library(dplyr)
 PATH <- "https://raw.githubusercontent.com/aldosolari/DM/master/docs/DATA/"
-train <- read_csv(paste0(PATH,"OrangeTr.csv"))
-train <- train %>% mutate_if(is.character, factor)
-train <- data.frame(train)
-test <- read_csv(paste0(PATH,"OrangeTe.csv"))
-test <- test %>% mutate_if(is.character, factor)
-test <- data.frame(test)
+train <- read.csv(paste0(PATH,"OrangeTr.csv"), stringsAsFactors = TRUE)
+test <- read.csv(paste0(PATH,"OrangeTe.csv"), stringsAsFactors = TRUE)
 n = nrow(train)
 m = nrow(test)
 combi = rbind(train,test)
