@@ -178,7 +178,6 @@ barplot(beta_hat)
 
 kappa(crossprod(B), exact=T)
 
-
 #---------------------------------------
 # B-SPLINES
 #---------------------------------------
@@ -213,6 +212,10 @@ for (i in 1:ncol(B)) lines(x,B[,i], col=i, lwd=2)
 
 rowSums(B)
 
+S = B %*% solve(crossprod(B)) %*% t(B)
+#pdf("Figure_hatmatrixBbasis.pdf")
+filled.contour(main="B-basis spline", apply(S, 2, rev), asp=1, xaxt="n", yaxt="n", xlab="columns", ylab="rows", levels=c(min(S),-0.005,0.005,max(S)), col=c("red", "white", "blue"))
+#dev.off()
 
 
 
@@ -244,6 +247,7 @@ y_hat = apply(BB_scaled, 1, sum)
 lines(xx,y_hat, lwd=2)
 par(op)
 #dev.off()
+
 
 
 
@@ -310,4 +314,7 @@ plot(x, y_hat_cs$se.fit, type="l",
 lines(x, y_hat_ns$se.fit, lwd=2, col=4)
 legend("top", c("cubic spline", "natural cubic spline"), lty=1, col=c(1,4), lwd=2)
 #dev.off()
+
+
+
 
