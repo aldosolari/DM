@@ -144,7 +144,7 @@ Giovedì inizio 11:30
 <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Splines.R)</td>
 <td> AS §4.4.1, §4.4.2, LKA §4.5, §4.7, HTF § 5.1, §5.2 §A.B
 </td>
-<td>  </td>
+<td> HTF Ex. 5.5 </td>
 </tr>
 
 
