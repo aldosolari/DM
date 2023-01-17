@@ -152,7 +152,7 @@ Giovedì inizio 11:30
 <td> Additive models.</td>
 <td> [SLIDES](docs/SLIDES/Additive.pdf). </td>
 <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Additive.R)</td>
-<td>  </td>
+<td> AS § 4.5, LKA § 6.3, HTF § 9.1.1, 9.1.2  </td>
 <td> [GAMs in R](https://noamross.github.io/gams-in-r-course/) </td>
 </tr>
 
@@ -165,13 +165,13 @@ Giovedì inizio 11:30
 <!-- <td>  </td> -->
 <!-- </tr> -->
 
-<!-- <tr> -->
-<!-- <td> Best subset selection.</td> -->
-<!-- <td> [SLIDES](docs/SLIDES/Bestsubset.pdf). </td> -->
-<!-- <td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Bestsubset.R)</td> -->
-<!-- <td>  </td> -->
-<!-- <td>  </td> -->
-<!-- </tr> -->
+<tr>
+<td> Best subset selection.</td>
+<td> [SLIDES](docs/SLIDES/Bestsubset.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Bestsubset.R)</td>
+<td> AS § 3.6.1, HTF § 3.3, § 7.10.2 </td>
+<td> Vedi slide. </td>
+</tr>
 
 
 <!-- <tr> -->
