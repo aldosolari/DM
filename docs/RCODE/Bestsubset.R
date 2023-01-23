@@ -73,11 +73,6 @@ yhat.fwdAIC = predict(fit.fwdAIC, newdata=test)
 RMSE.fwdAIC = sqrt(mean( (yhat.fwdAIC - y.star)^2 ))
 RMSE.fwdAIC
 
-data.frame(
-  fit = c("full", "best cp", "best bic", "best fwd aic", "best va", "best cv"),
-  RMSE = c(RMSE.full, RMSE.Cp, RMSE.BIC, RMSE.fwdAIC, RMSE.bestVa, RMSE.bestCV)
-)
-
 #--- Esercizio 2 ----------------------------
 
 # Validation set
@@ -113,6 +108,11 @@ plot(1:p,apply(KCV,2,mean), type="b", ylab="CV error", xlab="k")
 yhat.bestCV = predict.regsubsets(fit.bests, newdata=test, id=which.min(apply(KCV,2,mean)))
 RMSE.bestCV = sqrt(mean( (yhat.bestCV - y.star)^2 ))
 RMSE.bestCV
+
+data.frame(
+  fit = c("full", "best cp", "best bic", "best fwd aic", "best va", "best cv"),
+  RMSE = c(RMSE.full, RMSE.Cp, RMSE.BIC, RMSE.fwdAIC, RMSE.bestVa, RMSE.bestCV)
+)
 
 #--- § 7.10.2 HTF ----------------------------
 

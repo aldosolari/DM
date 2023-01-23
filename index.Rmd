@@ -182,6 +182,15 @@ Giovedì inizio 11:30
 <td> Vedi slide. </td>
 </tr>
 
+
+<tr>
+<td> Comparing models </td>
+<td> [SLIDES](docs/SLIDES/Comparing.pdf). </td>
+<td> [R CODE](https://github.com/aldosolari/DM/blob/master/docs/RCODE/Comparing.R)</td>
+<td> TMWR § 11.1, § 11.2, § 11.3 </td>
+<td>  </td>
+</tr>
+
 </table>
 
 
