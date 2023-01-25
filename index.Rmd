@@ -201,8 +201,11 @@ Giovedì inizio 11:30
 * Per l'analisi dei dati, oltre alle previsioni, bisognerà produrre una relazione contenete la descrizione dell’analisi e il codice utilizzato. Bisogna consegnare l'analisi dei dati sulla pagina moodle del corso almeno una settimana prima dell'appello d'esame. E' possibile consegnare l'analisi dei dati una volta sola per A.A.
 
 * Il dataset : [TRAIN](https://github.com/aldosolari/DM/blob/master/docs/DATA/train.csv) [TEST](https://github.com/aldosolari/DM/blob/master/docs/DATA/test.csv)
-[INFOFILE](https://github.com/aldosolari/DM/blob/master/docs/DATA/infofile.txt) . Esempio di consegna (da caricare nell’apposito spazio sulla pagina MOODLE): [2575.pdf](https://github.com/aldosolari/DM/blob/master/docs/DATA/2575.pdf)
-[2575_codice.R](https://github.com/aldosolari/DM/blob/master/docs/DATA/2575_codice.R) [2575_previsione.txt](https://github.com/aldosolari/DM/blob/master/docs/DATA/2575_previsione.txt) 
+[INFOFILE](https://github.com/aldosolari/DM/blob/master/docs/DATA/infofile.txt). 
+
+* Esempio di consegna (da caricare nell’apposito spazio sulla pagina MOODLE, rispettando il formato [numero di matricola]_previsione.txt, [numero di matricola]_codice.pdf e [numero di matricola]_relazione.pdf):
+[2575_previsione.txt](https://github.com/aldosolari/DM/blob/master/docs/DATA/2575_previsione.txt) ; 
+[2575_codice.pdf](https://github.com/aldosolari/DM/blob/master/docs/DATA/2575.pdf) ; [2575_relazione.pdf](https://github.com/aldosolari/DM/blob/master/docs/DATA/2575_relazione.pdf) . 
 
 * [GRUPPI](https://github.com/aldosolari/DM/blob/master/docs/DATA/gruppi.pdf) 
 
